@@ -59,11 +59,8 @@ export default function PublicHeader() {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-6 text-[15px] font-bold text-slate-800">
-            <Link href="/" className="text-[#059669] hover:text-[#059669] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[#059669]">
+            <Link href="/" className="hover:text-[#059669] transition-colors py-1">
               Home
-            </Link>
-            <Link href="/routes" className="hover:text-[#059669] transition-colors py-1">
-              Services
             </Link>
             <Link href="/routes" className="hover:text-[#059669] transition-colors py-1">
               Routes
@@ -72,15 +69,21 @@ export default function PublicHeader() {
               Fleet
             </Link>
             <Link href="/airport-transfers" className="hover:text-[#059669] transition-colors py-1">
-              Reviews
+              Airport Transfers
             </Link>
             <Link href="/local-rentals" className="hover:text-[#059669] transition-colors py-1">
+              Local Rentals
+            </Link>
+            <Link href="/reviews" className="hover:text-[#059669] transition-colors py-1">
+              Reviews
+            </Link>
+            <Link href="/blog" className="hover:text-[#059669] transition-colors py-1">
               Blog
             </Link>
-            <Link href="/routes" className="hover:text-[#059669] transition-colors py-1">
+            <Link href="/about" className="hover:text-[#059669] transition-colors py-1">
               About Us
             </Link>
-            <Link href="/routes" className="hover:text-[#059669] transition-colors py-1">
+            <Link href="/contact" className="hover:text-[#059669] transition-colors py-1">
               Contact Us
             </Link>
           </nav>
@@ -166,11 +169,32 @@ export default function PublicHeader() {
                 Airport Transfers
               </Link>
               <Link
-                href="/local-rentals"
+                href="/reviews"
                 onClick={() => setMobileOpen(false)}
                 className="px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-900"
               >
-                Local Rentals
+                Customer Reviews
+              </Link>
+              <Link
+                href="/blog"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-900"
+              >
+                Travel Blog
+              </Link>
+              <Link
+                href="/about"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-900"
+              >
+                About Us
+              </Link>
+              <Link
+                href="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-900"
+              >
+                Contact Us
               </Link>
             </nav>
 
