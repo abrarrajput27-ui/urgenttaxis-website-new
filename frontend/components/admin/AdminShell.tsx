@@ -44,12 +44,10 @@ export default function AdminShell({ children, user }: AdminLayoutProps) {
     {
       title: 'Pricing Engine',
       items: [
-        { name: 'One Way Fares', href: '#', comingSoon: true },
-        { name: 'Round Trip Fares', href: '#', comingSoon: true },
-        { name: 'Local Packages', href: '#', comingSoon: true },
-        { name: 'Airport Transfers', href: '#', comingSoon: true },
-        { name: 'Dynamic Surge Rules', href: '#', comingSoon: true },
-        { name: 'Fare Overrides', href: '#', comingSoon: true },
+        { name: 'Pricing Console', href: '/admin/pricing' },
+        { name: 'Dynamic Surge Rules', href: '/admin/pricing/surge' },
+        { name: 'Pricing Simulator', href: '/admin/pricing/simulator' },
+        { name: 'Quotations & Snapshots', href: '#', comingSoon: true },
       ],
     },
     {

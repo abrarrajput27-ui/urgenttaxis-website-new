@@ -85,11 +85,130 @@ export interface ActualFleet {
   drivers?: Driver;
 }
 
-export interface UserProfile {
+export interface Location {
   id: string;
-  full_name: string;
-  email: string;
-  phone: string | null;
+  name: string;
+  city: string;
+  state: string;
+  location_type: 'city' | 'airport' | 'railway_station' | 'tourist_spot';
   is_active: boolean;
   created_at: string;
 }
+
+export interface Route {
+  id: string;
+  origin_location_id: string;
+  destination_location_id: string;
+  estimated_distance_km: number;
+  estimated_duration_minutes: number | null;
+  is_active: boolean;
+  created_at: string;
+  origin?: Location;
+  destination?: Location;
+}
+
+export interface PricingOneWay {
+  id: string;
+  route_id: string;
+  category_id: string;
+  base_fare: number;
+  included_km: number;
+  extra_km_rate: number;
+  driver_allowance: number;
+  default_included_charges: string[];
+  default_excluded_charges: string[];
+  is_active: boolean;
+  created_at: string;
+  routes?: Route;
+  vehicle_categories?: VehicleCategory;
+}
+
+export interface PricingRoundTrip {
+  id: string;
+  category_id: string;
+  min_km_per_day: number;
+  per_km_rate: number;
+  driver_allowance_per_day: number;
+  night_halt_charge: number;
+  default_included_charges: string[];
+  default_excluded_charges: string[];
+  is_active: boolean;
+  created_at: string;
+  vehicle_categories?: VehicleCategory;
+}
+
+export interface PricingLocalPackage {
+  id: string;
+  category_id: string;
+  package_name: string;
+  included_hours: number;
+  included_km: number;
+  package_price: number;
+  extra_hour_rate: number;
+  extra_km_rate: number;
+  default_included_charges: string[];
+  default_excluded_charges: string[];
+  is_active: boolean;
+  created_at: string;
+  vehicle_categories?: VehicleCategory;
+}
+
+export interface PricingAirportTransfer {
+  id: string;
+  airport_location_id: string;
+  city_zone_location_id: string;
+  category_id: string;
+  base_fare: number;
+  included_km: number;
+  extra_km_rate: number;
+  default_included_charges: string[];
+  default_excluded_charges: string[];
+  is_active: boolean;
+  created_at: string;
+  airport_location?: Location;
+  city_zone_location?: Location;
+  vehicle_categories?: VehicleCategory;
+}
+
+export interface DynamicPricingRule {
+  id: string;
+  rule_name: string;
+  trip_type: 'one_way' | 'round_trip' | 'local_rental' | 'airport_transfer' | null;
+  category_id: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  start_time: string | null;
+  end_time: string | null;
+  adjustment_type: 'percentage' | 'flat';
+  adjustment_value: number;
+  priority: number;
+  is_active: boolean;
+  created_at: string;
+  vehicle_categories?: VehicleCategory;
+}
+
+export interface FareSnapshot {
+  id: string;
+  booking_id: string | null;
+  automatic_fare: number;
+  manual_override_fare: number | null;
+  final_fare: number;
+  override_reason: string | null;
+  overridden_by_user_id: string | null;
+  breakdown_json: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface CMSPage {
+  id: string;
+  slug: string;
+  title: string;
+  content_markdown: string | null;
+  meta_title: string | null;
+  meta_description: string | null;
+  canonical_url: string | null;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
