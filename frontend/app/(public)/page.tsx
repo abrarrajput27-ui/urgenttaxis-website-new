@@ -203,16 +203,16 @@ export default async function HomePage() {
       </section>
 
       {/* 6. AIRPORT TRANSFERS SECTION */}
-      <section id="airport-transfers" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900">
-        <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-8 sm:p-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <section id="airport-transfers" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 sm:p-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div className="space-y-4">
-            <span className="inline-block px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-semibold">
+            <span className="inline-block px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 border border-blue-500/20 text-xs font-semibold">
               Punctual & Doorstep Pickups
             </span>
-            <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-black text-[#1e1b4b] tracking-tight">
               Airport Transfers & Railway Pickups
             </h2>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
               Hassle-free transfers to and from IGI Airport Delhi (T3/T1) and Noida International Airport with flight tracking and guaranteed clean vehicles.
             </p>
             <div className="pt-2">
@@ -224,22 +224,102 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800/80 space-y-4">
-            <h3 className="text-sm font-bold text-white border-b border-slate-800 pb-2">Top Verified Airport Routes</h3>
-            <ul className="space-y-3 text-xs text-slate-300">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 shadow-sm">
+            <h3 className="text-sm font-bold text-[#1e1b4b] border-b border-slate-100 pb-2">Top Verified Airport Routes</h3>
+            <ul className="space-y-3 text-xs text-slate-700 font-medium">
               <li className="flex justify-between items-center">
                 <span>IGI Airport T3 ↔ Gurgaon Cyber City</span>
-                <span className="text-emerald-400 font-semibold">Fixed Zone Rate</span>
+                <span className="text-[#059669] font-bold">Fixed Zone Rate</span>
               </li>
               <li className="flex justify-between items-center">
                 <span>IGI Airport T3 ↔ Noida Sector 62</span>
-                <span className="text-emerald-400 font-semibold">Fixed Zone Rate</span>
+                <span className="text-[#059669] font-bold">Fixed Zone Rate</span>
               </li>
               <li className="flex justify-between items-center">
                 <span>IGI Airport T3 ↔ Greater Noida</span>
-                <span className="text-emerald-400 font-semibold">Fixed Zone Rate</span>
+                <span className="text-[#059669] font-bold">Fixed Zone Rate</span>
               </li>
             </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* 6B. OUTSTATION TOUR PACKAGES (CONSOLIDATED FROM SOURCE PROJECTS) */}
+      <section id="tour-packages" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="text-center space-y-2 mb-10">
+          <span className="inline-block px-3 py-1 rounded-full bg-[#059669]/10 text-[#059669] border border-[#059669]/20 text-xs font-bold">
+            Curated Sightseeing & Hill Station Circuits
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black text-[#1e1b4b] tracking-tight">
+            Popular Multi-Day Outstation Tour Cabs
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto font-medium">
+            Explore top North India tour circuits with dedicated chauffeur-driven sedans, SUVs, and Tempo Travellers.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl space-y-3 shadow-sm hover:shadow-md transition-shadow">
+            <span className="text-xs font-extrabold px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-100">
+              Uttarakhand Kumaon Circuit (3 Nights / 4 Days)
+            </span>
+            <h3 className="text-lg font-black text-[#1e1b4b]">Nainital, Bhimtal & Kainchi Dham</h3>
+            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+              Delhi ↔ Kathgodam ↔ Nainital ↔ Kainchi Dham ↔ Sattal ↔ Bhimtal tour package with complete local sightseeing.
+            </p>
+            <div className="pt-2 flex justify-between items-center text-xs">
+              <span className="text-[#059669] font-bold">Starting ₹12,499</span>
+              <a
+                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis%2C%20I%20want%20to%20inquire%20about%20the%20Nainital%20Bhimtal%20Kainchi%20Dham%20Tour%20Package.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#059669] hover:bg-[#047857] text-white font-bold px-3.5 py-2 rounded-xl"
+              >
+                Inquire Tour
+              </a>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl space-y-3 shadow-sm hover:shadow-md transition-shadow">
+            <span className="text-xs font-extrabold px-2.5 py-1 rounded-md bg-emerald-50 text-[#059669] border border-emerald-100">
+              Char Dham / Spiritual Express (2 Nights / 3 Days)
+            </span>
+            <h3 className="text-lg font-black text-[#1e1b4b]">Haridwar & Rishikesh Ganga Aarti</h3>
+            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+              Delhi ↔ Haridwar Har Ki Pauri ↔ Rishikesh Ram Jhula & Parmarth Niketan Ganga Aarti spiritual tour package.
+            </p>
+            <div className="pt-2 flex justify-between items-center text-xs">
+              <span className="text-[#059669] font-bold">Starting ₹7,999</span>
+              <a
+                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis%2C%20I%20want%20to%20inquire%20about%20the%20Haridwar%20Rishikesh%20Tour%20Package.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#059669] hover:bg-[#047857] text-white font-bold px-3.5 py-2 rounded-xl"
+              >
+                Inquire Tour
+              </a>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl space-y-3 shadow-sm hover:shadow-md transition-shadow">
+            <span className="text-xs font-extrabold px-2.5 py-1 rounded-md bg-amber-50 text-amber-800 border border-amber-100">
+              Golden Triangle Circuit (2 Nights / 3 Days)
+            </span>
+            <h3 className="text-lg font-black text-[#1e1b4b]">Delhi ↔ Agra Taj Mahal ↔ Jaipur</h3>
+            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+              Complete heritage circuit covering Taj Mahal Agra, Fatehpur Sikri, Amber Fort Jaipur, and Hawa Mahal.
+            </p>
+            <div className="pt-2 flex justify-between items-center text-xs">
+              <span className="text-[#059669] font-bold">Starting ₹9,999</span>
+              <a
+                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis%2C%20I%20want%20to%20inquire%20about%20the%20Golden%20Triangle%20Tour%20Package.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#059669] hover:bg-[#047857] text-white font-bold px-3.5 py-2 rounded-xl"
+              >
+                Inquire Tour
+              </a>
+            </div>
           </div>
         </div>
       </section>

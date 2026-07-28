@@ -16,7 +16,9 @@ function generateSlug(originName: string, destName: string): string {
   return `${originName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-to-${destName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-taxi`;
 }
 
-// Helper to resolve route by slug from database
+import masterRoutesData from '@/lib/data/processed-master-routes.json';
+
+// Helper to resolve route by slug from database or master routes
 async function resolveRouteBySlug(slug: string) {
   const supabase = await supabaseServer();
   const { data: routes } = await supabase
@@ -24,13 +26,35 @@ async function resolveRouteBySlug(slug: string) {
     .select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)')
     .eq('is_active', true);
 
-  if (!routes) return null;
+  if (routes) {
+    const dbMatch = routes.find((r) => {
+      const originName = r.origin?.name || '';
+      const destName = r.destination?.name || '';
+      return generateSlug(originName, destName) === slug;
+    });
 
-  return routes.find((r) => {
-    const originName = r.origin?.name || '';
-    const destName = r.destination?.name || '';
-    return generateSlug(originName, destName) === slug;
-  });
+    if (dbMatch) return dbMatch;
+  }
+
+  // Fallback to master 502 consolidated routes
+  const masterMatch = masterRoutesData.find((mr) => mr.slug === slug);
+  if (masterMatch) {
+    return {
+      id: masterMatch.id,
+      is_active: true,
+      estimated_distance_km: masterMatch.estimated_distance_km,
+      estimated_duration_minutes: masterMatch.estimated_duration_minutes,
+      origin: { name: masterMatch.originName },
+      destination: { name: masterMatch.destName },
+      aboutContent: masterMatch.about,
+      customFaqs: masterMatch.faqs,
+      sedanFare: masterMatch.sedanFare,
+      ertigaFare: masterMatch.ertigaFare,
+      crystaFare: masterMatch.crystaFare,
+    };
+  }
+
+  return null;
 }
 
 export async function generateMetadata({ params }: DynamicRoutePageProps) {
@@ -63,11 +87,19 @@ export async function generateStaticParams() {
     .select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)')
     .eq('is_active', true);
 
-  if (!routes) return [];
+  const slugsSet = new Set<string>();
 
-  return routes.map((r) => ({
-    slug: generateSlug(r.origin?.name || '', r.destination?.name || ''),
-  }));
+  if (routes) {
+    routes.forEach((r) => {
+      slugsSet.add(generateSlug(r.origin?.name || '', r.destination?.name || ''));
+    });
+  }
+
+  masterRoutesData.forEach((mr) => {
+    slugsSet.add(mr.slug);
+  });
+
+  return Array.from(slugsSet).map((slug) => ({ slug }));
 }
 
 export default async function RouteDetailPage({ params }: DynamicRoutePageProps) {
@@ -345,16 +377,26 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
         </div>
       </section>
 
+      {/* About Route Content (From Master Consolidation) */}
+      {'aboutContent' in route && route.aboutContent && (
+        <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100 space-y-4">
+          <h2 className="text-2xl font-black text-[#1e1b4b]">About {originName} to {destName} Taxi Route</h2>
+          <div className="bg-slate-50 border border-slate-200 p-6 sm:p-8 rounded-2xl text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+            {route.aboutContent}
+          </div>
+        </section>
+      )}
+
       {/* 11. Route FAQ */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-900">
-        <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-8">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
+        <h2 className="text-xl sm:text-2xl font-black text-[#1e1b4b] text-center mb-8">
           Frequently Asked Questions ({originName} to {destName})
         </h2>
         <div className="space-y-4 text-xs">
-          {visibleFaqs.map((faq, idx) => (
-            <div key={idx} className="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
-              <h3 className="text-sm font-bold text-white">{faq.question}</h3>
-              <p className="text-slate-400 leading-relaxed">{faq.answer}</p>
+          {('customFaqs' in route && Array.isArray(route.customFaqs) && route.customFaqs.length > 0 ? route.customFaqs : visibleFaqs).map((faq: { question?: string; answer?: string; q?: string; a?: string }, idx: number) => (
+            <div key={idx} className="bg-white border border-slate-200 p-5 rounded-xl space-y-2 shadow-sm">
+              <h3 className="text-sm font-bold text-[#1e1b4b]">{faq.question || faq.q}</h3>
+              <p className="text-slate-600 leading-relaxed">{faq.answer || faq.a}</p>
             </div>
           ))}
         </div>
