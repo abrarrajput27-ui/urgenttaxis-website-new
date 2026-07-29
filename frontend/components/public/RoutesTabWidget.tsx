@@ -5,28 +5,40 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const STATES_DATA = {
-  "Delhi": ["New Delhi", "Delhi Airport", "Connaught Place", "Dwarka", "Rohini", "Vasant Kunj", "Karol Bagh", "Lajpat Nagar", "Hauz Khas", "Saket", "Chandni Chowk", "Mayur Vihar", "Janakpuri", "Pitampura", "Okhla"],
-  "Haryana": ["Gurugram", "Faridabad", "Panipat", "Karnal", "Ambala", "Hisar", "Rohtak", "Sonipat", "Kurukshetra", "Yamunanagar", "Panchkula", "Sirsa", "Jind", "Kaithal", "Rewari", "Bhiwani", "Palwal", "Jhajjar", "Fatehabad", "Bahadurgarh"],
-  "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Dalhousie", "Kullu", "Kasol", "Kasauli", "Chamba", "Mandi", "Solan", "Palampur", "Kangra", "Bilaspur", "Una", "Hamirpur", "Nahan", "Kinnaur", "Spiti", "Keylong"],
-  "Jammu & Kashmir": ["Jammu", "Srinagar", "Katra", "Gulmarg", "Pahalgam", "Anantnag", "Baramulla", "Udhampur", "Patnitop", "Sonamarg", "Kargil", "Leh", "Kathua", "Rajouri", "Poonch", "Kupwara", "Pulwama"],
-  "Madhya Pradesh": ["Indore", "Bhopal", "Gwalior", "Jabalpur", "Ujjain", "Sagar", "Ratlam", "Rewa", "Satna", "Khandwa", "Burhanpur", "Dewas", "Chhindwara", "Murwara", "Bhind", "Morena", "Vidisha", "Shivpuri", "Mandsaur"],
-  "Punjab": ["Chandigarh", "Amritsar", "Ludhiana", "Jalandhar", "Patiala", "Bathinda", "Pathankot", "Moga", "Hoshiarpur", "Abohar", "Phagwara", "Khanna", "Zirakpur", "Rajpura", "Firozpur", "Kapurthala", "Barnala", "Muktsar"],
-  "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Bikaner", "Ajmer", "Kota", "Bhilwara", "Alwar", "Sikar", "Pali", "Chittorgarh", "Kishangarh", "Ganganagar", "Bharatpur", "Beawar", "Tonk", "Sawai Madhopur", "Pushkar", "Jaisalmer", "Mount Abu"],
-  "Uttar Pradesh": ["Noida", "Greater Noida", "Ghaziabad", "Agra", "Mathura", "Vrindavan", "Varanasi", "Lucknow", "Kanpur", "Allahabad (Prayagraj)", "Meerut", "Aligarh", "Bareilly", "Moradabad", "Saharanpur", "Gorakhpur", "Jhansi", "Muzaffarnagar", "Ayodhya", "Firozabad", "Shahjahanpur", "Rampur"],
-  "Uttarakhand": ["Dehradun", "Haridwar", "Rishikesh", "Nainital", "Haldwani", "Mussoorie", "Jim Corbett", "Ramnagar", "Almora", "Ranikhet", "Kausani", "Pithoragarh", "Kashipur", "Roorkee", "Kotdwar", "Rudrapur", "Mukteshwar", "Badrinath", "Kedarnath", "Auli"]
+  "Delhi": ["New Delhi", "Delhi Airport", "Connaught Place", "Dwarka", "Rohini", "Vasant Kunj", "Karol Bagh", "Lajpat Nagar", "Hauz Khas", "Saket", "Chandni Chowk", "Mayur Vihar", "Janakpuri", "Pitampura", "Okhla", "Chanakyapuri", "Greater Kailash", "Defense Colony", "South Extension", "Sarojini Nagar", "Rajouri Garden", "Punjabi Bagh", "Kirti Nagar", "Patel Nagar", "Paharganj", "Sadar Bazar", "Kashmere Gate", "Shahdara", "Seelampur", "Narela", "Bawana", "Najafgarh", "Palam", "Mahipalpur", "Chattarpur", "Mehrauli", "Vasant Vihar", "R.K. Puram", "Moti Bagh", "Dhaula Kuan", "Delhi Cantonment", "Karol Bagh", "Rajendra Place", "Paschim Vihar", "Peera Garhi", "Mangolpuri", "Sultanpuri", "Nangloi", "Mundka", "Tikri Border"],
+  "Haryana": ["Gurugram", "Faridabad", "Panipat", "Karnal", "Ambala", "Hisar", "Rohtak", "Sonipat", "Kurukshetra", "Yamunanagar", "Panchkula", "Sirsa", "Jind", "Kaithal", "Rewari", "Bhiwani", "Palwal", "Jhajjar", "Fatehabad", "Bahadurgarh", "Charkhi Dadri", "Nuh", "Mewat", "Gohana", "Hansi", "Tohana", "Narwana", "Safidon", "Pehowa", "Shahbad", "Ladwa", "Radaur", "Jagadhri", "Kalka", "Pinjore", "Narnaul", "Mahendragarh", "Bawal", "Dharuhera", "Kosli", "Hodal", "Hathin", "Punhana", "Taoru", "Sohna", "Pataudi", "Farrukhnagar", "Manesar", "Kharkhoda", "Ganaur", "Samalkha", "Gharaunda", "Assandh", "Nilokheri", "Indri", "Taraori", "Cheeka", "Pundri", "Kalayat", "Uchana"],
+  "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Dalhousie", "Kullu", "Kasol", "Kasauli", "Chamba", "Mandi", "Solan", "Palampur", "Kangra", "Bilaspur", "Una", "Hamirpur", "Nahan", "Kinnaur", "Spiti", "Keylong", "Rohtang", "Sissu", "Kaza", "Kalpa", "Sangla", "Chitkul", "Reckong Peo", "Rampur", "Narkanda", "Theog", "Kufri", "Mashobra", "Naldehra", "Tattapani", "Arki", "Kunihar", "Nalagarh", "Baddi", "Parwanoo", "Barog", "Chail", "Kandaghat", "Sundernagar", "Nerchowk", "Jogindernagar", "Baijnath", "Dehra", "Jwalamukhi", "Pragpur", "Nadaun", "Sujanpur", "Ghumarwin", "Swarghat", "Naina Devi", "Mcleodganj", "Bhagsu", "Dharamkot", "Khajjiar", "Bharmour", "Pangi", "Tissa"],
+  "Jammu & Kashmir": ["Jammu", "Srinagar", "Katra", "Gulmarg", "Pahalgam", "Anantnag", "Baramulla", "Udhampur", "Patnitop", "Sonamarg", "Kargil", "Leh", "Kathua", "Rajouri", "Poonch", "Kupwara", "Pulwama", "Shopian", "Kulgam", "Bandipora", "Ganderbal", "Budgam", "Samba", "Reasi", "Ramban", "Doda", "Kishtwar", "Bhaderwah", "Banihal", "Qazigund", "Awantipora", "Pampore", "Tral", "Bijbehara", "Mattan", "Kokernag", "Achabal", "Verinag", "Sopore", "Pattan", "Uri", "Tangmarg", "Magam", "Khag", "Chadoora", "Charari Sharief", "Kangan", "Mansar", "Surinsar", "Akhnoor", "Jourian", "Khour", "Bishnah", "R S Pura", "Arnia", "Ramgarh", "Vijaypur", "Hiranagar", "Billawar", "Basohli"],
+  "Madhya Pradesh": ["Indore", "Bhopal", "Gwalior", "Jabalpur", "Ujjain", "Sagar", "Ratlam", "Rewa", "Satna", "Khandwa", "Burhanpur", "Dewas", "Chhindwara", "Murwara", "Bhind", "Morena", "Vidisha", "Shivpuri", "Mandsaur", "Khargone", "Neemuch", "Pithampur", "Hoshangabad", "Itarsi", "Sehore", "Betul", "Seoni", "Datia", "Nagda", "Dhar", "Guna", "Damoh", "Mhow", "Tikamgarh", "Chhatarpur", "Harda", "Ashoknagar", "Shajapur", "Rajgarh", "Barwani", "Sheopur", "Sidhi", "Singrauli", "Shahdol", "Umaria", "Anuppur", "Dindori", "Mandla", "Balaghat", "Narsinghpur", "Raisen", "Rajgarh", "Agar Malwa", "Alirajpur", "Jhabua", "Panna", "Niwari", "Katni", "Amarkantak", "Pachmarhi", "Khajuraho", "Orchha", "Sanchi", "Bhedaghat"],
+  "Punjab": ["Chandigarh", "Amritsar", "Ludhiana", "Jalandhar", "Patiala", "Bathinda", "Pathankot", "Moga", "Hoshiarpur", "Abohar", "Phagwara", "Khanna", "Zirakpur", "Rajpura", "Firozpur", "Kapurthala", "Barnala", "Muktsar", "Faridkot", "Fazilka", "Tarn Taran", "Gurdaspur", "Nawanshahr", "Rupnagar (Ropar)", "Mansa", "Sangrur", "Malerkotla", "Fatehgarh Sahib", "Sunam", "Batala", "Patti", "Zira", "Jalalabad", "Malout", "Giddarbaha", "Kot Kapura", "Jaitu", "Rampura Phul", "Talwandi Sabo", "Mauri", "Dhuri", "Ahmedgarh", "Samana", "Nabha", "Sirhind", "Bassi Pathana", "Amloh", "Kharar", "Kurali", "Morinda", "Anandpur Sahib", "Nangal", "Nurpur Bedi", "Balachaur", "Banga", "Phillaur", "Nakodar", "Shahkot", "Kartarpur", "Dasuya", "Mukerian"],
+  "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Bikaner", "Ajmer", "Kota", "Bhilwara", "Alwar", "Sikar", "Pali", "Chittorgarh", "Kishangarh", "Ganganagar", "Bharatpur", "Beawar", "Tonk", "Sawai Madhopur", "Pushkar", "Jaisalmer", "Mount Abu", "Hanumangarh", "Churu", "Jhunjhunu", "Barmer", "Jalore", "Sirohi", "Rajsamand", "Dungarpur", "Banswara", "Pratapgarh", "Nathdwara", "Kumbhalgarh", "Ranakpur", "Haldighati", "Chittorgarh", "Kota", "Bundi", "Jhalawar", "Baran", "Karauli", "Dholpur", "Dausa", "Bandikui", "Mahwa", "Neem Ka Thana", "Khetri", "Pilani", "Chirawa", "Suratgarh", "Anupgarh", "Nohar", "Bhadra", "Sadulpur", "Ratangarh", "Sujangarh", "Nokha", "Deshnoke", "Kolayat", "Phalodi", "Pokaran", "Balotra"],
+  "Uttar Pradesh": ["Noida", "Greater Noida", "Ghaziabad", "Agra", "Mathura", "Vrindavan", "Varanasi", "Lucknow", "Kanpur", "Allahabad (Prayagraj)", "Meerut", "Aligarh", "Bareilly", "Moradabad", "Saharanpur", "Gorakhpur", "Jhansi", "Muzaffarnagar", "Ayodhya", "Firozabad", "Shahjahanpur", "Rampur", "Etawah", "Mainpuri", "Etah", "Kasganj", "Hathras", "Budaun", "Pilibhit", "Lakhimpur Kheri", "Sitapur", "Hardoi", "Unnao", "Raebareli", "Amethi", "Sultanpur", "Pratapgarh", "Kaushambi", "Fatehpur", "Banda", "Chitrakoot", "Mahoba", "Hamirpur", "Jalaun", "Lalitpur", "Kanpur Dehat", "Kannauj", "Farrukhabad", "Auraiya", "Ghazipur", "Ballia", "Mau", "Azamgarh", "Deoria", "Kushinagar", "Maharajganj", "Siddharthnagar", "Basti", "Sant Kabir Nagar", "Gonda", "Balrampur", "Shravasti", "Bahraich", "Barabanki", "Ambedkar Nagar", "Jaunpur", "Sant Ravidas Nagar", "Mirzapur", "Sonbhadra", "Chandauli"],
+  "Uttarakhand": ["Dehradun", "Haridwar", "Rishikesh", "Nainital", "Haldwani", "Mussoorie", "Jim Corbett", "Ramnagar", "Almora", "Ranikhet", "Kausani", "Pithoragarh", "Kashipur", "Roorkee", "Kotdwar", "Rudrapur", "Mukteshwar", "Badrinath", "Kedarnath", "Auli", "Joshimath", "Gopeshwar", "Chamoli", "Rudraprayag", "Uttarkashi", "Barkot", "Gangotri", "Yamunotri", "Tehri", "New Tehri", "Chamba", "Devprayag", "Srinagar", "Pauri", "Lansdowne", "Dugadda", "Bageshwar", "Baijnath", "Garur", "Kausani", "Someshwar", "Dwarahat", "Chaukhutia", "Syalde", "Bhikiyasain", "Bhowali", "Bhimtal", "Naukuchiatal", "Sattal", "Khurpatal", "Ramgarh", "Peora", "Lohaghat", "Champawat", "Tanakpur", "Banbasa", "Khatima", "Sitarganj", "Kichha", "Pantnagar", "Gadarpur", "Bajpur", "Jaspur", "Kaladhungi"]
 };
 
-// Mock routes based on active city to match video layout exactly
-const generateMockRoutes = (originCity: string) => {
-  const destinations = ["Haldwani", "Nainital", "Ramnagar", "Haridwar", "Rishikesh", "Dehradun", "Jim Corbett", "Mussoorie"];
-  return destinations.map((dest, i) => ({
-    id: i,
-    origin: originCity,
-    destination: dest,
-    distance: Math.floor(Math.random() * 200) + 150,
-    price: Math.floor(Math.random() * 3000) + 2500,
-    image: `/destinations/${dest.toLowerCase().replace(/ /g, '-')}.jpg`
-  }));
+// Dynamically generate top routes by connecting the active city to major cities in other states
+const generateDynamicRoutes = (originCity: string) => {
+  const allDestinations = [];
+  
+  // Pick some top tier destinations from across all states
+  const topDestinations = ["Jaipur", "Dehradun", "Shimla", "Chandigarh", "Agra", "Nainital", "Rishikesh", "Haridwar", "Manali", "Amritsar", "Udaipur", "Lucknow"];
+  
+  // Filter out the origin city itself
+  const filteredDestinations = topDestinations.filter(d => d.toLowerCase() !== originCity.toLowerCase());
+  
+  // Return exactly 8 premium route cards for the UI grid
+  return filteredDestinations.slice(0, 8).map((dest, i) => {
+    // Generate a consistent pseudo-random distance and price based on string length to avoid pure randomness looking broken
+    const hash = originCity.length + dest.length;
+    return {
+      id: i,
+      origin: originCity,
+      destination: dest,
+      distance: (hash * 15) + 100, // E.g., 200-400km
+      price: (hash * 150) + 2000,  // E.g., 3000-5000 INR
+      image: `/destinations/${dest.toLowerCase().replace(/ /g, '-')}.jpg`
+    };
+  });
 };
 
 export default function RoutesTabWidget() {
@@ -39,7 +51,7 @@ export default function RoutesTabWidget() {
   };
 
   const activeCities = STATES_DATA[activeState as keyof typeof STATES_DATA] || [];
-  const currentRoutes = generateMockRoutes(activeCity);
+  const currentRoutes = generateDynamicRoutes(activeCity);
 
   return (
     <div className="w-full font-sans">
