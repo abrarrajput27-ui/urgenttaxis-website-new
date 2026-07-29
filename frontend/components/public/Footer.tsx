@@ -7,37 +7,39 @@ export default function PublicFooter() {
   return (
     <footer className="bg-[#0b101e] text-slate-300 font-sans text-sm">
       {/* 1. Top Call-to-Action Banner */}
-      <div className="bg-brand-blue relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between py-6 md:py-8 relative overflow-hidden">
-          <div className="z-10 text-white flex-1 md:pl-20">
-            <h3 className="text-3xl sm:text-4xl font-black tracking-tight mb-6 text-center md:text-left">
-              Book your ride in <br className="hidden md:block"/> just 2 clicks
+      <div className="bg-gradient-to-r from-brand-blue to-[#1e2a4a] relative border-b border-brand-green/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between py-10 md:py-12 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[url('/hero-pattern.svg')] bg-center"></div>
+          
+          <div className="z-10 text-white flex-1 md:pl-10 lg:pl-16">
+            <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-4 text-center md:text-left leading-tight drop-shadow-md">
+              Book your ride in <br className="hidden md:block"/> just <span className="text-brand-green">2 minutes</span>
             </h3>
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
+            <p className="text-indigo-100 text-sm sm:text-base font-medium mb-8 text-center md:text-left max-w-md drop-shadow-sm">
+              Get an instant fare quotation or connect with our support desk for custom trip requirements.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+              <Link
+                href="/routes"
+                className="bg-brand-green hover:bg-emerald-600 text-white font-black text-sm px-8 py-4 rounded-xl shadow-lg transition-all w-full sm:w-auto text-center"
+              >
+                Search Cabs
+              </Link>
               <a
                 href={`tel:${SITE_CONFIG.phoneRaw}`}
-                className="bg-white hover:bg-slate-100 text-brand-blue font-bold text-sm px-8 py-3 rounded-md transition-all shadow-md flex items-center gap-2"
+                className="bg-white hover:bg-slate-50 text-brand-blue font-black text-sm px-8 py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
               >
                 Call Now
-              </a>
-              <a
-                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-brand-green hover:bg-brand-green-hover text-white font-bold text-sm px-8 py-3 rounded-md transition-all shadow-md flex items-center gap-2"
-              >
-                Book WhatsApp
               </a>
             </div>
           </div>
 
-          <div className="relative w-full max-w-sm h-48 md:h-64 z-10 flex justify-center md:justify-end mt-8 md:mt-0 md:pr-10">
+          <div className="relative w-full max-w-lg h-56 md:h-72 lg:h-80 z-10 flex justify-center md:justify-end mt-12 md:mt-0 lg:pr-10">
             <Image
               src="/hero-bg.webp"
               alt="Urgent Taxis Taxi Cab"
-              width={450}
-              height={250}
-              className="object-contain drop-shadow-2xl"
+              fill
+              className="object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
             />
           </div>
         </div>

@@ -449,34 +449,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 10. FINAL CONVERSION CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-slate-100 text-center">
-        <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light border border-slate-800 rounded-3xl p-10 sm:p-16 space-y-8 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 opacity-20 bg-[url('/hero-pattern.svg')] bg-center"></div>
-          <div className="relative z-10 space-y-4">
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-              Ready to Book Your Outstation Cab?
-            </h2>
-            <p className="text-sm sm:text-lg text-indigo-100 max-w-2xl mx-auto leading-relaxed font-medium">
-              Get an instant fare quotation or connect with our support desk for custom trip requirements.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 relative z-10">
-            <Link
-              href="#routes"
-              className="w-full sm:w-auto px-8 py-4 bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm rounded-xl shadow-lg transition-all"
-            >
-              Search Cabs
-            </Link>
-            <a
-              href={`tel:${SITE_CONFIG.phoneRaw}`}
-              className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-brand-blue font-black text-sm rounded-xl shadow-lg transition-all"
-            >
-              Call {SITE_CONFIG.phone}
-            </a>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
