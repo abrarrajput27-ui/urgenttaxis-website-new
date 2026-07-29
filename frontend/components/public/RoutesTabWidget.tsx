@@ -131,8 +131,7 @@ export default function RoutesTabWidget() {
               </div>
             </div>
 
-            <div className="p-5 flex-1 flex flex-col">
-            <div className="p-5 flex-grow flex flex-col justify-between">
+              <div className="p-5 flex-grow flex flex-col justify-between">
               <div className="space-y-3 mb-4">
                 <div className="flex items-center text-sm text-slate-600 font-medium bg-slate-50 p-2 rounded-lg">
                   <MapPin className="w-4 h-4 mr-2 text-brand-green flex-shrink-0" />
@@ -169,7 +168,9 @@ export default function RoutesTabWidget() {
               </div>
             </div>
           </div>
-        )})}
+          );
+        })}
+      </div>
       </div>
       
       <style dangerouslySetInnerHTML={{ __html: `
