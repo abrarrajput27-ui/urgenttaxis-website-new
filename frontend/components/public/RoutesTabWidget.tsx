@@ -5,15 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const STATES_DATA = {
-  "Delhi": ["Delhi", "Delhi Airport"],
-  "Haryana": ["Adampur", "Ambala", "Asandh", "Bhiwani", "Faridabad", "Gurugram", "Hisar", "Karnal", "Panipat", "Rohtak", "Sonipat"],
-  "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Dalhousie", "Kullu", "Kasol"],
-  "Jammu & Kashmir": ["Jammu", "Srinagar", "Katra"],
-  "Madhya Pradesh": ["Gwalior", "Indore", "Bhopal", "Ujjain"],
-  "Punjab": ["Chandigarh", "Amritsar", "Ludhiana", "Jalandhar", "Patiala"],
-  "Rajasthan": ["Jaipur", "Udaipur", "Jodhpur", "Pushkar", "Ajmer", "Bikaner", "Jaisalmer"],
-  "Uttar Pradesh": ["Noida", "Greater Noida", "Ghaziabad", "Agra", "Mathura", "Varanasi", "Lucknow", "Kanpur"],
-  "Uttarakhand": ["Dehradun", "Haridwar", "Rishikesh", "Nainital", "Haldwani", "Mussoorie", "Jim Corbett"]
+  "Delhi": ["New Delhi", "Delhi Airport", "Connaught Place", "Dwarka", "Rohini", "Vasant Kunj", "Karol Bagh", "Lajpat Nagar", "Hauz Khas", "Saket", "Chandni Chowk", "Mayur Vihar", "Janakpuri", "Pitampura", "Okhla"],
+  "Haryana": ["Gurugram", "Faridabad", "Panipat", "Karnal", "Ambala", "Hisar", "Rohtak", "Sonipat", "Kurukshetra", "Yamunanagar", "Panchkula", "Sirsa", "Jind", "Kaithal", "Rewari", "Bhiwani", "Palwal", "Jhajjar", "Fatehabad", "Bahadurgarh"],
+  "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Dalhousie", "Kullu", "Kasol", "Kasauli", "Chamba", "Mandi", "Solan", "Palampur", "Kangra", "Bilaspur", "Una", "Hamirpur", "Nahan", "Kinnaur", "Spiti", "Keylong"],
+  "Jammu & Kashmir": ["Jammu", "Srinagar", "Katra", "Gulmarg", "Pahalgam", "Anantnag", "Baramulla", "Udhampur", "Patnitop", "Sonamarg", "Kargil", "Leh", "Kathua", "Rajouri", "Poonch", "Kupwara", "Pulwama"],
+  "Madhya Pradesh": ["Indore", "Bhopal", "Gwalior", "Jabalpur", "Ujjain", "Sagar", "Ratlam", "Rewa", "Satna", "Khandwa", "Burhanpur", "Dewas", "Chhindwara", "Murwara", "Bhind", "Morena", "Vidisha", "Shivpuri", "Mandsaur"],
+  "Punjab": ["Chandigarh", "Amritsar", "Ludhiana", "Jalandhar", "Patiala", "Bathinda", "Pathankot", "Moga", "Hoshiarpur", "Abohar", "Phagwara", "Khanna", "Zirakpur", "Rajpura", "Firozpur", "Kapurthala", "Barnala", "Muktsar"],
+  "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Bikaner", "Ajmer", "Kota", "Bhilwara", "Alwar", "Sikar", "Pali", "Chittorgarh", "Kishangarh", "Ganganagar", "Bharatpur", "Beawar", "Tonk", "Sawai Madhopur", "Pushkar", "Jaisalmer", "Mount Abu"],
+  "Uttar Pradesh": ["Noida", "Greater Noida", "Ghaziabad", "Agra", "Mathura", "Vrindavan", "Varanasi", "Lucknow", "Kanpur", "Allahabad (Prayagraj)", "Meerut", "Aligarh", "Bareilly", "Moradabad", "Saharanpur", "Gorakhpur", "Jhansi", "Muzaffarnagar", "Ayodhya", "Firozabad", "Shahjahanpur", "Rampur"],
+  "Uttarakhand": ["Dehradun", "Haridwar", "Rishikesh", "Nainital", "Haldwani", "Mussoorie", "Jim Corbett", "Ramnagar", "Almora", "Ranikhet", "Kausani", "Pithoragarh", "Kashipur", "Roorkee", "Kotdwar", "Rudrapur", "Mukteshwar", "Badrinath", "Kedarnath", "Auli"]
 };
 
 // Mock routes based on active city to match video layout exactly

@@ -37,12 +37,12 @@ export default function TrustSection() {
   ];
 
   const platforms = [
-    { name: "MakeMyTrip" },
-    { name: "Goibibo" },
-    { name: "EaseMyTrip" },
-    { name: "Savaari" },
-    { name: "Justdial" },
-    { name: "TripAdvisor" }
+    { name: "MakeMyTrip", logo: "/partners/makemytrip.svg" },
+    { name: "Goibibo", logo: "/partners/goibibo.png" },
+    { name: "EaseMyTrip", logo: "/partners/easemytrip.svg" },
+    { name: "Savaari", logo: "/partners/savaari.png" },
+    { name: "Justdial", logo: "/partners/justdial.png" },
+    { name: "TripAdvisor", logo: "/partners/tripadvisor.jpg" }
   ];
 
   return (
@@ -61,38 +61,40 @@ export default function TrustSection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
           
-          {/* Left Side: Features Grid */}
-          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {features.map((feature, idx) => (
+          {/* Features - Left Side */}
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {features.map((feature, index) => (
               <div 
-                key={idx} 
-                className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow hover:border-brand-green/30 group"
+                key={index}
+                className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-green/20 transition-all duration-300 group"
               >
-                <div className="w-12 h-12 bg-brand-green/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  {feature.icon}
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-slate-50 rounded-xl group-hover:bg-brand-green/10 transition-colors">
+                    {feature.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-800 text-lg mb-1">{feature.title}</h3>
+                    <p className="text-slate-500 text-sm leading-relaxed">{feature.description}</p>
+                  </div>
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-2">{feature.title}</h3>
-                <p className="text-sm text-slate-600 font-medium leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
 
-          {/* Right Side: Logo Wall & Disclaimer */}
-          <div className="lg:col-span-1 bg-white p-8 rounded-3xl shadow-lg border border-slate-100 sticky top-24">
-            <h3 className="text-xl font-black text-slate-800 text-center mb-6">Popular Travel Platforms</h3>
+          {/* Platforms Grid - Right Side */}
+          <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100 flex flex-col h-full">
+            <h3 className="text-xl font-bold text-slate-800 mb-6 text-center">Compare our fares on top platforms</h3>
             
-            <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-2 gap-4 mb-6">
               {platforms.map((platform, idx) => (
                 <div 
                   key={idx} 
-                  className="bg-slate-50 h-16 rounded-xl flex items-center justify-center p-3 grayscale hover:grayscale-0 hover:scale-105 hover:shadow-sm transition-all duration-300 border border-slate-100 cursor-pointer"
+                  className="flex items-center justify-center p-4 rounded-xl border border-slate-100 bg-slate-50 grayscale hover:grayscale-0 hover:bg-white hover:shadow-sm hover:border-brand-blue/20 transition-all duration-300 h-20"
                 >
-                  {/* Using placehold.co text fallback since logos are missing */}
                   <img 
-                    src={`https://placehold.co/120x60/e2e8f0/475569?text=${platform.name}`}
-                    alt={`${platform.name} Platform`}
-                    loading="lazy"
-                    className="max-h-full max-w-full object-contain mix-blend-multiply"
+                    src={platform.logo} 
+                    alt={`${platform.name} Logo`} 
+                    className="max-h-12 max-w-full object-contain"
                   />
                 </div>
               ))}
