@@ -90,12 +90,12 @@ export default function RoutesTabWidget() {
       </div>
 
       <div className="bg-slate-50 rounded-2xl p-4 sm:p-8 border border-slate-200">
-        <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-10">
+        <div className="flex overflow-x-auto hide-scrollbar gap-2 sm:gap-3 pb-2 mb-6 sm:mb-10">
           {(STATES_DATA[activeState as keyof typeof STATES_DATA] || []).map((city) => (
             <button
               key={city}
               onClick={() => setActiveCity(city)}
-              className={`px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 border ${
+              className={`px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 border whitespace-nowrap flex-shrink-0 ${
                 activeCity === city
                   ? 'bg-brand-green/20 border-brand-green text-slate-900 shadow-sm'
                   : 'bg-white/50 border-slate-300 text-slate-600 hover:border-slate-400 hover:bg-slate-100'
