@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { FaPhoneAlt, FaTag, FaUserCheck, FaHeadset, FaFileInvoiceDollar, FaCar, FaUserFriends, FaShieldAlt, FaRupeeSign } from 'react-icons/fa';
+import { FaHeadset, FaUserFriends, FaShieldAlt, FaRupeeSign } from 'react-icons/fa';
 
 export default function TrustSection() {
   const trustItems = [
