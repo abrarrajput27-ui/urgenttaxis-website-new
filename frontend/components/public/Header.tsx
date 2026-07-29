@@ -37,7 +37,7 @@ export default function PublicHeader() {
     <header ref={headerRef} className="sticky top-0 z-50 font-sans w-full transition-all duration-300 bg-white shadow-sm">
       
       {/* Top Bar (Hidden on Mobile) */}
-      <div className="hidden lg:flex border-b border-slate-100 bg-slate-50 text-[13px] py-2">
+      <div className="hidden lg:flex border-b border-slate-100 bg-slate-50 text-[13px] py-1">
         <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 flex justify-between items-center">
           
           {/* Top Bar Left */}
