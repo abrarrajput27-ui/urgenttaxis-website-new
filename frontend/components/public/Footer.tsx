@@ -7,10 +7,10 @@ export default function PublicFooter() {
   return (
     <footer className="bg-[#0b101e] text-slate-300 font-sans text-sm mt-8">
       {/* 1. Top Call-to-Action Banner */}
-      <div className="pt-20 lg:pt-12 pb-4 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto -mt-24 lg:-mt-20 relative z-20">
+      <div className="pt-20 lg:pt-12 pb-8 lg:pb-12 px-4 sm:px-6 lg:px-8 max-w-[95%] lg:max-w-[90%] xl:max-w-7xl mx-auto -mt-24 lg:-mt-24 relative z-20">
         <div className="bg-[#1a419c] relative rounded-[2rem] text-center lg:text-left px-4 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:py-8 shadow-2xl border border-white/10 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[160px]">
           
-          <div className="relative z-20 space-y-1 lg:space-y-2 mt-2 lg:mt-0 lg:w-3/5">
+          <div className="relative z-20 space-y-1 lg:space-y-2 mt-2 lg:mt-0 lg:w-[65%]">
             <h3 className="text-white text-[22px] sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight">
               Book your ride in just 2 clicks
             </h3>
@@ -39,7 +39,7 @@ export default function PublicFooter() {
           {/* Overflowing Car Image */}
           <div className="absolute -top-16 sm:-top-24 lg:top-1/2 left-1/2 lg:left-auto lg:right-0 -translate-x-1/2 lg:translate-x-8 lg:-translate-y-1/2 w-[95%] max-w-[320px] sm:max-w-[400px] lg:max-w-[480px] xl:max-w-[550px] z-10 pointer-events-none">
             <Image
-              src="/cta-hero.png"
+              src="/fleet-hero-bg.png"
               alt="Urgent Taxis Cab"
               width={700}
               height={400}
