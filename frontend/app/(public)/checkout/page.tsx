@@ -106,7 +106,7 @@ function CheckoutContent() {
         <div className="text-center bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
           <h2 className="text-xl font-bold mb-4">Invalid Booking Session</h2>
           <p className="text-slate-600 mb-6">Your session has expired or parameters are missing.</p>
-          <a href="/" className="px-6 py-3 bg-brand-blue text-white rounded-xl font-bold">Return Home</a>
+          <Link href="/" prefetch={true} className="px-6 py-3 bg-brand-blue text-white rounded-xl font-bold">Return Home</Link>
         </div>
       </div>
     );

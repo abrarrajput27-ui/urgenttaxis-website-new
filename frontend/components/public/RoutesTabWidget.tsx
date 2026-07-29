@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MapPin, Car } from 'lucide-react';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { SITE_CONFIG } from '@/lib/seo';
+import { useState } from 'react';
 
 const STATES_DATA = {
   "Delhi": ["New Delhi", "Delhi Airport", "Connaught Place", "Dwarka", "Rohini", "Vasant Kunj", "Karol Bagh", "Lajpat Nagar", "Hauz Khas", "Saket", "Chandni Chowk", "Mayur Vihar", "Janakpuri", "Pitampura", "Okhla", "Chanakyapuri", "Greater Kailash", "Defense Colony", "South Extension", "Sarojini Nagar", "Rajouri Garden", "Punjabi Bagh", "Kirti Nagar", "Patel Nagar", "Paharganj", "Sadar Bazar", "Kashmere Gate", "Shahdara", "Seelampur", "Narela", "Bawana", "Najafgarh", "Palam", "Mahipalpur", "Chattarpur", "Mehrauli", "Vasant Vihar", "R.K. Puram", "Moti Bagh", "Dhaula Kuan", "Delhi Cantonment", "Karol Bagh", "Rajendra Place", "Paschim Vihar", "Peera Garhi", "Mangolpuri", "Sultanpuri", "Nangloi", "Mundka", "Tikri Border"],
@@ -158,6 +159,7 @@ export default function RoutesTabWidget() {
                 <div className="grid grid-cols-2 gap-2 mt-2">
                   <Link
                     href={`/routes/${route.origin.toLowerCase().replace(/ /g, '-')}-to-${route.destination.toLowerCase().replace(/ /g, '-')}`}
+                    prefetch={true}
                     className="bg-brand-blue hover:bg-blue-900 text-white text-xs text-center font-bold px-3 py-2.5 rounded-lg shadow-sm transition-colors"
                   >
                     View Fare
