@@ -81,8 +81,8 @@ export default function RoutesTabWidget() {
             }}
             className={`whitespace-nowrap px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 border-2 ${
               activeState === state
-                ? 'bg-brand-blue/90 border-brand-blue text-white shadow-lg shadow-brand-blue/30 scale-105'
-                : 'bg-slate-100/30 border-slate-300 text-slate-700 hover:bg-slate-100/60 hover:border-slate-400'
+                ? 'bg-transparent border-brand-blue text-brand-blue shadow-lg shadow-brand-blue/10 scale-105'
+                : 'bg-transparent border-slate-300 text-slate-700 hover:border-brand-blue/50 hover:text-brand-blue'
             }`}
           >
             {state}
@@ -96,10 +96,10 @@ export default function RoutesTabWidget() {
             <button
               key={city}
               onClick={() => setActiveCity(city)}
-              className={`px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 border whitespace-nowrap flex-shrink-0 ${
+              className={`px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 border-2 whitespace-nowrap flex-shrink-0 ${
                 activeCity === city
-                  ? 'bg-brand-green/20 border-brand-green text-slate-900 shadow-sm'
-                  : 'bg-white/50 border-slate-300 text-slate-600 hover:border-slate-400 hover:bg-slate-100'
+                  ? 'bg-transparent border-brand-green text-brand-green shadow-sm'
+                  : 'bg-transparent border-slate-300 text-slate-600 hover:border-brand-green hover:text-brand-green'
               }`}
             >
               {city}

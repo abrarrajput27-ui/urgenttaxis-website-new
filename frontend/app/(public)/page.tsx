@@ -123,8 +123,8 @@ export default async function HomePage() {
       </section>
 
       {/* 4. MOST BOOKED ROUTES SECTION */}
-      <section id="routes" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
+      <section id="routes" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
           <div>
             <span className="text-brand-green font-bold text-sm tracking-widest uppercase mb-2 block">QUICK BOOKING</span>
             <h2 className="text-3xl sm:text-4xl font-black text-brand-blue tracking-tight">
@@ -142,7 +142,9 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        <RoutesTabWidget />
+        <div className="w-full px-2 sm:px-6 lg:px-8">
+          <RoutesTabWidget />
+        </div>
       </section>
 
       {/* 5. FLEET SLIDER SECTION */}
