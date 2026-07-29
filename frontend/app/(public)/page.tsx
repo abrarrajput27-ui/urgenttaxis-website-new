@@ -85,8 +85,8 @@ export default async function HomePage() {
       />
 
       {/* 2. HERO SECTION */}
-      <section className="relative pt-12 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Background Video */}
+      <section className="relative bg-slate-950 pt-28 sm:pt-32 pb-6 lg:pb-8 px-4 sm:px-6 lg:px-8 border-b border-white/10 overflow-hidden">
+        {/* Background Decorative Elements */}
         <video 
           autoPlay 
           loop 
@@ -99,7 +99,7 @@ export default async function HomePage() {
         {/* Dark overlay for contrast */}
         <div className="absolute inset-0 bg-brand-blue/70 z-0"></div>
 
-        <div className="max-w-5xl mx-auto text-center space-y-5 mb-10 relative z-10">
+        <div className="max-w-5xl mx-auto text-center space-y-3 mb-6 relative z-10">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white border border-white/20 text-xs font-bold tracking-wide shadow-sm">
             <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse"></span>
             Guaranteed & Transparent Outstation Fares
