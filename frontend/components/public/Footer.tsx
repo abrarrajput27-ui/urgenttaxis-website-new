@@ -20,10 +20,10 @@ export default function PublicFooter() {
                 Get instant confirmation via WhatsApp
               </p>
               
-              <div className="flex flex-row items-center justify-center gap-2 sm:gap-3 mt-3 lg:mt-4 pb-6 lg:pb-0 w-full">
+              <div className="flex flex-row items-center justify-center gap-2 sm:gap-3 mt-2 lg:mt-3 pb-6 lg:pb-0 w-full">
                 <a
                   href={`tel:${SITE_CONFIG.phoneRaw}`}
-                  className="bg-white hover:bg-slate-50 text-[#1a419c] font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none"
+                  className="bg-white hover:bg-slate-50 text-[#1a419c] font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-none sm:flex-none"
                 >
                   <FaPhoneAlt /> Call Now
                 </a>
@@ -31,7 +31,7 @@ export default function PublicFooter() {
                   href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-[#00a859] hover:bg-emerald-600 text-white font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none"
+                  className="bg-[#00a859] hover:bg-emerald-600 text-white font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none whitespace-nowrap"
                 >
                   <FaWhatsapp className="text-lg" /> Book on WhatsApp
                 </a>
