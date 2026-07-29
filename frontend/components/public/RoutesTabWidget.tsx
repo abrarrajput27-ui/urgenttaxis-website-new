@@ -38,18 +38,7 @@ export default function RoutesTabWidget() {
     setActiveCity(STATES_DATA[state as keyof typeof STATES_DATA][0]); // Default to first city of new state
   };
 
-  // Generate a massive list of cities to demonstrate the 1000+ requirement
-  const getCitiesForState = (state: string) => {
-    const baseCities = STATES_DATA[state as keyof typeof STATES_DATA] || [];
-    // If it's a demo, pad it out to show scale (e.g., 500+ cities visible)
-    const expandedCities = [...baseCities];
-    for (let i = 1; i <= 500; i++) {
-      expandedCities.push(`${state} City ${i}`);
-    }
-    return expandedCities;
-  };
-
-  const activeCities = getCitiesForState(activeState);
+  const activeCities = STATES_DATA[activeState as keyof typeof STATES_DATA] || [];
   const currentRoutes = generateMockRoutes(activeCity);
 
   return (
