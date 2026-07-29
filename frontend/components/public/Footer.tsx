@@ -188,14 +188,14 @@ export default function PublicFooter() {
       </div>
 
       {/* 4. Bottom Legal / Copyright Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] text-slate-500">
-        <p>© Copyright 2024. All rights reserved.</p>
-        <div className="flex items-center gap-6">
-          <Link href="/privacy" className="hover:text-brand-green transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-row items-center justify-between gap-2 text-[11px] sm:text-[12px] text-slate-500">
+        <p>© 2026 Urgent Taxis.</p>
+        <div className="flex items-center gap-3 sm:gap-6">
+          <Link href="/privacy" className="hover:text-brand-green transition-colors whitespace-nowrap">
             Privacy Policy
           </Link>
           <span className="text-slate-700">|</span>
-          <Link href="/terms" className="hover:text-brand-green transition-colors">
+          <Link href="/terms" className="hover:text-brand-green transition-colors whitespace-nowrap">
             Terms of Use
           </Link>
         </div>
