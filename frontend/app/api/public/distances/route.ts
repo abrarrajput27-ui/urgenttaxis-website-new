@@ -38,7 +38,7 @@ export async function GET(request: Request) {
       const data = await response.json();
       
       if (data.status === 'OK') {
-        const newCacheEntries = [];
+        const newCacheEntries: any[] = [];
         
         missingDestinations.forEach((dest, index) => {
           const element = data.rows[0].elements[index];
