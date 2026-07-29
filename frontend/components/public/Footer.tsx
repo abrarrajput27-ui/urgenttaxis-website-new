@@ -6,54 +6,57 @@ import { FaFacebookF, FaInstagram, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarke
 
 export default function PublicFooter() {
   return (
-    <footer className="bg-[#0b101e] text-slate-300 font-sans text-sm mt-8">
+    <>
       {/* 1. Top Call-to-Action Banner */}
-      <div className="pt-20 lg:pt-12 pb-12 lg:pb-24 px-4 sm:px-6 lg:px-8 max-w-[98%] lg:max-w-[96%] xl:max-w-[1500px] mx-auto -mt-32 lg:-mt-40 relative z-20">
-        <div className="bg-[#1a419c] relative rounded-[2rem] text-center lg:text-left px-4 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:py-8 shadow-2xl border border-white/10 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[160px]">
-          
-          <div className="relative z-20 space-y-1 lg:space-y-2 mt-2 lg:mt-0 lg:w-[65%]">
-            <h3 className="text-white text-[22px] sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight">
-              Book your ride in just 2 clicks
-            </h3>
-            <p className="text-blue-100 text-[12px] sm:text-sm lg:text-base font-medium pb-2 lg:pb-0">
-              Get instant confirmation via WhatsApp
-            </p>
+      <div className="w-full bg-transparent pt-28 pb-12 lg:pt-32 lg:pb-20 relative z-20">
+        <div className="px-2 sm:px-6 lg:px-8 w-full max-w-[100%] sm:max-w-[98%] lg:max-w-[96%] xl:max-w-[1500px] mx-auto relative z-20">
+          <div className="bg-[#1a419c] relative rounded-[2rem] text-center px-3 sm:px-8 lg:px-12 pt-28 sm:pt-28 lg:py-10 shadow-2xl border border-white/10 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[160px]">
             
-            <div className="flex flex-row items-center justify-center lg:justify-start gap-2 sm:gap-3 mt-3 lg:mt-4 pb-6 lg:pb-0">
-              <a
-                href={`tel:${SITE_CONFIG.phoneRaw}`}
-                className="bg-white hover:bg-slate-50 text-[#1a419c] font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none"
-              >
-                <FaPhoneAlt /> Call Now
-              </a>
-              <a
-                href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-[#00a859] hover:bg-emerald-600 text-white font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none"
-              >
-                <FaWhatsapp className="text-lg" /> Book on WhatsApp
-              </a>
+            <div className="relative z-20 space-y-1 lg:space-y-2 mt-2 lg:mt-0 lg:w-[65%] flex flex-col items-center">
+              <h3 className="text-white text-[22px] sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-center">
+                Book your ride in just 2 clicks
+              </h3>
+              <p className="text-blue-100 text-[12px] sm:text-sm lg:text-base font-medium pb-2 lg:pb-0 text-center">
+                Get instant confirmation via WhatsApp
+              </p>
+              
+              <div className="flex flex-row items-center justify-center gap-2 sm:gap-3 mt-3 lg:mt-4 pb-6 lg:pb-0 w-full">
+                <a
+                  href={`tel:${SITE_CONFIG.phoneRaw}`}
+                  className="bg-white hover:bg-slate-50 text-[#1a419c] font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none"
+                >
+                  <FaPhoneAlt /> Call Now
+                </a>
+                <a
+                  href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#00a859] hover:bg-emerald-600 text-white font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none"
+                >
+                  <FaWhatsapp className="text-lg" /> Book on WhatsApp
+                </a>
+              </div>
             </div>
-          </div>
 
-          {/* Overflowing Car Image */}
-          <div className="absolute -top-16 sm:-top-24 lg:top-1/2 left-1/2 lg:left-auto lg:right-0 -translate-x-1/2 lg:translate-x-8 lg:-translate-y-1/2 w-[95%] max-w-[320px] sm:max-w-[400px] lg:max-w-[480px] xl:max-w-[550px] z-10 pointer-events-none">
-            <Image
-              src="/cta-hero.png"
-              alt="Urgent Taxis Cab"
-              width={700}
-              height={400}
-              className="object-contain w-full h-auto drop-shadow-2xl"
-              priority
-            />
+            {/* Overflowing Car Image */}
+            <div className="absolute -top-20 sm:-top-24 lg:top-1/2 left-1/2 lg:left-auto lg:right-0 -translate-x-1/2 lg:translate-x-8 lg:-translate-y-1/2 w-[98%] max-w-[340px] sm:max-w-[400px] lg:max-w-[480px] xl:max-w-[550px] z-10 pointer-events-none">
+              <Image
+                src="/cta-hero.png"
+                alt="Urgent Taxis Cab"
+                width={700}
+                height={400}
+                className="object-contain w-full h-auto drop-shadow-2xl"
+                priority
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 2. Main Footer Content Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-4 border-b border-white/10">
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
+      <footer className="bg-[#0b101e] text-slate-300 font-sans text-sm mt-0">
+        {/* 2. Main Footer Content Grid */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12 border-b border-white/10">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
           
           {/* Column 1: Brand Logo & Description */}
           <div className="space-y-4 col-span-2 lg:col-span-1">
@@ -207,7 +210,7 @@ export default function PublicFooter() {
             Terms of Use
           </Link>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </>
   );
 }
