@@ -1,8 +1,40 @@
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaPhoneAlt, FaTag, FaUserCheck, FaHeadset, FaFileInvoiceDollar, FaCar } from 'react-icons/fa';
+import { FaPhoneAlt, FaTag, FaUserCheck, FaHeadset, FaFileInvoiceDollar, FaCar, FaUserFriends, FaShieldAlt, FaRupeeSign } from 'react-icons/fa';
 
 export default function TrustSection() {
+  const trustItems = [
+    {
+      title: "10,000+",
+      subtitle: "Happy Customers",
+      desc: "and counting",
+      icon: <FaUserFriends className="text-white text-xl" />,
+      colorClass: "bg-[#3b2c85]",
+    },
+    {
+      title: "Verified",
+      subtitle: "Drivers",
+      desc: "Background verified",
+      icon: <FaShieldAlt className="text-white text-xl" />,
+      colorClass: "bg-[#00a859]",
+    },
+    {
+      title: "No Hidden",
+      subtitle: "Charges",
+      desc: "100% Transparent",
+      icon: <FaRupeeSign className="text-white text-xl" />,
+      colorClass: "bg-[#3b2c85]",
+    },
+    {
+      title: "24/7",
+      subtitle: "Support",
+      desc: "We're here anytime",
+      icon: <FaHeadset className="text-white text-xl" />,
+      colorClass: "bg-[#00a859]",
+    }
+  ];
+
   const features = [
     {
       title: "Direct Booking Assistance",
@@ -46,90 +78,118 @@ export default function TrustSection() {
   ];
 
   return (
-    <section className="w-full bg-gradient-to-b from-white to-slate-50 py-10 px-4 sm:px-6 lg:px-8 border-t border-slate-100 font-sans">
-      <div className="max-w-7xl mx-auto space-y-12">
-        
-        {/* Header */}
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-black text-brand-blue tracking-tight">
-            Why Book Direct with Urgent Taxis?
-          </h2>
-          <p className="text-slate-600 font-medium text-sm sm:text-base leading-relaxed">
-            Book directly with Urgent Taxis for transparent pricing, verified drivers, flexible support and a smoother booking experience.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-          
-          {/* Features - Left Side */}
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {features.map((feature, index) => (
-              <div 
-                key={index}
-                className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-green/20 transition-all duration-300 group"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-slate-50 rounded-xl group-hover:bg-brand-green/10 transition-colors">
-                    {feature.icon}
+    <>
+      {/* Floating Trust Band */}
+      <section className="w-full px-4 sm:px-6 lg:px-8 font-sans relative z-20 -mt-12 sm:-mt-16 mb-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white rounded-2xl sm:rounded-[2rem] p-4 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100/50">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+              {trustItems.map((item, idx) => (
+                <div key={idx} className={`flex items-center gap-4 ${idx !== 0 ? 'pt-4 sm:pt-0 sm:pl-8' : ''}`}>
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex-shrink-0 flex items-center justify-center shadow-md ${item.colorClass}`}>
+                    {item.icon}
                   </div>
-                  <div>
-                    <h3 className="font-bold text-slate-800 text-lg mb-1">{feature.title}</h3>
-                    <p className="text-slate-500 text-sm leading-relaxed">{feature.description}</p>
+                  <div className="flex flex-col">
+                    <span className="text-[15px] sm:text-[17px] font-black text-slate-900 leading-tight">
+                      {item.title} <br className="hidden sm:block" /> {item.subtitle}
+                    </span>
+                    <span className="text-[11px] sm:text-xs font-medium text-slate-500 mt-0.5">
+                      {item.desc}
+                    </span>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Book Direct Section */}
+      <section className="w-full bg-gradient-to-b from-white to-slate-50 py-10 px-4 sm:px-6 lg:px-8 border-t border-slate-100 font-sans">
+        <div className="max-w-7xl mx-auto space-y-12 px-2 sm:px-8">
+          
+          {/* Header */}
+          <div className="text-center space-y-4 max-w-3xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-black text-brand-blue tracking-tight">
+              Why Book Direct with Urgent Taxis?
+            </h2>
+            <p className="text-slate-600 font-medium text-sm sm:text-base leading-relaxed">
+              Book directly with Urgent Taxis for transparent pricing, verified drivers, flexible support and a smoother booking experience.
+            </p>
           </div>
 
-          {/* Platforms Grid - Right Side */}
-          <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100 flex flex-col h-full">
-            <h3 className="text-xl font-bold text-slate-800 mb-6 text-center">Compare our fares on top platforms</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
             
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {platforms.map((platform, idx) => (
+            {/* Features - Left Side */}
+            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+              {features.map((feature, index) => (
                 <div 
-                  key={idx} 
-                  className="flex items-center justify-center p-4 rounded-xl border border-slate-100 bg-slate-50 grayscale hover:grayscale-0 hover:bg-white hover:shadow-sm hover:border-brand-blue/20 transition-all duration-300 h-20"
+                  key={index}
+                  className="bg-white p-6 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.16)] hover:-translate-y-1 hover:border-brand-green/20 transition-all duration-300 group"
                 >
-                  <img 
-                    src={platform.logo} 
-                    alt={`${platform.name} Logo`} 
-                    className="max-h-12 max-w-full object-contain"
-                  />
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-slate-50 rounded-xl group-hover:bg-brand-green/10 transition-colors">
+                      {feature.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-slate-800 text-lg mb-1">{feature.title}</h3>
+                      <p className="text-slate-500 text-sm leading-relaxed">{feature.description}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
 
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-              <p className="text-xs text-slate-500 font-medium leading-relaxed text-justify">
-                <span className="font-bold text-slate-700 block mb-1">Please Note:</span>
-                Many travelers discover taxi services through popular travel platforms. Booking directly with Urgent Taxis can provide personalized assistance, transparent communication and competitive pricing depending on the route and availability.
+            {/* Platforms Grid - Right Side */}
+            <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100 flex flex-col h-full">
+              <h3 className="text-xl font-bold text-slate-800 mb-6 text-center">Compare our fares on top platforms</h3>
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                {platforms.map((platform, idx) => (
+                  <div 
+                    key={idx} 
+                    className="flex items-center justify-center p-4 rounded-xl border border-slate-100 bg-slate-50 grayscale hover:grayscale-0 hover:bg-white hover:shadow-md hover:border-brand-blue/20 transition-all duration-300 h-20"
+                  >
+                    <img 
+                      src={platform.logo} 
+                      alt={`${platform.name} Logo`} 
+                      className="max-h-12 max-w-full object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                <p className="text-xs text-slate-500 font-medium leading-relaxed text-justify">
+                  <span className="font-bold text-slate-700 block mb-1">Please Note:</span>
+                  Many travelers discover taxi services through popular travel platforms. Booking directly with Urgent Taxis can provide personalized assistance, transparent communication and competitive pricing depending on the route and availability.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Bottom Section: CTAs and SEO Content */}
+          <div className="flex flex-col items-center space-y-8 pt-8">
+            
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <a href="tel:+917310651940" className="bg-brand-green hover:bg-emerald-600 text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition-colors text-center text-sm">
+                Book Direct & Save Time
+              </a>
+              <Link href="/routes" className="bg-white hover:bg-slate-50 text-brand-blue border-2 border-brand-blue font-bold py-3.5 px-8 rounded-xl shadow-sm transition-colors text-center text-sm">
+                Get Instant Fare
+              </Link>
+            </div>
+
+            <div className="max-w-4xl mx-auto text-center">
+              <p className="text-[11px] text-slate-400 font-medium leading-relaxed">
+                Urgent Taxis provides premier <strong className="font-semibold">outstation taxi</strong> and <strong className="font-semibold">airport taxi</strong> services across major cities. Whether you need a simple <strong className="font-semibold">cab booking</strong> or an <strong className="font-semibold">online cab booking</strong> platform, our <strong className="font-semibold">taxi service</strong> offers reliable <strong className="font-semibold">chauffeur driven car</strong> experiences. We specialize in <strong className="font-semibold">one way taxi</strong> drops, <strong className="font-semibold">round trip cab</strong> packages, and prompt <strong className="font-semibold">airport transfer</strong>. For city tours, book a <strong className="font-semibold">local cab</strong> or hire a spacious <strong className="font-semibold">tempo traveller</strong> for group trips. We also cater to business professionals requiring a <strong className="font-semibold">corporate cab</strong>. Explore popular corridors with our <strong className="font-semibold">Delhi taxi</strong>, <strong className="font-semibold">Noida taxi</strong>, <strong className="font-semibold">Ghaziabad taxi</strong>, <strong className="font-semibold">Aligarh taxi</strong>, <strong className="font-semibold">Lucknow taxi</strong>, <strong className="font-semibold">Haridwar taxi</strong>, <strong className="font-semibold">Rishikesh taxi</strong>, <strong className="font-semibold">Nainital taxi</strong>, <strong className="font-semibold">Jim Corbett taxi</strong>, <strong className="font-semibold">Dehradun taxi</strong>, <strong className="font-semibold">Agra taxi</strong>, and <strong className="font-semibold">Jaipur taxi</strong> routes.
               </p>
             </div>
+            
           </div>
-
         </div>
-
-        {/* Bottom Section: CTAs and SEO Content */}
-        <div className="flex flex-col items-center space-y-8 pt-8">
-          
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <a href="tel:+917310651940" className="bg-brand-green hover:bg-emerald-600 text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition-colors text-center text-sm">
-              Book Direct & Save Time
-            </a>
-            <Link href="/routes" className="bg-white hover:bg-slate-50 text-brand-blue border-2 border-brand-blue font-bold py-3.5 px-8 rounded-xl shadow-sm transition-colors text-center text-sm">
-              Get Instant Fare
-            </Link>
-          </div>
-
-          <div className="max-w-4xl mx-auto text-center">
-            <p className="text-[11px] text-slate-400 font-medium leading-relaxed">
-              Urgent Taxis provides premier <strong className="font-semibold">outstation taxi</strong> and <strong className="font-semibold">airport taxi</strong> services across major cities. Whether you need a simple <strong className="font-semibold">cab booking</strong> or an <strong className="font-semibold">online cab booking</strong> platform, our <strong className="font-semibold">taxi service</strong> offers reliable <strong className="font-semibold">chauffeur driven car</strong> experiences. We specialize in <strong className="font-semibold">one way taxi</strong> drops, <strong className="font-semibold">round trip cab</strong> packages, and prompt <strong className="font-semibold">airport transfer</strong>. For city tours, book a <strong className="font-semibold">local cab</strong> or hire a spacious <strong className="font-semibold">tempo traveller</strong> for group trips. We also cater to business professionals requiring a <strong className="font-semibold">corporate cab</strong>. Explore popular corridors with our <strong className="font-semibold">Delhi taxi</strong>, <strong className="font-semibold">Noida taxi</strong>, <strong className="font-semibold">Ghaziabad taxi</strong>, <strong className="font-semibold">Aligarh taxi</strong>, <strong className="font-semibold">Lucknow taxi</strong>, <strong className="font-semibold">Haridwar taxi</strong>, <strong className="font-semibold">Rishikesh taxi</strong>, <strong className="font-semibold">Nainital taxi</strong>, <strong className="font-semibold">Jim Corbett taxi</strong>, <strong className="font-semibold">Dehradun taxi</strong>, <strong className="font-semibold">Agra taxi</strong>, and <strong className="font-semibold">Jaipur taxi</strong> routes.
-            </p>
-          </div>
-          
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
