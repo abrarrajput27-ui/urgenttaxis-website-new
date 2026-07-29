@@ -38,7 +38,7 @@ export default function PublicHeader() {
       
       {/* Top Bar (Hidden on Mobile) */}
       <div className="hidden lg:flex border-b border-slate-100 bg-slate-50 text-[13px] py-2">
-        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 flex justify-between items-center">
           
           {/* Top Bar Left */}
           <div className="flex items-center gap-6 font-semibold">
