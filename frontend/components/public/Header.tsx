@@ -9,6 +9,7 @@ import { FaPhoneAlt, FaWhatsapp, FaFacebook, FaInstagram, FaYoutube, FaEnvelope,
 
 export default function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
 
@@ -34,7 +35,7 @@ export default function PublicHeader() {
   ];
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-50 font-sans w-full transition-all duration-300 bg-white shadow-sm">
+    <header ref={headerRef} className="sticky top-0 z-50 font-sans w-full transition-all duration-300 bg-white shadow-sm relative">
       
       {/* Top Bar (Hidden on Mobile) */}
       <div className="hidden lg:flex border-b border-slate-100 bg-slate-50 text-[13px] py-1">
@@ -68,7 +69,7 @@ export default function PublicHeader() {
       </div>
 
       {/* Main Header */}
-      <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 py-2 flex items-center justify-between">
+      <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 py-0 flex items-center h-[56px]">
         
         {/* Logo */}
         <Link href="/" className="flex items-center flex-shrink-0" onClick={() => setMobileOpen(false)} prefetch={true}>
@@ -83,7 +84,7 @@ export default function PublicHeader() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-7 text-[16px] font-extrabold text-slate-800">
+        <nav className="hidden lg:flex items-center gap-5 text-[15px] font-extrabold text-slate-800 ml-auto mr-6">
           {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
             return (
@@ -115,10 +116,10 @@ export default function PublicHeader() {
         </nav>
 
         {/* Right Action Block */}
-        <div className="hidden lg:flex items-center gap-5">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#3b2c85] flex items-center justify-center text-white shadow-sm">
-              <FaPhoneAlt className="w-[14px] h-[14px]" />
+        <div className="hidden lg:flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-[#3b2c85] flex items-center justify-center text-white shadow-sm">
+              <FaPhoneAlt className="w-[12px] h-[12px]" />
             </div>
             <div className="flex flex-col justify-center">
               <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="text-[17px] font-black tracking-tight text-[#1e1b4b] leading-none hover:text-brand-green transition-colors mb-1">
@@ -132,15 +133,15 @@ export default function PublicHeader() {
             href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-[#00a859] hover:bg-[#00904d] text-white font-bold text-[14px] px-4 py-1.5 rounded-full transition-all shadow-md hover:shadow-lg"
+            className="flex items-center gap-1.5 bg-[#00a859] hover:bg-[#00904d] text-white font-bold text-[13px] px-3 py-1 rounded-full transition-all shadow-md hover:shadow-lg"
           >
-            <FaWhatsapp className="w-[18px] h-[18px]" />
+            <FaWhatsapp className="w-[16px] h-[16px]" />
             <span>WhatsApp</span>
           </a>
         </div>
 
         {/* Mobile Hamburger */}
-        <div className="flex items-center gap-4 lg:hidden">
+        <div className="flex items-center gap-4 lg:hidden ml-auto">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
@@ -159,7 +160,7 @@ export default function PublicHeader() {
 
       {/* Mobile Navigation Drawer */}
       <div 
-        className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${mobileOpen ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`lg:hidden absolute left-0 right-0 top-full bg-white shadow-xl overflow-hidden transition-all duration-300 ease-in-out border-t border-slate-100 ${mobileOpen ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <div className="bg-white px-4 pt-2 pb-6 space-y-4 font-sans shadow-inner border-t border-slate-100">
           <nav className="flex flex-col space-y-1 text-[16px] font-extrabold text-slate-800">
@@ -169,12 +170,18 @@ export default function PublicHeader() {
               if (link.hasDropdown) {
                 return (
                   <div key={link.name} className="flex flex-col">
-                    <span className="px-4 py-3 rounded-xl bg-slate-50 text-slate-500 mb-1">Services ▼</span>
-                    <div className="flex flex-col pl-6 space-y-1">
-                      <Link href="/airport-transfers" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2.5 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Airport Transfers</Link>
-                      <Link href="/local-rentals" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2.5 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Local Rentals</Link>
-                      <Link href="/corporate-taxi" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2.5 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Corporate Taxi</Link>
-                      <Link href="/tour-packages" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2.5 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Tour Packages</Link>
+                    <button 
+                      onClick={() => setServicesOpen(!servicesOpen)} 
+                      className="px-4 py-3 rounded-xl bg-slate-50 text-slate-700 font-bold mb-1 flex justify-between items-center w-full"
+                    >
+                      Services 
+                      <span className={`transform transition-transform ${servicesOpen ? 'rotate-180' : ''}`}>▼</span>
+                    </button>
+                    <div className={`flex flex-col pl-6 space-y-1 overflow-hidden transition-all duration-300 ${servicesOpen ? 'max-h-48' : 'max-h-0'}`}>
+                      <Link href="/airport-transfers" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Airport Transfers</Link>
+                      <Link href="/local-rentals" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Local Rentals</Link>
+                      <Link href="/corporate-taxi" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Corporate Taxi</Link>
+                      <Link href="/tour-packages" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Tour Packages</Link>
                     </div>
                   </div>
                 );
@@ -194,16 +201,17 @@ export default function PublicHeader() {
             })}
           </nav>
           
-          <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
-            <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="w-full flex items-center justify-center gap-2 bg-[#3b2c85] text-white font-bold text-[16px] py-3.5 rounded-xl shadow-md">
-              <FaPhoneAlt className="w-4 h-4" /> Call Now
+          <div className="pt-4 border-t border-slate-100 flex flex-row gap-3">
+            <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="flex-1 flex items-center justify-center gap-1.5 bg-[#3b2c85] text-white font-bold text-[14px] py-3 rounded-xl shadow-md">
+              <FaPhoneAlt className="w-3.5 h-3.5" /> Call Now
             </a>
-            <a href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`} target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-2 bg-[#00a859] text-white font-bold text-[16px] py-3.5 rounded-xl shadow-md">
-              <FaWhatsapp className="w-5 h-5" /> WhatsApp Booking
+            <a href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1.5 bg-[#00a859] text-white font-bold text-[14px] py-3 rounded-xl shadow-md">
+              <FaWhatsapp className="w-4 h-4" /> WhatsApp
             </a>
+          </div>
             
-            {/* Mobile Top Bar Info */}
-            <div className="flex flex-col items-center gap-3 pt-4 pb-2 text-sm text-slate-500 font-bold">
+          {/* Mobile Top Bar Info */}
+          <div className="flex flex-col items-center gap-3 pt-4 pb-2 text-sm text-slate-500 font-bold">
               <a href="mailto:info@urgenttaxis.com" className="flex items-center gap-2 hover:text-brand-blue">
                 <FaEnvelope /> info@urgenttaxis.com
               </a>
@@ -213,7 +221,6 @@ export default function PublicHeader() {
                 <a href="#" className="bg-[#FF0000] text-white p-2 rounded-full"><FaYoutube className="w-4 h-4" /></a>
               </div>
             </div>
-          </div>
         </div>
       </div>
     </header>
