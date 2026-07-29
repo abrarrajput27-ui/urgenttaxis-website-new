@@ -122,8 +122,11 @@ export default async function HomePage() {
         />
       </section>
 
+      {/* PHASE 6B: TRUST SECTION (Moved below Hero) */}
+      <TrustSection />
+
       {/* 4. MOST BOOKED ROUTES SECTION */}
-      <section id="routes" className="py-20 bg-white">
+      <section id="routes" className="py-10 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
           <div>
             <span className="text-brand-green font-bold text-sm tracking-widest uppercase mb-2 block">QUICK BOOKING</span>
@@ -148,7 +151,7 @@ export default async function HomePage() {
       </section>
 
       {/* 5. FLEET SLIDER SECTION */}
-      <section id="fleet" className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-100 overflow-hidden">
+      <section id="fleet" className="py-10 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-100 overflow-hidden">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex flex-col items-center text-center mb-12 gap-4">
             <h2 className="text-3xl sm:text-4xl font-black text-brand-blue tracking-tight">
@@ -249,11 +252,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* PHASE 6B: TRUST SECTION */}
-      <TrustSection />
-
       {/* 6. AIRPORT TRANSFERS SECTION */}
-      <section id="airport-transfers" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section id="airport-transfers" className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light rounded-3xl p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center shadow-lg relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[url('/hero-pattern.svg')] bg-center mix-blend-overlay"></div>
           <div className="space-y-5 relative z-10">
@@ -296,7 +296,7 @@ export default async function HomePage() {
       </section>
 
       {/* 6B. OUTSTATION TOUR PACKAGES */}
-      <section id="tour-packages" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section id="tour-packages" className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center space-y-3 mb-12">
           <span className="inline-block px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold">
             Curated Sightseeing & Hill Station Circuits
@@ -377,7 +377,7 @@ export default async function HomePage() {
       </section>
 
       {/* 7. LOCAL RENTALS SECTION */}
-      <section id="local-rentals" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section id="local-rentals" className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
           <div>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">

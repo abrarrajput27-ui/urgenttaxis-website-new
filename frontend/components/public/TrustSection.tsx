@@ -46,7 +46,7 @@ export default function TrustSection() {
   ];
 
   return (
-    <section className="w-full bg-gradient-to-b from-white to-slate-50 py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-100 font-sans">
+    <section className="w-full bg-gradient-to-b from-white to-slate-50 py-10 px-4 sm:px-6 lg:px-8 border-t border-slate-100 font-sans">
       <div className="max-w-7xl mx-auto space-y-12">
         
         {/* Header */}
