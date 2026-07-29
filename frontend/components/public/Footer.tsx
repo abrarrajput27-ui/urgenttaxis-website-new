@@ -7,7 +7,7 @@ export default function PublicFooter() {
   return (
     <footer className="bg-[#0b101e] text-slate-300 font-sans text-sm mt-8">
       {/* 1. Top Call-to-Action Banner */}
-      <div className="pt-20 lg:pt-12 pb-8 lg:pb-12 px-4 sm:px-6 lg:px-8 max-w-[95%] lg:max-w-[90%] xl:max-w-7xl mx-auto -mt-24 lg:-mt-24 relative z-20">
+      <div className="pt-20 lg:pt-12 pb-12 lg:pb-24 px-4 sm:px-6 lg:px-8 max-w-[98%] lg:max-w-[96%] xl:max-w-[1500px] mx-auto -mt-32 lg:-mt-40 relative z-20">
         <div className="bg-[#1a419c] relative rounded-[2rem] text-center lg:text-left px-4 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:py-8 shadow-2xl border border-white/10 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[160px]">
           
           <div className="relative z-20 space-y-1 lg:space-y-2 mt-2 lg:mt-0 lg:w-[65%]">
