@@ -3,6 +3,10 @@ import PublicFareWidget from '@/components/public/PublicFareWidget';
 import VehicleImage from '@/components/public/VehicleImage';
 import { constructMetadata, generateLocalBusinessSchema, SITE_CONFIG } from '@/lib/seo';
 import Link from 'next/link';
+import Image from 'next/image';
+import { FaUser, FaSuitcase, FaSnowflake, FaMusic, FaMapMarkerAlt, FaRoute } from 'react-icons/fa';
+import RoutesTabWidget from '@/components/public/RoutesTabWidget';
+import TrustSection from '@/components/public/TrustSection';
 
 export const metadata = constructMetadata({
   title: 'Outstation Cab Booking & Airport Taxi Service',
@@ -68,7 +72,7 @@ export default async function HomePage() {
   };
 
   return (
-    <>
+    <div className="bg-slate-50 min-h-screen font-sans">
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
@@ -80,18 +84,31 @@ export default async function HomePage() {
       />
 
       {/* 2. HERO SECTION */}
-      <section className="relative pt-8 pb-16 px-4 sm:px-6 lg:px-8 bg-slate-950 overflow-hidden">
-        <div className="max-w-5xl mx-auto text-center space-y-4 mb-8">
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <section className="relative pt-12 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Background Video */}
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+        </video>
+        {/* Dark overlay for contrast */}
+        <div className="absolute inset-0 bg-brand-blue/70 z-0"></div>
+
+        <div className="max-w-5xl mx-auto text-center space-y-5 mb-10 relative z-10">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white border border-white/20 text-xs font-bold tracking-wide shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse"></span>
             Guaranteed & Transparent Outstation Fares
           </span>
 
-          <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-            Reliable Outstation Taxi & Airport Transfers
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight drop-shadow-sm">
+            Reliable Outstation Taxi <br className="hidden sm:block" /> & Airport Transfers
           </h1>
 
-          <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+          <p className="text-indigo-100 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium">
             Book verified sedan and SUV cabs for one-way outstation trips, round-trip journeys, local hourly packages, and airport transfers with transparent per-KM pricing.
           </p>
         </div>
@@ -105,217 +122,238 @@ export default async function HomePage() {
         />
       </section>
 
-      {/* 4. POPULAR ROUTES SECTION */}
-      <section id="routes" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">
+      {/* 4. MOST BOOKED ROUTES SECTION */}
+      <section id="routes" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Popular Database-Backed Taxi Routes
+            <span className="text-brand-green font-bold text-sm tracking-widest uppercase mb-2 block">QUICK BOOKING</span>
+            <h2 className="text-3xl sm:text-4xl font-black text-brand-blue tracking-tight">
+              Most Booked Routes
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Verified outstation travel corridors with fixed distance limits.
+            <p className="text-sm text-slate-500 mt-2 font-medium">
+              Below is the list of top outstation routes. You can book our services for any route from here.
             </p>
           </div>
           <Link
             href="/routes"
-            className="text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 rounded-lg"
+            className="text-sm font-bold text-brand-blue hover:text-brand-green transition-colors border border-slate-200 bg-white px-5 py-2.5 rounded-full shadow-sm hover:shadow-md flex items-center gap-2"
           >
-            View All Routes →
+            View All Routes <span>→</span>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {routes?.slice(0, 6).map((r) => (
-            <div key={r.id} className="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3 flex flex-col justify-between hover:border-slate-700 transition-colors">
-              <div>
-                <h3 className="text-base font-bold text-white">
-                  {r.origin?.name} → {r.destination?.name}
-                </h3>
-                <span className="text-xs text-amber-400 font-mono font-medium block mt-1">
-                  Est. Distance: {r.estimated_distance_km} KM ({r.estimated_duration_hours ? `${r.estimated_duration_hours} hrs` : 'Direct Route'})
-                </span>
-              </div>
-              <div className="pt-2 flex items-center justify-between">
-                <Link
-                  href={`/routes/${r.slug || r.id}`}
-                  className="text-xs font-bold text-slate-300 hover:text-white underline"
-                >
-                  Route Details
-                </Link>
-                <a
-                  href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis%2C%20I%20want%20to%20book%20a%20cab%20from%20${encodeURIComponent(r.origin?.name || '')}%20to%20${encodeURIComponent(r.destination?.name || '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-extrabold px-3 py-2 rounded-lg transition-colors"
-                >
-                  Book Cab
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
+        <RoutesTabWidget />
       </section>
 
-      {/* 5. FLEET SHOWCASE SECTION */}
-      <section id="fleet" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Our Vehicle Categories
+      {/* 5. FLEET SLIDER SECTION */}
+      <section id="fleet" className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-100 overflow-hidden">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="flex flex-col items-center text-center mb-12 gap-4">
+            <h2 className="text-3xl sm:text-4xl font-black text-brand-blue tracking-tight">
+              Wide Range of Clean & Comfortable Cars
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Choose from our verified fleet of well-maintained sedans and spacious SUVs.
+            <p className="text-sm text-slate-500 font-medium max-w-2xl">
+              Please Select any of them to book your ride with us.
             </p>
           </div>
-          <Link
-            href="/fleet"
-            className="text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 rounded-lg"
-          >
-            Explore Fleet →
-          </Link>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {categories?.map((cat) => (
-            <div key={cat.id} className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between hover:border-slate-700 transition-colors">
-              <div className="h-48 relative bg-slate-950">
-                <VehicleImage
-                  categoryImageUrl={cat.image_url}
-                  alt={`${cat.name} taxi available for outstation cab booking`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-white">{cat.name}</h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">{cat.description}</p>
+          <div className="flex overflow-x-auto gap-6 pb-8 hide-scrollbar scroll-smooth" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {[
+              { image: "/fleet-brand/Hatchback.png", title: "Hatchback", models: "(WagonR, Swift, Celerio)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹10/km", localPrice: "₹1200" },
+              { image: "/fleet-brand/dzire.png", title: "Sedan", models: "(Dzire, Etios, Amaze)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹11/km", localPrice: "₹1500" },
+              { image: "/fleet-brand/Ertiga.png", title: "SUV / MPV", models: "(Ertiga, Triber, Carens)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹15/km", localPrice: "₹2000" },
+              { image: "/fleet-brand/Innova%20Crysta.png", title: "Premium SUV", models: "(Innova Crysta, Hycross)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹20/km", localPrice: "₹2500" },
+              { image: "/fleet-brand/Tempo Traveller.png", title: "12 Seater Traveller", models: "Force Traveller 1x1", seats: "12 Seats", bags: "10 Bags", ac: true, music: true, outstationPrice: "₹24/km", localPrice: "₹3500" },
+              { image: "/fleet-brand/Tempo Traveller.png", title: "16 Seater Traveller", models: "Force Traveller 2x1", seats: "16 Seats", bags: "12 Bags", ac: true, music: true, outstationPrice: "₹26/km", localPrice: "₹4500" },
+              { image: "/fleet-brand/Tempo Traveller.png", title: "20 Seater Traveller", models: "Force Traveller 2x1", seats: "20 Seats", bags: "15 Bags", ac: true, music: true, outstationPrice: "₹28/km", localPrice: "₹5500" },
+              { image: "/fleet-brand/Tempo Traveller.png", title: "26 Seater Traveller", models: "Force Traveller 2x2", seats: "26 Seats", bags: "20 Bags", ac: true, music: true, outstationPrice: "₹32/km", localPrice: "₹6500" },
+              { image: "/fleet-brand/Urbania.png", title: "12 Seater Urbania", models: "Force Urbania Premium", seats: "12 Seats", bags: "10 Bags", ac: true, music: true, outstationPrice: "₹30/km", localPrice: "₹5000" },
+              { image: "/fleet-brand/Urbania.png", title: "16 Seater Urbania", models: "Force Urbania Premium", seats: "16 Seats", bags: "14 Bags", ac: true, music: true, outstationPrice: "₹34/km", localPrice: "₹6000" },
+              { image: "/fleet-brand/Bus.png", title: "27 Seater Bus", models: "Luxury AC Bus", seats: "27 Seats", bags: "27 Bags", ac: true, music: true, outstationPrice: "₹45/km", localPrice: "₹8000" },
+              { image: "/fleet-brand/volvo bus.png", title: "45 Seater Bus", models: "Luxury AC Bus", seats: "45 Seats", bags: "45 Bags", ac: true, music: true, outstationPrice: "₹55/km", localPrice: "₹10000" }
+            ].map((v, i) => (
+              <div key={i} className="shrink-0 w-[300px] bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col border border-slate-100 transition-transform hover:-translate-y-1">
+                <div className="bg-slate-50 flex items-center justify-center border-b border-slate-100 overflow-hidden h-40">
+                  <Image
+                    src={v.image}
+                    alt={v.title}
+                    width={260}
+                    height={160}
+                    className="w-full h-full object-contain mix-blend-multiply"
+                  />
                 </div>
-                <div className="flex items-center justify-between text-xs pt-3 border-t border-slate-800/80 font-medium text-slate-300">
-                  <span>Capacity: {cat.max_passengers || 4} Passengers</span>
-                  <Link href={`/fleet/${cat.slug || cat.id}`} className="text-emerald-400 hover:text-emerald-300 font-bold">
-                    Category Details →
-                  </Link>
+                <div className="p-6 flex-1 flex flex-col">
+                  <h3 className="text-xl font-bold text-brand-blue mb-1">{v.title}</h3>
+                  <p className="text-xs text-slate-500 mb-4 h-4">{v.models}</p>
+
+                  <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-xs font-semibold text-slate-700 mb-6">
+                    <div className="flex items-center gap-1.5"><FaUser className="text-brand-green" /> {v.seats}</div>
+                    <div className="flex items-center gap-1.5"><FaSuitcase className="text-brand-green" /> {v.bags}</div>
+                    <div className="flex items-center gap-1.5"><FaSnowflake className="text-brand-green" /> {v.ac ? 'AC' : 'Non-AC'}</div>
+                    <div className="flex items-center gap-1.5"><FaMusic className="text-brand-green" /> {v.music ? 'Music System' : 'No Music'}</div>
+                    <div className="flex items-center gap-1.5"><FaMapMarkerAlt className="text-brand-green" /> Local Sightseeing</div>
+                    <div className="flex items-center gap-1.5"><FaRoute className="text-brand-green" /> Outstation Travel</div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mb-6 mt-auto">
+                    <div className="bg-purple-50 rounded-xl p-3 text-center border border-purple-100">
+                      <div className="text-[10px] text-purple-600 font-bold uppercase tracking-wider mb-1">Outstation</div>
+                      <div className="text-sm font-black text-slate-800">{v.outstationPrice}</div>
+                    </div>
+                    <div className="bg-emerald-50 rounded-xl p-3 text-center border border-emerald-100">
+                      <div className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mb-1">Local Rentals</div>
+                      <div className="text-sm font-black text-slate-800">{v.localPrice}</div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <a
+                      href={`tel:${SITE_CONFIG.phoneRaw}`}
+                      className="flex items-center justify-center gap-2 border-2 border-brand-blue text-brand-blue font-bold rounded-full py-2 hover:bg-brand-blue hover:text-white transition-colors text-sm"
+                    >
+                      <span>📞</span> Call Now
+                    </a>
+                    <a
+                      href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 border-2 border-brand-green text-brand-green font-bold rounded-full py-2 hover:bg-brand-green hover:text-white transition-colors text-sm"
+                    >
+                      <span>💬</span> WhatsApp
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          
+          <style dangerouslySetInnerHTML={{ __html: `
+            .hide-scrollbar::-webkit-scrollbar {
+              display: none;
+            }
+          `}} />
         </div>
       </section>
 
+      {/* PHASE 6B: TRUST SECTION */}
+      <TrustSection />
+
       {/* 6. AIRPORT TRANSFERS SECTION */}
-      <section id="airport-transfers" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
-        <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 sm:p-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <div className="space-y-4">
-            <span className="inline-block px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 border border-blue-500/20 text-xs font-semibold">
+      <section id="airport-transfers" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light rounded-3xl p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center shadow-lg relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[url('/hero-pattern.svg')] bg-center mix-blend-overlay"></div>
+          <div className="space-y-5 relative z-10">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white border border-white/20 text-xs font-bold tracking-wide shadow-sm">
               Punctual & Doorstep Pickups
             </span>
-            <h2 className="text-2xl sm:text-4xl font-black text-[#1e1b4b] tracking-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
               Airport Transfers & Railway Pickups
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+            <p className="text-sm sm:text-base text-indigo-100 leading-relaxed font-medium">
               Hassle-free transfers to and from IGI Airport Delhi (T3/T1) and Noida International Airport with flight tracking and guaranteed clean vehicles.
             </p>
-            <div className="pt-2">
+            <div className="pt-3">
               <Link
                 href="/airport-transfers"
-                className="inline-block bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-5 py-3 rounded-xl transition-colors"
+                className="inline-block bg-white hover:bg-slate-50 text-brand-blue text-sm font-bold px-6 py-3.5 rounded-xl transition-all shadow-md hover:shadow-lg"
               >
                 View Airport Transfer Rates →
               </Link>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 shadow-sm">
-            <h3 className="text-sm font-bold text-[#1e1b4b] border-b border-slate-100 pb-2">Top Verified Airport Routes</h3>
-            <ul className="space-y-3 text-xs text-slate-700 font-medium">
-              <li className="flex justify-between items-center">
+          <div className="bg-white p-7 rounded-2xl border border-slate-100 space-y-5 shadow-xl relative z-10">
+            <h3 className="text-base font-black text-brand-blue border-b border-slate-100 pb-3">Top Verified Airport Routes</h3>
+            <ul className="space-y-4 text-sm text-slate-700 font-medium">
+              <li className="flex justify-between items-center border-b border-slate-50 pb-2">
                 <span>IGI Airport T3 ↔ Gurgaon Cyber City</span>
-                <span className="text-[#059669] font-bold">Fixed Zone Rate</span>
+                <span className="text-brand-green font-bold bg-brand-green/10 px-2.5 py-1 rounded-md text-xs">Fixed Rate</span>
               </li>
-              <li className="flex justify-between items-center">
+              <li className="flex justify-between items-center border-b border-slate-50 pb-2">
                 <span>IGI Airport T3 ↔ Noida Sector 62</span>
-                <span className="text-[#059669] font-bold">Fixed Zone Rate</span>
+                <span className="text-brand-green font-bold bg-brand-green/10 px-2.5 py-1 rounded-md text-xs">Fixed Rate</span>
               </li>
               <li className="flex justify-between items-center">
                 <span>IGI Airport T3 ↔ Greater Noida</span>
-                <span className="text-[#059669] font-bold">Fixed Zone Rate</span>
+                <span className="text-brand-green font-bold bg-brand-green/10 px-2.5 py-1 rounded-md text-xs">Fixed Rate</span>
               </li>
             </ul>
           </div>
         </div>
       </section>
 
-      {/* 6B. OUTSTATION TOUR PACKAGES (CONSOLIDATED FROM SOURCE PROJECTS) */}
-      <section id="tour-packages" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
-        <div className="text-center space-y-2 mb-10">
-          <span className="inline-block px-3 py-1 rounded-full bg-[#059669]/10 text-[#059669] border border-[#059669]/20 text-xs font-bold">
+      {/* 6B. OUTSTATION TOUR PACKAGES */}
+      <section id="tour-packages" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="text-center space-y-3 mb-12">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold">
             Curated Sightseeing & Hill Station Circuits
           </span>
-          <h2 className="text-2xl sm:text-4xl font-black text-[#1e1b4b] tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
             Popular Multi-Day Outstation Tour Cabs
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto font-medium">
+          <p className="text-sm text-slate-500 max-w-xl mx-auto font-medium">
             Explore top North India tour circuits with dedicated chauffeur-driven sedans, SUVs, and Tempo Travellers.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white border border-slate-200 p-6 rounded-2xl space-y-3 shadow-sm hover:shadow-md transition-shadow">
-            <span className="text-xs font-extrabold px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-100">
-              Uttarakhand Kumaon Circuit (3 Nights / 4 Days)
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 border border-blue-100 block w-fit">
+              Uttarakhand Circuit (3N / 4D)
             </span>
-            <h3 className="text-lg font-black text-[#1e1b4b]">Nainital, Bhimtal & Kainchi Dham</h3>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+            <h3 className="text-xl font-black text-brand-blue leading-tight">Nainital, Bhimtal & Kainchi Dham</h3>
+            <p className="text-sm text-slate-600 leading-relaxed font-medium">
               Delhi ↔ Kathgodam ↔ Nainital ↔ Kainchi Dham ↔ Sattal ↔ Bhimtal tour package with complete local sightseeing.
             </p>
-            <div className="pt-2 flex justify-between items-center text-xs">
-              <span className="text-[#059669] font-bold">Starting ₹12,499</span>
+            <div className="pt-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-t border-slate-100 mt-2">
+              <span className="text-brand-green font-black text-lg">From ₹12,499</span>
               <a
-                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis%2C%20I%20want%20to%20inquire%20about%20the%20Nainital%20Bhimtal%20Kainchi%20Dham%20Tour%20Package.`}
+                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20inquire%20about%20the%20*Nainital%20Bhimtal%20Kainchi%20Dham%20Tour%20Package*.%20%F0%9F%8F%94%EF%B8%8F`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#059669] hover:bg-[#047857] text-white font-bold px-3.5 py-2 rounded-xl"
+                className="bg-brand-green hover:bg-brand-green-hover text-white text-center font-bold px-5 py-2.5 rounded-xl transition-colors shadow-sm"
               >
                 Inquire Tour
               </a>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 p-6 rounded-2xl space-y-3 shadow-sm hover:shadow-md transition-shadow">
-            <span className="text-xs font-extrabold px-2.5 py-1 rounded-md bg-emerald-50 text-[#059669] border border-emerald-100">
-              Char Dham / Spiritual Express (2 Nights / 3 Days)
+          <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+            <div className="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-black px-3 py-1 rounded-bl-xl tracking-wider">POPULAR</div>
+            <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-brand-green/10 text-brand-green border border-brand-green/20 block w-fit">
+              Spiritual Express (2N / 3D)
             </span>
-            <h3 className="text-lg font-black text-[#1e1b4b]">Haridwar & Rishikesh Ganga Aarti</h3>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+            <h3 className="text-xl font-black text-brand-blue leading-tight">Haridwar & Rishikesh Ganga Aarti</h3>
+            <p className="text-sm text-slate-600 leading-relaxed font-medium">
               Delhi ↔ Haridwar Har Ki Pauri ↔ Rishikesh Ram Jhula & Parmarth Niketan Ganga Aarti spiritual tour package.
             </p>
-            <div className="pt-2 flex justify-between items-center text-xs">
-              <span className="text-[#059669] font-bold">Starting ₹7,999</span>
+            <div className="pt-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-t border-slate-100 mt-2">
+              <span className="text-brand-green font-black text-lg">From ₹7,999</span>
               <a
-                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis%2C%20I%20want%20to%20inquire%20about%20the%20Haridwar%20Rishikesh%20Tour%20Package.`}
+                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20inquire%20about%20the%20*Haridwar%20Rishikesh%20Tour%20Package*.%20%F0%9F%8F%94%EF%B8%8F`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#059669] hover:bg-[#047857] text-white font-bold px-3.5 py-2 rounded-xl"
+                className="bg-brand-green hover:bg-brand-green-hover text-white text-center font-bold px-5 py-2.5 rounded-xl transition-colors shadow-sm"
               >
                 Inquire Tour
               </a>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 p-6 rounded-2xl space-y-3 shadow-sm hover:shadow-md transition-shadow">
-            <span className="text-xs font-extrabold px-2.5 py-1 rounded-md bg-amber-50 text-amber-800 border border-amber-100">
-              Golden Triangle Circuit (2 Nights / 3 Days)
+          <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 block w-fit">
+              Golden Triangle (2N / 3D)
             </span>
-            <h3 className="text-lg font-black text-[#1e1b4b]">Delhi ↔ Agra Taj Mahal ↔ Jaipur</h3>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+            <h3 className="text-xl font-black text-brand-blue leading-tight">Delhi ↔ Agra Taj Mahal ↔ Jaipur</h3>
+            <p className="text-sm text-slate-600 leading-relaxed font-medium">
               Complete heritage circuit covering Taj Mahal Agra, Fatehpur Sikri, Amber Fort Jaipur, and Hawa Mahal.
             </p>
-            <div className="pt-2 flex justify-between items-center text-xs">
-              <span className="text-[#059669] font-bold">Starting ₹9,999</span>
+            <div className="pt-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-t border-slate-100 mt-2">
+              <span className="text-brand-green font-black text-lg">From ₹9,999</span>
               <a
-                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis%2C%20I%20want%20to%20inquire%20about%20the%20Golden%20Triangle%20Tour%20Package.`}
+                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20inquire%20about%20the%20*Golden%20Triangle%20Tour%20Package*.%20%F0%9F%8F%94%EF%B8%8F`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#059669] hover:bg-[#047857] text-white font-bold px-3.5 py-2 rounded-xl"
+                className="bg-brand-green hover:bg-brand-green-hover text-white text-center font-bold px-5 py-2.5 rounded-xl transition-colors shadow-sm"
               >
                 Inquire Tour
               </a>
@@ -325,42 +363,46 @@ export default async function HomePage() {
       </section>
 
       {/* 7. LOCAL RENTALS SECTION */}
-      <section id="local-rentals" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">
+      <section id="local-rentals" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
               Local Hourly Rental Packages
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            <p className="text-sm text-slate-500 mt-2 font-medium">
               Flexible hourly packages for city shopping, business travel, and local errands.
             </p>
           </div>
           <Link
             href="/local-rentals"
-            className="text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 rounded-lg"
+            className="text-sm font-bold text-brand-blue hover:text-brand-green transition-colors border border-slate-200 bg-white px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md"
           >
             View All Packages →
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           {localPackages?.slice(0, 3).map((pkg) => (
-            <div key={pkg.id} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <div key={pkg.id} className="bg-white border border-slate-200 p-8 rounded-3xl space-y-5 shadow-sm hover:shadow-lg transition-all duration-300">
+              <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-brand-blue/10 text-brand-blue border border-brand-blue/20 block w-fit">
                 {pkg.package_name || `${pkg.included_hours}h / ${pkg.included_km}km`}
               </span>
-              <h3 className="text-lg font-bold text-white">
-                {pkg.included_hours} Hours ({pkg.included_km} KM Included)
-              </h3>
-              <p className="text-xs text-slate-400">
-                Extra KM: ₹{pkg.extra_km_rate}/km | Extra Hour: ₹{pkg.extra_hour_rate}/hr
+              <div>
+                <h3 className="text-2xl font-black text-slate-900">
+                  {pkg.included_hours} Hours
+                </h3>
+                <span className="text-sm text-brand-green font-bold block mt-1">{pkg.included_km} KM Included</span>
+              </div>
+              <p className="text-sm text-slate-500 font-medium bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <span className="block">Extra KM: ₹{pkg.extra_km_rate}/km</span>
+                <span className="block mt-1">Extra Hour: ₹{pkg.extra_hour_rate}/hr</span>
               </p>
               <div className="pt-2">
                 <a
-                  href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis%2C%20I%20want%20to%20book%20a%20local%20rental%20package%3A%20${pkg.included_hours}H%2F${pkg.included_km}KM`}
+                  href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20book%20a%20*Local%20Rental%20Cab*.%20%F0%9F%9A%96%0A%E2%8F%B1%EF%B8%8F%20*Package*%3A%20${pkg.included_hours}H%20%2F%20${pkg.included_km}KM`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-center bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2.5 rounded-xl transition-colors"
+                  className="flex items-center justify-center gap-2 w-full bg-brand-blue hover:bg-brand-blue-light text-white text-sm font-bold py-3.5 rounded-xl transition-all shadow-md"
                 >
                   Book Package
                 </a>
@@ -371,43 +413,43 @@ export default async function HomePage() {
       </section>
 
       {/* 8. WHY CHOOSE URGENT TAXIS */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900">
-        <div className="text-center space-y-2 mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="text-center space-y-3 mb-16">
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
             Why Choose Urgent Taxis?
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+          <p className="text-sm text-slate-500 max-w-xl mx-auto font-medium">
             Transparent policies, verified drivers, and guaranteed outstation vehicles.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-lg border border-emerald-500/20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="bg-white border border-slate-100 p-8 rounded-3xl space-y-4 text-center shadow-sm hover:shadow-lg transition-shadow">
+            <div className="w-16 h-16 rounded-2xl bg-brand-blue/10 text-brand-blue flex items-center justify-center font-bold text-3xl mx-auto border border-brand-blue/20">
               💵
             </div>
-            <h3 className="text-base font-bold text-white">Transparent Itemized Pricing</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-black text-slate-900">Transparent Itemized Pricing</h3>
+            <p className="text-sm text-slate-600 leading-relaxed font-medium">
               Calculated using strict per-KM rates and daily minimums. Clearly itemized base fare, distance charges, and driver allowance.
             </p>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-lg border border-blue-500/20">
+          <div className="bg-white border border-slate-100 p-8 rounded-3xl space-y-4 text-center shadow-sm hover:shadow-lg transition-shadow">
+            <div className="w-16 h-16 rounded-2xl bg-brand-green/10 text-brand-green flex items-center justify-center font-bold text-3xl mx-auto border border-brand-green/20">
               🛡️
             </div>
-            <h3 className="text-base font-bold text-white">Verified Fleet & Drivers</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-black text-slate-900">Verified Fleet & Drivers</h3>
+            <p className="text-sm text-slate-600 leading-relaxed font-medium">
               Well-maintained sedans and SUVs driven by experienced chauffeurs trained for highway navigation and safety.
             </p>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-lg border border-emerald-500/20">
+          <div className="bg-white border border-slate-100 p-8 rounded-3xl space-y-4 text-center shadow-sm hover:shadow-lg transition-shadow">
+            <div className="w-16 h-16 rounded-2xl bg-brand-blue/10 text-brand-blue flex items-center justify-center font-bold text-3xl mx-auto border border-brand-blue/20">
               📲
             </div>
-            <h3 className="text-base font-bold text-white">Instant Booking Assistance</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-black text-slate-900">Instant Booking Assistance</h3>
+            <p className="text-sm text-slate-600 leading-relaxed font-medium">
               Instant phone and WhatsApp support for quick outstation trip confirmation and vehicle assignment.
             </p>
           </div>
@@ -415,53 +457,54 @@ export default async function HomePage() {
       </section>
 
       {/* 9. VISIBLE FAQS SECTION */}
-      <section id="faq" className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-900">
-        <div className="text-center space-y-2 mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+      <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
+        <div className="text-center space-y-3 mb-12">
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400">
+          <p className="text-sm text-slate-500 font-medium">
             Clear answers regarding outstation fares, toll inclusions, and driver allowances.
           </p>
         </div>
 
-        <div className="space-y-4 text-xs">
+        <div className="space-y-5 text-sm">
           {visibleFaqs.map((faq, idx) => (
-            <div key={idx} className="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
-              <h3 className="text-sm font-bold text-white">{faq.question}</h3>
-              <p className="text-slate-400 leading-relaxed">{faq.answer}</p>
+            <div key={idx} className="bg-white border border-slate-200 p-6 rounded-2xl space-y-2.5 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-base font-black text-brand-blue">{faq.question}</h3>
+              <p className="text-slate-600 leading-relaxed font-medium">{faq.answer}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* 10. FINAL CONVERSION CTA */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-slate-900 text-center">
-        <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800 rounded-3xl p-8 sm:p-12 space-y-6">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Ready to Book Your Outstation Cab?
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-            Get an instant fare quotation or connect with our support desk for custom trip requirements.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-slate-100 text-center">
+        <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light border border-slate-800 rounded-3xl p-10 sm:p-16 space-y-8 shadow-2xl relative overflow-hidden">
+          <div className="absolute inset-0 opacity-20 bg-[url('/hero-pattern.svg')] bg-center"></div>
+          <div className="relative z-10 space-y-4">
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              Ready to Book Your Outstation Cab?
+            </h2>
+            <p className="text-sm sm:text-lg text-indigo-100 max-w-2xl mx-auto leading-relaxed font-medium">
+              Get an instant fare quotation or connect with our support desk for custom trip requirements.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 relative z-10">
+            <Link
+              href="#routes"
+              className="w-full sm:w-auto px-8 py-4 bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm rounded-xl shadow-lg transition-all"
+            >
+              Search Cabs
+            </Link>
             <a
               href={`tel:${SITE_CONFIG.phoneRaw}`}
-              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-6 py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-brand-blue font-black text-sm rounded-xl shadow-lg transition-all"
             >
-              📞 Call {SITE_CONFIG.phone}
-            </a>
-            <a
-              href={SITE_CONFIG.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs px-6 py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
-            >
-              💬 WhatsApp Us
+              Call {SITE_CONFIG.phone}
             </a>
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

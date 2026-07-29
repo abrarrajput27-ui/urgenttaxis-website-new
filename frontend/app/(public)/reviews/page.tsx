@@ -49,61 +49,66 @@ export default function ReviewsPage() {
   ];
 
   return (
-    <div className="pb-16 bg-white text-slate-900">
-      <PublicBreadcrumbs items={breadcrumbItems} />
+    <div className="pb-16 bg-slate-50 min-h-screen text-slate-900">
+      <div className="bg-white border-b border-slate-100">
+        <PublicBreadcrumbs items={breadcrumbItems} />
+      </div>
 
       {/* Header Banner */}
-      <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-3">
-        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#059669]/10 text-[#059669] border border-[#059669]/20 text-xs font-bold">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Verified Passenger Feedback
         </span>
-        <h1 className="text-3xl sm:text-5xl font-black text-[#1e1b4b] tracking-tight">
+        <h1 className="text-4xl sm:text-5xl font-black text-brand-blue tracking-tight">
           Customer Reviews & Testimonials
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed font-medium">
+        <p className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
           See what our passengers say about our outstation cabs, verified highway drivers, and doorstep airport transfers.
         </p>
       </section>
 
       {/* Reviews Grid */}
       <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {reviewsData.map((rev, idx) => (
             <div
               key={idx}
-              className="bg-white border border-slate-200 p-6 rounded-3xl space-y-4 shadow-sm hover:shadow-md transition-shadow"
+              className="bg-white border border-slate-200 p-8 rounded-3xl space-y-5 shadow-sm hover:shadow-lg transition-all duration-300"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-base font-black text-[#1e1b4b]">{rev.name}</h3>
-                  <p className="text-xs text-slate-500 font-medium">{rev.city} • <span className="text-[#059669] font-bold">{rev.route}</span></p>
+                  <h3 className="text-lg font-black text-brand-blue">{rev.name}</h3>
+                  <p className="text-sm text-slate-500 font-medium mt-1">{rev.city} • <span className="text-brand-green font-bold">{rev.route}</span></p>
                 </div>
-                <div className="flex text-amber-400 text-sm">
+                <div className="flex text-amber-500 text-lg">
                   {'★'.repeat(rev.rating)}
                 </div>
               </div>
 
-              <p className="text-xs text-slate-700 leading-relaxed font-medium bg-slate-50 p-4 rounded-2xl border border-slate-100">
+              <p className="text-sm text-slate-600 leading-relaxed font-medium bg-slate-50 p-5 rounded-2xl border border-slate-100 italic">
                 &ldquo;{rev.comment}&rdquo;
               </p>
 
-              <span className="text-[10px] text-slate-400 font-bold block text-right">{rev.date}</span>
+              <span className="text-xs text-slate-400 font-bold block text-right tracking-wider uppercase">{rev.date}</span>
             </div>
           ))}
         </div>
 
         {/* CTA */}
-        <div className="mt-12 text-center bg-slate-50 border border-slate-200 p-8 rounded-3xl max-w-xl mx-auto space-y-3">
-          <h3 className="text-lg font-black text-[#1e1b4b]">Had a Great Trip with Urgent Taxis?</h3>
-          <p className="text-xs text-slate-600 font-medium">Share your trip feedback or book your next outstation cab directly on WhatsApp.</p>
-          <a
-            href={SITE_CONFIG.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-[#059669] hover:bg-[#047857] text-white font-bold text-xs px-6 py-3 rounded-xl transition-colors shadow-sm"
-          >
-            💬 Share Feedback / Book Cab
-          </a>
+        <div className="mt-16 text-center bg-white border border-brand-blue/10 p-10 rounded-3xl max-w-2xl mx-auto space-y-4 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-blue to-brand-green"></div>
+          <h3 className="text-2xl font-black text-brand-blue">Had a Great Trip with Urgent Taxis?</h3>
+          <p className="text-sm text-slate-600 font-medium">Share your trip feedback or book your next outstation cab directly on WhatsApp.</p>
+          <div className="pt-2">
+            <a
+              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm px-8 py-4 rounded-xl transition-all shadow-md"
+            >
+              Share Feedback / Book Cab
+            </a>
+          </div>
         </div>
       </section>
     </div>

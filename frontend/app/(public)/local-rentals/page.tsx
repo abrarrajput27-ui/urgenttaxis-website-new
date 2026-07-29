@@ -69,9 +69,11 @@ export default async function LocalRentalsPage() {
   };
 
   return (
-    <div className="pb-16">
+    <div className="pb-16 bg-slate-50 min-h-screen text-slate-900">
       {/* 1. Breadcrumbs */}
-      <PublicBreadcrumbs items={breadcrumbItems} />
+      <div className="bg-white border-b border-slate-100">
+        <PublicBreadcrumbs items={breadcrumbItems} />
+      </div>
 
       <script
         type="application/ld+json"
@@ -79,68 +81,68 @@ export default async function LocalRentalsPage() {
       />
 
       {/* 2. Hero Section */}
-      <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
-        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Flexible Hourly City Packages
         </span>
-        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-brand-blue tracking-tight leading-tight">
           Local Hourly Cab Rentals
         </h1>
-        <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
           Book half-day and full-day cabs for city travel, shopping, and business meetings with transparent package limits and fixed extra rates.
         </p>
       </section>
 
       {/* 3. Active Local Rental Packages Grid */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900">
-        <div className="text-center space-y-2 mb-10">
-          <h2 className="text-2xl font-bold text-white">Active Database Rental Packages</h2>
-          <p className="text-xs text-slate-400">Available hourly packages and extra usage rates.</p>
+      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="text-center space-y-3 mb-12">
+          <h2 className="text-3xl font-black text-slate-900">Active Database Rental Packages</h2>
+          <p className="text-sm text-slate-500 font-medium">Available hourly packages and extra usage rates.</p>
         </div>
 
         {localPackages && localPackages.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {localPackages.map((pkg) => {
               const catName = pkg.vehicle_categories?.name || 'Standard Category';
 
               return (
-                <div key={pkg.id} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between">
-                  <div className="space-y-3">
+                <div key={pkg.id} className="bg-white border border-slate-200 p-8 rounded-3xl space-y-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-brand-blue/10 text-brand-blue border border-brand-blue/20">
                         {catName}
                       </span>
-                      <span className="font-mono text-xs text-amber-400 font-bold">
-                        {pkg.included_hours} Hours / {pkg.included_km} KM
+                      <span className="font-mono text-sm text-brand-green font-bold">
+                        {pkg.included_hours}H / {pkg.included_km}KM
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-bold text-white">
+                    <h3 className="text-2xl font-black text-slate-900">
                       {pkg.package_name || `${pkg.included_hours}H / ${pkg.included_km}KM Package`}
                     </h3>
 
-                    <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs space-y-2 text-slate-300">
-                      <div className="flex justify-between border-b border-slate-800 pb-1">
+                    <div className="bg-slate-50 p-5 rounded-xl border border-slate-100 text-sm space-y-3 text-slate-600 font-medium">
+                      <div className="flex justify-between border-b border-slate-200 pb-2">
                         <span>Base Package Fare:</span>
-                        <span className="font-mono text-emerald-400 font-bold">₹{pkg.base_fare}</span>
+                        <span className="font-mono text-brand-green font-black text-lg">₹{pkg.base_fare}</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between pt-1">
                         <span>Extra KM Rate:</span>
-                        <span className="font-mono text-slate-300">₹{pkg.extra_km_rate}/KM</span>
+                        <span className="font-mono text-slate-900 font-bold">₹{pkg.extra_km_rate}/KM</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Extra Hour Rate:</span>
-                        <span className="font-mono text-slate-300">₹{pkg.extra_hour_rate}/Hour</span>
+                        <span className="font-mono text-slate-900 font-bold">₹{pkg.extra_hour_rate}/Hour</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="pt-2">
+                  <div className="pt-3">
                     <a
-                      href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis%2C%20I%20want%20to%20book%20the%20${encodeURIComponent(catName)}%20Local%20Rental%20Package%20(${pkg.included_hours}H%2F${pkg.included_km}KM)`}
+                      href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20book%20a%20*Local%20Rental%20Cab*.%20%F0%9F%9A%96%0A%E2%8F%B1%EF%B8%8F%20*Package*%3A%20${encodeURIComponent(catName)}%20(${pkg.included_hours}H%2F${pkg.included_km}KM)`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block text-center bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-extrabold py-3 rounded-xl transition-colors"
+                      className="block text-center bg-brand-green hover:bg-brand-green-hover text-white text-sm font-bold py-3.5 rounded-xl transition-colors shadow-sm"
                     >
                       Book Package via WhatsApp
                     </a>
@@ -150,9 +152,9 @@ export default async function LocalRentalsPage() {
             })}
           </div>
         ) : (
-          <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center space-y-3">
-            <h3 className="text-base font-bold text-amber-400">Fare on Request</h3>
-            <p className="text-xs text-slate-400 max-w-md mx-auto">
+          <div className="bg-white border border-slate-200 p-10 rounded-3xl text-center space-y-4 shadow-sm">
+            <h3 className="text-xl font-black text-amber-600">Fare on Request</h3>
+            <p className="text-sm text-slate-600 max-w-md mx-auto font-medium">
               Custom local rental packages (4h/40km, 8h/80km, 12h/120km) are available upon request through our support desk.
             </p>
           </div>
@@ -160,10 +162,10 @@ export default async function LocalRentalsPage() {
       </section>
 
       {/* 4. Fare Calculator Widget */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900">
-        <div className="text-center space-y-2 mb-8">
-          <h2 className="text-2xl font-bold text-white">Calculate Local Package Fare</h2>
-          <p className="text-xs text-slate-400">Use our secure server pricing widget to estimate your trip fare.</p>
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="text-center space-y-3 mb-10">
+          <h2 className="text-3xl font-black text-slate-900">Calculate Local Package Fare</h2>
+          <p className="text-sm text-slate-500 font-medium">Use our secure server pricing widget to estimate your trip fare.</p>
         </div>
         <PublicFareWidget
           localPackages={localPackages || []}
@@ -175,61 +177,64 @@ export default async function LocalRentalsPage() {
       </section>
 
       {/* 5. Extra Hour & Extra KM Billing Rules */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-3">
-          <h3 className="text-base font-bold text-emerald-400">✓ Included in Package</h3>
-          <ul className="text-xs text-slate-300 space-y-2 list-disc list-inside">
-            <li>Vehicle fuel charges up to package distance limit</li>
-            <li>Driver allowance for package duration</li>
-            <li>Multiple city stops within package limits</li>
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-white border border-emerald-100 p-8 rounded-3xl space-y-4 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl">✓</div>
+          <h3 className="text-xl font-black text-brand-green relative z-10">Included in Package</h3>
+          <ul className="text-sm text-slate-600 space-y-3 font-medium relative z-10">
+            <li className="flex gap-2"><span className="text-brand-green">✓</span> Vehicle fuel charges up to package distance limit</li>
+            <li className="flex gap-2"><span className="text-brand-green">✓</span> Driver allowance for package duration</li>
+            <li className="flex gap-2"><span className="text-brand-green">✓</span> Multiple city stops within package limits</li>
           </ul>
         </div>
 
-        <div className="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-3">
-          <h3 className="text-base font-bold text-amber-400">⚠️ Excluded / Payable at Actuals</h3>
-          <ul className="text-xs text-slate-300 space-y-2 list-disc list-inside">
-            <li>Extra kilometers beyond package threshold (billed per KM)</li>
-            <li>Extra hours beyond package duration (billed per Hour)</li>
-            <li>Parking fees and municipal toll taxes</li>
+        <div className="bg-white border border-amber-100 p-8 rounded-3xl space-y-4 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl">⚠️</div>
+          <h3 className="text-xl font-black text-amber-600 relative z-10">Excluded / Payable at Actuals</h3>
+          <ul className="text-sm text-slate-600 space-y-3 font-medium relative z-10">
+            <li className="flex gap-2"><span className="text-amber-500">⚠</span> Extra kilometers beyond package threshold (billed per KM)</li>
+            <li className="flex gap-2"><span className="text-amber-500">⚠</span> Extra hours beyond package duration (billed per Hour)</li>
+            <li className="flex gap-2"><span className="text-amber-500">⚠</span> Parking fees and municipal toll taxes</li>
           </ul>
         </div>
       </section>
 
       {/* 6. Visible FAQs */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-900">
-        <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-8">
-          Frequently Asked Questions (Local Rentals)
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
+        <h2 className="text-3xl font-black text-slate-900 text-center mb-10">
+          Frequently Asked Questions
         </h2>
-        <div className="space-y-4 text-xs">
+        <div className="space-y-5 text-sm">
           {visibleFaqs.map((faq, idx) => (
-            <div key={idx} className="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
-              <h3 className="text-sm font-bold text-white">{faq.question}</h3>
-              <p className="text-slate-400 leading-relaxed">{faq.answer}</p>
+            <div key={idx} className="bg-white border border-slate-200 p-6 rounded-2xl space-y-2.5 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-base font-black text-brand-blue">{faq.question}</h3>
+              <p className="text-slate-600 leading-relaxed font-medium">{faq.answer}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* 7. Final CTA */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-900">
-        <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">
+        <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light border border-slate-800 rounded-3xl p-10 space-y-8 shadow-2xl relative overflow-hidden">
+          <div className="absolute inset-0 opacity-20 bg-[url('/hero-pattern.svg')] bg-center"></div>
+          <h2 className="text-3xl sm:text-4xl font-black text-white relative z-10">
             Need a Local City Taxi Package?
           </h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
             <a
               href={`tel:${SITE_CONFIG.phoneRaw}`}
-              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-6 py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-white hover:bg-slate-50 text-brand-blue font-black text-sm px-8 py-4 rounded-xl transition-all shadow-lg"
             >
-              📞 Call {SITE_CONFIG.phone}
+              Call {SITE_CONFIG.phone}
             </a>
             <a
-              href={SITE_CONFIG.whatsapp}
+              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs px-6 py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm px-8 py-4 rounded-xl transition-all shadow-lg"
             >
-              💬 WhatsApp Us
+              WhatsApp Us
             </a>
           </div>
         </div>

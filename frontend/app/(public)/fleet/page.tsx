@@ -1,6 +1,7 @@
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import Image from 'next/image';
 import Link from 'next/link';
+import { FaUser, FaSuitcase, FaSnowflake, FaMusic, FaMapMarkerAlt, FaRoute } from 'react-icons/fa';
 
 export const metadata = constructMetadata({
   title: 'Our Taxi Fleet - Urgent Taxis',
@@ -35,13 +36,13 @@ const VehicleCard = ({
   localPrice: string;
 }) => (
   <div className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-visible flex flex-col border border-slate-100 transition-transform hover:-translate-y-1">
-    <div className="bg-slate-50 p-0 flex justify-center items-center h-48 relative border-b border-slate-100 overflow-hidden">
+    <div className="bg-slate-50 flex items-center justify-center border-b border-slate-100 overflow-hidden">
       <Image
         src={image}
         alt={title}
         width={300}
         height={180}
-        className="object-cover w-full h-full"
+        className="w-full h-auto object-contain"
       />
     </div>
     <div className="p-6 flex-1 flex flex-col">
@@ -49,12 +50,12 @@ const VehicleCard = ({
       <p className="text-xs text-slate-500 mb-4 h-4">{models}</p>
 
       <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-xs font-semibold text-slate-700 mb-6">
-        <div className="flex items-center gap-1.5"><span className="text-brand-green text-sm">✔</span> {seats}</div>
-        <div className="flex items-center gap-1.5"><span className="text-brand-green text-sm">✔</span> {bags}</div>
-        <div className="flex items-center gap-1.5"><span className="text-brand-green text-sm">✔</span> {ac ? 'AC' : 'Non-AC'}</div>
-        <div className="flex items-center gap-1.5"><span className="text-brand-green text-sm">✔</span> {music ? 'Music System' : 'No Music'}</div>
-        {localSightseeing && <div className="flex items-center gap-1.5"><span className="text-brand-green text-sm">✔</span> Local Sightseeing</div>}
-        {outstationTravel && <div className="flex items-center gap-1.5"><span className="text-brand-green text-sm">✔</span> Outstation Travel</div>}
+        <div className="flex items-center gap-1.5"><FaUser className="text-brand-green" /> {seats}</div>
+        <div className="flex items-center gap-1.5"><FaSuitcase className="text-brand-green" /> {bags}</div>
+        <div className="flex items-center gap-1.5"><FaSnowflake className="text-brand-green" /> {ac ? 'AC' : 'Non-AC'}</div>
+        <div className="flex items-center gap-1.5"><FaMusic className="text-brand-green" /> {music ? 'Music System' : 'No Music'}</div>
+        {localSightseeing && <div className="flex items-center gap-1.5"><FaMapMarkerAlt className="text-brand-green" /> Local Sightseeing</div>}
+        {outstationTravel && <div className="flex items-center gap-1.5"><FaRoute className="text-brand-green" /> Outstation Travel</div>}
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-6 mt-auto">
@@ -76,7 +77,7 @@ const VehicleCard = ({
           <span>📞</span> Call Now
         </a>
         <a
-          href={SITE_CONFIG.whatsapp}
+          href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 border-2 border-brand-green text-brand-green font-bold rounded-full py-2 hover:bg-brand-green hover:text-white transition-colors text-sm"
@@ -92,8 +93,21 @@ export default function FleetPage() {
   return (
     <div className="min-h-screen bg-white pb-20 font-sans">
       {/* 1. Hero Section */}
-      <section className="bg-slate-900 text-white py-20 px-4 text-center">
-        <div className="max-w-3xl mx-auto space-y-4">
+      <section className="relative text-white py-32 px-4 text-center overflow-hidden">
+        {/* Background Image & Overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="/fleet-hero-bg.png" 
+            alt="Fleet Background" 
+            fill 
+            className="object-cover object-center"
+            priority
+          />
+          <div className="absolute inset-0 bg-slate-900/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-slate-900/50"></div>
+        </div>
+
+        <div className="max-w-3xl mx-auto space-y-4 relative z-10">
           <div className="inline-block text-xs font-bold tracking-[0.2em] text-brand-green uppercase mb-2">
             Comfort & Safety Guaranteed
           </div>
@@ -285,22 +299,20 @@ export default function FleetPage() {
         <section className="grid md:grid-cols-2 gap-8 border-t border-slate-100 pt-12">
           <div>
             <h4 className="text-lg font-bold text-brand-blue mb-4 flex items-center gap-2">
-              <span className="text-brand-green">📍</span> Popular Destinations
+              <span className="text-brand-green">📍</span> Popular Routes
             </h4>
             <div className="grid grid-cols-2 gap-3 text-sm font-semibold text-slate-600">
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Haridwar</Link>
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Nainital</Link>
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Chandigarh</Link>
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Dehradun</Link>
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Mussoorie</Link>
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Rishikesh</Link>
+              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Agra</Link>
               <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Jaipur</Link>
+              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Haridwar</Link>
               <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Shimla</Link>
+              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Rishikesh</Link>
+              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Varanasi</Link>
             </div>
           </div>
           <div>
             <h4 className="text-lg font-bold text-brand-blue mb-4 flex items-center gap-2">
-              <span className="text-brand-green">🚕</span> Top Outstation Services
+              <span className="text-brand-green">🚕</span> Top City Taxi Services
             </h4>
             <div className="grid grid-cols-2 gap-3 text-sm font-semibold text-slate-600">
               <Link href="/fleet" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Innova</Link>

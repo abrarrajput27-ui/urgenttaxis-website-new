@@ -21,7 +21,7 @@ export default function PublicFooter() {
                 Call Now
               </a>
               <a
-                href={SITE_CONFIG.whatsapp}
+                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-brand-green hover:bg-brand-green-hover text-white font-bold text-sm px-8 py-3 rounded-md transition-all shadow-md flex items-center gap-2"
@@ -81,14 +81,14 @@ export default function PublicFooter() {
               Quick links
             </h4>
             <ul className="space-y-3 text-[13px] text-slate-400">
-              <li><Link href="/" className="hover:text-brand-green transition-colors block">Home</Link></li>
-              <li><Link href="/about" className="hover:text-brand-green transition-colors block">About Us</Link></li>
-              <li><Link href="/fleet" className="hover:text-brand-green transition-colors block">Our Fleet</Link></li>
-              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Popular Routes</Link></li>
-              <li><Link href="/reviews" className="hover:text-brand-green transition-colors block">Reviews</Link></li>
-              <li><Link href="/blog" className="hover:text-brand-green transition-colors block">Blog</Link></li>
-              <li><Link href="/faq" className="hover:text-brand-green transition-colors block">FAQ</Link></li>
-              <li><Link href="/contact" className="hover:text-brand-green transition-colors block">Contact Us</Link></li>
+              <li><Link href="/" prefetch={true} className="hover:text-white transition-colors block">Home</Link></li>
+              <li><Link href="/about" prefetch={true} className="hover:text-white transition-colors block">About Us</Link></li>
+              <li><Link href="/fleet" prefetch={true} className="hover:text-white transition-colors block">Our Fleet</Link></li>
+              <li><Link href="/routes" prefetch={true} className="hover:text-white transition-colors block">Popular Routes</Link></li>
+              <li><Link href="/reviews" prefetch={true} className="hover:text-white transition-colors block">Reviews</Link></li>
+              <li><Link href="/blog" prefetch={true} className="hover:text-white transition-colors block">Blog</Link></li>
+              <li><Link href="/faq" prefetch={true} className="hover:text-white transition-colors block">FAQ</Link></li>
+              <li><Link href="/contact" prefetch={true} className="hover:text-white transition-colors block">Contact Us</Link></li>
             </ul>
           </div>
 
@@ -98,11 +98,11 @@ export default function PublicFooter() {
               Our services
             </h4>
             <ul className="space-y-3 text-[13px] text-slate-400">
-              <li><Link href="/fleet" className="hover:text-brand-green transition-colors block">Outstation Cabs</Link></li>
-              <li><Link href="/local-rentals" className="hover:text-brand-green transition-colors block">Local Rentals</Link></li>
-              <li><Link href="/corporate-taxi" className="hover:text-brand-green transition-colors block">Corporate Taxi</Link></li>
-              <li><Link href="/tempo-traveller" className="hover:text-brand-green transition-colors block">Tempo Traveller</Link></li>
-              <li><Link href="/tour-packages" className="hover:text-brand-green transition-colors block">Tour Packages</Link></li>
+              <li><Link href="/fleet" prefetch={true} className="hover:text-white transition-colors block">Outstation Cabs</Link></li>
+              <li><Link href="/local-rentals" prefetch={true} className="hover:text-white transition-colors block">Local Rentals</Link></li>
+              <li><Link href="/corporate-taxi" prefetch={true} className="hover:text-white transition-colors block">Corporate Taxi</Link></li>
+              <li><Link href="/tempo-traveller" prefetch={true} className="hover:text-white transition-colors block">Tempo Traveller</Link></li>
+              <li><Link href="/tour-packages" prefetch={true} className="hover:text-white transition-colors block">Tour Packages</Link></li>
             </ul>
           </div>
 
@@ -112,11 +112,11 @@ export default function PublicFooter() {
               Top Routes
             </h4>
             <ul className="space-y-3 text-[13px] text-slate-400">
-              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Delhi to Haridwar</Link></li>
-              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Delhi to Dehradun</Link></li>
-              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Delhi to Haldwani</Link></li>
-              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Delhi to Rishikesh</Link></li>
-              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Delhi to Shimla</Link></li>
+              <li><Link href="/routes/delhi-to-haridwar" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haridwar</Link></li>
+              <li><Link href="/routes/delhi-to-dehradun" prefetch={true} className="hover:text-white transition-colors block">Delhi to Dehradun</Link></li>
+              <li><Link href="/routes/delhi-to-haldwani" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haldwani</Link></li>
+              <li><Link href="/routes/delhi-to-rishikesh" prefetch={true} className="hover:text-white transition-colors block">Delhi to Rishikesh</Link></li>
+              <li><Link href="/routes/delhi-to-shimla" prefetch={true} className="hover:text-white transition-colors block">Delhi to Shimla</Link></li>
             </ul>
           </div>
 
@@ -129,14 +129,14 @@ export default function PublicFooter() {
               <div className="flex items-start gap-3">
                 <FaPhoneAlt className="text-slate-400 mt-1 shrink-0" />
                 <div>
-                  <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="hover:text-brand-green transition-colors block">
+                  <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="hover:text-white transition-colors block">
                     +91 {SITE_CONFIG.phone}
                   </a>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <FaEnvelope className="text-slate-400 mt-1 shrink-0" />
-                <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="hover:text-brand-green transition-colors block break-all">
+                <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="hover:text-white transition-colors block break-all">
                   {SITE_CONFIG.supportEmail}
                 </a>
               </div>

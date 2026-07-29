@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabase/server';
 import {
-  calculateOneWayFare,
-  calculateRoundTripFare,
-  calculateLocalRentalFare,
-  calculateAirportTransferFare,
-  CalculateFareInput,
-  CalculateFareResult,
-} from '@/lib/pricing/calculator';
+  calculateMasterOneWayFare,
+  calculateMasterRoundTripFare,
+  calculateMasterLocalRentalFare,
+  calculateMasterAirportTransferFare,
+  MasterFareInput,
+  MasterFareResult,
+} from '@/lib/pricing/engine';
+import { resolveDynamicPricingRule } from '@/lib/pricing/calculator';
 
 export interface PublicQuotationDTO {
   success: boolean;
@@ -26,11 +27,13 @@ export interface PublicQuotationDTO {
     baseFare: number;
     distanceCharge: number;
     driverAllowance: number;
-    nightHaltCharge: number;
-    extraKmCharge: number;
-    extraHourCharge: number;
+    nightCharge: number;
     dynamicSurgeAmount: number;
     automaticFare: number;
+    customerPayable: number;
+    tokenAmount: number;
+    balanceAmount: number;
+    pricingMode: string;
     includedCharges: string[];
     excludedCharges: string[];
     calculatedAt: string;
@@ -53,7 +56,8 @@ export async function POST(request: NextRequest) {
       numberOfDays = 1,
       numberOfNights = 0,
       pickupDateTime,
-    } = body as Partial<CalculateFareInput>;
+      fuelTypePreference,
+    } = body as Partial<MasterFareInput>;
 
     // 1. Basic input validation
     if (!serviceType || !categoryId) {
@@ -93,10 +97,9 @@ export async function POST(request: NextRequest) {
       .order('priority', { ascending: false });
 
     // 3. Prepare calculation input
-    const calcInput: CalculateFareInput = {
-      serviceType,
+    const calcInput: MasterFareInput = {
+      serviceType: serviceType as MasterFareInput['serviceType'],
       categoryId,
-      variantId,
       routeId,
       airportLocationId,
       cityZoneLocationId,
@@ -106,29 +109,30 @@ export async function POST(request: NextRequest) {
       numberOfDays: Number(numberOfDays) || 1,
       numberOfNights: Number(numberOfNights) || 0,
       pickupDateTime,
+      fuelTypePreference: fuelTypePreference as any,
     };
 
     // 4. Calculate fare using pure server-side engine
-    let calcResult: CalculateFareResult | null = null;
+    let calcResult: MasterFareResult | null = null;
 
     if (serviceType === 'one_way') {
       const rule = (oneWayRules || []).find((r) => r.route_id === routeId && r.category_id === categoryId);
       if (!rule) {
         return NextResponse.json({ success: true, isFareOnRequest: true, message: 'No active one-way rule found for selected route and category.' } as PublicQuotationDTO);
       }
-      calcResult = calculateOneWayFare(calcInput, rule, dynamicRules || []);
+      calcResult = calculateMasterOneWayFare(calcInput, rule, dynamicRules || []);
     } else if (serviceType === 'round_trip') {
       const rule = (roundTripRules || []).find((r) => r.category_id === categoryId);
       if (!rule) {
         return NextResponse.json({ success: true, isFareOnRequest: true, message: 'No active round-trip rule found for category.' } as PublicQuotationDTO);
       }
-      calcResult = calculateRoundTripFare(calcInput, rule, dynamicRules || []);
+      calcResult = calculateMasterRoundTripFare(calcInput, rule, dynamicRules || []);
     } else if (serviceType === 'local_rental') {
       const pkg = (localPackages || []).find((p) => p.id === packageId && p.category_id === categoryId);
       if (!pkg) {
         return NextResponse.json({ success: true, isFareOnRequest: true, message: 'No active local package found.' } as PublicQuotationDTO);
       }
-      calcResult = calculateLocalRentalFare(calcInput, pkg, dynamicRules || []);
+      calcResult = calculateMasterLocalRentalFare(calcInput, pkg, dynamicRules || []);
     } else if (serviceType === 'airport_transfer') {
       const rule = (airportTransfers || []).find(
         (r) => r.airport_location_id === airportLocationId && r.city_zone_location_id === cityZoneLocationId && r.category_id === categoryId
@@ -136,14 +140,14 @@ export async function POST(request: NextRequest) {
       if (!rule) {
         return NextResponse.json({ success: true, isFareOnRequest: true, message: 'No active airport transfer rule found.' } as PublicQuotationDTO);
       }
-      calcResult = calculateAirportTransferFare(calcInput, rule, dynamicRules || []);
+      calcResult = calculateMasterAirportTransferFare(calcInput, rule, dynamicRules || []);
     }
 
     if (!calcResult) {
       return NextResponse.json({ success: true, isFareOnRequest: true, message: 'Unsupported service type or rule combination.' } as PublicQuotationDTO);
     }
 
-    // 5. Build sanitized Public Quotation DTO (Zero raw DB rows, zero internal audit trace logs)
+    // 5. Build sanitized Public Quotation DTO
     const quotation: PublicQuotationDTO = {
       success: true,
       isFareOnRequest: false,
@@ -160,14 +164,16 @@ export async function POST(request: NextRequest) {
         baseFare: calcResult.baseFare,
         distanceCharge: calcResult.distanceCharge,
         driverAllowance: calcResult.driverAllowance,
-        nightHaltCharge: calcResult.nightHaltCharge,
-        extraKmCharge: calcResult.extraKmCharge,
-        extraHourCharge: calcResult.extraHourCharge,
+        nightCharge: calcResult.nightCharge,
         dynamicSurgeAmount: calcResult.dynamicSurgeAmount,
         automaticFare: calcResult.automaticFare,
+        customerPayable: calcResult.customerPayable,
+        tokenAmount: calcResult.tokenAmount,
+        balanceAmount: calcResult.balanceAmount,
+        pricingMode: calcResult.pricingMode,
         includedCharges: calcResult.includedCharges || [],
         excludedCharges: calcResult.excludedCharges || [],
-        calculatedAt: calcResult.calculatedAt,
+        calculatedAt: calcResult.calculationTimestamp,
       },
     };
 

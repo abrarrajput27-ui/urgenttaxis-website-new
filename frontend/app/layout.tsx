@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
 export const metadata: Metadata = {
-  title: "Urgent Taxis - Admin Portal & Fleet Management",
-  description: "Secure Admin Console & Pricing Engine for Urgent Taxis",
+  title: "Urgent Taxis - Reliable Outstation Cab Booking",
+  description: "Book reliable sedan, SUV, and outstation cabs in Delhi NCR with transparent pricing.",
 };
 
 export default function RootLayout({
@@ -12,9 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased font-sans">
-      <body className="min-h-full flex flex-col bg-white text-slate-900">{children}</body>
+    <html lang="en" className={`${inter.variable} h-full antialiased font-sans`}>
+      <body className="min-h-full flex flex-col bg-brand-white text-slate-900">{children}</body>
     </html>
   );
 }
-

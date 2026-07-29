@@ -35,18 +35,20 @@ export default function BlogListPage() {
   ];
 
   return (
-    <div className="pb-16 bg-white text-slate-900">
-      <PublicBreadcrumbs items={breadcrumbItems} />
+    <div className="pb-16 bg-slate-50 min-h-screen text-slate-900">
+      <div className="bg-white border-b border-slate-100">
+        <PublicBreadcrumbs items={breadcrumbItems} />
+      </div>
 
       {/* Header Banner */}
-      <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-3">
-        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#059669]/10 text-[#059669] border border-[#059669]/20 text-xs font-bold">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Travel Guides & Highway Advice
         </span>
-        <h1 className="text-3xl sm:text-5xl font-black text-[#1e1b4b] tracking-tight">
+        <h1 className="text-4xl sm:text-5xl font-black text-brand-blue tracking-tight">
           Urgent Taxis Travel Blog
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed font-medium">
+        <p className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
           Expert travel insights, outstation route breakdowns, fare advice, and North India sightseeing itineraries.
         </p>
       </section>
@@ -57,26 +59,26 @@ export default function BlogListPage() {
           {sampleBlogs.map((blog) => (
             <article
               key={blog.slug}
-              className="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition-shadow"
+              className="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between space-y-5 shadow-sm hover:shadow-lg transition-all duration-300"
             >
               <div className="space-y-3">
-                <span className="text-[11px] font-bold text-slate-400 block">{blog.date}</span>
-                <h2 className="text-base font-black text-[#1e1b4b] leading-snug hover:text-[#059669]">
+                <span className="text-[11px] font-bold text-slate-400 block uppercase tracking-wider">{blog.date}</span>
+                <h2 className="text-lg font-black text-brand-blue leading-snug hover:text-brand-blue-light transition-colors cursor-pointer">
                   {blog.title}
                 </h2>
-                <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                <p className="text-sm text-slate-600 leading-relaxed font-medium">
                   {blog.excerpt}
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                 <a
-                  href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis%2C%20I%20read%20your%20article%20on%20${encodeURIComponent(blog.title)}`}
+                  href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20read%20your%20article%20on%20*${encodeURIComponent(blog.title)}*.%20%F0%9F%93%96`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-bold text-[#059669] hover:underline"
+                  className="text-sm font-bold text-brand-green hover:text-brand-green-hover transition-colors flex items-center gap-1"
                 >
-                  Discuss Article on WhatsApp →
+                  Discuss on WhatsApp →
                 </a>
               </div>
             </article>

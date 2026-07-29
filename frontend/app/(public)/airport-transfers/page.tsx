@@ -74,9 +74,11 @@ export default async function AirportTransfersPage() {
   };
 
   return (
-    <div className="pb-16">
+    <div className="pb-16 bg-slate-50 min-h-screen text-slate-900">
       {/* 1. Breadcrumbs */}
-      <PublicBreadcrumbs items={breadcrumbItems} />
+      <div className="bg-white border-b border-slate-100">
+        <PublicBreadcrumbs items={breadcrumbItems} />
+      </div>
 
       <script
         type="application/ld+json"
@@ -84,14 +86,14 @@ export default async function AirportTransfersPage() {
       />
 
       {/* 2. Hero Section */}
-      <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
-        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-semibold">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Punctual Airport & Railway Cabs
         </span>
-        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-brand-blue tracking-tight leading-tight">
           Airport Taxi Transfers
         </h1>
-        <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
           Reliable pickup and drop services for IGI Airport Delhi (T3/T1) and Noida International Airport with guaranteed clean vehicles and transparent zone pricing.
         </p>
       </section>
@@ -99,24 +101,24 @@ export default async function AirportTransfersPage() {
       {/* 3. Supported Airport Locations & 4. Fare Calculator Widget */}
       <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Airport Info Card */}
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 lg:col-span-1">
-          <h2 className="text-lg font-bold text-white border-b border-slate-800 pb-3">Supported Airport Hubs</h2>
-          <div className="space-y-3 text-xs">
+        <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-6 lg:col-span-1 shadow-sm">
+          <h2 className="text-xl font-black text-slate-900 border-b border-slate-100 pb-4">Supported Airport Hubs</h2>
+          <div className="space-y-4 text-sm">
             {airportLocations.length > 0 ? (
               airportLocations.map((loc) => (
-                <div key={loc.id} className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
-                  <span className="font-bold text-white block">{loc.name}</span>
-                  <span className="text-slate-400 block">{loc.city}, {loc.state}</span>
+                <div key={loc.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1.5 hover:shadow-md transition-shadow">
+                  <span className="font-black text-brand-blue block text-base">{loc.name}</span>
+                  <span className="text-slate-500 block font-medium">{loc.city}, {loc.state}</span>
                 </div>
               ))
             ) : (
-              <p className="text-slate-400">IGI Airport Delhi T3/T1 & Noida International Airport.</p>
+              <p className="text-slate-500 font-medium">IGI Airport Delhi T3/T1 & Noida International Airport.</p>
             )}
           </div>
 
-          <div className="pt-2 text-xs text-slate-400 leading-relaxed">
-            <p className="font-semibold text-slate-300">Pickup Procedure:</p>
-            <p className="mt-1">Driver contact details and vehicle numbers are dispatched 2 hours prior to flight arrival.</p>
+          <div className="pt-4 mt-2 border-t border-slate-100 text-sm text-slate-600 leading-relaxed font-medium">
+            <p className="font-bold text-slate-900 mb-2">Pickup Procedure:</p>
+            <p>Driver contact details and vehicle numbers are dispatched 2 hours prior to flight arrival.</p>
           </div>
         </div>
 
@@ -133,30 +135,30 @@ export default async function AirportTransfersPage() {
       </section>
 
       {/* 5. Vehicle Options */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900">
-        <div className="text-center space-y-2 mb-10">
-          <h2 className="text-2xl font-bold text-white">Airport Fleet Categories</h2>
-          <p className="text-xs text-slate-400">Select suitable vehicle sizes based on passenger and luggage count.</p>
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="text-center space-y-3 mb-12">
+          <h2 className="text-3xl font-black text-slate-900">Airport Fleet Categories</h2>
+          <p className="text-sm text-slate-500 font-medium">Select suitable vehicle sizes based on passenger and luggage count.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {categories?.map((cat) => (
-            <div key={cat.id} className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between">
-              <div className="h-44 relative bg-slate-950">
+            <div key={cat.id} className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+              <div className="h-48 relative bg-white border-b border-slate-100 p-4 flex items-center justify-center">
                 <VehicleImage
                   categoryImageUrl={cat.image_url}
                   alt={`${cat.name} airport transfer taxi`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain mix-blend-multiply"
                 />
               </div>
-              <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
+              <div className="p-8 space-y-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-base font-bold text-white">{cat.name}</h3>
-                  <p className="text-xs text-slate-400 mt-1">{cat.description}</p>
+                  <h3 className="text-2xl font-black text-brand-blue">{cat.name}</h3>
+                  <p className="text-sm text-slate-600 mt-2 font-medium leading-relaxed">{cat.description}</p>
                 </div>
-                <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-300">
-                  <span>Capacity: {cat.max_passengers || 4} Passengers</span>
-                  <Link href={`/fleet/${cat.slug || cat.id}`} className="text-emerald-400 font-bold hover:underline">
+                <div className="pt-4 mt-2 border-t border-slate-100 flex items-center justify-between text-sm text-slate-600 font-bold">
+                  <span>Capacity: {cat.max_passengers || 4} Pax</span>
+                  <Link href={`/fleet/${cat.slug || cat.id}`} className="text-brand-blue hover:text-brand-blue-light transition-colors">
                     View Fleet →
                   </Link>
                 </div>
@@ -167,61 +169,64 @@ export default async function AirportTransfersPage() {
       </section>
 
       {/* 6. Included vs Excluded Charges */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-3">
-          <h3 className="text-base font-bold text-emerald-400">✓ Included in Airport Base Fare</h3>
-          <ul className="text-xs text-slate-300 space-y-2 list-disc list-inside">
-            <li>Vehicle fuel charges for the transfer zone distance</li>
-            <li>Driver allowance for transfer duration</li>
-            <li>Doorstep pickup or airport terminal meeting point</li>
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-white border border-emerald-100 p-8 rounded-3xl space-y-4 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl">✓</div>
+          <h3 className="text-xl font-black text-brand-green relative z-10">Included in Airport Base Fare</h3>
+          <ul className="text-sm text-slate-600 space-y-3 font-medium relative z-10">
+            <li className="flex gap-2"><span className="text-brand-green">✓</span> Vehicle fuel charges for the transfer zone distance</li>
+            <li className="flex gap-2"><span className="text-brand-green">✓</span> Driver allowance for transfer duration</li>
+            <li className="flex gap-2"><span className="text-brand-green">✓</span> Doorstep pickup or airport terminal meeting point</li>
           </ul>
         </div>
 
-        <div className="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-3">
-          <h3 className="text-base font-bold text-amber-400">⚠️ Excluded / Payable at Actuals</h3>
-          <ul className="text-xs text-slate-300 space-y-2 list-disc list-inside">
-            <li>Airport terminal parking fees</li>
-            <li>MCD / State toll entry taxes</li>
-            <li>Extra wait time beyond included complimentary window</li>
+        <div className="bg-white border border-amber-100 p-8 rounded-3xl space-y-4 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl">⚠️</div>
+          <h3 className="text-xl font-black text-amber-600 relative z-10">Excluded / Payable at Actuals</h3>
+          <ul className="text-sm text-slate-600 space-y-3 font-medium relative z-10">
+            <li className="flex gap-2"><span className="text-amber-500">⚠</span> Airport terminal parking fees</li>
+            <li className="flex gap-2"><span className="text-amber-500">⚠</span> MCD / State toll entry taxes</li>
+            <li className="flex gap-2"><span className="text-amber-500">⚠</span> Extra wait time beyond included complimentary window</li>
           </ul>
         </div>
       </section>
 
       {/* 7. Visible FAQs */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-900">
-        <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-8">
-          Frequently Asked Questions (Airport Transfers)
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
+        <h2 className="text-3xl font-black text-slate-900 text-center mb-10">
+          Frequently Asked Questions
         </h2>
-        <div className="space-y-4 text-xs">
+        <div className="space-y-5 text-sm">
           {visibleFaqs.map((faq, idx) => (
-            <div key={idx} className="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
-              <h3 className="text-sm font-bold text-white">{faq.question}</h3>
-              <p className="text-slate-400 leading-relaxed">{faq.answer}</p>
+            <div key={idx} className="bg-white border border-slate-200 p-6 rounded-2xl space-y-2.5 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-base font-black text-brand-blue">{faq.question}</h3>
+              <p className="text-slate-600 leading-relaxed font-medium">{faq.answer}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* 8. Final CTA */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-900">
-        <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">
+        <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light border border-slate-800 rounded-3xl p-10 space-y-8 shadow-2xl relative overflow-hidden">
+          <div className="absolute inset-0 opacity-20 bg-[url('/hero-pattern.svg')] bg-center"></div>
+          <h2 className="text-3xl sm:text-4xl font-black text-white relative z-10">
             Need an Airport Pick Up or Drop Cab?
           </h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
             <a
               href={`tel:${SITE_CONFIG.phoneRaw}`}
-              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-6 py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-white hover:bg-slate-50 text-brand-blue font-black text-sm px-8 py-4 rounded-xl transition-all shadow-lg"
             >
-              📞 Call {SITE_CONFIG.phone}
+              Call {SITE_CONFIG.phone}
             </a>
             <a
-              href={SITE_CONFIG.whatsapp}
+              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs px-6 py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm px-8 py-4 rounded-xl transition-all shadow-lg"
             >
-              💬 WhatsApp Us
+              WhatsApp Us
             </a>
           </div>
         </div>
