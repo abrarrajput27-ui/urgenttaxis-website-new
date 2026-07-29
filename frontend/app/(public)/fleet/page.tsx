@@ -2,6 +2,7 @@ import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaUser, FaSuitcase, FaSnowflake, FaMusic, FaMapMarkerAlt, FaRoute } from 'react-icons/fa';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 
 export const metadata = constructMetadata({
   title: 'Our Taxi Fleet - Urgent Taxis',
@@ -77,7 +78,7 @@ const VehicleCard = ({
           <span>📞</span> Call Now
         </a>
         <a
-          href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
+          href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 border-2 border-brand-green text-brand-green font-bold rounded-full py-2 hover:bg-brand-green hover:text-white transition-colors text-sm"

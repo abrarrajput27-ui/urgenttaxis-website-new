@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Car } from 'lucide-react';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
+import { SITE_CONFIG } from '@/lib/seo';
 
 const STATES_DATA = {
   "Delhi": ["New Delhi", "Delhi Airport", "Connaught Place", "Dwarka", "Rohini", "Vasant Kunj", "Karol Bagh", "Lajpat Nagar", "Hauz Khas", "Saket", "Chandni Chowk", "Mayur Vihar", "Janakpuri", "Pitampura", "Okhla", "Chanakyapuri", "Greater Kailash", "Defense Colony", "South Extension", "Sarojini Nagar", "Rajouri Garden", "Punjabi Bagh", "Kirti Nagar", "Patel Nagar", "Paharganj", "Sadar Bazar", "Kashmere Gate", "Shahdara", "Seelampur", "Narela", "Bawana", "Najafgarh", "Palam", "Mahipalpur", "Chattarpur", "Mehrauli", "Vasant Vihar", "R.K. Puram", "Moti Bagh", "Dhaula Kuan", "Delhi Cantonment", "Karol Bagh", "Rajendra Place", "Paschim Vihar", "Peera Garhi", "Mangolpuri", "Sultanpuri", "Nangloi", "Mundka", "Tikri Border"],
@@ -109,8 +110,12 @@ export default function RoutesTabWidget() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {currentRoutes.map((route) => {
-            const whatsappMessage = encodeURIComponent(`Hello Urgent Taxis! 👋\n\nI want to book an *Outstation Cab*. 🚕\n📍 *Route*: *${route.origin}* to *${route.destination}*\n\nPlease share the detailed fare and availability.`);
-            const whatsappUrl = `https://wa.me/918595066033?text=${whatsappMessage}`;
+            const whatsappUrl = generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+              pickup: route.origin,
+              drop: route.destination,
+              tripType: 'One Way',
+              customMessage: 'Hello Urgent Taxis! 👋\n\nI want to book an *Outstation Cab*. 🚕'
+            });
             return (
               <div key={route.id} className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] hover:shadow-xl hover:border-brand-green/30 transition-all duration-300 flex flex-col h-full">
             <div className="h-44 relative overflow-hidden bg-slate-100">

@@ -1,4 +1,5 @@
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import Link from 'next/link';
 
@@ -56,7 +57,10 @@ export default function TempoTravellerPage() {
 
           <div className="pt-8">
             <a
-              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20want%20to%20enquire%20about%20a%20*Tempo%20Traveller*%20booking.%20%F0%9F%9A%90`}
+              href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                tripType: 'Tempo Traveller',
+                customMessage: 'Hello Urgent Taxis! 👋\n\nI want to enquire about a *Tempo Traveller* booking. 🚐'
+              })}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm px-8 py-4 rounded-xl transition-all shadow-lg"

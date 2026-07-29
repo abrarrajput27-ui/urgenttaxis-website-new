@@ -1,5 +1,6 @@
 import { supabaseServer } from '@/lib/supabase/server';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
 
@@ -139,7 +140,10 @@ export default async function LocalRentalsPage() {
 
                   <div className="pt-3">
                     <a
-                      href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20book%20a%20*Local%20Rental%20Cab*.%20%F0%9F%9A%96%0A%E2%8F%B1%EF%B8%8F%20*Package*%3A%20${encodeURIComponent(catName)}%20(${pkg.included_hours}H%2F${pkg.included_km}KM)`}
+                      href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                        tripType: 'Local Rental',
+                        customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Local Rental Cab*. 🚖\n⏱️ *Package*: ${catName} (${pkg.included_hours}H/${pkg.included_km}KM)`
+                      })}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block text-center bg-brand-green hover:bg-brand-green-hover text-white text-sm font-bold py-3.5 rounded-xl transition-colors shadow-sm"
@@ -229,7 +233,7 @@ export default async function LocalRentalsPage() {
               Call {SITE_CONFIG.phone}
             </a>
             <a
-              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
+              href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm px-8 py-4 rounded-xl transition-all shadow-lg"

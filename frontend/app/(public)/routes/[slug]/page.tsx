@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { supabaseServer } from '@/lib/supabase/server';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -125,8 +126,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
     { label: `${originName} to ${destName} Taxi Service` },
   ];
 
-  const whatsappMessage = encodeURIComponent(`Hello Urgent Taxis! 👋\n\nI would like to book an *Outstation Cab*. 🚕\n📍 *Route*: ${originName} to ${destName}\nPlease let me know the availability and best fare.`);
-  const whatsappUrl = `${SITE_CONFIG.whatsapp}?text=${whatsappMessage}`;
+  const whatsappUrl = generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+    pickup: originName,
+    drop: destName,
+    tripType: 'Outstation Cab',
+    customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to book an *Outstation Cab*. 🚕'
+  });
 
   return (
     <div className="pb-20 bg-slate-50 min-h-screen text-slate-900 font-sans">

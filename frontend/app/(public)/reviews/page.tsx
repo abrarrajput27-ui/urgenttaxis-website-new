@@ -1,4 +1,5 @@
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 
 export const metadata = constructMetadata({
@@ -101,7 +102,7 @@ export default function ReviewsPage() {
           <p className="text-sm text-slate-600 font-medium">Share your trip feedback or book your next outstation cab directly on WhatsApp.</p>
           <div className="pt-2">
             <a
-              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
+              href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm px-8 py-4 rounded-xl transition-all shadow-md"

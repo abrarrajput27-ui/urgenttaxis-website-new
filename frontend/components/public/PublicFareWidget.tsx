@@ -9,6 +9,7 @@ import {
   Location,
 } from '@/types/database';
 import { SITE_CONFIG } from '@/lib/seo';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 
 interface PublicFareWidgetProps {
   localPackages: PricingLocalPackage[];
@@ -276,7 +277,7 @@ export default function PublicFareWidget({
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <a
-              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20need%20a%20*Fare%20Quote*%20for%20my%20upcoming%20trip.%20%F0%9F%9A%96`}
+              href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI need a *Fare Quote* for my upcoming trip. 🚖' })}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-6 py-3 bg-brand-green hover:bg-brand-green-hover text-white font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
@@ -373,7 +374,13 @@ export default function PublicFareWidget({
                 Continue to Checkout
               </a>
               <a
-                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20book%20a%20*${fareResult.serviceType}*%20cab.%20%🚖%0A%F0%9F%92%B0%20*Fare%20Estimate*%3A%20%E2%82%B9${fareResult.customerPayable}%0APlease%20confirm%20my%20booking.`}
+                href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { 
+                  tripType: fareResult.serviceType,
+                  totalFare: fareResult.customerPayable,
+                  baseFare: fareResult.baseFare,
+                  distance: fareResult.billableKm,
+                  customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to book a cab.' 
+                })}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto px-6 py-3.5 bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm rounded-xl shadow-lg shadow-brand-green/20 transition-all text-center flex items-center justify-center gap-2"

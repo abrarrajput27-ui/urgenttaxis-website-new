@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { SITE_CONFIG } from '@/lib/seo';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { FaFacebookF, FaInstagram, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
 
 export default function PublicFooter() {
@@ -26,7 +27,7 @@ export default function PublicFooter() {
                 <FaPhoneAlt /> Call Now
               </a>
               <a
-                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
+                href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#00a859] hover:bg-emerald-600 text-white font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none"

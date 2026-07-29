@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { SITE_CONFIG } from '@/lib/seo';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { FaPhoneAlt, FaWhatsapp, FaFacebook, FaInstagram, FaYoutube, FaEnvelope, FaHeadset, FaHeart } from 'react-icons/fa';
 
 export default function PublicHeader() {
@@ -139,7 +140,7 @@ export default function PublicHeader() {
           </div>
 
           <a
-            href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
+            href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 bg-[#00a859] hover:bg-[#00904d] text-white font-bold text-[13px] px-3 py-1 rounded-full transition-all shadow-md hover:shadow-lg"
@@ -214,7 +215,7 @@ export default function PublicHeader() {
             <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="flex-1 flex items-center justify-center gap-1.5 bg-[#3b2c85] text-white font-bold text-[14px] py-3 rounded-xl shadow-md">
               <FaPhoneAlt className="w-3.5 h-3.5" /> Call Now
             </a>
-            <a href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1.5 bg-[#00a859] text-white font-bold text-[14px] py-3 rounded-xl shadow-md">
+            <a href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1.5 bg-[#00a859] text-white font-bold text-[14px] py-3 rounded-xl shadow-md">
               <FaWhatsapp className="w-4 h-4" /> WhatsApp
             </a>
           </div>

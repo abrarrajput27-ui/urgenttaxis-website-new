@@ -1,4 +1,5 @@
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 
 export const metadata = constructMetadata({
@@ -59,7 +60,10 @@ export default function TourPackagesPage() {
           </p>
           <div className="pt-2">
             <a
-              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20plan%20a%20*Custom%20Tour%20Package*.%20%F0%9F%8F%94%EF%B8%8F`}
+              href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                tripType: 'Tour Package',
+                customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to plan a *Custom Tour Package*. ⛰️'
+              })}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm px-8 py-4 rounded-xl transition-all shadow-md"

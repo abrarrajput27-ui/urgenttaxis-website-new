@@ -5,6 +5,7 @@ import { constructMetadata, generateLocalBusinessSchema, SITE_CONFIG } from '@/l
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaUser, FaSuitcase, FaSnowflake, FaMusic, FaMapMarkerAlt, FaRoute } from 'react-icons/fa';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
 import TrustSection from '@/components/public/TrustSection';
 
@@ -223,7 +224,10 @@ export default async function HomePage() {
                       View Details
                     </Link>
                     <a
-                      href={`${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(`Hello Urgent Taxis! 👋\n\nI am interested in booking the *${v.title}*.\nPlease share availability and best fare.`)}`}
+                      href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                        vehicleModel: v.title,
+                        customMessage: `Hello Urgent Taxis! 👋\n\nI am interested in booking the *${v.title}*.\nPlease share availability and best fare.`
+                      })}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 border-2 border-brand-green text-brand-green font-bold rounded-full py-2 hover:bg-brand-green hover:text-white transition-colors text-xs"
@@ -321,7 +325,10 @@ export default async function HomePage() {
             <div className="pt-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-t border-slate-100 mt-2">
               <span className="text-brand-green font-black text-lg">From ₹12,499</span>
               <a
-                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20inquire%20about%20the%20*Nainital%20Bhimtal%20Kainchi%20Dham%20Tour%20Package*.%20%F0%9F%8F%94%EF%B8%8F`}
+                href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                  tripType: 'Tour Package',
+                  customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to inquire about the *Nainital Bhimtal Kainchi Dham Tour Package*. ⛰️'
+                })}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-brand-green hover:bg-brand-green-hover text-white text-center font-bold px-5 py-2.5 rounded-xl transition-colors shadow-sm"
@@ -343,7 +350,10 @@ export default async function HomePage() {
             <div className="pt-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-t border-slate-100 mt-2">
               <span className="text-brand-green font-black text-lg">From ₹7,999</span>
               <a
-                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20inquire%20about%20the%20*Haridwar%20Rishikesh%20Tour%20Package*.%20%F0%9F%8F%94%EF%B8%8F`}
+                href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                  tripType: 'Tour Package',
+                  customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to inquire about the *Haridwar Rishikesh Tour Package*. ⛰️'
+                })}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-brand-green hover:bg-brand-green-hover text-white text-center font-bold px-5 py-2.5 rounded-xl transition-colors shadow-sm"
@@ -364,7 +374,10 @@ export default async function HomePage() {
             <div className="pt-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-t border-slate-100 mt-2">
               <span className="text-brand-green font-black text-lg">From ₹9,999</span>
               <a
-                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20inquire%20about%20the%20*Golden%20Triangle%20Tour%20Package*.%20%F0%9F%8F%94%EF%B8%8F`}
+                href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                  tripType: 'Tour Package',
+                  customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to inquire about the *Golden Triangle Tour Package*. ⛰️'
+                })}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-brand-green hover:bg-brand-green-hover text-white text-center font-bold px-5 py-2.5 rounded-xl transition-colors shadow-sm"
@@ -413,7 +426,10 @@ export default async function HomePage() {
               </p>
               <div className="pt-2">
                 <a
-                  href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20book%20a%20*Local%20Rental%20Cab*.%20%F0%9F%9A%96%0A%E2%8F%B1%EF%B8%8F%20*Package*%3A%20${pkg.included_hours}H%20%2F%20${pkg.included_km}KM`}
+                  href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                    tripType: 'Local Rental',
+                    customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Local Rental Cab*. 🚖\n⏱️ *Package*: ${pkg.included_hours}H / ${pkg.included_km}KM`
+                  })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full bg-brand-blue hover:bg-brand-blue-light text-white text-sm font-bold py-3.5 rounded-xl transition-all shadow-md"
