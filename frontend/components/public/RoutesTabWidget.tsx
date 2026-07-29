@@ -117,24 +117,22 @@ export default function RoutesTabWidget() {
             </div>
 
             <div className="p-5 flex-1 flex flex-col">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 mb-4 bg-slate-50 w-fit px-2.5 py-1 rounded-md">
-                <span className="text-brand-green">📍</span> Approx. {route.distance} km
-              </div>
-
-              <div className="mb-4">
-                <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">Cab Availability</div>
-                <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold text-slate-600">
-                  <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded-md border border-brand-green/20">Hatchback</span>
-                  <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded-md border border-brand-green/20">Sedan</span>
-                  <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded-md border border-brand-green/20">SUV</span>
-                  <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded-md border border-brand-green/20">Innova</span>
+            <div className="p-5 flex-grow flex flex-col justify-between">
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center text-sm text-slate-600 font-medium bg-slate-50 p-2 rounded-lg">
+                  <MapPin className="w-4 h-4 mr-2 text-brand-green flex-shrink-0" />
+                  <span>Distance: <span className="font-bold text-slate-800">Available on Inquiry</span></span>
+                </div>
+                <div className="flex items-center text-sm text-slate-600 font-medium bg-slate-50 p-2 rounded-lg">
+                  <Car className="w-4 h-4 mr-2 text-brand-blue flex-shrink-0" />
+                  <span>Cab Availability: Hatchback to Innova</span>
                 </div>
               </div>
 
-              <div className="mt-auto flex flex-col gap-3 pt-4 border-t border-slate-100">
+              <div className="pt-4 border-t border-slate-100 space-y-3 mt-auto">
                 <div className="flex justify-between items-center">
-                  <div className="text-[10px] text-slate-500 font-bold uppercase">Starting From</div>
-                  <div className="text-lg font-black text-brand-blue">₹{route.price}</div>
+                  <span className="text-sm font-bold text-slate-500">Starts at</span>
+                  <span className="text-sm font-black text-brand-blue">Contact for Best Fare</span>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-2 mt-2">
