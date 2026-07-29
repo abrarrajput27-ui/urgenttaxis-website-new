@@ -79,7 +79,11 @@ export default function RoutesTabWidget() {
 
       {/* Routes Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {currentRoutes.map((route, i) => (
+        {currentRoutes.map((route, i) => {
+          const whatsappMessage = encodeURIComponent(`Hello Urgent Taxis! 👋\n\nI want to book an *Outstation Cab*. 🚕\n📍 *Route*: *${route.origin}* to *${route.destination}*\n\nPlease share the detailed fare and availability.`);
+          const whatsappUrl = `https://wa.me/917310651940?text=${whatsappMessage}`;
+          
+          return (
           <div key={i} className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col group border border-slate-100 hover:border-brand-green/30 hover:shadow-xl transition-all duration-300">
             <div className="h-44 relative overflow-hidden bg-slate-100">
               <Image
@@ -105,28 +109,42 @@ export default function RoutesTabWidget() {
                 <span className="text-brand-green">📍</span> Approx. {route.distance} km
               </div>
 
-              <div className="flex items-center gap-3 text-xs font-semibold text-slate-600 mb-6">
-                <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded">Hatchback</span>
-                <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded">Sedan</span>
-                <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded">SUV</span>
-                <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded">Innova</span>
+              <div className="mb-4">
+                <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">Cab Availability</div>
+                <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold text-slate-600">
+                  <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded-md border border-brand-green/20">Hatchback</span>
+                  <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded-md border border-brand-green/20">Sedan</span>
+                  <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded-md border border-brand-green/20">SUV</span>
+                  <span className="bg-brand-green/10 text-brand-green px-2 py-1 rounded-md border border-brand-green/20">Innova</span>
+                </div>
               </div>
 
-              <div className="mt-auto flex items-center justify-between gap-3 pt-4 border-t border-slate-100">
-                <div>
-                  <div className="text-[10px] text-slate-500 font-bold uppercase mb-0.5">Starting From</div>
+              <div className="mt-auto flex flex-col gap-3 pt-4 border-t border-slate-100">
+                <div className="flex justify-between items-center">
+                  <div className="text-[10px] text-slate-500 font-bold uppercase">Starting From</div>
                   <div className="text-lg font-black text-brand-blue">₹{route.price}</div>
                 </div>
-                <Link
-                  href={`/routes/${route.origin.toLowerCase().replace(/ /g, '-')}-to-${route.destination.toLowerCase().replace(/ /g, '-')}`}
-                  className="bg-brand-green hover:bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded shadow-sm transition-colors"
-                >
-                  Book Now
-                </Link>
+                
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <Link
+                    href={`/routes/${route.origin.toLowerCase().replace(/ /g, '-')}-to-${route.destination.toLowerCase().replace(/ /g, '-')}`}
+                    className="bg-brand-blue hover:bg-blue-900 text-white text-xs text-center font-bold px-3 py-2.5 rounded-lg shadow-sm transition-colors"
+                  >
+                    View Fare
+                  </Link>
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-brand-green hover:bg-emerald-600 text-white text-xs text-center font-bold px-3 py-2.5 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    <span>💬</span> WhatsApp
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        ))}
+        )})}
       </div>
       
       <style dangerouslySetInnerHTML={{ __html: `

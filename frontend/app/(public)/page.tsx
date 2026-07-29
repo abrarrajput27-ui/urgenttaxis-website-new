@@ -157,7 +157,8 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="flex overflow-x-auto gap-6 pb-8 hide-scrollbar scroll-smooth" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="overflow-hidden relative w-full pb-8">
+            <div className="flex gap-6 w-max animate-slow-slide hover:[animation-play-state:paused]">
             {[
               { image: "/fleet-brand/Hatchback.png", title: "Hatchback", models: "(WagonR, Swift, Celerio)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹10/km", localPrice: "₹1200" },
               { image: "/fleet-brand/dzire.png", title: "Sedan", models: "(Dzire, Etios, Amaze)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹11/km", localPrice: "₹1500" },
@@ -170,7 +171,12 @@ export default async function HomePage() {
               { image: "/fleet-brand/Urbania.png", title: "12 Seater Urbania", models: "Force Urbania Premium", seats: "12 Seats", bags: "10 Bags", ac: true, music: true, outstationPrice: "₹30/km", localPrice: "₹5000" },
               { image: "/fleet-brand/Urbania.png", title: "16 Seater Urbania", models: "Force Urbania Premium", seats: "16 Seats", bags: "14 Bags", ac: true, music: true, outstationPrice: "₹34/km", localPrice: "₹6000" },
               { image: "/fleet-brand/Bus.png", title: "27 Seater Bus", models: "Luxury AC Bus", seats: "27 Seats", bags: "27 Bags", ac: true, music: true, outstationPrice: "₹45/km", localPrice: "₹8000" },
-              { image: "/fleet-brand/volvo bus.png", title: "45 Seater Bus", models: "Luxury AC Bus", seats: "45 Seats", bags: "45 Bags", ac: true, music: true, outstationPrice: "₹55/km", localPrice: "₹10000" }
+              { image: "/fleet-brand/volvo bus.png", title: "45 Seater Bus", models: "Luxury AC Bus", seats: "45 Seats", bags: "45 Bags", ac: true, music: true, outstationPrice: "₹55/km", localPrice: "₹10000" },
+              // Duplicate to create seamless loop
+              { image: "/fleet-brand/Hatchback.png", title: "Hatchback", models: "(WagonR, Swift, Celerio)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹10/km", localPrice: "₹1200" },
+              { image: "/fleet-brand/dzire.png", title: "Sedan", models: "(Dzire, Etios, Amaze)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹11/km", localPrice: "₹1500" },
+              { image: "/fleet-brand/Ertiga.png", title: "SUV / MPV", models: "(Ertiga, Triber, Carens)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹15/km", localPrice: "₹2000" },
+              { image: "/fleet-brand/Innova%20Crysta.png", title: "Premium SUV", models: "(Innova Crysta, Hycross)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹20/km", localPrice: "₹2500" }
             ].map((v, i) => (
               <div key={i} className="shrink-0 w-[300px] bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col border border-slate-100 transition-transform hover:-translate-y-1">
                 <div className="bg-slate-50 flex items-center justify-center border-b border-slate-100 overflow-hidden h-40">
@@ -190,9 +196,7 @@ export default async function HomePage() {
                     <div className="flex items-center gap-1.5"><FaUser className="text-brand-green" /> {v.seats}</div>
                     <div className="flex items-center gap-1.5"><FaSuitcase className="text-brand-green" /> {v.bags}</div>
                     <div className="flex items-center gap-1.5"><FaSnowflake className="text-brand-green" /> {v.ac ? 'AC' : 'Non-AC'}</div>
-                    <div className="flex items-center gap-1.5"><FaMusic className="text-brand-green" /> {v.music ? 'Music System' : 'No Music'}</div>
-                    <div className="flex items-center gap-1.5"><FaMapMarkerAlt className="text-brand-green" /> Local Sightseeing</div>
-                    <div className="flex items-center gap-1.5"><FaRoute className="text-brand-green" /> Outstation Travel</div>
+                    <div className="flex items-center gap-1.5"><FaMusic className="text-brand-green" /> {v.music ? 'Music' : 'No Music'}</div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 mb-6 mt-auto">
@@ -207,17 +211,17 @@ export default async function HomePage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <a
-                      href={`tel:${SITE_CONFIG.phoneRaw}`}
-                      className="flex items-center justify-center gap-2 border-2 border-brand-blue text-brand-blue font-bold rounded-full py-2 hover:bg-brand-blue hover:text-white transition-colors text-sm"
+                    <Link
+                      href={`/fleet/${v.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                      className="flex items-center justify-center gap-2 border-2 border-brand-blue text-brand-blue font-bold rounded-full py-2 hover:bg-brand-blue hover:text-white transition-colors text-xs"
                     >
-                      <span>📞</span> Call Now
-                    </a>
+                      View Details
+                    </Link>
                     <a
-                      href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
+                      href={`${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(`Hello Urgent Taxis! 👋\n\nI am interested in booking the *${v.title}*.\nPlease share availability and best fare.`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 border-2 border-brand-green text-brand-green font-bold rounded-full py-2 hover:bg-brand-green hover:text-white transition-colors text-sm"
+                      className="flex items-center justify-center gap-2 border-2 border-brand-green text-brand-green font-bold rounded-full py-2 hover:bg-brand-green hover:text-white transition-colors text-xs"
                     >
                       <span>💬</span> WhatsApp
                     </a>
@@ -225,9 +229,17 @@ export default async function HomePage() {
                 </div>
               </div>
             ))}
+            </div>
           </div>
           
           <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes slowSlide {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+            .animate-slow-slide {
+              animation: slowSlide 30s linear infinite;
+            }
             .hide-scrollbar::-webkit-scrollbar {
               display: none;
             }
