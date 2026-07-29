@@ -210,7 +210,8 @@ export default function PublicFooter() {
             Terms of Use
           </Link>
         </div>
-      </footer>
+      </div>
+    </footer>
     </>
   );
 }
