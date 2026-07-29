@@ -78,10 +78,10 @@ export default function RoutesTabWidget() {
               setActiveState(state);
               setActiveCity(STATES_DATA[state as keyof typeof STATES_DATA][0]);
             }}
-            className={`whitespace-nowrap px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+            className={`whitespace-nowrap px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 border-2 ${
               activeState === state
-                ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/30 scale-105'
-                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                ? 'bg-brand-blue/90 border-brand-blue text-white shadow-lg shadow-brand-blue/30 scale-105'
+                : 'bg-slate-100/30 border-slate-300 text-slate-700 hover:bg-slate-100/60 hover:border-slate-400'
             }`}
           >
             {state}
@@ -89,16 +89,16 @@ export default function RoutesTabWidget() {
         ))}
       </div>
 
-      <div className="bg-slate-50 rounded-2xl p-4 sm:p-8 border border-slate-100">
+      <div className="bg-slate-50 rounded-2xl p-4 sm:p-8 border border-slate-200">
         <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-10">
           {(STATES_DATA[activeState as keyof typeof STATES_DATA] || []).map((city) => (
             <button
               key={city}
               onClick={() => setActiveCity(city)}
-              className={`px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
+              className={`px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 border ${
                 activeCity === city
-                  ? 'bg-brand-green text-slate-900 shadow-md shadow-brand-green/20'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:border-brand-green/50'
+                  ? 'bg-brand-green/20 border-brand-green text-slate-900 shadow-sm'
+                  : 'bg-white/50 border-slate-300 text-slate-600 hover:border-slate-400 hover:bg-slate-100'
               }`}
             >
               {city}
