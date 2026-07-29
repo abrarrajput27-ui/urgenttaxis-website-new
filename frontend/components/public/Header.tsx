@@ -68,7 +68,7 @@ export default function PublicHeader() {
       </div>
 
       {/* Main Header */}
-      <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 h-[90px] flex items-center justify-between">
+      <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 h-[80px] flex items-center justify-between">
         
         {/* Logo */}
         <Link href="/" className="flex items-center py-1 flex-shrink-0" onClick={() => setMobileOpen(false)} prefetch={true}>
@@ -77,7 +77,7 @@ export default function PublicHeader() {
             alt="Urgent Taxis Logo"
             width={220}
             height={66}
-            className="h-16 w-auto object-contain"
+            className="h-14 w-auto object-contain"
             priority
           />
         </Link>
@@ -115,16 +115,16 @@ export default function PublicHeader() {
         </nav>
 
         {/* Right Action Block */}
-        <div className="hidden lg:flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-5">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-full bg-[#3b2c85] flex items-center justify-center text-white shadow-sm">
-              <FaPhoneAlt className="w-[18px] h-[18px]" />
+            <div className="w-10 h-10 rounded-full bg-[#3b2c85] flex items-center justify-center text-white shadow-sm">
+              <FaPhoneAlt className="w-[16px] h-[16px]" />
             </div>
             <div className="flex flex-col justify-center">
-              <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="text-[19px] font-black tracking-tight text-[#1e1b4b] leading-none hover:text-brand-green transition-colors mb-1">
+              <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="text-[17px] font-black tracking-tight text-[#1e1b4b] leading-none hover:text-brand-green transition-colors mb-1">
                 {SITE_CONFIG.phone}
               </a>
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide leading-none">Call us anytime</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide leading-none">Call us anytime</span>
             </div>
           </div>
 
@@ -132,9 +132,9 @@ export default function PublicHeader() {
             href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-[#00a859] hover:bg-[#00904d] text-white font-bold text-[16px] px-6 py-3 rounded-full transition-all shadow-md hover:shadow-lg"
+            className="flex items-center gap-2 bg-[#00a859] hover:bg-[#00904d] text-white font-bold text-[15px] px-5 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
           >
-            <FaWhatsapp className="w-[22px] h-[22px]" />
+            <FaWhatsapp className="w-[20px] h-[20px]" />
             <span>WhatsApp</span>
           </a>
         </div>
