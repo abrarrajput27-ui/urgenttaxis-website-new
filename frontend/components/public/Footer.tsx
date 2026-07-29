@@ -31,7 +31,9 @@ export default function PublicFooter() {
                 rel="noopener noreferrer"
                 className="bg-[#00a859] hover:bg-emerald-600 text-white font-black text-[13px] sm:text-base px-4 sm:px-8 py-3 lg:py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none"
               >
-                <FaWhatsapp className="text-lg" /> Book on WhatsApp
+                <FaWhatsapp className="text-lg" />
+                <span className="sm:hidden">Book Now</span>
+                <span className="hidden sm:inline">Book on WhatsApp</span>
               </a>
             </div>
           </div>
