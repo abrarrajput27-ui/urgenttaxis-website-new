@@ -144,7 +144,7 @@ export async function POST(req: NextRequest) {
       remainingBalance: newRemainingBalance
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Token Validation Error:', error);
     return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
   }

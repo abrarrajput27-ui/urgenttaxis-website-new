@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     const adminClient = supabaseAdmin();
 
     // 2. Fetch Pricing Rule
-    let rule: any = null;
+    let rule: unknown = null;
     if (serviceType === 'one_way') {
       const { data } = await adminClient.from('pricing_one_way').select('*').eq('route_id', routeId).eq('category_id', categoryId).eq('is_active', true).single();
       rule = data;
@@ -157,8 +157,8 @@ export async function POST(req: NextRequest) {
       base_fare: calcResult.baseFare,
       included_km: calcResult.includedKm,
       extra_km_rate: calcResult.extraKmRate,
-      toll_tax: calcResult.charges.find((c: any) => c.id === 'toll_tax')?.amount || 0,
-      state_tax: calcResult.charges.find((c: any) => c.id === 'state_tax')?.amount || 0,
+      toll_tax: calcResult.charges.find((c: unknown) => c.id === 'toll_tax')?.amount || 0,
+      state_tax: calcResult.charges.find((c: unknown) => c.id === 'state_tax')?.amount || 0,
       customer_payable: calcResult.customerPayable,
       token_amount: calcResult.tokenAmount,
       balance_amount: calcResult.balanceAmount,
@@ -181,7 +181,7 @@ export async function POST(req: NextRequest) {
       token: calcResult.tokenAmount,
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Booking API Error:', error);
     return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
   }

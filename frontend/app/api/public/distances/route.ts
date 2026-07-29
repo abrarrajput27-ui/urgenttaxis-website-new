@@ -38,7 +38,7 @@ export async function GET(request: Request) {
       const data = await response.json();
       
       if (data.status === 'OK') {
-        const newCacheEntries: any[] = [];
+        const newCacheEntries: unknown[] = [];
         
         missingDestinations.forEach((dest, index) => {
           const element = data.rows[0].elements[index];
@@ -80,7 +80,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ routes: results });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching distances:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

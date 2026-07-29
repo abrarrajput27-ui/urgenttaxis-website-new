@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
       documentId: docRecord.id
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Document Upload Exception:', error);
     return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
   }
