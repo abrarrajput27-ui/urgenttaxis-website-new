@@ -8,9 +8,9 @@ export default function PublicFooter() {
   return (
     <>
       {/* 1. Top Call-to-Action Banner */}
-      <div className="w-full bg-transparent pt-28 pb-12 lg:pt-32 lg:pb-20 relative z-20">
+      <div className="w-full bg-white pt-24 pb-6 lg:pt-20 lg:pb-12 relative z-20">
         <div className="px-2 sm:px-6 lg:px-8 w-full max-w-[100%] sm:max-w-[98%] lg:max-w-[96%] xl:max-w-[1500px] mx-auto relative z-20">
-          <div className="bg-[#1a419c] relative rounded-[2rem] text-center px-3 sm:px-8 lg:px-12 pt-28 sm:pt-28 lg:py-10 shadow-2xl border border-white/10 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[160px]">
+          <div className="bg-[#1a419c] relative rounded-[2rem] text-center px-3 sm:px-8 lg:px-12 pt-28 sm:pt-28 lg:py-10 shadow-2xl border border-slate-100 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[160px]">
             
             <div className="relative z-20 space-y-1 lg:space-y-2 mt-2 lg:mt-0 lg:w-[65%] flex flex-col items-center">
               <h3 className="text-white text-[22px] sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-center">
