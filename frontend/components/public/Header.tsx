@@ -38,7 +38,7 @@ export default function PublicHeader() {
       
       {/* Top Bar (Hidden on Mobile) */}
       <div className="hidden lg:flex border-b border-slate-100 bg-slate-50 text-[13px] py-1">
-        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 flex justify-between items-center">
+        <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 flex justify-between items-center">
           
           {/* Top Bar Left */}
           <div className="flex items-center gap-6 font-semibold">
@@ -68,7 +68,7 @@ export default function PublicHeader() {
       </div>
 
       {/* Main Header */}
-      <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 py-2 flex items-center justify-between">
+      <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 py-2 flex items-center justify-between">
         
         {/* Logo */}
         <Link href="/" className="flex items-center flex-shrink-0" onClick={() => setMobileOpen(false)} prefetch={true}>
