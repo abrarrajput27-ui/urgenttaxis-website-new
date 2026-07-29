@@ -20,7 +20,7 @@ export default function TempoTravellerPage() {
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Group Travel Made Easy
         </span>
@@ -32,7 +32,7 @@ export default function TempoTravellerPage() {
         </p>
       </section>
 
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="bg-white border border-slate-200 p-8 md:p-12 rounded-3xl shadow-sm text-center max-w-3xl mx-auto space-y-6">
           <h2 className="text-2xl font-black text-brand-blue">Perfect for Large Groups</h2>
           <p className="text-sm text-slate-600 font-medium leading-relaxed">

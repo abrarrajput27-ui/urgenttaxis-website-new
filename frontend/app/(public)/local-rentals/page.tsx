@@ -81,7 +81,7 @@ export default async function LocalRentalsPage() {
       />
 
       {/* 2. Hero Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Flexible Hourly City Packages
         </span>
@@ -95,7 +95,7 @@ export default async function LocalRentalsPage() {
 
       {/* 3. Active Local Rental Packages Grid */}
       <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center space-y-3 mb-12">
+        <div className="text-center space-y-3 mb-4">
           <h2 className="text-3xl font-black text-slate-900">Active Database Rental Packages</h2>
           <p className="text-sm text-slate-500 font-medium">Available hourly packages and extra usage rates.</p>
         </div>
@@ -162,7 +162,7 @@ export default async function LocalRentalsPage() {
       </section>
 
       {/* 4. Fare Calculator Widget */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center space-y-3 mb-10">
           <h2 className="text-3xl font-black text-slate-900">Calculate Local Package Fare</h2>
           <p className="text-sm text-slate-500 font-medium">Use our secure server pricing widget to estimate your trip fare.</p>
@@ -177,7 +177,7 @@ export default async function LocalRentalsPage() {
       </section>
 
       {/* 5. Extra Hour & Extra KM Billing Rules */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-white border border-emerald-100 p-8 rounded-3xl space-y-4 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl">✓</div>
           <h3 className="text-xl font-black text-brand-green relative z-10">Included in Package</h3>
@@ -200,7 +200,7 @@ export default async function LocalRentalsPage() {
       </section>
 
       {/* 6. Visible FAQs */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
         <h2 className="text-3xl font-black text-slate-900 text-center mb-10">
           Frequently Asked Questions
         </h2>
@@ -215,7 +215,7 @@ export default async function LocalRentalsPage() {
       </section>
 
       {/* 7. Final CTA */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">
         <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light border border-slate-800 rounded-3xl p-10 space-y-8 shadow-2xl relative overflow-hidden">
           <div className="absolute inset-0 opacity-20 bg-[url('/hero-pattern.svg')] bg-center"></div>
           <h2 className="text-3xl sm:text-4xl font-black text-white relative z-10">

@@ -74,7 +74,7 @@ export default async function RoutesDirectoryPage() {
       </div>
 
       {/* Header Banner */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           {allRoutes.length} Verified Intercity Corridors
         </span>
@@ -87,7 +87,7 @@ export default async function RoutesDirectoryPage() {
       </section>
 
       {/* Routes Widget (Replaces Grid) */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white rounded-3xl shadow-sm mb-16">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white rounded-3xl shadow-sm mb-6">
         <RoutesTabWidget />
       </section>
     </div>

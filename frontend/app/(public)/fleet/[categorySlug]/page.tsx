@@ -150,7 +150,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       />
 
       {/* 2. Category Hero */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Vehicle Category Profile
         </span>
@@ -163,8 +163,8 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       </section>
 
       {/* 3. Vehicle Models & 4. Image Fallback */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
-        <div className="text-center space-y-3 mb-12">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="text-center space-y-3 mb-4">
           <h2 className="text-3xl font-black text-slate-900">Active {category.name} Models & Variants</h2>
           <p className="text-sm text-slate-500 font-medium">Verified vehicle models available in this category.</p>
         </div>
@@ -214,8 +214,8 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       </section>
 
       {/* 5. Service Suitability */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
-        <div className="text-center space-y-3 mb-12">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="text-center space-y-3 mb-4">
           <h2 className="text-3xl font-black text-slate-900">Ideal Service Suitability</h2>
           <p className="text-sm text-slate-500 font-medium">Recommended trip types for {category.name} cabs.</p>
         </div>
@@ -240,7 +240,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       </section>
 
       {/* 6. Fare / Booking CTA (Secure Public Fare API Widget) */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center space-y-3 mb-10">
           <h2 className="text-3xl font-black text-slate-900">Calculate {category.name} Fare</h2>
           <p className="text-sm text-slate-500 font-medium">Instant server-side fare calculation for your itinerary.</p>
@@ -254,7 +254,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       </section>
 
       {/* 7. Relevant Database Routes */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center space-y-3 mb-10">
           <h2 className="text-3xl font-black text-slate-900">Popular {category.name} Routes</h2>
           <p className="text-sm text-slate-500 font-medium">Verified outstation corridors served by our {category.name} fleet.</p>
@@ -284,7 +284,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       </section>
 
       {/* 8. Booking Process & 9. Visible FAQs */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
         <h2 className="text-3xl font-black text-slate-900 text-center mb-10">
           Frequently Asked Questions
         </h2>
@@ -299,7 +299,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       </section>
 
       {/* 10. Final CTA */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">
         <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light border border-slate-800 rounded-3xl p-10 space-y-8 shadow-2xl relative overflow-hidden">
           <div className="absolute inset-0 opacity-20 bg-[url('/hero-pattern.svg')] bg-center"></div>
           <h2 className="text-3xl sm:text-4xl font-black text-white relative z-10">

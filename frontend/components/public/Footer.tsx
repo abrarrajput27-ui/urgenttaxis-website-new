@@ -1,52 +1,56 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { SITE_CONFIG } from '@/lib/seo';
-import { FaFacebookF, FaInstagram, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
 
 export default function PublicFooter() {
   return (
-    <footer className="bg-[#0b101e] text-slate-300 font-sans text-sm">
+    <footer className="bg-[#0b101e] text-slate-300 font-sans text-sm mt-8">
       {/* 1. Top Call-to-Action Banner */}
-      <div className="bg-gradient-to-r from-brand-blue to-[#1e2a4a] relative border-b border-brand-green/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between py-10 md:py-12 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10 bg-[url('/hero-pattern.svg')] bg-center"></div>
+      <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto -mt-32 relative z-20">
+        <div className="bg-[#1a419c] relative rounded-[2rem] text-center px-4 sm:px-12 pt-28 sm:pt-36 pb-10 shadow-2xl border border-white/10">
+          {/* Overflowing Car Image */}
+          <div className="absolute -top-24 sm:-top-32 left-1/2 -translate-x-1/2 w-[95%] max-w-[400px] sm:max-w-[500px] z-10 pointer-events-none">
+            <Image
+              src="/fleet-hero-bg.png"
+              alt="Premium SUV Urgent Taxis"
+              width={600}
+              height={300}
+              className="object-contain w-full h-auto drop-shadow-2xl"
+              priority
+            />
+          </div>
           
-          <div className="z-10 text-white flex-1 md:pl-10 lg:pl-16">
-            <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-4 text-center md:text-left leading-tight drop-shadow-md">
-              Book your ride in <br className="hidden md:block"/> just <span className="text-brand-green">2 minutes</span>
+          <div className="relative z-20 space-y-2 mt-4 sm:mt-6">
+            <h3 className="text-white text-[26px] sm:text-4xl font-black tracking-tight leading-tight">
+              Book your ride in just 2 clicks
             </h3>
-            <p className="text-indigo-100 text-sm sm:text-base font-medium mb-8 text-center md:text-left max-w-md drop-shadow-sm">
-              Get an instant fare quotation or connect with our support desk for custom trip requirements.
+            <p className="text-blue-100 text-[13px] sm:text-base font-medium pb-4">
+              Get instant confirmation via WhatsApp
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
-              <Link
-                href="/routes"
-                className="bg-brand-green hover:bg-emerald-600 text-white font-black text-sm px-8 py-4 rounded-xl shadow-lg transition-all w-full sm:w-auto text-center"
-              >
-                Search Cabs
-              </Link>
+            
+            <div className="flex flex-row items-center justify-center gap-3 sm:gap-4 mt-6">
               <a
                 href={`tel:${SITE_CONFIG.phoneRaw}`}
-                className="bg-white hover:bg-slate-50 text-brand-blue font-black text-sm px-8 py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
+                className="bg-white hover:bg-slate-50 text-[#1a419c] font-black text-[13px] sm:text-sm px-4 sm:px-8 py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none"
               >
-                Call Now
+                <FaPhoneAlt /> Call Now
+              </a>
+              <a
+                href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#00a859] hover:bg-emerald-600 text-white font-black text-[13px] sm:text-sm px-4 sm:px-8 py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-1 sm:flex-none"
+              >
+                <FaWhatsapp className="text-lg" /> Book on WhatsApp
               </a>
             </div>
-          </div>
-
-          <div className="relative w-full max-w-lg h-56 md:h-72 lg:h-80 z-10 flex justify-center md:justify-end mt-12 md:mt-0 lg:pr-10">
-            <Image
-              src="/hero-bg.webp"
-              alt="Urgent Taxis Taxi Cab"
-              fill
-              className="object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-            />
           </div>
         </div>
       </div>
 
       {/* 2. Main Footer Content Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10 border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-4 border-b border-white/10">
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
           
           {/* Column 1: Brand Logo & Description */}

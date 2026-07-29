@@ -19,7 +19,7 @@ export default function PrivacyPage() {
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <h1 className="text-3xl sm:text-4xl font-black text-brand-blue tracking-tight mb-8">
           Privacy Policy
         </h1>

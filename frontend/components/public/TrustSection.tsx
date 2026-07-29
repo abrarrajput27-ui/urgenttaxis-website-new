@@ -64,7 +64,7 @@ export default function TrustSection() {
   return (
     <>
       {/* Floating Trust Band */}
-      <section className="w-full px-2 sm:px-6 lg:px-8 font-sans relative z-20 -mt-10 sm:-mt-16 mb-2 sm:mb-4">
+      <section className="w-full px-2 sm:px-6 lg:px-8 font-sans relative z-20 -mt-10 sm:-mt-6 mb-2 sm:mb-4">
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-2xl sm:rounded-[2rem] p-3 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100/50">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 divide-y-0 lg:divide-x divide-slate-100">
@@ -89,8 +89,8 @@ export default function TrustSection() {
       </section>
 
       {/* Why Book Direct Section */}
-      <section className="w-full bg-gradient-to-b from-white to-slate-50 py-10 px-4 sm:px-6 lg:px-8 border-t border-slate-100 font-sans">
-        <div className="max-w-7xl mx-auto space-y-12 px-2 sm:px-8">
+      <section className="w-full bg-gradient-to-b from-white to-slate-50 py-4 px-4 sm:px-6 lg:px-8 border-t border-slate-100 font-sans">
+        <div className="max-w-7xl mx-auto space-y-6 px-2 sm:px-8">
           
           {/* Header */}
           <div className="text-center space-y-4 max-w-3xl mx-auto">
@@ -102,7 +102,7 @@ export default function TrustSection() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             
             {/* Features - Left Side */}
             <div className="lg:col-span-2 grid grid-cols-1 gap-6 w-full">

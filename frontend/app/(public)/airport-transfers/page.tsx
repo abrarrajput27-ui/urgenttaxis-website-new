@@ -86,7 +86,7 @@ export default async function AirportTransfersPage() {
       />
 
       {/* 2. Hero Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Punctual Airport & Railway Cabs
         </span>
@@ -135,8 +135,8 @@ export default async function AirportTransfersPage() {
       </section>
 
       {/* 5. Vehicle Options */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
-        <div className="text-center space-y-3 mb-12">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="text-center space-y-3 mb-4">
           <h2 className="text-3xl font-black text-slate-900">Airport Fleet Categories</h2>
           <p className="text-sm text-slate-500 font-medium">Select suitable vehicle sizes based on passenger and luggage count.</p>
         </div>
@@ -169,7 +169,7 @@ export default async function AirportTransfersPage() {
       </section>
 
       {/* 6. Included vs Excluded Charges */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-white border border-emerald-100 p-8 rounded-3xl space-y-4 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl">✓</div>
           <h3 className="text-xl font-black text-brand-green relative z-10">Included in Airport Base Fare</h3>
@@ -192,7 +192,7 @@ export default async function AirportTransfersPage() {
       </section>
 
       {/* 7. Visible FAQs */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
         <h2 className="text-3xl font-black text-slate-900 text-center mb-10">
           Frequently Asked Questions
         </h2>
@@ -207,7 +207,7 @@ export default async function AirportTransfersPage() {
       </section>
 
       {/* 8. Final CTA */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">
         <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light border border-slate-800 rounded-3xl p-10 space-y-8 shadow-2xl relative overflow-hidden">
           <div className="absolute inset-0 opacity-20 bg-[url('/hero-pattern.svg')] bg-center"></div>
           <h2 className="text-3xl sm:text-4xl font-black text-white relative z-10">

@@ -20,7 +20,7 @@ export default function AboutUsPage() {
       </div>
 
       {/* Hero Banner */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Trusted Travel Partner Across India
         </span>
@@ -33,7 +33,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Mission & Story */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-slate-100 space-y-8">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-slate-100 space-y-8">
         <div className="bg-white border border-slate-200 p-10 rounded-3xl space-y-5 shadow-sm">
           <h2 className="text-3xl font-black text-brand-blue">Our Story & Mission</h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-medium">

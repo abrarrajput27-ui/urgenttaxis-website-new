@@ -26,7 +26,7 @@ export default function TourPackagesPage() {
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Multi-Day Itineraries
         </span>
@@ -38,8 +38,8 @@ export default function TourPackagesPage() {
         </p>
       </section>
 
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-        <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm mb-12">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm mb-4">
            <h2 className="text-2xl font-black text-brand-blue text-center mb-8">Popular Tour Routes</h2>
            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {popularDestinations.map((dest, idx) => (

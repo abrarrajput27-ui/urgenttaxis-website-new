@@ -19,7 +19,7 @@ export default function ChardhamYatraPage() {
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20 text-xs font-bold shadow-sm">
           Sacred Pilgrimage Tours
         </span>
@@ -31,7 +31,7 @@ export default function ChardhamYatraPage() {
         </p>
       </section>
 
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
           <h2 className="text-2xl font-black text-brand-blue">Our Yatra Services</h2>
           <p className="text-sm text-slate-600 font-medium leading-relaxed">

@@ -135,7 +135,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
       </div>
 
       {/* Hero Header */}
-      <section className="bg-brand-blue text-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="bg-brand-blue text-white py-4 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div className="max-w-7xl mx-auto relative z-10 text-center space-y-4">
           <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-bold backdrop-blur-sm border border-white/30 uppercase tracking-wider">
