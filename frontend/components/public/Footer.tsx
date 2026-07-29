@@ -1,62 +1,55 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { SITE_CONFIG } from '@/lib/seo';
+import { FaFacebookF, FaInstagram, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 
 export default function PublicFooter() {
   return (
-    <footer className="bg-[#0b132b] text-slate-300 font-sans text-sm">
-      {/* 1. Top Call-to-Action Banner (Blue background with vehicle image & white pill buttons) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
-        <div className="bg-[#1e40af] rounded-2xl p-6 sm:p-10 text-white relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-          {/* Text Content */}
-          <div className="z-10 max-w-xl space-y-2 text-center md:text-left">
-            <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              Book your ride in just 2 clicks
+    <footer className="bg-[#0b101e] text-slate-300 font-sans text-sm">
+      {/* 1. Top Call-to-Action Banner */}
+      <div className="bg-brand-blue relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between py-10 md:py-12 relative overflow-hidden">
+          <div className="z-10 text-white flex-1 md:pl-20">
+            <h3 className="text-3xl sm:text-4xl font-black tracking-tight mb-6 text-center md:text-left">
+              Book your ride in <br className="hidden md:block"/> just 2 clicks
             </h3>
-            <p className="text-sm sm:text-base text-blue-100 font-medium">
-              Get instant confirmation via WhatsApp
-            </p>
-            {/* Pill Action Buttons */}
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-4">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
               <a
                 href={`tel:${SITE_CONFIG.phoneRaw}`}
-                className="bg-white hover:bg-slate-100 text-[#1e1b4b] font-bold text-sm px-6 py-3 rounded-full transition-all shadow-md flex items-center gap-2"
+                className="bg-white hover:bg-slate-100 text-brand-blue font-bold text-sm px-8 py-3 rounded-md transition-all shadow-md flex items-center gap-2"
               >
-                <span>📞</span>
-                <span>Call Now</span>
+                Call Now
               </a>
               <a
                 href={SITE_CONFIG.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#059669] hover:bg-[#047857] text-white font-bold text-sm px-6 py-3 rounded-full transition-all shadow-md flex items-center gap-2"
+                className="bg-brand-green hover:bg-brand-green-hover text-white font-bold text-sm px-8 py-3 rounded-md transition-all shadow-md flex items-center gap-2"
               >
-                <span>💬</span>
-                <span>Book on WhatsApp</span>
+                Book WhatsApp
               </a>
             </div>
           </div>
 
-          {/* Right Vehicle Image / Graphic from Reference */}
-          <div className="relative w-full max-w-xs md:max-w-sm h-36 sm:h-44 z-10 flex justify-center md:justify-end">
+          <div className="relative w-full max-w-sm h-48 md:h-64 z-10 flex justify-center md:justify-end mt-8 md:mt-0 md:pr-10">
             <Image
               src="/hero-bg.webp"
               alt="Urgent Taxis Taxi Cab"
-              width={350}
-              height={180}
+              width={450}
+              height={250}
               className="object-contain drop-shadow-2xl"
             />
           </div>
         </div>
       </div>
 
-      {/* 2. Main Footer Content Grid (5 Columns on dark navy background) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-b border-slate-800">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+      {/* 2. Main Footer Content Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           
           {/* Column 1: Brand Logo & Description */}
-          <div className="space-y-4 lg:col-span-1">
-            <div className="bg-white p-2.5 rounded-lg inline-block shadow-md">
+          <div className="space-y-6 lg:col-span-1">
+            <div className="bg-white p-2.5 rounded-lg inline-block">
               <Image
                 src="/logo.jpg"
                 alt="Urgent Taxis Logo"
@@ -65,198 +58,148 @@ export default function PublicFooter() {
                 className="h-10 w-auto object-contain"
               />
             </div>
-            <p className="text-slate-300 text-xs leading-relaxed">
+            <p className="text-slate-400 text-[13px] leading-relaxed">
               Your reliable travel partner for outstation trips, local rentals and airport transfers across India.
             </p>
             {/* Social Media Icons */}
-            <div className="flex items-center gap-3 pt-2">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-[#1877f2] flex items-center justify-center text-white font-bold text-sm hover:opacity-90 transition-opacity"
-                aria-label="Facebook"
-              >
-                f
+            <div className="flex items-center gap-3">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#1877f2] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Facebook">
+                <FaFacebookF size={14} />
               </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm hover:opacity-90 transition-opacity"
-                aria-label="Instagram"
-              >
-                📷
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Instagram">
+                <FaInstagram size={14} />
               </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-[#ff0000] flex items-center justify-center text-white font-bold text-sm hover:opacity-90 transition-opacity"
-                aria-label="YouTube"
-              >
-                ▶
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#ff0000] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="YouTube">
+                <FaYoutube size={14} />
               </a>
             </div>
           </div>
 
           {/* Column 2: Quick Links */}
-          <div className="space-y-3">
-            <h4 className="text-white font-bold text-base tracking-tight mb-4">
-              Quick Links
+          <div className="space-y-6">
+            <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
+              Quick links
             </h4>
-            <ul className="space-y-2.5 text-xs text-slate-300">
-              <li>
-                <Link href="/" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Our Services
-                </Link>
-              </li>
-              <li>
-                <Link href="/fleet" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Our Fleet
-                </Link>
-              </li>
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Popular Routes
-                </Link>
-              </li>
-              <li>
-                <Link href="/airport-transfers" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Reviews
-                </Link>
-              </li>
-              <li>
-                <Link href="/local-rentals" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Blog
-                </Link>
-              </li>
+            <ul className="space-y-3 text-[13px] text-slate-400">
+              <li><Link href="/" className="hover:text-brand-green transition-colors block">Home</Link></li>
+              <li><Link href="/about" className="hover:text-brand-green transition-colors block">About Us</Link></li>
+              <li><Link href="/fleet" className="hover:text-brand-green transition-colors block">Our Fleet</Link></li>
+              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Popular Routes</Link></li>
+              <li><Link href="/reviews" className="hover:text-brand-green transition-colors block">Reviews</Link></li>
+              <li><Link href="/blog" className="hover:text-brand-green transition-colors block">Blog</Link></li>
+              <li><Link href="/faq" className="hover:text-brand-green transition-colors block">FAQ</Link></li>
+              <li><Link href="/contact" className="hover:text-brand-green transition-colors block">Contact Us</Link></li>
             </ul>
           </div>
 
           {/* Column 3: Our Services */}
-          <div className="space-y-3">
-            <h4 className="text-white font-bold text-base tracking-tight mb-4">
-              Our Services
+          <div className="space-y-6">
+            <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
+              Our services
             </h4>
-            <ul className="space-y-2.5 text-xs text-slate-300">
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Outstation One Way Taxi
-                </Link>
-              </li>
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Outstation Round Trip Taxi
-                </Link>
-              </li>
-              <li>
-                <Link href="/airport-transfers" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Airport Transfer
-                </Link>
-              </li>
-              <li>
-                <Link href="/local-rentals" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Local Rental
-                </Link>
-              </li>
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Tour Packages
-                </Link>
-              </li>
+            <ul className="space-y-3 text-[13px] text-slate-400">
+              <li><Link href="/fleet" className="hover:text-brand-green transition-colors block">Outstation Cabs</Link></li>
+              <li><Link href="/local-rentals" className="hover:text-brand-green transition-colors block">Local Rentals</Link></li>
+              <li><Link href="/corporate-taxi" className="hover:text-brand-green transition-colors block">Corporate Taxi</Link></li>
+              <li><Link href="/tempo-traveller" className="hover:text-brand-green transition-colors block">Tempo Traveller</Link></li>
+              <li><Link href="/tour-packages" className="hover:text-brand-green transition-colors block">Tour Packages</Link></li>
             </ul>
           </div>
 
           {/* Column 4: Top Routes */}
-          <div className="space-y-3">
-            <h4 className="text-white font-bold text-base tracking-tight mb-4">
+          <div className="space-y-6">
+            <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
               Top Routes
             </h4>
-            <ul className="space-y-2.5 text-xs text-slate-300">
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Delhi to Haridwar
-                </Link>
-              </li>
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Delhi to Dehradun
-                </Link>
-              </li>
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Delhi to Haldwani
-                </Link>
-              </li>
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Delhi to Rishikesh
-                </Link>
-              </li>
-              <li>
-                <Link href="/routes" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <span className="text-slate-500">›</span> Delhi to Shimla
-                </Link>
-              </li>
+            <ul className="space-y-3 text-[13px] text-slate-400">
+              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Delhi to Haridwar</Link></li>
+              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Delhi to Dehradun</Link></li>
+              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Delhi to Haldwani</Link></li>
+              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Delhi to Rishikesh</Link></li>
+              <li><Link href="/routes" className="hover:text-brand-green transition-colors block">Delhi to Shimla</Link></li>
             </ul>
           </div>
 
           {/* Column 5: Contact Us */}
-          <div className="space-y-4">
-            <h4 className="text-white font-bold text-base tracking-tight mb-4">
+          <div className="space-y-6">
+            <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
               Contact Us
             </h4>
-            <div className="space-y-3 text-xs text-slate-300">
-              <div className="flex items-start gap-2.5">
-                <span className="text-white text-base">📞</span>
+            <div className="space-y-4 text-[13px] text-slate-400">
+              <div className="flex items-start gap-3">
+                <FaPhoneAlt className="text-slate-400 mt-1 shrink-0" />
                 <div>
-                  <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="text-white font-bold hover:underline">
+                  <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="hover:text-brand-green transition-colors block">
                     +91 {SITE_CONFIG.phone}
                   </a>
                 </div>
               </div>
-              <div className="flex items-start gap-2.5">
-                <span className="text-white text-base">✉</span>
-                <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="text-slate-300 hover:text-white transition-colors">
+              <div className="flex items-start gap-3">
+                <FaEnvelope className="text-slate-400 mt-1 shrink-0" />
+                <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="hover:text-brand-green transition-colors block break-all">
                   {SITE_CONFIG.supportEmail}
                 </a>
               </div>
-              <div className="flex items-start gap-2.5">
-                <span className="text-white text-base">📍</span>
-                <span className="text-slate-300 leading-relaxed">
-                  {SITE_CONFIG.address}
+              <div className="flex items-start gap-3">
+                <FaMapMarkerAlt className="text-slate-400 mt-1 shrink-0 text-base" />
+                <span className="leading-relaxed">
+                  Head Office: Shop No. 1, Ground Floor, Chilla Gaon, Mayur Vihar Phase 1, New Delhi - 110091
                 </span>
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* 3. Bottom Legal / Copyright Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-        <p>© {new Date().getFullYear()} Urgent Taxis. All rights reserved.</p>
+      {/* 3. Bottom Links Matrix */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[12px] text-slate-500">
+          <div>
+            <h5 className="text-white font-bold mb-4">Popular City Taxi Services</h5>
+            <div className="flex flex-wrap gap-x-2 gap-y-1">
+              <span>Taxi Services in Delhi</span> <span>•</span>
+              <span>Taxi Services in Gurgaon</span> <span>•</span>
+              <span>Taxi Services in Noida</span> <span>•</span>
+              <span>Taxi Services in Ghaziabad</span> <span>•</span>
+              <span>Taxi Services in Faridabad</span>
+            </div>
+          </div>
+          <div>
+            <h5 className="text-white font-bold mb-4">Top Airport Routes</h5>
+            <div className="flex flex-wrap gap-x-2 gap-y-1">
+              <span>Delhi Airport</span> <span>•</span>
+              <span>Jaipur Airport</span> <span>•</span>
+              <span>Chandigarh Airport</span> <span>•</span>
+              <span>Dehradun Airport</span> <span>•</span>
+              <span>Amritsar Airport</span>
+            </div>
+          </div>
+          <div>
+            <h5 className="text-white font-bold mb-4">Delhi Airport Routes</h5>
+            <div className="flex flex-wrap gap-x-2 gap-y-1">
+              <span>IGI to Gurgaon</span> <span>•</span>
+              <span>IGI to Noida</span> <span>•</span>
+              <span>IGI to Faridabad</span> <span>•</span>
+              <span>IGI to Ghaziabad</span> <span>•</span>
+              <span>IGI to Meerut</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Bottom Legal / Copyright Bar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] text-slate-500">
+        <p>© Copyright 2024. All rights reserved.</p>
         <div className="flex items-center gap-6">
-          <Link href="/routes" className="hover:text-white transition-colors">
+          <Link href="/privacy" className="hover:text-brand-green transition-colors">
             Privacy Policy
           </Link>
-          <Link href="/routes" className="hover:text-white transition-colors">
-            Terms & Conditions
+          <span className="text-slate-700">|</span>
+          <Link href="/terms" className="hover:text-brand-green transition-colors">
+            Terms of Use
           </Link>
         </div>
       </div>
     </footer>
   );
 }
-
