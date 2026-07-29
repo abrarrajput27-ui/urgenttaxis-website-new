@@ -99,10 +99,10 @@ export async function POST(req: NextRequest) {
     };
 
     let calcResult = null;
-    if (serviceType === 'one_way') calcResult = calculateMasterOneWayFare(calcInput, rule, dynamicRulesData || []);
-    if (serviceType === 'round_trip') calcResult = calculateMasterRoundTripFare(calcInput, rule, dynamicRulesData || []);
-    if (serviceType === 'local_rental') calcResult = calculateMasterLocalRentalFare(calcInput, rule, dynamicRulesData || []);
-    if (serviceType === 'airport_transfer') calcResult = calculateMasterAirportTransferFare(calcInput, rule, dynamicRulesData || []);
+    if (serviceType === 'one_way') calcResult = calculateMasterOneWayFare(calcInput, rule as any, dynamicRulesData || []);
+    if (serviceType === 'round_trip') calcResult = calculateMasterRoundTripFare(calcInput, rule as any, dynamicRulesData || []);
+    if (serviceType === 'local_rental') calcResult = calculateMasterLocalRentalFare(calcInput, rule as any, dynamicRulesData || []);
+    if (serviceType === 'airport_transfer') calcResult = calculateMasterAirportTransferFare(calcInput, rule as any, dynamicRulesData || []);
 
     if (!calcResult) {
       return NextResponse.json({ success: false, message: 'Fare calculation failed.' }, { status: 500 });
@@ -157,8 +157,8 @@ export async function POST(req: NextRequest) {
       base_fare: calcResult.baseFare,
       included_km: calcResult.includedKm,
       extra_km_rate: calcResult.extraKmRate,
-      toll_tax: calcResult.charges.find((c: unknown) => c.id === 'toll_tax')?.amount || 0,
-      state_tax: calcResult.charges.find((c: unknown) => c.id === 'state_tax')?.amount || 0,
+      toll_tax: calcResult.charges.find((c: any) => c.id === 'toll_tax')?.amount || 0,
+      state_tax: calcResult.charges.find((c: any) => c.id === 'state_tax')?.amount || 0,
       customer_payable: calcResult.customerPayable,
       token_amount: calcResult.tokenAmount,
       balance_amount: calcResult.balanceAmount,

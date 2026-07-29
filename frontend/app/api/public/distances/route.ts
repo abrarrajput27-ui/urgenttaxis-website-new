@@ -80,7 +80,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ routes: results });
 
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error('Error fetching distances:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
