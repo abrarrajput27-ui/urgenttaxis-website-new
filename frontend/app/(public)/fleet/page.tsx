@@ -34,14 +34,14 @@ const VehicleCard = ({
   outstationPrice: string;
   localPrice: string;
 }) => (
-  <div className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col border border-slate-100 transition-transform hover:-translate-y-1">
-    <div className="bg-slate-50 p-6 flex justify-center items-center h-48 relative border-b border-slate-100">
+  <div className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-visible flex flex-col border border-slate-100 transition-transform hover:-translate-y-1">
+    <div className="bg-slate-50 p-0 flex justify-center items-center h-48 relative border-b border-slate-100 overflow-hidden">
       <Image
         src={image}
         alt={title}
         width={300}
         height={180}
-        className="object-contain w-full h-full drop-shadow-md"
+        className="object-cover w-full h-full"
       />
     </div>
     <div className="p-6 flex-1 flex flex-col">
@@ -114,7 +114,7 @@ export default function FleetPage() {
           <h2 className="text-2xl font-black text-brand-blue mb-6 border-b-2 border-brand-blue pb-2 inline-block">Cars & SUVs</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <VehicleCard
-              image="/hero-bg.webp" 
+              image="/fleet-brand/Hatchback.png" 
               title="Hatchback"
               models="(WagonR, Swift, Celerio)"
               seats="4 Seats"
@@ -125,7 +125,7 @@ export default function FleetPage() {
               localPrice="₹1200"
             />
             <VehicleCard
-              image="/hero-bg.webp"
+              image="/fleet-brand/dzire.png"
               title="Sedan"
               models="(Dzire, Etios, Amaze)"
               seats="4 Seats"
@@ -136,7 +136,7 @@ export default function FleetPage() {
               localPrice="₹1500"
             />
             <VehicleCard
-              image="/hero-bg.webp"
+              image="/fleet-brand/Ertiga.png"
               title="SUV / MPV"
               models="(Ertiga, Triber, Carens)"
               seats="6/7 Seats"
@@ -147,16 +147,16 @@ export default function FleetPage() {
               localPrice="₹2000"
             />
             <VehicleCard
-              image="/hero-bg.webp"
-              title="Premium SUV"
-              models="(Innova Crysta, Hycross)"
-              seats="6/7 Seats"
-              bags="4 Bags"
-              ac={true}
-              music={true}
-              outstationPrice="₹20/km"
-              localPrice="₹2500"
-            />
+                image="/fleet-brand/Innova%20Crysta.png"
+                title="Premium SUV"
+                models="(Innova Crysta, Hycross)"
+                seats="6/7 Seats"
+                bags="4 Bags"
+                ac={true}
+                music={true}
+                outstationPrice="₹20/km"
+                localPrice="₹2500"
+                />
           </div>
         </section>
 
@@ -165,7 +165,7 @@ export default function FleetPage() {
           <h2 className="text-2xl font-black text-brand-blue mb-6 border-b-2 border-brand-blue pb-2 inline-block">Tempo Travellers</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <VehicleCard
-              image="/hero-bg.webp"
+              image="/fleet-brand/Tempo Traveller.png"
               title="12 Seater Traveller"
               models="Force Traveller 1x1"
               seats="12 Seats"
@@ -176,7 +176,7 @@ export default function FleetPage() {
               localPrice="₹3500"
             />
             <VehicleCard
-              image="/hero-bg.webp"
+              image="/fleet-brand/Tempo Traveller.png"
               title="16 Seater Traveller"
               models="Force Traveller 2x1"
               seats="16 Seats"
@@ -187,7 +187,7 @@ export default function FleetPage() {
               localPrice="₹4500"
             />
             <VehicleCard
-              image="/hero-bg.webp"
+              image="/fleet-brand/Tempo Traveller.png"
               title="20 Seater Traveller"
               models="Force Traveller 2x1"
               seats="20 Seats"
@@ -198,7 +198,7 @@ export default function FleetPage() {
               localPrice="₹5500"
             />
             <VehicleCard
-              image="/hero-bg.webp"
+              image="/fleet-brand/Tempo Traveller.png"
               title="26 Seater Traveller"
               models="Force Traveller 2x2"
               seats="26 Seats"
@@ -216,7 +216,7 @@ export default function FleetPage() {
           <h2 className="text-2xl font-black text-brand-blue mb-6 border-b-2 border-brand-blue pb-2 inline-block">Urbania</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <VehicleCard
-              image="/hero-bg.webp"
+              image="/fleet-brand/Urbania.png"
               title="12 Seater Urbania"
               models="Force Urbania Premium"
               seats="12 Seats"
@@ -227,7 +227,7 @@ export default function FleetPage() {
               localPrice="₹5000"
             />
             <VehicleCard
-              image="/hero-bg.webp"
+              image="/fleet-brand/Urbania.png"
               title="16 Seater Urbania"
               models="Force Urbania Premium"
               seats="16 Seats"
@@ -245,7 +245,7 @@ export default function FleetPage() {
           <h2 className="text-2xl font-black text-brand-blue mb-6 border-b-2 border-brand-blue pb-2 inline-block">Luxury Buses</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <VehicleCard
-              image="/hero-bg.webp"
+              image="/fleet-brand/Bus.png"
               title="27 Seater Bus"
               models="Luxury AC Bus"
               seats="27 Seats"
@@ -256,7 +256,7 @@ export default function FleetPage() {
               localPrice="₹8000"
             />
             <VehicleCard
-              image="/hero-bg.webp"
+              image="/fleet-brand/volvo bus.png"
               title="45 Seater Bus"
               models="Luxury AC Bus"
               seats="45 Seats"
