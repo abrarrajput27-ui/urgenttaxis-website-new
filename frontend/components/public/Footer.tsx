@@ -8,7 +8,7 @@ export default function PublicFooter() {
     <footer className="bg-[#0b101e] text-slate-300 font-sans text-sm">
       {/* 1. Top Call-to-Action Banner */}
       <div className="bg-brand-blue relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between py-10 md:py-12 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between py-6 md:py-8 relative overflow-hidden">
           <div className="z-10 text-white flex-1 md:pl-20">
             <h3 className="text-3xl sm:text-4xl font-black tracking-tight mb-6 text-center md:text-left">
               Book your ride in <br className="hidden md:block"/> just 2 clicks
@@ -44,11 +44,11 @@ export default function PublicFooter() {
       </div>
 
       {/* 2. Main Footer Content Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-b border-white/10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10 border-b border-white/10">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
           
           {/* Column 1: Brand Logo & Description */}
-          <div className="space-y-6 lg:col-span-1">
+          <div className="space-y-4 col-span-2 lg:col-span-1">
             <div className="bg-white p-2.5 rounded-lg inline-block">
               <Image
                 src="/logo.jpg"
@@ -76,7 +76,7 @@ export default function PublicFooter() {
           </div>
 
           {/* Column 2: Quick Links */}
-          <div className="space-y-6">
+          <div className="space-y-4 col-span-1">
             <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
               Quick links
             </h4>
@@ -93,7 +93,7 @@ export default function PublicFooter() {
           </div>
 
           {/* Column 3: Our Services */}
-          <div className="space-y-6">
+          <div className="space-y-4 col-span-1">
             <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
               Our services
             </h4>
@@ -107,7 +107,7 @@ export default function PublicFooter() {
           </div>
 
           {/* Column 4: Top Routes */}
-          <div className="space-y-6">
+          <div className="space-y-4 col-span-1">
             <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
               Top Routes
             </h4>
@@ -121,7 +121,7 @@ export default function PublicFooter() {
           </div>
 
           {/* Column 5: Contact Us */}
-          <div className="space-y-6">
+          <div className="space-y-4 col-span-2 lg:col-span-1">
             <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
               Contact Us
             </h4>
@@ -152,43 +152,43 @@ export default function PublicFooter() {
       </div>
 
       {/* 3. Bottom Links Matrix */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-b border-white/10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[12px] text-slate-500">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-b border-white/10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-[12px] text-slate-500">
           <div>
-            <h5 className="text-white font-bold mb-4">Popular City Taxi Services</h5>
+            <h5 className="text-white font-bold mb-3">Popular City Taxi Services</h5>
             <div className="flex flex-wrap gap-x-2 gap-y-1">
-              <span>Taxi Services in Delhi</span> <span>•</span>
-              <span>Taxi Services in Gurgaon</span> <span>•</span>
-              <span>Taxi Services in Noida</span> <span>•</span>
-              <span>Taxi Services in Ghaziabad</span> <span>•</span>
-              <span>Taxi Services in Faridabad</span>
+              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Delhi</Link> <span>•</span>
+              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Gurgaon</Link> <span>•</span>
+              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Noida</Link> <span>•</span>
+              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Ghaziabad</Link> <span>•</span>
+              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Faridabad</Link>
             </div>
           </div>
           <div>
-            <h5 className="text-white font-bold mb-4">Top Airport Routes</h5>
+            <h5 className="text-white font-bold mb-3">Top Airport Routes</h5>
             <div className="flex flex-wrap gap-x-2 gap-y-1">
-              <span>Delhi Airport</span> <span>•</span>
-              <span>Jaipur Airport</span> <span>•</span>
-              <span>Chandigarh Airport</span> <span>•</span>
-              <span>Dehradun Airport</span> <span>•</span>
-              <span>Amritsar Airport</span>
+              <Link href="/airport-transfers" className="hover:text-white transition-colors">Delhi Airport</Link> <span>•</span>
+              <Link href="/airport-transfers" className="hover:text-white transition-colors">Jaipur Airport</Link> <span>•</span>
+              <Link href="/airport-transfers" className="hover:text-white transition-colors">Chandigarh Airport</Link> <span>•</span>
+              <Link href="/airport-transfers" className="hover:text-white transition-colors">Dehradun Airport</Link> <span>•</span>
+              <Link href="/airport-transfers" className="hover:text-white transition-colors">Amritsar Airport</Link>
             </div>
           </div>
-          <div>
-            <h5 className="text-white font-bold mb-4">Delhi Airport Routes</h5>
+          <div className="sm:col-span-2 md:col-span-1">
+            <h5 className="text-white font-bold mb-3">Delhi Airport Routes</h5>
             <div className="flex flex-wrap gap-x-2 gap-y-1">
-              <span>IGI to Gurgaon</span> <span>•</span>
-              <span>IGI to Noida</span> <span>•</span>
-              <span>IGI to Faridabad</span> <span>•</span>
-              <span>IGI to Ghaziabad</span> <span>•</span>
-              <span>IGI to Meerut</span>
+              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Gurgaon</Link> <span>•</span>
+              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Noida</Link> <span>•</span>
+              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Faridabad</Link> <span>•</span>
+              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Ghaziabad</Link> <span>•</span>
+              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Meerut</Link>
             </div>
           </div>
         </div>
       </div>
 
       {/* 4. Bottom Legal / Copyright Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] text-slate-500">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] text-slate-500">
         <p>© Copyright 2024. All rights reserved.</p>
         <div className="flex items-center gap-6">
           <Link href="/privacy" className="hover:text-brand-green transition-colors">
