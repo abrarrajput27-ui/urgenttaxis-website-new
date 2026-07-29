@@ -8,11 +8,11 @@ export default function PublicFooter() {
   return (
     <>
       {/* 1. Top Call-to-Action Banner */}
-      <div className="w-full bg-white pt-12 pb-4 lg:pt-8 lg:pb-6 relative z-20">
-        <div className="px-2 sm:px-6 lg:px-8 w-full max-w-[100%] sm:max-w-[98%] lg:max-w-[96%] xl:max-w-[1500px] mx-auto relative z-20">
-          <div className="bg-[#1a419c] relative rounded-[2rem] text-center px-3 sm:px-8 lg:px-12 pt-28 sm:pt-28 lg:py-10 shadow-2xl border border-slate-100 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[160px]">
+      <div className="w-full bg-white pt-8 pb-4 lg:pt-4 lg:pb-4 relative z-20">
+        <div className="w-[98%] lg:w-[94%] xl:max-w-7xl mx-auto relative z-20">
+          <div className="bg-[#1a419c] relative rounded-[2rem] text-center px-3 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:py-6 shadow-2xl border border-slate-100 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[auto] lg:min-h-[100px]">
             
-            <div className="relative z-20 space-y-1 lg:space-y-2 mt-2 lg:mt-0 lg:w-[65%] flex flex-col items-center">
+            <div className="relative z-20 space-y-1 lg:space-y-2 mt-2 lg:mt-0 lg:w-[65%] flex flex-col items-center justify-center">
               <h3 className="text-white text-[22px] sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-center">
                 Book your ride in just 2 clicks
               </h3>
@@ -39,13 +39,13 @@ export default function PublicFooter() {
             </div>
 
             {/* Overflowing Car Image */}
-            <div className="absolute -top-20 sm:-top-24 lg:top-1/2 left-1/2 lg:left-auto lg:right-0 -translate-x-1/2 lg:translate-x-8 lg:-translate-y-1/2 w-[98%] max-w-[340px] sm:max-w-[400px] lg:max-w-[480px] xl:max-w-[550px] z-10 pointer-events-none">
+            <div className="absolute -top-20 sm:-top-24 lg:top-1/2 left-1/2 lg:left-auto lg:right-4 -translate-x-1/2 lg:translate-x-0 lg:-translate-y-1/2 w-[98%] max-w-[340px] sm:max-w-[400px] lg:max-w-[440px] xl:max-w-[500px] z-10 pointer-events-none">
               <Image
                 src="/cta-hero.png"
                 alt="Urgent Taxis Cab"
                 width={700}
                 height={400}
-                className="object-contain w-full h-auto drop-shadow-2xl"
+                className="object-contain w-full h-auto drop-shadow-2xl mix-blend-multiply"
                 priority
               />
             </div>
