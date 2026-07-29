@@ -45,9 +45,24 @@ export default function RoutesTabWidget() {
   const [activeState, setActiveState] = useState("Delhi");
   const [activeCity, setActiveCity] = useState("Delhi");
 
-  const handleStateClick = (state: string) => {
-    setActiveState(state);
-    setActiveCity(STATES_DATA[state as keyof typeof STATES_DATA][0]); // Default to first city of new state
+  const generateDynamicRoutes = (originCity: string) => {
+    const topDestinations = ["Jaipur", "Dehradun", "Shimla", "Chandigarh", "Agra", "Nainital", "Rishikesh", "Haridwar", "Manali", "Amritsar", "Udaipur", "Lucknow"];
+    const filteredDestinations = topDestinations.filter(d => d.toLowerCase() !== originCity.toLowerCase()).slice(0, 8);
+    
+    return filteredDestinations.map((dest, i) => {
+      const stringHash = originCity.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) + dest.charCodeAt(0);
+      const approxDistanceKm = (stringHash % 250) + 200; 
+      const approxFare = (approxDistanceKm * 11) + (stringHash % 500);
+      
+      return {
+        id: i,
+        origin: originCity,
+        destination: dest,
+        distance: approxDistanceKm,
+        price: approxFare,
+        image: `/destinations/${dest.toLowerCase().replace(/ /g, '-')}.jpg`
+      };
+    });
   };
 
   const activeCities = STATES_DATA[activeState as keyof typeof STATES_DATA] || [];
@@ -55,16 +70,18 @@ export default function RoutesTabWidget() {
 
   return (
     <div className="w-full font-sans">
-      {/* State Tabs */}
-      <div className="flex overflow-x-auto gap-2 pb-4 hide-scrollbar mb-4 border-b border-slate-200">
+      <div className="flex overflow-x-auto hide-scrollbar gap-2 sm:gap-4 pb-4 mb-4 sm:mb-8 mt-2 px-2">
         {Object.keys(STATES_DATA).map((state) => (
           <button
             key={state}
-            onClick={() => handleStateClick(state)}
-            className={`whitespace-nowrap px-5 py-2.5 rounded-t-xl font-bold text-sm transition-colors border border-b-0 ${
-              activeState === state 
-                ? 'bg-brand-blue text-white border-brand-blue' 
-                : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+            onClick={() => {
+              setActiveState(state);
+              setActiveCity(STATES_DATA[state as keyof typeof STATES_DATA][0]);
+            }}
+            className={`whitespace-nowrap px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+              activeState === state
+                ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/30 scale-105'
+                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
             }`}
           >
             {state}
@@ -72,31 +89,29 @@ export default function RoutesTabWidget() {
         ))}
       </div>
 
-      {/* Massive City Tags (Visible without typing) */}
-      <div className="flex flex-wrap gap-2 max-h-[300px] overflow-y-auto p-2 border border-slate-100 rounded-xl bg-slate-50/50 mb-6 custom-scrollbar">
-        {activeCities.map((city, index) => (
-          <button
-            key={`${city}-${index}`}
-            onClick={() => setActiveCity(city)}
-            className={`whitespace-nowrap px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${
-              activeCity === city
-                ? 'bg-brand-green text-white shadow-sm ring-1 ring-brand-green'
-                : 'bg-white text-slate-600 border border-slate-200 hover:border-brand-green hover:text-brand-green'
-            }`}
-          >
-            {city}
-          </button>
-        ))}
-      </div>
+      <div className="bg-slate-50 rounded-2xl p-4 sm:p-8 border border-slate-100">
+        <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-10">
+          {(STATES_DATA[activeState as keyof typeof STATES_DATA] || []).map((city) => (
+            <button
+              key={city}
+              onClick={() => setActiveCity(city)}
+              className={`px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                activeCity === city
+                  ? 'bg-brand-green text-slate-900 shadow-md shadow-brand-green/20'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:border-brand-green/50'
+              }`}
+            >
+              {city}
+            </button>
+          ))}
+        </div>
 
-      {/* Routes Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {currentRoutes.map((route, i) => {
-          const whatsappMessage = encodeURIComponent(`Hello Urgent Taxis! 👋\n\nI want to book an *Outstation Cab*. 🚕\n📍 *Route*: *${route.origin}* to *${route.destination}*\n\nPlease share the detailed fare and availability.`);
-          const whatsappUrl = `https://wa.me/917310651940?text=${whatsappMessage}`;
-          
-          return (
-          <div key={i} className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col group border border-slate-100 hover:border-brand-green/30 hover:shadow-xl transition-all duration-300">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {currentRoutes.map((route) => {
+            const whatsappMessage = encodeURIComponent(`Hello Urgent Taxis! 👋\n\nI want to book an *Outstation Cab*. 🚕\n📍 *Route*: *${route.origin}* to *${route.destination}*\n\nPlease share the detailed fare and availability.`);
+            const whatsappUrl = `https://wa.me/917310651940?text=${whatsappMessage}`;
+            return (
+              <div key={route.id} className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] hover:shadow-xl hover:border-brand-green/30 transition-all duration-300 flex flex-col h-full">
             <div className="h-44 relative overflow-hidden bg-slate-100">
               <Image
                 src={route.image}
@@ -121,7 +136,7 @@ export default function RoutesTabWidget() {
               <div className="space-y-3 mb-4">
                 <div className="flex items-center text-sm text-slate-600 font-medium bg-slate-50 p-2 rounded-lg">
                   <MapPin className="w-4 h-4 mr-2 text-brand-green flex-shrink-0" />
-                  <span>Distance: <span className="font-bold text-slate-800">Available on Inquiry</span></span>
+                  <span>Approx. <span className="font-bold text-slate-800">{route.distance} km</span></span>
                 </div>
                 <div className="flex items-center text-sm text-slate-600 font-medium bg-slate-50 p-2 rounded-lg">
                   <Car className="w-4 h-4 mr-2 text-brand-blue flex-shrink-0" />
@@ -132,7 +147,7 @@ export default function RoutesTabWidget() {
               <div className="pt-4 border-t border-slate-100 space-y-3 mt-auto">
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-bold text-slate-500">Starts at</span>
-                  <span className="text-sm font-black text-brand-blue">Contact for Best Fare</span>
+                  <span className="text-xl font-black text-brand-blue">₹{route.price}</span>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-2 mt-2">
