@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata: Metadata = {
   title: "Urgent Taxis - Reliable Outstation Cab Booking",
   description: "Book reliable sedan, SUV, and outstation cabs in Delhi NCR with transparent pricing.",
+  icons: {
+    icon: '/logo.jpg',
+  }
 };
 
 export default function RootLayout({
