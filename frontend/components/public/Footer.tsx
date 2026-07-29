@@ -39,7 +39,7 @@ export default function PublicFooter() {
           {/* Overflowing Car Image */}
           <div className="absolute -top-16 sm:-top-24 lg:top-1/2 left-1/2 lg:left-auto lg:right-0 -translate-x-1/2 lg:translate-x-8 lg:-translate-y-1/2 w-[95%] max-w-[320px] sm:max-w-[400px] lg:max-w-[480px] xl:max-w-[550px] z-10 pointer-events-none">
             <Image
-              src="/fleet-hero-bg.png"
+              src="/cta-hero.png"
               alt="Urgent Taxis Cab"
               width={700}
               height={400}
