@@ -157,6 +157,7 @@ export default function TrustSection() {
             </div>
 
           </div>
+        </div>
       </section>
     </>
   );
