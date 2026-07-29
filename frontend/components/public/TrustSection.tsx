@@ -37,34 +37,19 @@ export default function TrustSection() {
 
   const features = [
     {
-      title: "Direct Booking Assistance",
-      description: "Book directly with our team for quick confirmation and personalized support.",
-      icon: <FaPhoneAlt className="text-2xl text-brand-green" />
+      title: "Transparent Itemized Pricing",
+      description: "Calculated using strict per-KM rates and daily minimums. Clearly itemized base fare, distance charges, and driver allowance.",
+      icon: "💵"
     },
     {
-      title: "Competitive Pricing",
-      description: "Direct bookings may help you avoid additional marketplace markups or platform fees where applicable.",
-      icon: <FaTag className="text-2xl text-brand-green" />
+      title: "Verified Fleet & Drivers",
+      description: "Well-maintained sedans and SUVs driven by experienced chauffeurs trained for highway navigation and safety.",
+      icon: "🛡️"
     },
     {
-      title: "Verified Drivers",
-      description: "Professional verified drivers with clean vehicles.",
-      icon: <FaUserCheck className="text-2xl text-brand-green" />
-    },
-    {
-      title: "24×7 Customer Support",
-      description: "Dedicated support before, during and after your journey.",
-      icon: <FaHeadset className="text-2xl text-brand-green" />
-    },
-    {
-      title: "Transparent Fare",
-      description: "Clear fare breakup with no hidden surprises.",
-      icon: <FaFileInvoiceDollar className="text-2xl text-brand-green" />
-    },
-    {
-      title: "Trusted Outstation Specialist",
-      description: "Specialized in Outstation Cabs, Airport Transfers, Local Rentals, Corporate Travel, Tempo Traveller and Tour Packages.",
-      icon: <FaCar className="text-2xl text-brand-green" />
+      title: "Instant Booking Assistance",
+      description: "Instant phone and WhatsApp support for quick outstation trip confirmation and vehicle assignment.",
+      icon: "📲"
     }
   ];
 
@@ -85,15 +70,15 @@ export default function TrustSection() {
           <div className="bg-white rounded-2xl sm:rounded-[2rem] p-3 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100/50">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 divide-y-0 lg:divide-x divide-slate-100">
               {trustItems.map((item, idx) => (
-                <div key={idx} className={`flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-4 ${idx !== 0 && idx !== 2 ? 'lg:pl-6' : ''}`}>
-                  <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-full flex-shrink-0 flex items-center justify-center shadow-md ${item.colorClass}`}>
-                    {item.icon}
+                <div key={idx} className={`flex flex-col sm:flex-row items-center text-center sm:text-left gap-1.5 sm:gap-4 w-full ${idx !== 0 && idx !== 2 ? 'lg:pl-6' : ''}`}>
+                  <div className={`w-8 h-8 sm:w-14 sm:h-14 rounded-full flex-shrink-0 flex items-center justify-center shadow-lg ${item.colorClass}`}>
+                    <span className="scale-75 sm:scale-100">{item.icon}</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[13px] sm:text-[17px] font-black text-slate-900 leading-tight">
+                    <span className="text-[12px] sm:text-[17px] font-black text-slate-900 leading-tight">
                       {item.title} <br className="hidden sm:block" /> {item.subtitle}
                     </span>
-                    <span className="text-[10px] sm:text-xs font-medium text-slate-500 mt-0.5">
+                    <span className="text-[9px] sm:text-xs font-medium text-slate-500 mt-0.5 leading-none">
                       {item.desc}
                     </span>
                   </div>
@@ -121,19 +106,19 @@ export default function TrustSection() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
             
             {/* Features - Left Side */}
-            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="lg:col-span-2 grid grid-cols-1 gap-6 w-full">
               {features.map((feature, index) => (
                 <div 
                   key={index}
-                  className="bg-white p-6 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.16)] hover:-translate-y-1 hover:border-brand-green/20 transition-all duration-300 group"
+                  className="bg-white p-6 rounded-3xl border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:-translate-y-1 hover:border-brand-green/30 transition-all duration-300 group w-full"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-slate-50 rounded-xl group-hover:bg-brand-green/10 transition-colors">
+                  <div className="flex items-start gap-5">
+                    <div className="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-2xl border border-brand-green/20 flex-shrink-0">
                       {feature.icon}
                     </div>
-                    <div>
-                      <h3 className="font-bold text-slate-800 text-lg mb-1">{feature.title}</h3>
-                      <p className="text-slate-500 text-sm leading-relaxed">{feature.description}</p>
+                    <div className="flex-1">
+                      <h3 className="font-black text-slate-900 text-lg sm:text-xl mb-1.5">{feature.title}</h3>
+                      <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-medium">{feature.description}</p>
                     </div>
                   </div>
                 </div>
@@ -141,14 +126,14 @@ export default function TrustSection() {
             </div>
 
             {/* Platforms Grid - Right Side */}
-            <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100 flex flex-col h-full">
-              <h3 className="text-xl font-bold text-slate-800 mb-6 text-center">Compare our fares on top platforms</h3>
+            <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border border-slate-100 flex flex-col h-full w-full">
+              <h3 className="text-xl font-bold text-slate-900 mb-6 text-center">Compare our fares on top platforms</h3>
               
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-2 gap-4 mb-6 w-full">
                 {platforms.map((platform, idx) => (
                   <div 
                     key={idx} 
-                    className="flex items-center justify-center p-4 rounded-xl border border-slate-100 bg-slate-50 grayscale hover:grayscale-0 hover:bg-white hover:shadow-md hover:border-brand-blue/20 transition-all duration-300 h-20"
+                    className="flex items-center justify-center p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all duration-300 h-20 w-full"
                   >
                     <img 
                       src={platform.logo} 

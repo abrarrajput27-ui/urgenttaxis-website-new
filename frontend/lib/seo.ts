@@ -7,7 +7,7 @@ export const SITE_CONFIG = {
   description: 'Book premium sedan, SUV, and outstation cabs in Delhi NCR, Agra, Haridwar, Jaipur, and airport transfers with transparent pricing and verified drivers.',
   phone: '7310 651 940',
   phoneRaw: '+917310651940',
-  whatsapp: 'https://wa.me/917310651940',
+  whatsapp: 'https://wa.me/918595066033',
   supportEmail: 'info@urgenttaxis.com',
   address: 'Shop No. 09, S. R. Complex, Railway Station Road, Masuri, Ghaziabad, Masuri, Uttar Pradesh 201302',
 };

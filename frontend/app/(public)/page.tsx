@@ -275,7 +275,7 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <div className="bg-white p-7 rounded-2xl border border-slate-100 space-y-5 shadow-xl relative z-10">
+            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] relative group hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300 w-full">
             <h3 className="text-base font-black text-brand-blue border-b border-slate-100 pb-3">Top Verified Airport Routes</h3>
             <ul className="space-y-4 text-sm text-slate-700 font-medium">
               <li className="flex justify-between items-center border-b border-slate-50 pb-2">
@@ -310,7 +310,7 @@ export default async function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300 w-full">
             <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 border border-blue-100 block w-fit">
               Uttarakhand Circuit (3N / 4D)
             </span>
@@ -331,7 +331,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+          <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden w-full">
             <div className="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-black px-3 py-1 rounded-bl-xl tracking-wider">POPULAR</div>
             <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-brand-green/10 text-brand-green border border-brand-green/20 block w-fit">
               Spiritual Express (2N / 3D)
@@ -353,7 +353,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300 w-full">
             <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 block w-fit">
               Golden Triangle (2N / 3D)
             </span>
@@ -397,7 +397,7 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           {localPackages?.slice(0, 3).map((pkg) => (
-            <div key={pkg.id} className="bg-white border border-slate-200 p-8 rounded-3xl space-y-5 shadow-sm hover:shadow-lg transition-all duration-300">
+              <div key={pkg.id} className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300 group flex flex-col w-full">
               <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-brand-blue/10 text-brand-blue border border-brand-blue/20 block w-fit">
                 {pkg.package_name || `${pkg.included_hours}h / ${pkg.included_km}km`}
               </span>
@@ -426,49 +426,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 8. WHY CHOOSE URGENT TAXIS */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
-        <div className="text-center space-y-3 mb-16">
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            Why Choose Urgent Taxis?
-          </h2>
-          <p className="text-sm text-slate-500 max-w-xl mx-auto font-medium">
-            Transparent policies, verified drivers, and guaranteed outstation vehicles.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          <div className="bg-white border border-slate-100 p-8 rounded-3xl space-y-4 text-center shadow-sm hover:shadow-lg transition-shadow">
-            <div className="w-16 h-16 rounded-2xl bg-brand-blue/10 text-brand-blue flex items-center justify-center font-bold text-3xl mx-auto border border-brand-blue/20">
-              💵
-            </div>
-            <h3 className="text-lg font-black text-slate-900">Transparent Itemized Pricing</h3>
-            <p className="text-sm text-slate-600 leading-relaxed font-medium">
-              Calculated using strict per-KM rates and daily minimums. Clearly itemized base fare, distance charges, and driver allowance.
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-100 p-8 rounded-3xl space-y-4 text-center shadow-sm hover:shadow-lg transition-shadow">
-            <div className="w-16 h-16 rounded-2xl bg-brand-green/10 text-brand-green flex items-center justify-center font-bold text-3xl mx-auto border border-brand-green/20">
-              🛡️
-            </div>
-            <h3 className="text-lg font-black text-slate-900">Verified Fleet & Drivers</h3>
-            <p className="text-sm text-slate-600 leading-relaxed font-medium">
-              Well-maintained sedans and SUVs driven by experienced chauffeurs trained for highway navigation and safety.
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-100 p-8 rounded-3xl space-y-4 text-center shadow-sm hover:shadow-lg transition-shadow">
-            <div className="w-16 h-16 rounded-2xl bg-brand-blue/10 text-brand-blue flex items-center justify-center font-bold text-3xl mx-auto border border-brand-blue/20">
-              📲
-            </div>
-            <h3 className="text-lg font-black text-slate-900">Instant Booking Assistance</h3>
-            <p className="text-sm text-slate-600 leading-relaxed font-medium">
-              Instant phone and WhatsApp support for quick outstation trip confirmation and vehicle assignment.
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* 9. VISIBLE FAQS SECTION */}
       <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
