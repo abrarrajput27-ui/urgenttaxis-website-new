@@ -123,7 +123,11 @@ export default function TrustSection() {
                   </div>
                 </div>
               ))}
+            {/* SEO Text (Moved up to save space) */}
+            <div className="text-[11px] text-slate-400 font-medium leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100 shadow-inner mt-2">
+              Urgent Taxis provides premier <strong className="font-semibold">outstation taxi</strong> and <strong className="font-semibold">airport taxi</strong> services across major cities. Whether you need a simple <strong className="font-semibold">cab booking</strong> or an <strong className="font-semibold">online cab booking</strong> platform, our <strong className="font-semibold">taxi service</strong> offers reliable <strong className="font-semibold">chauffeur driven car</strong> experiences. We specialize in <strong className="font-semibold">one way taxi</strong> drops, <strong className="font-semibold">round trip cab</strong> packages, and prompt <strong className="font-semibold">airport transfer</strong>. For city tours, book a <strong className="font-semibold">local cab</strong> or hire a spacious <strong className="font-semibold">tempo traveller</strong> for group trips. We also cater to business professionals requiring a <strong className="font-semibold">corporate cab</strong>. Explore popular corridors with our <strong className="font-semibold">Delhi taxi</strong>, <strong className="font-semibold">Noida taxi</strong>, <strong className="font-semibold">Ghaziabad taxi</strong>, <strong className="font-semibold">Aligarh taxi</strong>, <strong className="font-semibold">Lucknow taxi</strong>, <strong className="font-semibold">Haridwar taxi</strong>, <strong className="font-semibold">Rishikesh taxi</strong>, <strong className="font-semibold">Nainital taxi</strong>, <strong className="font-semibold">Jim Corbett taxi</strong>, <strong className="font-semibold">Dehradun taxi</strong>, <strong className="font-semibold">Agra taxi</strong>, and <strong className="font-semibold">Jaipur taxi</strong> routes.
             </div>
+          </div>
 
             {/* Platforms Grid - Right Side */}
             <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border border-slate-100 flex flex-col h-full w-full">
@@ -153,27 +157,6 @@ export default function TrustSection() {
             </div>
 
           </div>
-
-          {/* Bottom Section: CTAs and SEO Content */}
-          <div className="flex flex-col items-center space-y-8 pt-8">
-            
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <a href="tel:+917310651940" className="bg-brand-green hover:bg-emerald-600 text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition-colors text-center text-sm">
-                Book Direct & Save Time
-              </a>
-              <Link href="/routes" className="bg-white hover:bg-slate-50 text-brand-blue border-2 border-brand-blue font-bold py-3.5 px-8 rounded-xl shadow-sm transition-colors text-center text-sm">
-                Get Instant Fare
-              </Link>
-            </div>
-
-            <div className="max-w-4xl mx-auto text-center">
-              <p className="text-[11px] text-slate-400 font-medium leading-relaxed">
-                Urgent Taxis provides premier <strong className="font-semibold">outstation taxi</strong> and <strong className="font-semibold">airport taxi</strong> services across major cities. Whether you need a simple <strong className="font-semibold">cab booking</strong> or an <strong className="font-semibold">online cab booking</strong> platform, our <strong className="font-semibold">taxi service</strong> offers reliable <strong className="font-semibold">chauffeur driven car</strong> experiences. We specialize in <strong className="font-semibold">one way taxi</strong> drops, <strong className="font-semibold">round trip cab</strong> packages, and prompt <strong className="font-semibold">airport transfer</strong>. For city tours, book a <strong className="font-semibold">local cab</strong> or hire a spacious <strong className="font-semibold">tempo traveller</strong> for group trips. We also cater to business professionals requiring a <strong className="font-semibold">corporate cab</strong>. Explore popular corridors with our <strong className="font-semibold">Delhi taxi</strong>, <strong className="font-semibold">Noida taxi</strong>, <strong className="font-semibold">Ghaziabad taxi</strong>, <strong className="font-semibold">Aligarh taxi</strong>, <strong className="font-semibold">Lucknow taxi</strong>, <strong className="font-semibold">Haridwar taxi</strong>, <strong className="font-semibold">Rishikesh taxi</strong>, <strong className="font-semibold">Nainital taxi</strong>, <strong className="font-semibold">Jim Corbett taxi</strong>, <strong className="font-semibold">Dehradun taxi</strong>, <strong className="font-semibold">Agra taxi</strong>, and <strong className="font-semibold">Jaipur taxi</strong> routes.
-              </p>
-            </div>
-            
-          </div>
-        </div>
       </section>
     </>
   );
