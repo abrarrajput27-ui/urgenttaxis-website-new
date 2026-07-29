@@ -71,7 +71,7 @@ export default function RoutesTabWidget() {
 
   return (
     <div className="w-full font-sans">
-      <div className="flex overflow-x-auto hide-scrollbar gap-2 sm:gap-4 pb-4 mb-4 sm:mb-8 mt-2 px-2">
+      <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-2 mb-2 sm:mb-4 mt-1 px-2">
         {Object.keys(STATES_DATA).map((state) => (
           <button
             key={state}
@@ -79,7 +79,7 @@ export default function RoutesTabWidget() {
               setActiveState(state);
               setActiveCity(STATES_DATA[state as keyof typeof STATES_DATA][0]);
             }}
-            className={`whitespace-nowrap px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 border-2 ${
+            className={`whitespace-nowrap px-3 sm:px-5 py-1.5 sm:py-2 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 border-2 ${
               activeState === state
                 ? 'bg-transparent border-brand-blue text-brand-blue shadow-lg shadow-brand-blue/10 scale-105'
                 : 'bg-transparent border-slate-300 text-slate-700 hover:border-brand-blue/50 hover:text-brand-blue'
@@ -90,13 +90,13 @@ export default function RoutesTabWidget() {
         ))}
       </div>
 
-      <div className="bg-slate-50 rounded-2xl p-4 sm:p-8 border border-slate-200">
-        <div className="flex overflow-x-auto hide-scrollbar gap-2 sm:gap-3 pb-2 mb-6 sm:mb-10">
+      <div className="bg-slate-50 rounded-2xl p-3 sm:p-5 border border-slate-200">
+        <div className="flex overflow-x-auto hide-scrollbar gap-1.5 sm:gap-2 pb-2 mb-4 sm:mb-6">
           {(STATES_DATA[activeState as keyof typeof STATES_DATA] || []).map((city) => (
             <button
               key={city}
               onClick={() => setActiveCity(city)}
-              className={`px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 border-2 whitespace-nowrap flex-shrink-0 ${
+              className={`px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-semibold transition-all duration-300 border-2 whitespace-nowrap flex-shrink-0 ${
                 activeCity === city
                   ? 'bg-transparent border-brand-green text-brand-green shadow-sm'
                   : 'bg-transparent border-slate-300 text-slate-600 hover:border-brand-green hover:text-brand-green'
