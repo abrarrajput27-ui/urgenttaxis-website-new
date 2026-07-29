@@ -14,13 +14,22 @@ export default function PublicHeader() {
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setMobileOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
   }, []);
 
   const navLinks = [
@@ -160,9 +169,9 @@ export default function PublicHeader() {
 
       {/* Mobile Navigation Drawer */}
       <div 
-        className={`lg:hidden absolute left-0 right-0 top-full bg-white shadow-xl overflow-hidden transition-all duration-300 ease-in-out border-t border-slate-100 ${mobileOpen ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`lg:hidden absolute left-0 right-0 top-full bg-white/95 backdrop-blur-md shadow-xl overflow-hidden transition-all duration-300 ease-in-out border-t border-slate-100 ${mobileOpen ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}
       >
-        <div className="bg-white px-4 pt-2 pb-6 space-y-4 font-sans shadow-inner border-t border-slate-100">
+        <div className="bg-transparent px-4 pt-2 pb-4 space-y-3 font-sans shadow-inner border-t border-slate-100/50">
           <nav className="flex flex-col space-y-1 text-[16px] font-extrabold text-slate-800">
             {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
@@ -211,16 +220,16 @@ export default function PublicHeader() {
           </div>
             
           {/* Mobile Top Bar Info */}
-          <div className="flex flex-col items-center gap-3 pt-4 pb-2 text-sm text-slate-500 font-bold">
-              <a href="mailto:info@urgenttaxis.com" className="flex items-center gap-2 hover:text-brand-blue">
-                <FaEnvelope /> info@urgenttaxis.com
-              </a>
-              <div className="flex items-center gap-4 text-lg">
-                <a href="#" className="bg-[#1877F2] text-white p-2 rounded-full"><FaFacebook className="w-4 h-4" /></a>
-                <a href="#" className="bg-[#E4405F] text-white p-2 rounded-full"><FaInstagram className="w-4 h-4" /></a>
-                <a href="#" className="bg-[#FF0000] text-white p-2 rounded-full"><FaYoutube className="w-4 h-4" /></a>
-              </div>
+          <div className="flex items-center justify-between pt-3 pb-1 border-t border-slate-100/50 text-[13px] text-slate-500 font-bold">
+            <a href="mailto:info@urgenttaxis.com" className="flex items-center gap-1.5 hover:text-brand-blue">
+              <FaEnvelope /> info@urgenttaxis.com
+            </a>
+            <div className="flex items-center gap-3 text-lg">
+              <a href="#" className="text-[#1877F2] hover:opacity-80"><FaFacebook /></a>
+              <a href="#" className="text-[#E4405F] hover:opacity-80"><FaInstagram /></a>
+              <a href="#" className="text-[#FF0000] hover:opacity-80"><FaYoutube /></a>
             </div>
+          </div>
         </div>
       </div>
     </header>
