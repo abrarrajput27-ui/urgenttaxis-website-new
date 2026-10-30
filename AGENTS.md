@@ -1,0 +1,47 @@
+# URGENT TAXIS – PERMANENT DEVELOPMENT, DESIGN & DEPLOYMENT RULES
+
+## Core Operating Principle
+"MAKE EXACTLY THE CHANGE REQUESTED, PRESERVE EVERYTHING ELSE, TEST IT, AND DEPLOY IT LIVE."
+
+## 1. Project & Production Credentials
+- **Production Website:** https://www.urgenttaxis.in
+- **Root Domain:** https://urgenttaxis.in
+- **Hosting:** Vercel (Auto-deploy on push to main)
+- **Connected Git Branch:** main
+- **Project Repo:** urgenttaxis-website-new
+- **Brand Identity:** Urgent Taxis | Colors: White, Blue, Green | Tagline: "Fast To Your Destination – Your Quick Ride Solution!"
+
+## 2. Permanent Footer Designer Credit (PROTECTED)
+The footer designer credit at the bottom of `frontend/components/public/Footer.tsx` is permanently protected:
+```jsx
+<div className="footer-designer-credit">
+  <span>Designed by </span>
+  <strong>Mantsha Khan</strong>
+</div>
+```
+- "Designed by" must always use normal font weight (400).
+- "Mantsha Khan" must always use bold font weight (700).
+- Both texts must appear on the same line at the absolute bottom of the shared footer on every page.
+- Never remove, rename, hide, replace, or modify this credit in any future task.
+
+## 3. Permanent WebP Image & Speed Optimization Policy
+- All newly added or uploaded raster images must use WebP as default format.
+- Next.js image optimization is enabled with AVIF/WebP formats and long-term caching.
+- Preserve image aspect ratios and dimensions to prevent layout shifts (CLS < 0.1).
+- Lazy-load below-the-fold images; prioritize critical above-the-fold hero images (LCP <= 2.5s).
+- Target full page loads within 2–3 seconds across representative mobile and desktop devices.
+
+## 4. Strict Scope & Change Policy
+- Change ONLY what the user explicitly asks for.
+- Do NOT perform unsolicited redesigns, rewrites, refactoring, or re-styling.
+- Never break booking workflows, phone buttons, WhatsApp integration, or Supabase database connections.
+- Keep all existing layouts, typography, brand colors, animations, and SEO configurations intact.
+
+## 5. Automatic Live Deployment Workflow
+For every approved task:
+1. Make minimal, precise changes.
+2. Run production build (`npm run build`).
+3. Commit verified changes to `main`.
+4. Push to GitHub (`origin/main`).
+5. Confirm Vercel Production deployment reports Ready.
+6. Verify on live site `https://www.urgenttaxis.in`.

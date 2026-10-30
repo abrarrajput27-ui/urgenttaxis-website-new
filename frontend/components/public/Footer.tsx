@@ -211,6 +211,16 @@ export default function PublicFooter() {
           </Link>
         </div>
       </div>
+
+      {/* 5. Permanent Designer Credit */}
+      <div className="border-t border-white/5 py-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="footer-designer-credit text-[13px] sm:text-[14px] text-slate-400">
+            <span className="font-normal">Designed by </span>
+            <strong className="font-bold text-slate-200">Mantsha Khan</strong>
+          </div>
+        </div>
+      </div>
     </footer>
     </>
   );
