@@ -5,8 +5,8 @@ import { FaUser, FaSuitcase, FaSnowflake, FaMusic, FaMapMarkerAlt, FaRoute } fro
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 
 export const metadata = constructMetadata({
-  title: 'Our Taxi Fleet - Urgent Taxis',
-  description: 'Explore our wide range of well-maintained vehicles including Cars, SUVs, Tempo Travellers, Urbania, and Luxury Buses.',
+  title: 'Our Taxi Fleet & Car Hire Options',
+  description: 'Explore our wide range of well-maintained vehicles including Sedans, Ertiga, Innova Crysta, Tempo Travellers, Urbania, and Luxury Buses in Delhi NCR.',
   canonicalPath: '/fleet',
 });
 
@@ -303,12 +303,12 @@ export default function FleetPage() {
               <span className="text-brand-green">📍</span> Popular Routes
             </h4>
             <div className="grid grid-cols-2 gap-3 text-sm font-semibold text-slate-600">
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Agra</Link>
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Jaipur</Link>
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Haridwar</Link>
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Shimla</Link>
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Rishikesh</Link>
-              <Link href="/routes" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Varanasi</Link>
+              <Link href="/routes/delhi-to-agra-taxi" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Agra</Link>
+              <Link href="/routes/delhi-to-jaipur-taxi" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Jaipur</Link>
+              <Link href="/routes/delhi-to-haridwar-taxi" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Haridwar</Link>
+              <Link href="/routes/delhi-to-shimla-taxi" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Shimla</Link>
+              <Link href="/routes/delhi-to-rishikesh-taxi" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Rishikesh</Link>
+              <Link href="/routes/delhi-to-nainital-taxi" className="hover:text-brand-green p-3 border border-slate-100 rounded-lg hover:border-brand-green hover:bg-brand-green/5 transition-all text-center">Delhi to Nainital</Link>
             </div>
           </div>
           <div>

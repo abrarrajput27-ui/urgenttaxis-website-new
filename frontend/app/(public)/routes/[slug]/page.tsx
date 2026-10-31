@@ -39,12 +39,18 @@ async function resolveRouteBySlug(slug: string) {
   if (masterMatch) {
     return {
       id: masterMatch.id,
+      slug: masterMatch.slug,
       is_active: true,
       estimated_distance_km: masterMatch.estimated_distance_km,
       estimated_duration_minutes: masterMatch.estimated_duration_minutes,
+      durationText: masterMatch.durationText,
       origin: { name: masterMatch.originName },
       destination: { name: masterMatch.destName },
       sedanFare: masterMatch.sedanFare,
+      ertigaFare: masterMatch.ertigaFare,
+      crystaFare: masterMatch.crystaFare,
+      about: masterMatch.about || '',
+      faqs: masterMatch.faqs || [],
     };
   }
 
@@ -132,6 +138,11 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
     tripType: 'Outstation Cab',
     customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to book an *Outstation Cab*. 🚕'
   });
+
+  // Calculate up to 4 genuinely related routes from the same origin or sharing the destination
+  const relatedRoutes = masterRoutesData
+    .filter((mr) => mr.slug !== resolvedParams.slug && (mr.originName === originName || mr.destName === destName))
+    .slice(0, 4);
 
   return (
     <div className="pb-20 bg-slate-50 min-h-screen text-slate-900 font-sans">
@@ -359,6 +370,71 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                 </div>
               </div>
             </div>
+
+            {/* Verified Route Narrative (Rendered only when custom text exists) */}
+            {route.about && route.about.trim().length > 0 && (
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
+                <h2 className="text-xl font-black text-brand-blue border-b border-slate-100 pb-3 flex items-center gap-2">
+                  <span>📖</span> Route Overview & Travel Guide
+                </h2>
+                <div className="prose prose-slate max-w-none text-slate-600 text-sm leading-relaxed font-medium space-y-3">
+                  <p>{route.about}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Verified FAQs Accordion (Rendered only when FAQs exist) */}
+            {route.faqs && route.faqs.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
+                <h2 className="text-xl font-black text-brand-blue border-b border-slate-100 pb-3 flex items-center gap-2">
+                  <span>❓</span> Frequently Asked Questions ({originName} to {destName} Cab)
+                </h2>
+                <div className="space-y-3 pt-2">
+                  {route.faqs.map((faq: { question: string; answer: string }, idx: number) => (
+                    <details key={idx} className="group border border-slate-200 rounded-xl p-4 open:bg-slate-50 transition-colors">
+                      <summary className="font-bold text-slate-800 cursor-pointer list-none flex justify-between items-center text-sm">
+                        <span>{faq.question}</span>
+                        <span className="text-brand-blue group-open:rotate-180 transition-transform font-black">▾</span>
+                      </summary>
+                      <p className="mt-3 text-xs sm:text-sm text-slate-600 leading-relaxed font-medium border-t border-slate-200/60 pt-3">
+                        {faq.answer}
+                      </p>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Related Corridors / Internal Linking */}
+            {relatedRoutes.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
+                <h2 className="text-xl font-black text-brand-blue border-b border-slate-100 pb-3 flex items-center gap-2">
+                  <span>🔄</span> Popular Related Outstation Taxi Corridors
+                </h2>
+                <p className="text-xs text-slate-500 font-medium">
+                  Frequently traveled connecting routes and destinations from {originName}:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  {relatedRoutes.map((rel) => (
+                    <Link
+                      key={rel.slug}
+                      href={`/routes/${rel.slug}`}
+                      className="group p-3 rounded-xl border border-slate-200 hover:border-brand-blue bg-slate-50 hover:bg-blue-50/50 transition-all flex items-center justify-between"
+                    >
+                      <div>
+                        <div className="font-bold text-slate-800 group-hover:text-brand-blue text-sm">
+                          {rel.originName} to {rel.destName} Cab
+                        </div>
+                        <div className="text-xs text-slate-500 font-medium">
+                          ~{rel.estimated_distance_km} km | From ₹{rel.sedanFare}
+                        </div>
+                      </div>
+                      <span className="text-brand-blue group-hover:translate-x-1 transition-transform text-lg">→</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
 
           </div>
 

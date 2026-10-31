@@ -90,6 +90,55 @@ export default async function RoutesDirectoryPage() {
       <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white rounded-3xl shadow-sm mb-6">
         <RoutesTabWidget />
       </section>
+
+      {/* Featured Priority Corridors for Direct Indexation */}
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-4">
+          <h2 className="text-xl sm:text-2xl font-black text-brand-blue flex items-center gap-2">
+            <span>⭐</span> Popular Priority Outstation Routes
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 font-medium">
+            Direct highway drops with door-to-door pickup across Delhi, Ghaziabad, Noida, and Gurgaon:
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 pt-2">
+            {[
+              { name: 'Delhi to Nainital Taxi', slug: 'delhi-to-nainital-taxi', fare: '₹4,999' },
+              { name: 'Delhi to Haldwani Taxi', slug: 'delhi-to-haldwani-taxi', fare: '₹3,999' },
+              { name: 'Delhi to Haridwar Taxi', slug: 'delhi-to-haridwar-taxi', fare: '₹2,999' },
+              { name: 'Delhi to Rishikesh Taxi', slug: 'delhi-to-rishikesh-taxi', fare: '₹3,299' },
+              { name: 'Delhi to Dehradun Taxi', slug: 'delhi-to-dehradun-taxi', fare: '₹3,499' },
+              { name: 'Delhi to Mussoorie Taxi', slug: 'delhi-to-mussoorie-taxi', fare: '₹4,499' },
+              { name: 'Delhi to Agra Taxi', slug: 'delhi-to-agra-taxi', fare: '₹3,499' },
+              { name: 'Delhi to Jaipur Taxi', slug: 'delhi-to-jaipur-taxi', fare: '₹3,499' },
+              { name: 'Delhi to Bareilly Taxi', slug: 'delhi-to-bareilly-taxi', fare: '₹3,499' },
+              { name: 'Delhi to Jim Corbett Taxi', slug: 'delhi-to-jim-corbett-taxi', fare: '₹3,999' },
+              { name: 'Delhi to Shimla Taxi', slug: 'delhi-to-shimla-taxi', fare: '₹5,499' },
+              { name: 'Delhi to Manali Taxi', slug: 'delhi-to-manali-taxi', fare: '₹8,999' },
+              { name: 'Delhi to Ayodhya Taxi', slug: 'delhi-to-ayodhya-taxi', fare: '₹8,999' },
+              { name: 'Delhi to Mathura Taxi', slug: 'delhi-to-mathura-taxi', fare: '₹3,499' },
+              { name: 'Delhi to Vrindavan Taxi', slug: 'delhi-to-vrindavan-taxi', fare: '₹3,499' },
+              { name: 'Delhi to Chandigarh Taxi', slug: 'delhi-to-chandigarh-taxi', fare: '₹3,499' },
+              { name: 'Noida to Dehradun Taxi', slug: 'noida-to-dehradun-taxi', fare: '₹3,499' },
+              { name: 'Noida to Haldwani Taxi', slug: 'noida-to-haldwani-taxi', fare: '₹3,999' },
+              { name: 'Ghaziabad to Haridwar Taxi', slug: 'ghaziabad-to-haridwar-taxi', fare: '₹2,999' },
+              { name: 'Ghaziabad to Nainital Taxi', slug: 'ghaziabad-to-nainital-taxi', fare: '₹4,999' },
+            ].map((route) => (
+              <Link
+                key={route.slug}
+                href={`/routes/${route.slug}`}
+                className="p-3 rounded-xl border border-slate-200 hover:border-brand-blue bg-slate-50 hover:bg-blue-50/50 transition-all group flex flex-col justify-between"
+              >
+                <span className="font-bold text-slate-800 group-hover:text-brand-blue text-xs sm:text-sm">
+                  {route.name}
+                </span>
+                <span className="text-[11px] font-semibold text-brand-green mt-1">
+                  Starting {route.fare}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

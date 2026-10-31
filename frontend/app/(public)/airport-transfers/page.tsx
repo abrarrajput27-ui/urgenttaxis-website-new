@@ -191,6 +191,43 @@ export default async function AirportTransfersPage() {
         </div>
       </section>
 
+      {/* Popular Airport Outstation Routes */}
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-4">
+          <h2 className="text-xl sm:text-2xl font-black text-brand-blue flex items-center gap-2">
+            <span>✈️</span> Direct Airport Outstation Taxi Corridors
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 font-medium">
+            Pre-book confirmed highway cabs directly from Delhi IGI Airport (T1, T2, T3) or Noida International Airport:
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 pt-2">
+            {[
+              { name: 'Delhi Airport to Haldwani Taxi', slug: 'delhi-airport-to-haldwani-taxi', fare: '₹3,999' },
+              { name: 'Delhi Airport to Dehradun Taxi', slug: 'delhi-airport-to-dehradun-taxi', fare: '₹3,499' },
+              { name: 'Delhi Airport to Haridwar Taxi', slug: 'delhi-airport-to-haridwar-taxi', fare: '₹2,999' },
+              { name: 'Delhi Airport to Rishikesh Taxi', slug: 'delhi-airport-to-rishikesh-taxi', fare: '₹3,299' },
+              { name: 'Delhi Airport to Agra Taxi', slug: 'delhi-airport-to-agra-taxi', fare: '₹3,499' },
+              { name: 'Delhi Airport to Jaipur Taxi', slug: 'delhi-airport-to-jaipur-taxi', fare: '₹3,499' },
+              { name: 'Delhi Airport to Chandigarh Taxi', slug: 'delhi-airport-to-chandigarh-taxi', fare: '₹3,499' },
+              { name: 'Delhi Airport to Nainital Taxi', slug: 'delhi-to-nainital-taxi', fare: '₹4,999' },
+            ].map((route) => (
+              <Link
+                key={route.slug}
+                href={`/routes/${route.slug}`}
+                className="p-3 rounded-xl border border-slate-200 hover:border-brand-blue bg-slate-50 hover:bg-blue-50/50 transition-all group flex flex-col justify-between"
+              >
+                <span className="font-bold text-slate-800 group-hover:text-brand-blue text-xs sm:text-sm">
+                  {route.name}
+                </span>
+                <span className="text-[11px] font-semibold text-brand-green mt-1">
+                  Starting {route.fare}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 7. Visible FAQs */}
       <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
         <h2 className="text-3xl font-black text-slate-900 text-center mb-10">

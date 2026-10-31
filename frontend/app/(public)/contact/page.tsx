@@ -13,8 +13,37 @@ export default function ContactUsPage() {
     { label: 'Contact Us' },
   ];
 
+  const localBusinessSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'TaxiService',
+    name: SITE_CONFIG.name,
+    url: SITE_CONFIG.domain,
+    telephone: SITE_CONFIG.phone,
+    email: SITE_CONFIG.supportEmail,
+    description: '24/7 outstation cab booking, airport transfers, and local taxi rental in Ghaziabad and Delhi NCR.',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Shop No. 09, S. R. Complex, Railway Station Road',
+      addressLocality: 'Masuri, Ghaziabad',
+      addressRegion: 'Uttar Pradesh',
+      postalCode: '201302',
+      addressCountry: 'IN',
+    },
+    areaServed: [
+      { '@type': 'City', name: 'Ghaziabad' },
+      { '@type': 'City', name: 'Noida' },
+      { '@type': 'City', name: 'Delhi' },
+      { '@type': 'AdministrativeArea', name: 'Delhi NCR' },
+    ],
+    priceRange: '₹₹',
+  };
+
   return (
     <div className="pb-16 bg-slate-50 min-h-screen text-slate-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
       <div className="bg-white border-b border-slate-100">
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>

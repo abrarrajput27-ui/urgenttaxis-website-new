@@ -10,8 +10,8 @@ import RoutesTabWidget from '@/components/public/RoutesTabWidget';
 import TrustSection from '@/components/public/TrustSection';
 
 export const metadata = constructMetadata({
-  title: 'Outstation Cab Booking & Airport Taxi Service',
-  description: 'Book reliable sedan, SUV, and outstation cabs in Delhi NCR, Agra, Haridwar, Jaipur, and airport transfers with transparent pricing.',
+  title: 'Taxi Service in Ghaziabad & Outstation Cabs Delhi NCR',
+  description: 'Leading taxi service in Ghaziabad, Noida & Delhi NCR. Book reliable one-way outstation cabs, IGI airport transfers & local rentals. Transparent fares & 24/7 verified drivers.',
 });
 
 export default async function HomePage() {
@@ -106,7 +106,7 @@ export default async function HomePage() {
           </span>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight drop-shadow-sm">
-            Reliable Outstation Taxi <br className="hidden sm:block" /> & Airport Transfers
+            Reliable Outstation Taxi & Cab Service <br className="hidden sm:block" /> in Ghaziabad & Delhi NCR
           </h1>
 
           <p className="text-indigo-100 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium">
