@@ -9,7 +9,7 @@ export const SITE_CONFIG = {
   phoneRaw: '+917310651940',
   whatsapp: 'https://wa.me/918595066033',
   supportEmail: 'info@urgenttaxis.in',
-  address: 'Shop No. 09, S. R. Complex, Railway Station Road, Masuri, Ghaziabad, Masuri, Uttar Pradesh 201302',
+  address: 'Shop No. 09, S. R. Complex, Railway Station Road, Masuri, Ghaziabad, Uttar Pradesh 201302',
 };
 
 interface ConstructMetadataProps {

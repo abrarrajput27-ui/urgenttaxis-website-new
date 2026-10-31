@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MapPin, Car } from 'lucide-react';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { SITE_CONFIG } from '@/lib/seo';
+import masterRoutesData from '@/lib/data/processed-master-routes.json';
 import { useState } from 'react';
 
 const STATES_DATA = {
@@ -53,9 +54,15 @@ export default function RoutesTabWidget() {
     const filteredDestinations = topDestinations.filter(d => d.toLowerCase() !== originCity.toLowerCase()).slice(0, 8);
     
     return filteredDestinations.map((dest, i) => {
+      // Find matching canonical route from dataset
+      const exactMatch = masterRoutesData.find(
+        (r) => r.originName.toLowerCase() === originCity.toLowerCase() && r.destName.toLowerCase() === dest.toLowerCase()
+      );
+
       const stringHash = originCity.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) + dest.charCodeAt(0);
-      const approxDistanceKm = (stringHash % 250) + 200; 
-      const approxFare = (approxDistanceKm * 11) + (stringHash % 500);
+      const approxDistanceKm = exactMatch ? exactMatch.estimated_distance_km : (stringHash % 250) + 200; 
+      const approxFare = exactMatch ? exactMatch.sedanFare : (approxDistanceKm * 11) + (stringHash % 500);
+      const slug = exactMatch ? exactMatch.slug : `${originCity.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-to-${dest.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-taxi`;
       
       return {
         id: i,
@@ -63,6 +70,7 @@ export default function RoutesTabWidget() {
         destination: dest,
         distance: approxDistanceKm,
         price: approxFare,
+        slug,
         image: `/destinations/${dest.toLowerCase().replace(/ /g, '-')}.jpg`
       };
     });
@@ -126,7 +134,7 @@ export default function RoutesTabWidget() {
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/logo.jpg';
+                  (e.target as HTMLImageElement).src = '/destinations/nainital.jpg';
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
@@ -158,7 +166,7 @@ export default function RoutesTabWidget() {
                 
                 <div className="grid grid-cols-2 gap-2 mt-2">
                   <Link
-                    href={`/routes/${route.origin.toLowerCase().replace(/ /g, '-')}-to-${route.destination.toLowerCase().replace(/ /g, '-')}`}
+                    href={`/routes/${route.slug}`}
                     prefetch={true}
                     className="bg-brand-blue hover:bg-blue-900 text-white text-xs text-center font-bold px-3 py-2.5 rounded-lg shadow-sm transition-colors"
                   >
