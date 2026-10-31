@@ -3,6 +3,13 @@ import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
+import {
+  FALLBACK_CATEGORIES,
+  FALLBACK_LOCATIONS,
+  FALLBACK_ROUTES,
+  FALLBACK_PACKAGES,
+  withTimeout,
+} from '@/lib/data/fallback-data';
 
 export const metadata = constructMetadata({
   title: 'Local Hourly Cab Rentals | 8h/80km & 12h/120km Packages',
@@ -11,30 +18,43 @@ export const metadata = constructMetadata({
 });
 
 export default async function LocalRentalsPage() {
-  const supabase = await supabaseServer();
+  let categories = FALLBACK_CATEGORIES;
+  let routes = FALLBACK_ROUTES;
+  let locations = FALLBACK_LOCATIONS;
+  let localPackages = FALLBACK_PACKAGES;
 
-  // Fetch Master Data & Active Packages
-  const { data: localPackages } = await supabase
-    .from('pricing_local_packages')
-    .select('*, vehicle_categories(*)')
-    .eq('is_active', true);
+  try {
+    const supabase = await supabaseServer();
+    const [pkgRes, catRes, routeRes, locRes] = await Promise.all([
+      withTimeout(
+        supabase.from('pricing_local_packages').select('*, vehicle_categories(*)').eq('is_active', true),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('vehicle_categories').select('*').eq('is_active', true).order('display_order', { ascending: true }),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('routes').select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)').eq('is_active', true),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('locations').select('*').eq('is_active', true).order('name', { ascending: true }),
+        2000,
+        { data: null }
+      ),
+    ]);
 
-  const { data: categories } = await supabase
-    .from('vehicle_categories')
-    .select('*')
-    .eq('is_active', true)
-    .order('display_order', { ascending: true });
-
-  const { data: routes } = await supabase
-    .from('routes')
-    .select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)')
-    .eq('is_active', true);
-
-  const { data: locations } = await supabase
-    .from('locations')
-    .select('*')
-    .eq('is_active', true)
-    .order('name', { ascending: true });
+    if (pkgRes?.data && pkgRes.data.length > 0) localPackages = pkgRes.data;
+    if (catRes?.data && catRes.data.length > 0) categories = catRes.data;
+    if (routeRes?.data && routeRes.data.length > 0) routes = routeRes.data;
+    if (locRes?.data && locRes.data.length > 0) locations = locRes.data;
+  } catch (err) {
+    console.warn('Supabase fetch failed on LocalRentalsPage, using fallback data:', err);
+  }
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },

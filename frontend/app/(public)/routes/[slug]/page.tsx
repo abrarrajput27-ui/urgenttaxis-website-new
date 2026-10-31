@@ -19,22 +19,7 @@ function generateSlug(originName: string, destName: string): string {
 import masterRoutesData from '@/lib/data/processed-master-routes.json';
 
 async function resolveRouteBySlug(slug: string) {
-  const supabase = await supabaseServer();
-  const { data: routes } = await supabase
-    .from('routes')
-    .select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)')
-    .eq('is_active', true);
-
-  if (routes) {
-    const dbMatch = routes.find((r) => {
-      const originName = r.origin?.name || '';
-      const destName = r.destination?.name || '';
-      return generateSlug(originName, destName) === slug;
-    });
-
-    if (dbMatch) return dbMatch;
-  }
-
+  // 1. Check local master routes first for instant zero-latency resolution
   const masterMatch = masterRoutesData.find((mr) => mr.slug === slug);
   if (masterMatch) {
     return {
@@ -52,6 +37,27 @@ async function resolveRouteBySlug(slug: string) {
       about: masterMatch.about || '',
       faqs: masterMatch.faqs || [],
     };
+  }
+
+  // 2. Fallback to Supabase with safe error handling
+  try {
+    const supabase = await supabaseServer();
+    const { data: routes } = await supabase
+      .from('routes')
+      .select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)')
+      .eq('is_active', true);
+
+    if (routes) {
+      const dbMatch = routes.find((r) => {
+        const originName = r.origin?.name || '';
+        const destName = r.destination?.name || '';
+        return generateSlug(originName, destName) === slug;
+      });
+
+      if (dbMatch) return dbMatch;
+    }
+  } catch (err) {
+    console.warn('Supabase query failed in resolveRouteBySlug:', err);
   }
 
   // Fallback generation for the mock mass routes

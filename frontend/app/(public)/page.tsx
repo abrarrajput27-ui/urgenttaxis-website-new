@@ -8,6 +8,13 @@ import { FaUser, FaSuitcase, FaSnowflake, FaMusic, FaMapMarkerAlt, FaRoute } fro
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
 import TrustSection from '@/components/public/TrustSection';
+import {
+  FALLBACK_CATEGORIES,
+  FALLBACK_LOCATIONS,
+  FALLBACK_ROUTES,
+  FALLBACK_PACKAGES,
+  withTimeout,
+} from '@/lib/data/fallback-data';
 
 export const metadata = constructMetadata({
   title: 'Taxi Service in Ghaziabad & Outstation Cabs Delhi NCR',
@@ -15,31 +22,43 @@ export const metadata = constructMetadata({
 });
 
 export default async function HomePage() {
-  const supabase = await supabaseServer();
+  let categories = FALLBACK_CATEGORIES;
+  let routes = FALLBACK_ROUTES;
+  let locations = FALLBACK_LOCATIONS;
+  let localPackages = FALLBACK_PACKAGES;
 
-  // Fetch reference master data
-  const { data: categories } = await supabase
-    .from('vehicle_categories')
-    .select('*')
-    .eq('is_active', true)
-    .order('display_order', { ascending: true });
+  try {
+    const supabase = await supabaseServer();
+    const [catRes, routeRes, locRes, pkgRes] = await Promise.all([
+      withTimeout(
+        supabase.from('vehicle_categories').select('*').eq('is_active', true).order('display_order', { ascending: true }),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('routes').select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)').eq('is_active', true).order('created_at', { ascending: false }),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('locations').select('*').eq('is_active', true).order('name', { ascending: true }),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('pricing_local_packages').select('*').eq('is_active', true),
+        2000,
+        { data: null }
+      ),
+    ]);
 
-  const { data: routes } = await supabase
-    .from('routes')
-    .select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)')
-    .eq('is_active', true)
-    .order('created_at', { ascending: false });
-
-  const { data: locations } = await supabase
-    .from('locations')
-    .select('*')
-    .eq('is_active', true)
-    .order('name', { ascending: true });
-
-  const { data: localPackages } = await supabase
-    .from('pricing_local_packages')
-    .select('*')
-    .eq('is_active', true);
+    if (catRes?.data && catRes.data.length > 0) categories = catRes.data;
+    if (routeRes?.data && routeRes.data.length > 0) routes = routeRes.data;
+    if (locRes?.data && locRes.data.length > 0) locations = locRes.data;
+    if (pkgRes?.data && pkgRes.data.length > 0) localPackages = pkgRes.data;
+  } catch (err) {
+    console.warn('Supabase fetch failed on HomePage, using fallback data:', err);
+  }
 
   const localBusinessSchema = generateLocalBusinessSchema();
 

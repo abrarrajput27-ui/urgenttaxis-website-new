@@ -7,6 +7,13 @@ import VehicleImage from '@/components/public/VehicleImage';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
 import Link from 'next/link';
 import { VehicleVariant } from '@/types/database';
+import {
+  FALLBACK_CATEGORIES,
+  FALLBACK_LOCATIONS,
+  FALLBACK_ROUTES,
+  FALLBACK_PACKAGES,
+  withTimeout,
+} from '@/lib/data/fallback-data';
 
 interface DynamicCategoryPageProps {
   params: Promise<{
@@ -16,17 +23,29 @@ interface DynamicCategoryPageProps {
 
 // Resolve vehicle category by slug from database
 async function resolveCategoryBySlug(slug: string) {
-  const supabase = await supabaseServer();
-  const { data: categories } = await supabase
-    .from('vehicle_categories')
-    .select('*')
-    .eq('is_active', true);
-
-  if (!categories) return null;
-
-  return categories.find(
+  const fallback = FALLBACK_CATEGORIES.find(
     (c) => c.slug === slug || c.id === slug || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug
   );
+
+  try {
+    const supabase = await supabaseServer();
+    const { data: categories } = await withTimeout(
+      supabase.from('vehicle_categories').select('*').eq('is_active', true),
+      2000,
+      { data: null }
+    );
+
+    if (categories && categories.length > 0) {
+      const match = categories.find(
+        (c) => c.slug === slug || c.id === slug || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug
+      );
+      if (match) return match;
+    }
+  } catch (err) {
+    console.warn('Supabase query failed in resolveCategoryBySlug:', err);
+  }
+
+  return fallback || null;
 }
 
 export async function generateMetadata({ params }: DynamicCategoryPageProps) {
@@ -69,38 +88,50 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
     notFound();
   }
 
-  const supabase = await supabaseServer();
+  let models: (any)[] = [];
+  let categories = FALLBACK_CATEGORIES;
+  let routes = FALLBACK_ROUTES;
+  let locations = FALLBACK_LOCATIONS;
+  let localPackages = FALLBACK_PACKAGES;
 
-  // Fetch Models for this Category
-  const { data: models } = await supabase
-    .from('vehicle_models')
-    .select('*, vehicle_variants(*)')
-    .eq('category_id', category.id)
-    .eq('is_active', true);
+  try {
+    const supabase = await supabaseServer();
+    const [modelsRes, catRes, routeRes, locRes, pkgRes] = await Promise.all([
+      withTimeout(
+        supabase.from('vehicle_models').select('*, vehicle_variants(*)').eq('category_id', category.id).eq('is_active', true),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('vehicle_categories').select('*').eq('is_active', true).order('display_order', { ascending: true }),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('routes').select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)').eq('is_active', true).order('created_at', { ascending: false }),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('locations').select('*').eq('is_active', true).order('name', { ascending: true }),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('pricing_local_packages').select('*').eq('is_active', true),
+        2000,
+        { data: null }
+      ),
+    ]);
 
-  // Fetch Master Reference Data for Pricing Widget
-  const { data: categories } = await supabase
-    .from('vehicle_categories')
-    .select('*')
-    .eq('is_active', true)
-    .order('display_order', { ascending: true });
-
-  const { data: routes } = await supabase
-    .from('routes')
-    .select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)')
-    .eq('is_active', true)
-    .order('created_at', { ascending: false });
-
-  const { data: locations } = await supabase
-    .from('locations')
-    .select('*')
-    .eq('is_active', true)
-    .order('name', { ascending: true });
-
-  const { data: localPackages } = await supabase
-    .from('pricing_local_packages')
-    .select('*')
-    .eq('is_active', true);
+    if (modelsRes?.data && modelsRes.data.length > 0) models = modelsRes.data;
+    if (catRes?.data && catRes.data.length > 0) categories = catRes.data;
+    if (routeRes?.data && routeRes.data.length > 0) routes = routeRes.data;
+    if (locRes?.data && locRes.data.length > 0) locations = locRes.data;
+    if (pkgRes?.data && pkgRes.data.length > 0) localPackages = pkgRes.data;
+  } catch (err) {
+    console.warn('Supabase query failed in DynamicVehicleCategoryPage, using fallback data:', err);
+  }
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },

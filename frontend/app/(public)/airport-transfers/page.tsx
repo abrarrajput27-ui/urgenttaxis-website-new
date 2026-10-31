@@ -2,6 +2,13 @@ import { supabaseServer } from '@/lib/supabase/server';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
+import {
+  FALLBACK_CATEGORIES,
+  FALLBACK_LOCATIONS,
+  FALLBACK_ROUTES,
+  FALLBACK_PACKAGES,
+  withTimeout,
+} from '@/lib/data/fallback-data';
 import VehicleImage from '@/components/public/VehicleImage';
 import Link from 'next/link';
 
@@ -12,30 +19,43 @@ export const metadata = constructMetadata({
 });
 
 export default async function AirportTransfersPage() {
-  const supabase = await supabaseServer();
+  let categories = FALLBACK_CATEGORIES;
+  let routes = FALLBACK_ROUTES;
+  let locations = FALLBACK_LOCATIONS;
+  let localPackages = FALLBACK_PACKAGES;
 
-  // Fetch Master Data
-  const { data: categories } = await supabase
-    .from('vehicle_categories')
-    .select('*')
-    .eq('is_active', true)
-    .order('display_order', { ascending: true });
+  try {
+    const supabase = await supabaseServer();
+    const [catRes, routeRes, locRes, pkgRes] = await Promise.all([
+      withTimeout(
+        supabase.from('vehicle_categories').select('*').eq('is_active', true).order('display_order', { ascending: true }),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('routes').select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)').eq('is_active', true),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('locations').select('*').eq('is_active', true).order('name', { ascending: true }),
+        2000,
+        { data: null }
+      ),
+      withTimeout(
+        supabase.from('pricing_local_packages').select('*').eq('is_active', true),
+        2000,
+        { data: null }
+      ),
+    ]);
 
-  const { data: routes } = await supabase
-    .from('routes')
-    .select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)')
-    .eq('is_active', true);
-
-  const { data: locations } = await supabase
-    .from('locations')
-    .select('*')
-    .eq('is_active', true)
-    .order('name', { ascending: true });
-
-  const { data: localPackages } = await supabase
-    .from('pricing_local_packages')
-    .select('*')
-    .eq('is_active', true);
+    if (catRes?.data && catRes.data.length > 0) categories = catRes.data;
+    if (routeRes?.data && routeRes.data.length > 0) routes = routeRes.data;
+    if (locRes?.data && locRes.data.length > 0) locations = locRes.data;
+    if (pkgRes?.data && pkgRes.data.length > 0) localPackages = pkgRes.data;
+  } catch (err) {
+    console.warn('Supabase fetch failed on AirportTransfersPage, using fallback data:', err);
+  }
 
   // Filter airport and city locations
   const airportLocations = locations?.filter((l) => l.location_type === 'airport') || [];
