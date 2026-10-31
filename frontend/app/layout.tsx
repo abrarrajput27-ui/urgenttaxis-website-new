@@ -9,7 +9,10 @@ export const metadata: Metadata = {
   description: "Book reliable sedan, SUV, and outstation cabs in Delhi NCR with transparent pricing.",
   icons: {
     icon: '/logo.jpg',
-  }
+  },
+  verification: {
+    google: 'gmiuOYv-8DEgSTJdyAa9-uNXHyO8PdwcK94l-mgFjTM',
+  },
 };
 
 export default function RootLayout({
