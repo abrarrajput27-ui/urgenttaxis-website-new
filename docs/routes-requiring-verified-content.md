@@ -68,29 +68,29 @@ Per SEO Safety Policy, no fabricated or invented highway facts, landmark stops, 
 | 57 | meerut-to-gorakhpur-taxi | Meerut | Gorakhpur | 250 km | ₹3499 | ₹4499 | ₹8999 |
 | 58 | meerut-to-aligarh-taxi | Meerut | Aligarh | 250 km | ₹3499 | ₹4499 | ₹8999 |
 | 59 | gurugram-to-agra-taxi | Gurugram | Agra | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 60 | gurugram-airport-to-agra-taxi | Gurugram Airport | Agra | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 60 | ~~gurugram-airport-to-agra-taxi~~ | *(Redirected 301 to delhi-airport-to-agra-taxi)* | Agra | — | — | — | — |
 | 61 | gurugram-to-mathura-taxi | Gurugram | Mathura | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 62 | gurugram-airport-to-mathura-taxi | Gurugram Airport | Mathura | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 62 | ~~gurugram-airport-to-mathura-taxi~~ | *(Redirected 301 to delhi-airport-to-mathura-taxi)* | Mathura | — | — | — | — |
 | 63 | gurugram-to-vrindavan-taxi | Gurugram | Vrindavan | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 64 | gurugram-airport-to-vrindavan-taxi | Gurugram Airport | Vrindavan | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 64 | ~~gurugram-airport-to-vrindavan-taxi~~ | *(Redirected 301 to delhi-airport-to-vrindavan-taxi)* | Vrindavan | — | — | — | — |
 | 65 | gurugram-to-lucknow-taxi | Gurugram | Lucknow | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 66 | gurugram-airport-to-lucknow-taxi | Gurugram Airport | Lucknow | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 66 | ~~gurugram-airport-to-lucknow-taxi~~ | *(Redirected 301 to delhi-airport-to-lucknow-taxi)* | Lucknow | — | — | — | — |
 | 67 | gurugram-to-kanpur-taxi | Gurugram | Kanpur | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 68 | gurugram-airport-to-kanpur-taxi | Gurugram Airport | Kanpur | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 68 | ~~gurugram-airport-to-kanpur-taxi~~ | *(Redirected 301 to delhi-airport-to-kanpur-taxi)* | Kanpur | — | — | — | — |
 | 69 | gurugram-to-varanasi-taxi | Gurugram | Varanasi | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 70 | gurugram-airport-to-varanasi-taxi | Gurugram Airport | Varanasi | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 70 | ~~gurugram-airport-to-varanasi-taxi~~ | *(Redirected 301 to delhi-airport-to-varanasi-taxi)* | Varanasi | — | — | — | — |
 | 71 | gurugram-to-ayodhya-taxi | Gurugram | Ayodhya | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 72 | gurugram-airport-to-ayodhya-taxi | Gurugram Airport | Ayodhya | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 72 | ~~gurugram-airport-to-ayodhya-taxi~~ | *(Redirected 301 to delhi-airport-to-ayodhya-taxi)* | Ayodhya | — | — | — | — |
 | 73 | gurugram-to-prayagraj-taxi | Gurugram | Prayagraj | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 74 | gurugram-airport-to-prayagraj-taxi | Gurugram Airport | Prayagraj | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 74 | ~~gurugram-airport-to-prayagraj-taxi~~ | *(Redirected 301 to delhi-airport-to-prayagraj-taxi)* | Prayagraj | — | — | — | — |
 | 75 | gurugram-to-bareilly-taxi | Gurugram | Bareilly | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 76 | gurugram-airport-to-bareilly-taxi | Gurugram Airport | Bareilly | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 76 | ~~gurugram-airport-to-bareilly-taxi~~ | *(Redirected 301 to delhi-airport-to-bareilly-taxi)* | Bareilly | — | — | — | — |
 | 77 | gurugram-to-moradabad-taxi | Gurugram | Moradabad | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 78 | gurugram-airport-to-moradabad-taxi | Gurugram Airport | Moradabad | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 78 | ~~gurugram-airport-to-moradabad-taxi~~ | *(Redirected 301 to delhi-airport-to-moradabad-taxi)* | Moradabad | — | — | — | — |
 | 79 | gurugram-to-gorakhpur-taxi | Gurugram | Gorakhpur | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 80 | gurugram-airport-to-gorakhpur-taxi | Gurugram Airport | Gorakhpur | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 80 | ~~gurugram-airport-to-gorakhpur-taxi~~ | *(Redirected 301 to delhi-airport-to-gorakhpur-taxi)* | Gorakhpur | — | — | — | — |
 | 81 | gurugram-to-aligarh-taxi | Gurugram | Aligarh | 250 km | ₹3499 | ₹4499 | ₹8999 |
-| 82 | gurugram-airport-to-aligarh-taxi | Gurugram Airport | Aligarh | 250 km | ₹3499 | ₹4499 | ₹8999 |
+| 82 | ~~gurugram-airport-to-aligarh-taxi~~ | *(Redirected 301 to delhi-airport-to-aligarh-taxi)* | Aligarh | — | — | — | — |
 | 83 | agra-to-mathura-taxi | Agra | Mathura | 250 km | ₹3499 | ₹4499 | ₹8999 |
 | 84 | agra-to-vrindavan-taxi | Agra | Vrindavan | 250 km | ₹3499 | ₹4499 | ₹8999 |
 | 85 | agra-to-lucknow-taxi | Agra | Lucknow | 250 km | ₹3499 | ₹4499 | ₹8999 |

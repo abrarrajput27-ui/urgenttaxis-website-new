@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { supabaseServer } from '@/lib/supabase/server';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
@@ -74,6 +74,13 @@ async function resolveRouteBySlug(slug: string) {
 
 export async function generateMetadata({ params }: DynamicRoutePageProps) {
   const resolvedParams = await params;
+
+  // 301 Permanent redirect for deprecated Gurugram Airport routes to canonical Delhi Airport routes
+  if (resolvedParams.slug?.startsWith('gurugram-airport-to-')) {
+    const canonicalSlug = resolvedParams.slug.replace('gurugram-airport-to-', 'delhi-airport-to-');
+    permanentRedirect(`/routes/${canonicalSlug}`);
+  }
+
   const route = await resolveRouteBySlug(resolvedParams.slug);
 
   if (!route) {
@@ -116,6 +123,13 @@ export async function generateStaticParams() {
 
 export default async function RouteDetailPage({ params }: DynamicRoutePageProps) {
   const resolvedParams = await params;
+
+  // 301 Permanent redirect for deprecated Gurugram Airport routes to canonical Delhi Airport routes
+  if (resolvedParams.slug?.startsWith('gurugram-airport-to-')) {
+    const canonicalSlug = resolvedParams.slug.replace('gurugram-airport-to-', 'delhi-airport-to-');
+    permanentRedirect(`/routes/${canonicalSlug}`);
+  }
+
   const route = await resolveRouteBySlug(resolvedParams.slug);
 
   if (!route) notFound();
