@@ -189,7 +189,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Main Content Column */}
@@ -297,7 +297,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                     </div>
                   </div>
 
-                  <div className="flex gap-3 pt-2">
+                  <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
                     <a href={whatsappUrl} className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm">
                       Book via WhatsApp
                     </a>
@@ -343,7 +343,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                     </div>
                   </div>
 
-                  <div className="flex gap-3 pt-2">
+                  <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
                     <a href={whatsappUrl} className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm">
                       Book via WhatsApp
                     </a>

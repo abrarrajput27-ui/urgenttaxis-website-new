@@ -4,7 +4,8 @@ import { supabaseServer } from '@/lib/supabase/server';
 import { SITE_CONFIG } from '@/lib/seo';
 import DocumentUploadForm from '@/components/public/DocumentUploadForm';
 
-export default async function BookingConfirmationPage({ params }: { params: { reference: string } }) {
+export default async function BookingConfirmationPage({ params }: { params: Promise<{ reference: string }> }) {
+  const { reference } = await params;
   const supabase = await supabaseServer();
   
   // Fetch booking details
@@ -34,7 +35,7 @@ export default async function BookingConfirmationPage({ params }: { params: { re
         is_verified
       )
     `)
-    .eq('booking_reference', params.reference)
+    .eq('booking_reference', reference)
     .single();
 
   if (!booking) {
@@ -42,7 +43,7 @@ export default async function BookingConfirmationPage({ params }: { params: { re
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         <div className="text-center bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
           <h2 className="text-xl font-bold mb-4">Booking Not Found</h2>
-          <p className="text-slate-600 mb-6">We couldn't find a booking with the reference {params.reference}.</p>
+          <p className="text-slate-600 mb-6">We couldn't find a booking with the reference {reference}.</p>
           <Link href="/" className="px-6 py-3 bg-brand-blue text-white rounded-xl font-bold">Return Home</Link>
         </div>
       </div>

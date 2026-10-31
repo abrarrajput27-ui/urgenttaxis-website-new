@@ -49,7 +49,7 @@ export default function ContactUsPage() {
       </div>
 
       {/* Header Banner */}
-      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           24/7 Direct Customer Support
         </span>
@@ -62,7 +62,7 @@ export default function ContactUsPage() {
       </section>
 
       {/* Contact Grid */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
         {/* Branch Info Card */}
         <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
           <div className="space-y-6">

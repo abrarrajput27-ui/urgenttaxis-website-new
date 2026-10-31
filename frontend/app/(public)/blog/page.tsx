@@ -41,7 +41,7 @@ export default function BlogListPage() {
       </div>
 
       {/* Header Banner */}
-      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Travel Guides & Highway Advice
         </span>
@@ -54,7 +54,7 @@ export default function BlogListPage() {
       </section>
 
       {/* Blog Cards Grid */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {sampleBlogs.map((blog) => (
             <article

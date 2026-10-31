@@ -48,7 +48,7 @@ const VehicleCard = ({
     </div>
     <div className="p-6 flex-1 flex flex-col">
       <h3 className="text-xl font-bold text-brand-blue mb-1">{title}</h3>
-      <p className="text-xs text-slate-500 mb-4 h-4">{models}</p>
+      <p className="text-xs text-slate-500 mb-4 min-h-[1.25rem]">{models}</p>
 
       <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-xs font-semibold text-slate-700 mb-6">
         <div className="flex items-center gap-1.5"><FaUser className="text-brand-green" /> {seats}</div>
@@ -122,7 +122,7 @@ export default function FleetPage() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-12 sm:space-y-16">
         
         {/* Cars & SUVs */}
         <section>

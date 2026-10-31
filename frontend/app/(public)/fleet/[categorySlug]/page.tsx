@@ -28,7 +28,7 @@ async function resolveCategoryBySlug(slug: string) {
   );
 
   try {
-    const supabase = await supabaseServer();
+    const supabase = getPublicSupabaseClient();
     const { data: categories } = await withTimeout(
       supabase.from('vehicle_categories').select('*').eq('is_active', true),
       2000,
@@ -95,7 +95,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
   let localPackages = FALLBACK_PACKAGES;
 
   try {
-    const supabase = await supabaseServer();
+    const supabase = getPublicSupabaseClient();
     const [modelsRes, catRes, routeRes, locRes, pkgRes] = await Promise.all([
       withTimeout(
         supabase.from('vehicle_models').select('*, vehicle_variants(*)').eq('category_id', category.id).eq('is_active', true),
@@ -181,7 +181,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       />
 
       {/* 2. Category Hero */}
-      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Vehicle Category Profile
         </span>
@@ -194,7 +194,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       </section>
 
       {/* 3. Vehicle Models & 4. Image Fallback */}
-      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center space-y-3 mb-4">
           <h2 className="text-3xl font-black text-slate-900">Active {category.name} Models & Variants</h2>
           <p className="text-sm text-slate-500 font-medium">Verified vehicle models available in this category.</p>
@@ -245,7 +245,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       </section>
 
       {/* 5. Service Suitability */}
-      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center space-y-3 mb-4">
           <h2 className="text-3xl font-black text-slate-900">Ideal Service Suitability</h2>
           <p className="text-sm text-slate-500 font-medium">Recommended trip types for {category.name} cabs.</p>
@@ -271,7 +271,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       </section>
 
       {/* 6. Fare / Booking CTA (Secure Public Fare API Widget) */}
-      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center space-y-3 mb-10">
           <h2 className="text-3xl font-black text-slate-900">Calculate {category.name} Fare</h2>
           <p className="text-sm text-slate-500 font-medium">Instant server-side fare calculation for your itinerary.</p>
@@ -285,7 +285,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
       </section>
 
       {/* 7. Relevant Database Routes */}
-      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center space-y-3 mb-10">
           <h2 className="text-3xl font-black text-slate-900">Popular {category.name} Routes</h2>
           <p className="text-sm text-slate-500 font-medium">Verified outstation corridors served by our {category.name} fleet.</p>

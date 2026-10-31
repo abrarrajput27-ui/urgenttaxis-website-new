@@ -29,17 +29,17 @@ export default function PublicBreadcrumbs({ items }: PublicBreadcrumbsProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbListSchema) }}
       />
-      <nav aria-label="Breadcrumb" className="py-3 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-xs text-slate-400 font-medium">
+      <nav aria-label="Breadcrumb" className="py-3 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-xs text-slate-500 font-medium">
         <ol className="flex items-center flex-wrap gap-2">
           {items.map((item, index) => {
             const isLast = index === items.length - 1;
             return (
               <li key={index} className="flex items-center gap-2">
-                {index > 0 && <span className="text-slate-600">/</span>}
+                {index > 0 && <span className="text-slate-400">/</span>}
                 {isLast || !item.href ? (
-                  <span className="text-amber-400 font-semibold">{item.label}</span>
+                  <span className="text-brand-blue font-bold">{item.label}</span>
                 ) : (
-                  <Link href={item.href} className="hover:text-slate-200 transition-colors">
+                  <Link href={item.href} className="hover:text-brand-blue text-slate-600 transition-colors">
                     {item.label}
                   </Link>
                 )}

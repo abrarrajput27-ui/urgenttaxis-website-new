@@ -74,7 +74,7 @@ export default async function RoutesDirectoryPage() {
       </div>
 
       {/* Header Banner */}
-      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           {allRoutes.length} Verified Intercity Corridors
         </span>
@@ -87,12 +87,12 @@ export default async function RoutesDirectoryPage() {
       </section>
 
       {/* Routes Widget (Replaces Grid) */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white rounded-3xl shadow-sm mb-6">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white rounded-3xl shadow-sm mb-6">
         <RoutesTabWidget />
       </section>
 
       {/* Featured Priority Corridors for Direct Indexation */}
-      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-4">
           <h2 className="text-xl sm:text-2xl font-black text-brand-blue flex items-center gap-2">
             <span>⭐</span> Popular Priority Outstation Routes

@@ -56,7 +56,7 @@ export default function ReviewsPage() {
       </div>
 
       {/* Header Banner */}
-      <section className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Verified Passenger Feedback
         </span>
@@ -69,7 +69,7 @@ export default function ReviewsPage() {
       </section>
 
       {/* Reviews Grid */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {reviewsData.map((rev, idx) => (
             <div
@@ -96,7 +96,7 @@ export default function ReviewsPage() {
         </div>
 
         {/* CTA */}
-        <div className="mt-6 text-center bg-white border border-brand-blue/10 p-10 rounded-3xl max-w-2xl mx-auto space-y-4 shadow-sm relative overflow-hidden">
+        <div className="mt-12 sm:mt-16 text-center bg-white border border-brand-blue/10 p-10 rounded-3xl max-w-2xl mx-auto space-y-4 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-blue to-brand-green"></div>
           <h3 className="text-2xl font-black text-brand-blue">Had a Great Trip with Urgent Taxis?</h3>
           <p className="text-sm text-slate-600 font-medium">Share your trip feedback or book your next outstation cab directly on WhatsApp.</p>

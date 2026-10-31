@@ -104,7 +104,7 @@ export default async function HomePage() {
       />
 
       {/* 2. HERO SECTION */}
-      <section className="relative bg-slate-950 pt-28 sm:pt-32 pb-6 lg:pb-8 px-4 sm:px-6 lg:px-8 border-b border-white/10 overflow-hidden">
+      <section className="relative bg-slate-950 pt-28 sm:pt-32 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/10 overflow-hidden">
         {/* Background Decorative Elements */}
         <video 
           autoPlay 
@@ -146,7 +146,7 @@ export default async function HomePage() {
       <TrustSection />
 
       {/* 4. MOST BOOKED ROUTES SECTION */}
-      <section id="routes" className="py-4 bg-white">
+      <section id="routes" className="py-12 sm:py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-end justify-between mb-4 gap-4">
           <div>
             <span className="text-brand-green font-bold text-sm tracking-widest uppercase mb-2 block">QUICK BOOKING</span>
@@ -171,7 +171,7 @@ export default async function HomePage() {
       </section>
 
       {/* 5. FLEET SLIDER SECTION */}
-      <section id="fleet" className="py-4 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-100 overflow-hidden">
+      <section id="fleet" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-100 overflow-hidden">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex flex-col items-center text-center mb-4 gap-4">
             <h2 className="text-3xl sm:text-4xl font-black text-brand-blue tracking-tight">
@@ -276,7 +276,7 @@ export default async function HomePage() {
       </section>
 
       {/* 6. AIRPORT TRANSFERS SECTION */}
-      <section id="airport-transfers" className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section id="airport-transfers" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light rounded-3xl p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center shadow-lg relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[url('/hero-pattern.svg')] bg-center mix-blend-overlay"></div>
           <div className="space-y-5 relative z-10">
@@ -319,7 +319,7 @@ export default async function HomePage() {
       </section>
 
       {/* 6B. OUTSTATION TOUR PACKAGES */}
-      <section id="tour-packages" className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section id="tour-packages" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center space-y-3 mb-4">
           <span className="inline-block px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold">
             Curated Sightseeing & Hill Station Circuits
@@ -409,7 +409,7 @@ export default async function HomePage() {
       </section>
 
       {/* 7. LOCAL RENTALS SECTION */}
-      <section id="local-rentals" className="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+      <section id="local-rentals" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-4 gap-4">
           <div>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -429,7 +429,7 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           {localPackages?.slice(0, 3).map((pkg) => (
-              <div key={pkg.id} className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300 group flex flex-col w-full">
+              <div key={pkg.id} className="bg-white rounded-3xl overflow-hidden border border-slate-100 p-8 space-y-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300 group flex flex-col w-full">
               <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-brand-blue/10 text-brand-blue border border-brand-blue/20 block w-fit">
                 {pkg.package_name || `${pkg.included_hours}h / ${pkg.included_km}km`}
               </span>
@@ -464,7 +464,7 @@ export default async function HomePage() {
 
 
       {/* 9. VISIBLE FAQS SECTION */}
-      <section id="faq" className="py-8 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
+      <section id="faq" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
         <div className="text-center space-y-3 mb-4">
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
             Frequently Asked Questions

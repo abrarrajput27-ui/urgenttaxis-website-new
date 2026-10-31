@@ -84,7 +84,7 @@ export default function PublicFareWidget({
   };
 
   return (
-    <div className="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl max-w-5xl mx-auto font-sans relative z-10 border border-slate-100 mt-[-40px]">
+    <div className="bg-white text-slate-900 rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl max-w-5xl mx-auto font-sans relative z-10 border border-slate-100 mt-6 sm:mt-8">
       <div className="text-center mb-6">
         <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-brand-blue">Book Your Ride</h2>
         <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">Get Instant Price & Book Your Taxi</p>
