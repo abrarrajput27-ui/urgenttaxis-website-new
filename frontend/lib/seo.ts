@@ -68,6 +68,14 @@ export function generateLocalBusinessSchema() {
     url: SITE_CONFIG.domain,
     telephone: SITE_CONFIG.phone,
     email: SITE_CONFIG.supportEmail,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Shop No. 09, S. R. Complex, Railway Station Road',
+      addressLocality: 'Masuri, Ghaziabad',
+      addressRegion: 'Uttar Pradesh',
+      postalCode: '201302',
+      addressCountry: 'IN',
+    },
     areaServed: [
       { '@type': 'AdministrativeArea', name: 'Delhi NCR' },
       { '@type': 'City', name: 'Delhi' },

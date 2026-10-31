@@ -154,7 +154,7 @@ export default function PublicFooter() {
               <div className="flex items-start gap-3">
                 <FaMapMarkerAlt className="text-slate-400 mt-1 shrink-0 text-base" />
                 <span className="leading-relaxed">
-                  Head Office: Shop No. 1, Ground Floor, Chilla Gaon, Mayur Vihar Phase 1, New Delhi - 110091
+                  Head Office: {SITE_CONFIG.address}
                 </span>
               </div>
             </div>
