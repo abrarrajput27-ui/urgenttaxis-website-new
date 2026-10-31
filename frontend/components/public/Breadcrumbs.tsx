@@ -10,7 +10,7 @@ interface PublicBreadcrumbsProps {
 }
 
 export default function PublicBreadcrumbs({ items }: PublicBreadcrumbsProps) {
-  const domain = 'https://www.urgenttaxis.com';
+  const domain = 'https://www.urgenttaxis.in';
   
   const breadcrumbListSchema = {
     '@context': 'https://schema.org',

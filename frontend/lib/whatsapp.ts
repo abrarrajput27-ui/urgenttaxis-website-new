@@ -176,7 +176,7 @@ export function generateWhatsAppLink(phone: string, params: WhatsAppMessageParam
   parts.push('');
   parts.push('🚖 *Urgent Taxis*');
   parts.push('');
-  parts.push('🌐 [www.urgenttaxis.com](http://www.urgenttaxis.com)');
+  parts.push('🌐 [www.urgenttaxis.in](http://www.urgenttaxis.in)');
 
   const text = parts.join('\n');
   return `https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(text)}`;
