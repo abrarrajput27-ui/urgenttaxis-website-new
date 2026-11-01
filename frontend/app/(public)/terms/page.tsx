@@ -31,8 +31,8 @@ export default function TermsPage() {
 
           <h2 className="text-lg font-black text-slate-900 mt-6">1. Booking & Payments</h2>
           <ul className="list-disc pl-5 space-y-2">
-            <li>A minimum token advance (e.g., 30%) may be required to confirm your booking and assign a driver.</li>
-            <li>The remaining balance must be paid directly to the driver or via the company payment links during the journey.</li>
+            <li>An advance payment of 30% of the total cab fare is required to confirm your booking and assign a driver.</li>
+            <li>The remaining balance of 70% must be paid directly to the driver or via company payment links during the journey.</li>
             <li>Toll taxes, state border taxes, and parking fees are generally excluded from the base fare unless explicitly mentioned in your itemized quotation.</li>
           </ul>
 
