@@ -1,5 +1,5 @@
 import { notFound, permanentRedirect } from 'next/navigation';
-import { supabaseServer } from '@/lib/supabase/server';
+import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
@@ -46,7 +46,7 @@ async function resolveRouteBySlug(slug: string) {
 
   // 2. Fallback to Supabase with safe error handling
   try {
-    const supabase = await supabaseServer();
+    const supabase = getPublicSupabaseClient();
     const { data: routes } = await supabase
       .from('routes')
       .select('*, origin:locations!routes_origin_location_id_fkey(*), destination:locations!routes_destination_location_id_fkey(*)')
@@ -63,21 +63,6 @@ async function resolveRouteBySlug(slug: string) {
     }
   } catch (err) {
     console.warn('Supabase query failed in resolveRouteBySlug:', err);
-  }
-
-  // Fallback generation for mock mass routes
-  const parts = slug.split('-to-');
-  if (parts.length === 2) {
-    const formatName = (str: string) => str.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    return {
-      id: slug,
-      is_active: true,
-      estimated_distance_km: Math.floor(Math.random() * 400) + 150,
-      estimated_duration_minutes: Math.floor(Math.random() * 300) + 120,
-      origin: { name: formatName(parts[0].replace('-taxi', '')) },
-      destination: { name: formatName(parts[1].replace('-taxi', '')) },
-      sedanFare: '₹' + (Math.floor(Math.random() * 2000) + 2000).toLocaleString()
-    };
   }
 
   return null;
@@ -113,7 +98,6 @@ export async function generateMetadata({ params }: DynamicRoutePageProps) {
   });
 }
 
-import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 
 export async function generateStaticParams() {
   const supabase = getPublicSupabaseClient();
