@@ -310,13 +310,13 @@ export default function PublicFareWidget({
 
           <div className="flex flex-col sm:flex-row gap-3 bg-brand-blue/5 p-4 rounded-xl border border-brand-blue/10">
             <div className="flex-1">
-              <span className="text-[10px] text-brand-blue block uppercase font-bold mb-0.5">Booking Token (25%)</span>
+              <span className="text-[10px] text-brand-blue block uppercase font-bold mb-0.5">Booking Token (30%)</span>
               <span className="text-lg font-black text-brand-blue font-mono tracking-tight">₹{fareResult.tokenAmount.toLocaleString('en-IN')}</span>
               <p className="text-[10px] text-slate-600 font-medium leading-tight mt-1">Pay now to confirm</p>
             </div>
             <div className="w-px bg-brand-blue/10 hidden sm:block"></div>
             <div className="flex-1">
-              <span className="text-[10px] text-slate-600 block uppercase font-bold mb-0.5">Balance Amount</span>
+              <span className="text-[10px] text-slate-600 block uppercase font-bold mb-0.5">Balance Amount (70%)</span>
               <span className="text-lg font-black text-slate-700 font-mono tracking-tight">₹{fareResult.balanceAmount.toLocaleString('en-IN')}</span>
               <p className="text-[10px] text-slate-600 font-medium leading-tight mt-1">Payable to driver</p>
             </div>
@@ -377,9 +377,11 @@ export default function PublicFareWidget({
                 href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { 
                   tripType: fareResult.serviceType,
                   totalFare: fareResult.customerPayable,
+                  tokenAmount: fareResult.tokenAmount,
+                  balanceAmount: fareResult.balanceAmount,
                   baseFare: fareResult.baseFare,
                   distance: fareResult.billableKm,
-                  customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to book a cab.' 
+                  customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a cab.\nTrip: ${fareResult.serviceType}\nTotal: ₹${fareResult.customerPayable.toLocaleString('en-IN')}\nAdvance Token (30%): ₹${fareResult.tokenAmount.toLocaleString('en-IN')}\nRemaining Balance (70%): ₹${fareResult.balanceAmount.toLocaleString('en-IN')}` 
                 })}
                 target="_blank"
                 rel="noopener noreferrer"

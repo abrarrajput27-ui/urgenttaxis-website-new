@@ -76,7 +76,7 @@ export default function RouteBookingWidget({
       totalCabFare = Math.round(effectiveKm * rates[selectedVehicle].rateMultiplier);
     }
 
-    const tokenAmount = Math.round(totalCabFare * 0.25); // Authoritative 25% advance token
+    const tokenAmount = Math.round(totalCabFare * 0.30); // Official 30% advance token
     const balanceAmount = totalCabFare - tokenAmount;
 
     return {
@@ -140,9 +140,11 @@ export default function RouteBookingWidget({
     distance: calculations.billableKm,
     totalFare: calculations.totalPayable,
     baseFare: calculations.baseFare,
+    tokenAmount: calculations.tokenAmount,
+    balanceAmount: calculations.balanceAmount,
     estimatedToll: calculations.estToll,
     estimatedStateTax: calculations.estStateTax,
-    customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *${rates[selectedVehicle].name}*.\nPickup: ${origin}\nDrop: ${destination}\nType: ${tripType === 'one_way' ? 'One Way' : 'Round Trip'}\nDate: ${pickupDate} at ${pickupTime}\nEstimated Total: ₹${calculations.totalPayable.toLocaleString('en-IN')}`,
+    customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *${rates[selectedVehicle].name}*.\nPickup: ${origin}\nDrop: ${destination}\nType: ${tripType === 'one_way' ? 'One Way' : 'Round Trip'}\nDate: ${pickupDate} at ${pickupTime}\nEstimated Total: ₹${calculations.totalPayable.toLocaleString('en-IN')}\nAdvance Token (30%): ₹${calculations.tokenAmount.toLocaleString('en-IN')}\nRemaining Balance (70%): ₹${calculations.balanceAmount.toLocaleString('en-IN')}`,
   });
 
   return (
@@ -349,11 +351,11 @@ export default function RouteBookingWidget({
             </div>
             <div className="flex justify-between">
               <span>Advance Token to Confirm:</span>
-              <span className="font-bold text-brand-blue">₹{calculations.tokenAmount.toLocaleString('en-IN')} (25%)</span>
+              <span className="font-bold text-brand-blue">₹{calculations.tokenAmount.toLocaleString('en-IN')} (30%)</span>
             </div>
             <div className="flex justify-between text-slate-500">
               <span>Payable to Driver on Trip:</span>
-              <span>₹{calculations.balanceAmount.toLocaleString('en-IN')} (75%)</span>
+              <span>₹{calculations.balanceAmount.toLocaleString('en-IN')} (70%)</span>
             </div>
           </div>
 

@@ -23,6 +23,8 @@ export interface WhatsAppMessageParams {
   platformFee?: number;
   gst?: number;
   totalFare?: number;
+  tokenAmount?: number;
+  balanceAmount?: number;
 
   inclusions?: string[];
   exclusions?: string[];
@@ -104,6 +106,8 @@ export function generateWhatsAppLink(
     if (params.estimatedToll) lines.push(`• Est. Toll: ₹${params.estimatedToll.toLocaleString('en-IN')}`);
     if (params.estimatedStateTax) lines.push(`• Est. State Tax: ₹${params.estimatedStateTax.toLocaleString('en-IN')}`);
     if (params.totalFare) lines.push(`• Estimated Total: ₹${params.totalFare.toLocaleString('en-IN')}`);
+    if (params.tokenAmount) lines.push(`• Advance to Confirm (30%): ₹${params.tokenAmount.toLocaleString('en-IN')}`);
+    if (params.balanceAmount) lines.push(`• Remaining Balance (70%): ₹${params.balanceAmount.toLocaleString('en-IN')}`);
     lines.push('');
   }
 

@@ -354,6 +354,8 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                         tripType: 'Outstation Drop',
                         vehicleCategory: 'Sedan (Dzire/Etios)',
                         totalFare: sedanFareTotal,
+                        tokenAmount: Math.round(sedanFareTotal * 0.30),
+                        balanceAmount: sedanFareTotal - Math.round(sedanFareTotal * 0.30),
                         baseFare: Math.max(sedanFareTotal - estimatedToll, Math.round(distance * 11)),
                         estimatedToll: estimatedToll,
                         customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Sedan* for ${originName} to ${destName}.\nEstimated Fare: ₹${sedanFareTotal.toLocaleString('en-IN')}.`
@@ -419,6 +421,8 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                         tripType: 'Outstation Drop',
                         vehicleCategory: 'SUV (Ertiga/Carens)',
                         totalFare: ertigaFareTotal,
+                        tokenAmount: Math.round(ertigaFareTotal * 0.30),
+                        balanceAmount: ertigaFareTotal - Math.round(ertigaFareTotal * 0.30),
                         baseFare: Math.max(ertigaFareTotal - estimatedToll, Math.round(distance * 15)),
                         estimatedToll: estimatedToll,
                         customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book an *Ertiga SUV* for ${originName} to ${destName}.\nEstimated Fare: ₹${ertigaFareTotal.toLocaleString('en-IN')}.`
@@ -484,6 +488,8 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                         tripType: 'Outstation Drop',
                         vehicleCategory: 'Premium SUV (Innova Crysta)',
                         totalFare: crystaFareTotal,
+                        tokenAmount: Math.round(crystaFareTotal * 0.30),
+                        balanceAmount: crystaFareTotal - Math.round(crystaFareTotal * 0.30),
                         baseFare: Math.max(crystaFareTotal - estimatedToll, Math.round(distance * 20)),
                         estimatedToll: estimatedToll,
                         customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Toyota Innova Crysta* for ${originName} to ${destName}.\nEstimated Fare: ₹${crystaFareTotal.toLocaleString('en-IN')}.`

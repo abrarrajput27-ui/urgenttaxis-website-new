@@ -135,7 +135,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
             
             <div className="flex justify-between items-center mb-2">
               <div>
-                <span className="text-sm font-bold text-brand-blue block">Minimum Token Required (25%)</span>
+                <span className="text-sm font-bold text-brand-blue block">Minimum Token Required (30%)</span>
                 <span className="text-xs text-slate-500">Must be paid to confirm booking</span>
               </div>
               <span className="text-xl font-black text-brand-blue">₹{snapshot.token_amount?.toLocaleString('en-IN') || 0}</span>
@@ -175,7 +175,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
               <svg className="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               <div>
                 <p className="text-sm font-bold text-slate-900 mb-1">Action Required: Pay Token to Confirm</p>
-                <p className="text-xs text-slate-600">Your booking is currently <strong>PENDING</strong>. Please contact our support team via WhatsApp or Phone to complete your 25% token payment and instantly confirm your cab.</p>
+                <p className="text-xs text-slate-600">Your booking is currently <strong>PENDING</strong>. Please contact our support team via WhatsApp or Phone to complete your 30% token payment and instantly confirm your cab.</p>
               </div>
             </div>
           )}
