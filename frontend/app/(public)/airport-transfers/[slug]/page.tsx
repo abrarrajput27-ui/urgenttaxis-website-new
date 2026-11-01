@@ -157,11 +157,11 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
               Delhi IGI Airport Transfer (T1, T2, T3)
             </div>
 
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-brand-blue tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
               {data.h1}
             </h1>
 
-            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-700">
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-blue-100">
               <div className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-emerald-400" />
                 <span>Distance: <strong>{data.distanceKm} km</strong></span>
@@ -415,7 +415,7 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
               <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
                 Recommended Highway Corridor
               </p>
-              <p className="text-sm font-medium text-white mt-1">
+              <p className="text-sm font-bold text-slate-800 mt-1">
                 {data.expresswayCorridor}
               </p>
             </div>

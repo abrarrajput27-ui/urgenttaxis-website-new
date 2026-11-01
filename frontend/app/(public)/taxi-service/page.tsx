@@ -85,11 +85,11 @@ export default function TaxiServiceHubPage() {
               Serving Ghaziabad, Noida, Delhi NCR & Western UP
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black text-brand-blue tracking-tight leading-tight">
+            <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
               Taxi Service Network in Ghaziabad & Delhi NCR
             </h1>
 
-            <p className="mt-4 text-base sm:text-lg text-slate-700 leading-relaxed">
+            <p className="mt-4 text-base sm:text-lg text-blue-100 leading-relaxed">
               Urgent Taxis is based in Masuri, Ghaziabad. We operate a fleet of verified commercial sedans and SUVs with transparent per-kilometer rates, guaranteed doorstep pickup, and professional highway chauffeurs.
             </p>
 

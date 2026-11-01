@@ -164,12 +164,12 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
             </div>
 
             {/* H1 Heading */}
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-brand-blue tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
               {data.h1}
             </h1>
 
             {/* Tagline */}
-            <p className="mt-4 text-base sm:text-lg text-slate-700 leading-relaxed">
+            <p className="mt-4 text-base sm:text-lg text-blue-100 leading-relaxed">
               {data.tagline}. Dedicated outstation cabs, one-way drops, and reliable IGI Airport transfers with verified local drivers.
             </p>
 
@@ -178,7 +178,7 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
               <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-600">
                 <span className="font-semibold text-slate-700">Pincodes Served:</span>
                 {data.pincodes.map((pin) => (
-                  <span key={pin} className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-700 font-mono">
+                  <span key={pin} className="px-2 py-0.5 rounded bg-white/10 border border-white/20 text-blue-100 font-mono">
                     {pin}
                   </span>
                 ))}
@@ -280,8 +280,8 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
           {/* Landmarks & Connectivity Highlights */}
           <div className="mt-8 pt-8 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-blue-400" />
+              <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-blue-600" />
                 Key Landmarks Served
               </h3>
               <ul className="space-y-1.5 text-xs sm:text-sm text-slate-600">
@@ -295,8 +295,8 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-                <Compass className="w-4 h-4 text-emerald-400" />
+              <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <Compass className="w-4 h-4 text-emerald-600" />
                 Metro & Transit Access
               </h3>
               <ul className="space-y-1.5 text-xs sm:text-sm text-slate-600">
@@ -310,8 +310,8 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-                <Car className="w-4 h-4 text-amber-400" />
+              <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <Car className="w-4 h-4 text-amber-600" />
                 Expressways & Highways
               </h3>
               <ul className="space-y-1.5 text-xs sm:text-sm text-slate-600">
@@ -376,7 +376,7 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
               <tbody className="divide-y divide-slate-200">
                 {data.popularRoutes.map((route, i) => (
                   <tr key={i} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-4 py-4 sm:px-6 font-semibold text-white">
+                    <td className="px-4 py-4 sm:px-6 font-semibold text-slate-900">
                       {route.destination}
                     </td>
                     <td className="px-4 py-4 sm:px-6 text-slate-600 text-xs sm:text-sm">
