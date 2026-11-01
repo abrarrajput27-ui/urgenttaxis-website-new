@@ -149,7 +149,7 @@ export function validateVehicleConstraints(
 }
 
 // ----------------------------------------------------------------------
-// PHASE 4B-10: 25% TOKEN CALCULATION
+// PHASE 4B-10: 30% ADVANCE TOKEN CALCULATION (OFFICIAL POLICY)
 // ----------------------------------------------------------------------
 function calculatePayableAndToken(automaticFare: number, manualOverrideFare?: number): {
   customerPayable: number;
@@ -157,8 +157,8 @@ function calculatePayableAndToken(automaticFare: number, manualOverrideFare?: nu
   balanceAmount: number;
 } {
   const customerPayable = manualOverrideFare !== undefined ? manualOverrideFare : automaticFare;
-  // Token = 25% of payable, rounded to nearest whole number
-  const tokenAmount = Math.round(customerPayable * 0.25);
+  // Official Approved Business Policy: 30% advance payment, 70% remaining balance
+  const tokenAmount = Math.round(customerPayable * 0.30);
   const balanceAmount = customerPayable - tokenAmount;
   
   return { customerPayable, tokenAmount, balanceAmount };

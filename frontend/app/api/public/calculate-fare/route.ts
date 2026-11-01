@@ -8,7 +8,6 @@ import {
   MasterFareInput,
   MasterFareResult,
 } from '@/lib/pricing/engine';
-import { resolveDynamicPricingRule } from '@/lib/pricing/calculator';
 
 export interface PublicQuotationDTO {
   success: boolean;
@@ -69,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = await supabaseServer();
 
-    // 2. Fetch active rules from database (Strictly active records only)
+    // 2. Fetch active rules from database
     const { data: oneWayRules } = await supabase
       .from('pricing_one_way')
       .select('*')
@@ -100,6 +99,7 @@ export async function POST(request: NextRequest) {
     const calcInput: MasterFareInput = {
       serviceType: serviceType as MasterFareInput['serviceType'],
       categoryId,
+      variantId,
       routeId,
       airportLocationId,
       cityZoneLocationId,
@@ -112,19 +112,62 @@ export async function POST(request: NextRequest) {
       fuelTypePreference: fuelTypePreference as any,
     };
 
-    // 4. Calculate fare using pure server-side engine
+    // 4. Calculate fare using authoritative server-side engine
     let calcResult: MasterFareResult | null = null;
+    const catLower = categoryId.toLowerCase();
+    const isSuv = catLower.includes('suv') && !catLower.includes('exec');
+    const isExec = catLower.includes('exec') || catLower.includes('crysta');
+    const isHatch = catLower.includes('hatch');
 
     if (serviceType === 'one_way') {
-      const rule = (oneWayRules || []).find((r) => r.route_id === routeId && r.category_id === categoryId);
+      let rule = (oneWayRules || []).find((r) => r.route_id === routeId && r.category_id === categoryId);
       if (!rule) {
-        return NextResponse.json({ success: true, isFareOnRequest: true, message: 'No active one-way rule found for selected route and category.' } as PublicQuotationDTO);
+        // Authoritative fallback rule for one-way journeys
+        let baseRate = 13.5;
+        let extraKmRate = 11;
+        if (isSuv) { baseRate = 17.5; extraKmRate = 15; }
+        else if (isExec) { baseRate = 26; extraKmRate = 20; }
+        else if (isHatch) { baseRate = 11; extraKmRate = 9; }
+
+        rule = {
+          id: `standard-ow-${categoryId}`,
+          route_id: routeId || '',
+          category_id: categoryId,
+          base_fare: Math.round(Number(actualDistanceKm) * baseRate),
+          included_km: Number(actualDistanceKm),
+          extra_km_rate: extraKmRate,
+          driver_allowance: 0,
+          night_charge: 0,
+          default_included_charges: ['Fuel', 'Driver Allowance'],
+          default_excluded_charges: ['Toll Tax', 'State Tax', 'Parking'],
+          is_active: true,
+          created_at: new Date().toISOString(),
+        };
       }
       calcResult = calculateMasterOneWayFare(calcInput, rule, dynamicRules || []);
     } else if (serviceType === 'round_trip') {
-      const rule = (roundTripRules || []).find((r) => r.category_id === categoryId);
+      let rule = (roundTripRules || []).find((r) => r.category_id === categoryId);
       if (!rule) {
-        return NextResponse.json({ success: true, isFareOnRequest: true, message: 'No active round-trip rule found for category.' } as PublicQuotationDTO);
+        // Authoritative fallback rule for round-trip journeys
+        let perKmRate = 11;
+        let minKm = 250;
+        let driverAllowance = 400;
+        if (isSuv) { perKmRate = 15; minKm = 250; driverAllowance = 400; }
+        else if (isExec) { perKmRate = 20; minKm = 300; driverAllowance = 500; }
+        else if (isHatch) { perKmRate = 9; minKm = 250; driverAllowance = 300; }
+
+        rule = {
+          id: `standard-rt-${categoryId}`,
+          category_id: categoryId,
+          min_km_per_day: minKm,
+          per_km_rate: perKmRate,
+          driver_allowance_per_day: driverAllowance,
+          night_halt_charge: 300,
+          default_included_charges: ['Fuel', 'Vehicle Rent'],
+          default_excluded_charges: ['Toll Tax', 'State Tax', 'Parking', 'Driver Night Allowance'],
+          is_active: true,
+          created_at: new Date().toISOString(),
+        };
       }
       calcResult = calculateMasterRoundTripFare(calcInput, rule, dynamicRules || []);
     } else if (serviceType === 'local_rental') {
@@ -138,9 +181,27 @@ export async function POST(request: NextRequest) {
         (r) => r.airport_location_id === airportLocationId && r.city_zone_location_id === cityZoneLocationId && r.category_id === categoryId
       );
       if (!rule) {
-        return NextResponse.json({ success: true, isFareOnRequest: true, message: 'No active airport transfer rule found.' } as PublicQuotationDTO);
+        // Standard airport transfer calculation
+        const airportBase = isSuv ? 1800 : isExec ? 2500 : 1300;
+        const airportRule = {
+          id: `standard-airport-${categoryId}`,
+          airport_location_id: airportLocationId || '',
+          city_zone_location_id: cityZoneLocationId || '',
+          category_id: categoryId,
+          base_fare: airportBase,
+          included_km: 40,
+          extra_km_rate: isSuv ? 15 : isExec ? 20 : 11,
+          driver_allowance: 0,
+          night_charge: 0,
+          default_included_charges: ['Fuel', 'Driver Allowance', 'Terminal Drop'],
+          default_excluded_charges: ['Parking Fee'],
+          is_active: true,
+          created_at: new Date().toISOString(),
+        };
+        calcResult = calculateMasterAirportTransferFare(calcInput, airportRule, dynamicRules || []);
+      } else {
+        calcResult = calculateMasterAirportTransferFare(calcInput, rule, dynamicRules || []);
       }
-      calcResult = calculateMasterAirportTransferFare(calcInput, rule, dynamicRules || []);
     }
 
     if (!calcResult) {
@@ -179,12 +240,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(quotation);
   } catch (error: unknown) {
+    console.error('Calculate Fare API Error:', error);
     return NextResponse.json(
-      {
-        success: false,
-        isFareOnRequest: true,
-        message: error instanceof Error ? error.message : 'Internal calculation error',
-      } as PublicQuotationDTO,
+      { success: false, isFareOnRequest: true, message: 'Internal server error while calculating fare.' },
       { status: 500 }
     );
   }

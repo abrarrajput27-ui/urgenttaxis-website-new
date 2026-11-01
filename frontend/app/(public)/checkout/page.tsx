@@ -261,11 +261,11 @@ function CheckoutContent() {
 
                     <div className="bg-brand-blue/5 p-4 rounded-xl border border-brand-blue/10 mt-4">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-bold text-brand-blue uppercase">Booking Token (25%)</span>
+                        <span className="text-sm font-bold text-brand-blue uppercase">Booking Token (30%)</span>
                         <span className="text-lg font-black text-brand-blue">₹{fareData.tokenAmount.toLocaleString('en-IN')}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-medium text-slate-500 uppercase">Balance to Driver</span>
+                        <span className="text-xs font-medium text-slate-500 uppercase">Balance to Driver (70%)</span>
                         <span className="text-sm font-bold text-slate-700">₹{fareData.balanceAmount.toLocaleString('en-IN')}</span>
                       </div>
                     </div>

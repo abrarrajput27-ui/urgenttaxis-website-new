@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import PublicHeader from '@/components/public/Header';
 import PublicFooter from '@/components/public/Footer';
+import MobileStickyBar from '@/components/public/MobileStickyBar';
 
 export const metadata: Metadata = {
   title: {
@@ -16,10 +17,11 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 pb-16 md:pb-0">
       <PublicHeader />
       <main className="flex-1">{children}</main>
       <PublicFooter />
+      <MobileStickyBar />
     </div>
   );
 }

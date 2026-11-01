@@ -51,11 +51,11 @@ export async function POST(req: NextRequest) {
     const totalPaidSoFar = (existingPayments || []).reduce((sum, p) => sum + Number(p.amount), 0);
     const trueRemainingBalance = snapshot.customer_payable - totalPaidSoFar;
 
-    // 3. Validation Rule 1: Token must meet minimum 25% if this is the first payment
+    // 3. Validation Rule 1: Token must meet minimum 30% if this is the first payment
     if (totalPaidSoFar === 0 && numericAmount < snapshot.token_amount) {
       return NextResponse.json({ 
         success: false, 
-        message: `Insufficient token. Minimum 25% required: Rs. ${snapshot.token_amount}` 
+        message: `Insufficient token. Minimum 30% required: Rs. ${snapshot.token_amount}` 
       }, { status: 400 });
     }
 

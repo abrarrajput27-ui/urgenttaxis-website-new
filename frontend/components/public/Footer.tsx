@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { SITE_CONFIG } from '@/lib/seo';
+import { BUSINESS_CONFIG } from '@/lib/config';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { FaFacebookF, FaInstagram, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
 
@@ -70,20 +71,31 @@ export default function PublicFooter() {
               />
             </div>
             <p className="text-slate-400 text-[13px] leading-relaxed">
-              Your reliable travel partner for outstation trips, local rentals and airport transfers across India.
+              Your reliable travel partner for outstation trips, local rentals and airport transfers in Ghaziabad, Delhi NCR and North India.
             </p>
-            {/* Social Media Icons */}
-            <div className="flex items-center gap-3">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#1877f2] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Facebook">
-                <FaFacebookF size={14} />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Instagram">
-                <FaInstagram size={14} />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#ff0000] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="YouTube">
-                <FaYoutube size={14} />
-              </a>
-            </div>
+            <p className="text-brand-green font-bold text-xs tracking-wider">
+              हमेशा आपके साथ!
+            </p>
+            {/* Social Media Profiles (Rendered only when verified URLs are configured) */}
+            {(BUSINESS_CONFIG.socialProfiles.facebook || BUSINESS_CONFIG.socialProfiles.instagram || BUSINESS_CONFIG.socialProfiles.youtube) && (
+              <div className="flex items-center gap-3">
+                {BUSINESS_CONFIG.socialProfiles.facebook && (
+                  <a href={BUSINESS_CONFIG.socialProfiles.facebook} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#1877f2] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Facebook">
+                    <FaFacebookF size={14} />
+                  </a>
+                )}
+                {BUSINESS_CONFIG.socialProfiles.instagram && (
+                  <a href={BUSINESS_CONFIG.socialProfiles.instagram} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Instagram">
+                    <FaInstagram size={14} />
+                  </a>
+                )}
+                {BUSINESS_CONFIG.socialProfiles.youtube && (
+                  <a href={BUSINESS_CONFIG.socialProfiles.youtube} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#ff0000] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="YouTube">
+                    <FaYoutube size={14} />
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Column 2: Quick Links */}
@@ -98,7 +110,9 @@ export default function PublicFooter() {
               <li><Link href="/routes" prefetch={true} className="hover:text-white transition-colors block">Popular Routes</Link></li>
               <li><Link href="/reviews" prefetch={true} className="hover:text-white transition-colors block">Reviews</Link></li>
               <li><Link href="/blog" prefetch={true} className="hover:text-white transition-colors block">Blog</Link></li>
+              <li><Link href="/taxi-service" prefetch={true} className="hover:text-white transition-colors block">NCR Taxi Service</Link></li>
               <li><Link href="/faq" prefetch={true} className="hover:text-white transition-colors block">FAQ</Link></li>
+              <li><Link href="/booking-policy" prefetch={true} className="hover:text-white transition-colors block">Booking Policy</Link></li>
               <li><Link href="/contact" prefetch={true} className="hover:text-white transition-colors block">Contact Us</Link></li>
             </ul>
           </div>
@@ -123,11 +137,11 @@ export default function PublicFooter() {
               Top Routes
             </h4>
             <ul className="space-y-3 text-[13px] text-slate-400">
-              <li><Link href="/routes/delhi-to-haridwar" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haridwar</Link></li>
-              <li><Link href="/routes/delhi-to-dehradun" prefetch={true} className="hover:text-white transition-colors block">Delhi to Dehradun</Link></li>
-              <li><Link href="/routes/delhi-to-haldwani" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haldwani</Link></li>
-              <li><Link href="/routes/delhi-to-rishikesh" prefetch={true} className="hover:text-white transition-colors block">Delhi to Rishikesh</Link></li>
-              <li><Link href="/routes/delhi-to-shimla" prefetch={true} className="hover:text-white transition-colors block">Delhi to Shimla</Link></li>
+              <li><Link href="/routes/delhi-to-haridwar-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haridwar</Link></li>
+              <li><Link href="/routes/delhi-to-dehradun-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Dehradun</Link></li>
+              <li><Link href="/routes/delhi-to-haldwani-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haldwani</Link></li>
+              <li><Link href="/routes/delhi-to-rishikesh-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Rishikesh</Link></li>
+              <li><Link href="/routes/delhi-to-shimla-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Shimla</Link></li>
             </ul>
           </div>
 
@@ -168,11 +182,11 @@ export default function PublicFooter() {
           <div>
             <h5 className="text-white font-bold mb-3">Popular City Taxi Services</h5>
             <div className="flex flex-wrap gap-x-2 gap-y-1">
-              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Delhi</Link> <span>•</span>
-              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Gurgaon</Link> <span>•</span>
-              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Noida</Link> <span>•</span>
-              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Ghaziabad</Link> <span>•</span>
-              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Faridabad</Link>
+              <Link href="/taxi-service/delhi" className="hover:text-white transition-colors">Taxi Services in Delhi</Link> <span>•</span>
+              <Link href="/taxi-service/gurugram" className="hover:text-white transition-colors">Taxi Services in Gurgaon</Link> <span>•</span>
+              <Link href="/taxi-service/noida" className="hover:text-white transition-colors">Taxi Services in Noida</Link> <span>•</span>
+              <Link href="/taxi-service/ghaziabad" className="hover:text-white transition-colors">Taxi Services in Ghaziabad</Link> <span>•</span>
+              <Link href="/taxi-service/faridabad" className="hover:text-white transition-colors">Taxi Services in Faridabad</Link>
             </div>
           </div>
           <div>
@@ -188,11 +202,11 @@ export default function PublicFooter() {
           <div className="sm:col-span-2 md:col-span-1">
             <h5 className="text-white font-bold mb-3">Delhi Airport Routes</h5>
             <div className="flex flex-wrap gap-x-2 gap-y-1">
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Gurgaon</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Noida</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Faridabad</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Ghaziabad</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Meerut</Link>
+              <Link href="/airport-transfers/ghaziabad-to-delhi-airport" className="hover:text-white transition-colors">Ghaziabad to IGI Airport</Link> <span>•</span>
+              <Link href="/airport-transfers/noida-to-delhi-airport" className="hover:text-white transition-colors">Noida to IGI Airport</Link> <span>•</span>
+              <Link href="/airport-transfers/greater-noida-to-delhi-airport" className="hover:text-white transition-colors">Greater Noida to IGI</Link> <span>•</span>
+              <Link href="/airport-transfers/delhi-airport-to-ghaziabad" className="hover:text-white transition-colors">IGI Airport to Ghaziabad</Link> <span>•</span>
+              <Link href="/airport-transfers/delhi-airport-to-noida" className="hover:text-white transition-colors">IGI Airport to Noida</Link>
             </div>
           </div>
         </div>
@@ -208,6 +222,14 @@ export default function PublicFooter() {
           <span className="text-slate-700">|</span>
           <Link href="/terms" className="hover:text-brand-green transition-colors whitespace-nowrap">
             Terms of Use
+          </Link>
+          <span className="text-slate-700">|</span>
+          <Link href="/booking-policy" className="hover:text-brand-green transition-colors whitespace-nowrap">
+            Booking Policy
+          </Link>
+          <span className="text-slate-700">|</span>
+          <Link href="/cancellation" className="hover:text-brand-green transition-colors whitespace-nowrap">
+            Cancellation Policy
           </Link>
         </div>
       </div>

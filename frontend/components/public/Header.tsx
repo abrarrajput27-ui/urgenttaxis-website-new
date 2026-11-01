@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { SITE_CONFIG } from '@/lib/seo';
+import { BUSINESS_CONFIG } from '@/lib/config';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { FaPhoneAlt, FaWhatsapp, FaFacebook, FaInstagram, FaYoutube, FaEnvelope, FaHeadset, FaHeart } from 'react-icons/fa';
 
@@ -69,11 +70,13 @@ export default function PublicHeader() {
               <FaEnvelope className="w-4 h-4" />
               <span>info@urgenttaxis.in</span>
             </a>
-            <div className="flex items-center gap-3">
-              <a href="#" className="bg-[#1877F2] text-white p-1.5 rounded-full hover:opacity-80 transition-opacity"><FaFacebook className="w-3.5 h-3.5" /></a>
-              <a href="#" className="bg-[#E4405F] text-white p-1.5 rounded-full hover:opacity-80 transition-opacity"><FaInstagram className="w-3.5 h-3.5" /></a>
-              <a href="#" className="bg-[#FF0000] text-white p-1.5 rounded-full hover:opacity-80 transition-opacity"><FaYoutube className="w-3.5 h-3.5" /></a>
-            </div>
+            {(BUSINESS_CONFIG.socialProfiles.facebook || BUSINESS_CONFIG.socialProfiles.instagram || BUSINESS_CONFIG.socialProfiles.youtube) && (
+              <div className="flex items-center gap-3">
+                {BUSINESS_CONFIG.socialProfiles.facebook && <a href={BUSINESS_CONFIG.socialProfiles.facebook} target="_blank" rel="noopener noreferrer" className="bg-[#1877F2] text-white p-1.5 rounded-full hover:opacity-80 transition-opacity" aria-label="Facebook"><FaFacebook className="w-3.5 h-3.5" /></a>}
+                {BUSINESS_CONFIG.socialProfiles.instagram && <a href={BUSINESS_CONFIG.socialProfiles.instagram} target="_blank" rel="noopener noreferrer" className="bg-[#E4405F] text-white p-1.5 rounded-full hover:opacity-80 transition-opacity" aria-label="Instagram"><FaInstagram className="w-3.5 h-3.5" /></a>}
+                {BUSINESS_CONFIG.socialProfiles.youtube && <a href={BUSINESS_CONFIG.socialProfiles.youtube} target="_blank" rel="noopener noreferrer" className="bg-[#FF0000] text-white p-1.5 rounded-full hover:opacity-80 transition-opacity" aria-label="YouTube"><FaYoutube className="w-3.5 h-3.5" /></a>}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -101,10 +104,12 @@ export default function PublicHeader() {
               <div key={link.name} className="relative group flex items-center">
                 {link.hasDropdown ? (
                   <>
-                    <span className={`hover:text-brand-green transition-colors cursor-pointer flex items-center gap-1 pb-1 border-b-[3px] ${isActive ? 'text-brand-green border-brand-green' : 'border-transparent hover:border-brand-green/30'}`}>
+                    <Link href="/services" prefetch={true} className={`hover:text-brand-green transition-colors cursor-pointer flex items-center gap-1 pb-1 border-b-[3px] ${isActive ? 'text-brand-green border-brand-green' : 'border-transparent hover:border-brand-green/30'}`}>
                       {link.name}
-                    </span>
+                    </Link>
                     <div className="absolute top-[30px] left-0 w-56 bg-white shadow-xl rounded-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all flex flex-col py-2 z-50 transform origin-top-left -translate-y-2 group-hover:translate-y-0">
+                      <Link href="/services" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">All Services Overview</Link>
+                      <Link href="/taxi-service" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">NCR Taxi Service</Link>
                       <Link href="/airport-transfers" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50 last:border-0">Airport Transfers</Link>
                       <Link href="/local-rentals" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50 last:border-0">Local Rentals</Link>
                       <Link href="/corporate-taxi" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50 last:border-0">Corporate Taxi</Link>
@@ -187,7 +192,9 @@ export default function PublicHeader() {
                       Services 
                       <span className={`transform transition-transform ${servicesOpen ? 'rotate-180' : ''}`}>▼</span>
                     </button>
-                    <div className={`flex flex-col pl-6 space-y-1 overflow-hidden transition-all duration-300 ${servicesOpen ? 'max-h-48' : 'max-h-0'}`}>
+                    <div className={`flex flex-col pl-6 space-y-1 overflow-hidden transition-all duration-300 ${servicesOpen ? 'max-h-60' : 'max-h-0'}`}>
+                      <Link href="/services" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px] font-bold">All Services Overview</Link>
+                      <Link href="/taxi-service" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">NCR Taxi Service</Link>
                       <Link href="/airport-transfers" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Airport Transfers</Link>
                       <Link href="/local-rentals" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Local Rentals</Link>
                       <Link href="/corporate-taxi" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Corporate Taxi</Link>
@@ -225,11 +232,13 @@ export default function PublicHeader() {
             <a href="mailto:info@urgenttaxis.in" className="flex items-center gap-1.5 hover:text-brand-blue">
               <FaEnvelope /> info@urgenttaxis.in
             </a>
-            <div className="flex items-center gap-3 text-lg">
-              <a href="#" className="text-[#1877F2] hover:opacity-80"><FaFacebook /></a>
-              <a href="#" className="text-[#E4405F] hover:opacity-80"><FaInstagram /></a>
-              <a href="#" className="text-[#FF0000] hover:opacity-80"><FaYoutube /></a>
-            </div>
+            {(BUSINESS_CONFIG.socialProfiles.facebook || BUSINESS_CONFIG.socialProfiles.instagram || BUSINESS_CONFIG.socialProfiles.youtube) && (
+              <div className="flex items-center gap-3 text-lg">
+                {BUSINESS_CONFIG.socialProfiles.facebook && <a href={BUSINESS_CONFIG.socialProfiles.facebook} target="_blank" rel="noopener noreferrer" className="text-[#1877F2] hover:opacity-80" aria-label="Facebook"><FaFacebook /></a>}
+                {BUSINESS_CONFIG.socialProfiles.instagram && <a href={BUSINESS_CONFIG.socialProfiles.instagram} target="_blank" rel="noopener noreferrer" className="text-[#E4405F] hover:opacity-80" aria-label="Instagram"><FaInstagram /></a>}
+                {BUSINESS_CONFIG.socialProfiles.youtube && <a href={BUSINESS_CONFIG.socialProfiles.youtube} target="_blank" rel="noopener noreferrer" className="text-[#FF0000] hover:opacity-80" aria-label="YouTube"><FaYoutube /></a>}
+              </div>
+            )}
           </div>
         </div>
       </div>

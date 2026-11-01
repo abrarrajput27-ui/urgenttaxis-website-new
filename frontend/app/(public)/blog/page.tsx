@@ -1,32 +1,25 @@
-import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { BLOG_ARTICLES } from '@/lib/data/blog-data';
+import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
+import { Calendar, Clock, ArrowRight, BookOpen, Compass } from 'lucide-react';
 
-export const metadata = constructMetadata({
-  title: 'Travel Blog | Urgent Taxis Outstation Guides & Fare Tips',
-  description: 'Read outstation travel tips, highway guides, fuel updates, and cab booking advice from the Urgent Taxis editorial team.',
-  canonicalPath: '/blog',
-});
-
-const sampleBlogs = [
-  {
-    slug: 'delhi-to-nainital-road-trip-guide',
-    title: 'Complete Guide for Delhi to Nainital Road Trip: Distance, Tolls & Best Stops',
-    excerpt: 'Planning a road trip from Delhi to Nainital? Discover verified highway routes via Rampur and Haldwani, toll expenses, and scenic stops along the way.',
-    date: 'July 15, 2026',
+export const metadata: Metadata = {
+  title: 'Travel Blog & Highway Guides | Urgent Taxis',
+  description: 'Expert outstation road trip guides, expressway updates, toll breakdowns, and taxi fare tips across Ghaziabad, Delhi NCR, Uttarakhand, and North India.',
+  alternates: {
+    canonical: `${BUSINESS_CONFIG.canonicalDomain}/blog`,
   },
-  {
-    slug: 'one-way-vs-round-trip-taxi-comparison',
-    title: 'One-Way vs Round-Trip Taxi Fares: How to Choose the Most Cost-Effective Cab',
-    excerpt: 'Understand when one-way taxi pricing saves you money versus when round-trip daily driver allowances are more practical for outstation travel.',
-    date: 'June 28, 2026',
+  openGraph: {
+    title: 'Travel Blog & Highway Guides | Urgent Taxis',
+    description: 'Expert outstation road trip guides, expressway updates, toll breakdowns, and taxi fare tips across Ghaziabad, Delhi NCR, Uttarakhand, and North India.',
+    url: `${BUSINESS_CONFIG.canonicalDomain}/blog`,
+    siteName: BUSINESS_CONFIG.brandName,
+    locale: 'en_IN',
+    type: 'website',
   },
-  {
-    slug: 'delhi-airport-transfer-tips',
-    title: 'Top 5 Tips for Stress-Free IGI Airport T3 Cab Pickups & Drop-offs',
-    excerpt: 'How to coordinate late-night airport transfers at Delhi IGI Airport Terminal 3, avoid parking surges, and ensure on-time flight catch.',
-    date: 'June 10, 2026',
-  },
-];
+};
 
 export default function BlogListPage() {
   const breadcrumbItems = [
@@ -34,52 +27,91 @@ export default function BlogListPage() {
     { label: 'Travel Blog' },
   ];
 
+  const articles = Object.values(BLOG_ARTICLES);
+
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Urgent Taxis Travel Guides and Highway Articles',
+    description: 'Comprehensive road trip guides and taxi advice for North India.',
+    itemListElement: articles.map((art, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: art.title,
+      url: `${BUSINESS_CONFIG.canonicalDomain}/blog/${art.slug}`,
+    })),
+  };
+
   return (
-    <div className="pb-16 bg-slate-50 min-h-screen text-slate-900">
-      <div className="bg-white border-b border-slate-100">
+    <div className="pb-16 bg-slate-950 min-h-screen text-slate-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
+
+      <div className="bg-slate-900 border-b border-slate-800">
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
       {/* Header Banner */}
-      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
-          Travel Guides & Highway Advice
+      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30 text-xs font-bold">
+          <BookOpen className="w-4 h-4" />
+          Highway Guides & Fare Advice
         </span>
-        <h1 className="text-4xl sm:text-5xl font-black text-brand-blue tracking-tight">
-          Urgent Taxis Travel Blog
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          Urgent Taxis Travel & Highway Blog
         </h1>
-        <p className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
-          Expert travel insights, outstation route breakdowns, fare advice, and North India sightseeing itineraries.
+        <p className="text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          Expert highway guides, expressway route reviews, toll calculators, and taxi fare insights from our experienced transport team in Ghaziabad.
         </p>
       </section>
 
       {/* Blog Cards Grid */}
-      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {sampleBlogs.map((blog) => (
+      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {articles.map((blog) => (
             <article
               key={blog.slug}
-              className="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between space-y-5 shadow-sm hover:shadow-lg transition-all duration-300"
+              className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-5 hover:border-blue-500/50 hover:bg-slate-850 transition-all duration-200 group"
             >
               <div className="space-y-3">
-                <span className="text-[11px] font-bold text-slate-400 block uppercase tracking-wider">{blog.date}</span>
-                <h2 className="text-lg font-black text-brand-blue leading-snug hover:text-brand-blue-light transition-colors cursor-pointer">
-                  {blog.title}
-                </h2>
-                <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                <div className="flex items-center justify-between text-xs text-slate-400">
+                  <span className="px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-blue-400 font-semibold uppercase tracking-wider text-[10px]">
+                    {blog.category}
+                  </span>
+                  <span className="flex items-center gap-1 text-[11px]">
+                    <Clock className="w-3 h-3" />
+                    {blog.readingTimeMins} min read
+                  </span>
+                </div>
+
+                <Link href={`/blog/${blog.slug}`}>
+                  <h2 className="text-base sm:text-lg font-bold text-white group-hover:text-blue-400 transition-colors leading-snug">
+                    {blog.title}
+                  </h2>
+                </Link>
+
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed line-clamp-3">
                   {blog.excerpt}
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <a
-                  href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20read%20your%20article%20on%20*${encodeURIComponent(blog.title)}*.%20%F0%9F%93%96`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-bold text-brand-green hover:text-brand-green-hover transition-colors flex items-center gap-1"
+              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span className="text-slate-400">
+                  {new Date(blog.publishedDate).toLocaleDateString('en-IN', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </span>
+                <Link
+                  href={`/blog/${blog.slug}`}
+                  className="font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors"
                 >
-                  Discuss on WhatsApp →
-                </a>
+                  <span>Read Guide</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </article>
           ))}

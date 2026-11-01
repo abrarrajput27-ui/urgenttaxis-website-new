@@ -1,64 +1,66 @@
 import React from 'react';
-import Image from 'next/image';
-import { FaHeadset, FaUserFriends, FaShieldAlt, FaRupeeSign } from 'react-icons/fa';
+import Link from 'next/link';
+import { FaHeadset, FaUserCheck, FaShieldAlt, FaRupeeSign, FaCheckCircle, FaMapMarkerAlt } from 'react-icons/fa';
+import { BUSINESS_CONFIG } from '@/lib/config';
 
 export default function TrustSection() {
   const trustItems = [
     {
-      title: "10,000+",
-      subtitle: "Happy Customers",
-      desc: "and counting",
-      icon: <FaUserFriends className="text-white text-xl" />,
-      colorClass: "bg-[#3b2c85]",
+      title: "Verified",
+      subtitle: "Highway Drivers",
+      desc: "Licensed & route-tested",
+      icon: <FaUserCheck className="text-white text-xl" />,
+      colorClass: "bg-[#1a419c]",
     },
     {
-      title: "Verified",
-      subtitle: "Drivers",
-      desc: "Background verified",
+      title: "Clean",
+      subtitle: "Comfortable Cabs",
+      desc: "AC sedans & SUVs",
       icon: <FaShieldAlt className="text-white text-xl" />,
       colorClass: "bg-[#00a859]",
     },
     {
-      title: "No Hidden",
-      subtitle: "Charges",
-      desc: "100% Transparent",
+      title: "Transparent",
+      subtitle: "Pricing",
+      desc: "Clear itemized fare",
       icon: <FaRupeeSign className="text-white text-xl" />,
-      colorClass: "bg-[#3b2c85]",
+      colorClass: "bg-[#1a419c]",
     },
     {
       title: "24/7",
-      subtitle: "Support",
-      desc: "We're here anytime",
+      subtitle: "Customer Support",
+      desc: "Always on WhatsApp & Call",
       icon: <FaHeadset className="text-white text-xl" />,
       colorClass: "bg-[#00a859]",
-    }
+    },
   ];
 
-  const features = [
+  const directBookingBenefits = [
     {
-      title: "Transparent Itemized Pricing",
-      description: "Calculated using strict per-KM rates and daily minimums. Clearly itemized base fare, distance charges, and driver allowance.",
-      icon: "💵"
+      title: "One Clear, Final Price",
+      description: "No hidden charges or surprise surcharges at the end of your trip. We provide complete transparency regarding base fare, driver allowance, tolls, and state border taxes before departure.",
+      icon: "💵",
     },
     {
-      title: "Verified Fleet & Drivers",
-      description: "Well-maintained sedans and SUVs driven by experienced chauffeurs trained for highway navigation and safety.",
-      icon: "🛡️"
+      title: "Driver & Car Details Shared Early",
+      description: "Receive your assigned chauffeur's contact number, verified license details, and vehicle registration well ahead of departure time for zero-stress airport and outstation pickups.",
+      icon: "🚗",
     },
     {
-      title: "Instant Booking Assistance",
-      description: "Instant phone and WhatsApp support for quick outstation trip confirmation and vehicle assignment.",
-      icon: "📲"
-    }
-  ];
-
-  const platforms = [
-    { name: "MakeMyTrip", logo: "/partners/makemytrip.svg" },
-    { name: "Goibibo", logo: "/partners/goibibo.png" },
-    { name: "EaseMyTrip", logo: "/partners/easemytrip.svg" },
-    { name: "Savaari", logo: "/partners/savaari.png" },
-    { name: "Justdial", logo: "/partners/justdial.png" },
-    { name: "TripAdvisor", logo: "/partners/tripadvisor.jpg" }
+      title: "Real Local Office in Ghaziabad",
+      description: `Headquartered locally at ${BUSINESS_CONFIG.headOffice.formattedAddress}. Our dispatch and operational support teams are based right here in NCR, not in an anonymous call center.`,
+      icon: "📍",
+    },
+    {
+      title: "Direct 24/7 WhatsApp & Phone Support",
+      description: "Speak directly with our dedicated operations team anytime day or night. Need to adjust your pickup time, change your drop location, or add a stop? We handle it instantly.",
+      icon: "📲",
+    },
+    {
+      title: "Fair & Transparent Cancellation Policy",
+      description: "Plans change, and we understand. Enjoy flexible rescheduling and transparent cancellation up to 6 hours before departure with instant token refunds.",
+      icon: "🛡️",
+    },
   ];
 
   return (
@@ -66,18 +68,25 @@ export default function TrustSection() {
       {/* Floating Trust Band */}
       <section className="w-full px-2 sm:px-6 lg:px-8 font-sans relative z-20 my-8 sm:my-12">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-2xl sm:rounded-[2rem] p-3 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100/50">
+          <div className="bg-white rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100/50">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 divide-y-0 lg:divide-x divide-slate-100">
               {trustItems.map((item, idx) => (
-                <div key={idx} className={`flex flex-col sm:flex-row items-center text-center sm:text-left gap-1.5 sm:gap-4 w-full ${idx !== 0 && idx !== 2 ? 'lg:pl-6' : ''}`}>
-                  <div className={`w-8 h-8 sm:w-14 sm:h-14 rounded-full flex-shrink-0 flex items-center justify-center shadow-lg ${item.colorClass}`}>
+                <div
+                  key={idx}
+                  className={`flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-4 w-full ${
+                    idx !== 0 ? 'lg:pl-6' : ''
+                  }`}
+                >
+                  <div
+                    className={`w-10 h-10 sm:w-14 sm:h-14 rounded-full flex-shrink-0 flex items-center justify-center shadow-md ${item.colorClass}`}
+                  >
                     <span className="scale-75 sm:scale-100">{item.icon}</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[12px] sm:text-[17px] font-black text-slate-900 leading-tight">
+                    <span className="text-xs sm:text-base font-black text-slate-900 leading-tight">
                       {item.title} <br className="hidden sm:block" /> {item.subtitle}
                     </span>
-                    <span className="text-[9px] sm:text-xs font-medium text-slate-500 mt-0.5 leading-none">
+                    <span className="text-[10px] sm:text-xs font-medium text-slate-500 mt-0.5 leading-none">
                       {item.desc}
                     </span>
                   </div>
@@ -88,73 +97,119 @@ export default function TrustSection() {
         </div>
       </section>
 
-      {/* Why Book Direct Section */}
+      {/* Why Book Direct Section (Replaces competitor logos strip) */}
       <section className="w-full bg-gradient-to-b from-white to-slate-50 py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-100 font-sans">
-        <div className="max-w-7xl mx-auto space-y-6 px-2 sm:px-8">
-          
+        <div className="max-w-7xl mx-auto space-y-8 px-2 sm:px-8">
           {/* Header */}
-          <div className="text-center space-y-4 max-w-3xl mx-auto">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="inline-block px-3 py-1 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold uppercase tracking-wider">
+              Guaranteed Direct Operator Value
+            </span>
             <h2 className="text-3xl sm:text-4xl font-black text-brand-blue tracking-tight">
               Why Book Direct with Urgent Taxis?
             </h2>
             <p className="text-slate-600 font-medium text-sm sm:text-base leading-relaxed">
-              Book directly with Urgent Taxis for transparent pricing, verified drivers, flexible support and a smoother booking experience.
+              When you book directly with our local Ghaziabad dispatch desk, you avoid middleman commissions, get direct driver coordination, and travel with full peace of mind.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            
-            {/* Features - Left Side */}
-            <div className="lg:col-span-2 grid grid-cols-1 gap-6 w-full">
-              {features.map((feature, index) => (
-                <div 
-                  key={index}
-                  className="bg-white p-6 rounded-3xl border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:-translate-y-1 hover:border-brand-green/30 transition-all duration-300 group w-full"
-                >
-                  <div className="flex items-start gap-5">
-                    <div className="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-2xl border border-brand-green/20 flex-shrink-0">
-                      {feature.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-black text-slate-900 text-lg sm:text-xl mb-1.5">{feature.title}</h3>
-                      <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-medium">{feature.description}</p>
-                    </div>
+          {/* Benefits Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {directBookingBenefits.map((benefit, index) => (
+              <div
+                key={index}
+                className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-100 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.08)] hover:-translate-y-1 hover:border-brand-green/30 transition-all duration-300 flex flex-col justify-between"
+              >
+                <div className="space-y-4">
+                  <div className="w-12 h-12 bg-brand-blue/10 rounded-2xl flex items-center justify-center text-2xl border border-brand-blue/20">
+                    {benefit.icon}
                   </div>
+                  <h3 className="font-black text-slate-900 text-lg sm:text-xl">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                    {benefit.description}
+                  </p>
                 </div>
-              ))}
-            {/* SEO Text (Moved up to save space) */}
-            <div className="text-[11px] text-slate-400 font-medium leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100 shadow-inner mt-2">
-              Urgent Taxis provides premier <strong className="font-semibold">outstation taxi</strong> and <strong className="font-semibold">airport taxi</strong> services across major cities. Whether you need a simple <strong className="font-semibold">cab booking</strong> or an <strong className="font-semibold">online cab booking</strong> platform, our <strong className="font-semibold">taxi service</strong> offers reliable <strong className="font-semibold">chauffeur driven car</strong> experiences. We specialize in <strong className="font-semibold">one way taxi</strong> drops, <strong className="font-semibold">round trip cab</strong> packages, and prompt <strong className="font-semibold">airport transfer</strong>. For city tours, book a <strong className="font-semibold">local cab</strong> or hire a spacious <strong className="font-semibold">tempo traveller</strong> for group trips. We also cater to business professionals requiring a <strong className="font-semibold">corporate cab</strong>. Explore popular corridors with our <strong className="font-semibold">Delhi taxi</strong>, <strong className="font-semibold">Noida taxi</strong>, <strong className="font-semibold">Ghaziabad taxi</strong>, <strong className="font-semibold">Aligarh taxi</strong>, <strong className="font-semibold">Lucknow taxi</strong>, <strong className="font-semibold">Haridwar taxi</strong>, <strong className="font-semibold">Rishikesh taxi</strong>, <strong className="font-semibold">Nainital taxi</strong>, <strong className="font-semibold">Jim Corbett taxi</strong>, <strong className="font-semibold">Dehradun taxi</strong>, <strong className="font-semibold">Agra taxi</strong>, and <strong className="font-semibold">Jaipur taxi</strong> routes.
+                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-brand-green">
+                  <FaCheckCircle /> Direct Customer Guarantee
+                </div>
+              </div>
+            ))}
+
+            {/* Local Dispatch Box */}
+            <div className="bg-brand-blue text-white p-6 sm:p-7 rounded-3xl shadow-[0_10px_30px_-10px_rgba(26,65,156,0.3)] flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl backdrop-blur-sm border border-white/30">
+                  🏢
+                </div>
+                <h3 className="font-black text-white text-lg sm:text-xl">
+                  Local Ghaziabad Presence
+                </h3>
+                <p className="text-blue-100 text-sm leading-relaxed font-medium">
+                  Have questions or need custom group travel arrangements? Visit our local office on Railway Station Road, Masuri, or connect with our dispatch supervisors directly.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-white/10 space-y-2 text-xs">
+                <div className="flex items-center gap-2 text-emerald-300 font-bold">
+                  <FaMapMarkerAlt /> Masuri, Ghaziabad, UP 201302
+                </div>
+                <Link
+                  href="/contact"
+                  className="inline-block text-white underline font-semibold hover:text-emerald-200 transition-colors"
+                >
+                  View complete office contact details →
+                </Link>
+              </div>
             </div>
           </div>
 
-            {/* Platforms Grid - Right Side */}
-            <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border border-slate-100 flex flex-col h-full w-full">
-              <h3 className="text-xl font-bold text-slate-900 mb-6 text-center">Compare our fares on top platforms</h3>
-              
-              <div className="grid grid-cols-2 gap-4 mb-6 w-full">
-                {platforms.map((platform, idx) => (
-                  <div 
-                    key={idx} 
-                    className="flex items-center justify-center p-4 rounded-xl border border-slate-100 bg-white shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all duration-300 h-20 w-full"
-                  >
-                    <img 
-                      src={platform.logo} 
-                      alt={`${platform.name} Logo`} 
-                      className="max-h-12 max-w-full object-contain"
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-                <p className="text-xs text-slate-500 font-medium leading-relaxed text-justify">
-                  <span className="font-bold text-slate-700 block mb-1">Please Note:</span>
-                  Many travelers discover taxi services through popular travel platforms. Booking directly with Urgent Taxis can provide personalized assistance, transparent communication and competitive pricing depending on the route and availability.
-                </p>
-              </div>
+          {/* Natural Internal Links Navigation Box (Replaces keyword-stuffed bold block) */}
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+            <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-2">
+              Popular Intercity Routes & Regional Services
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+              We provide prompt doorstep pickup across Ghaziabad, Noida, Delhi, Gurugram, and Faridabad. Explore our most popular travel corridors with fixed outstation rates and verified drivers:
+            </p>
+            <div className="flex flex-wrap gap-2 pt-1 text-xs">
+              <Link href="/routes/delhi-to-haridwar-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Delhi to Haridwar Taxi
+              </Link>
+              <Link href="/routes/delhi-to-dehradun-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Delhi to Dehradun Taxi
+              </Link>
+              <Link href="/routes/delhi-to-rishikesh-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Delhi to Rishikesh Taxi
+              </Link>
+              <Link href="/routes/delhi-to-nainital-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Delhi to Nainital Taxi
+              </Link>
+              <Link href="/routes/delhi-to-agra-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Delhi to Agra Taxi
+              </Link>
+              <Link href="/routes/delhi-to-jaipur-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Delhi to Jaipur Taxi
+              </Link>
+              <Link href="/routes/delhi-to-chandigarh-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Delhi to Chandigarh Taxi
+              </Link>
+              <Link href="/routes/delhi-to-shimla-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Delhi to Shimla Taxi
+              </Link>
+              <Link href="/routes/delhi-to-lucknow-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Delhi to Lucknow Taxi
+              </Link>
+              <Link href="/airport-transfers" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Delhi IGI Airport Transfers
+              </Link>
+              <Link href="/local-rentals" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Hourly City Rentals
+              </Link>
+              <Link href="/tempo-traveller" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
+                Tempo Traveller Hire
+              </Link>
             </div>
-
           </div>
         </div>
       </section>

@@ -46,7 +46,7 @@ export class BookingStatusMachine {
   }
 
   /**
-   * Enforces the rule that a booking can only be confirmed if the 25% token is met.
+   * Enforces the rule that a booking can only be confirmed if the 30% advance token is met.
    * This is a server-side only validation rule.
    */
   static validateTokenRequirementForConfirmation(totalPaid: number, requiredToken: number): boolean {
