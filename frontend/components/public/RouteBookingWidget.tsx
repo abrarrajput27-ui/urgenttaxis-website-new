@@ -61,29 +61,30 @@ export default function RouteBookingWidget({
   // Calculate billable KM and fares
   const calculations = useMemo(() => {
     const isRound = tripType === 'round_trip';
-    const effectiveKm = isRound ? Math.max(defaultDistanceKm * 2, 250) : defaultDistanceKm;
+    const minKm = rates[selectedVehicle].minKmPerDay;
+    const effectiveKm = isRound ? Math.max(defaultDistanceKm * 2, minKm) : defaultDistanceKm;
     
-    // Toll and state tax estimates
+    // Toll and state tax estimates (informational Fastag highway toll)
     const estToll = Math.round(effectiveKm * 1.6);
     const estStateTax = 350;
 
-    let baseFare = 0;
+    let totalCabFare = 0;
     if (isRound) {
-      baseFare = Math.round(effectiveKm * rates[selectedVehicle].perKm + 400); // 400 driver day allowance
+      const driverAllowance = selectedVehicle === 'crysta' ? 500 : 400;
+      totalCabFare = Math.round(effectiveKm * rates[selectedVehicle].perKm + driverAllowance);
     } else {
-      baseFare = Math.round(effectiveKm * rates[selectedVehicle].rateMultiplier);
+      totalCabFare = Math.round(effectiveKm * rates[selectedVehicle].rateMultiplier);
     }
 
-    const totalPayable = baseFare + estToll;
-    const tokenAmount = Math.round(totalPayable * 0.2); // 20% advance token
-    const balanceAmount = totalPayable - tokenAmount;
+    const tokenAmount = Math.round(totalCabFare * 0.25); // Authoritative 25% advance token
+    const balanceAmount = totalCabFare - tokenAmount;
 
     return {
       billableKm: effectiveKm,
       estToll,
       estStateTax,
-      baseFare,
-      totalPayable,
+      baseFare: totalCabFare,
+      totalPayable: totalCabFare,
       tokenAmount,
       balanceAmount,
     };
@@ -327,7 +328,7 @@ export default function RouteBookingWidget({
         {/* Transparent Fare Summary Card */}
         <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
           <div className="flex justify-between items-baseline border-b border-slate-200 pb-2">
-            <span className="text-xs font-bold text-slate-500 uppercase">Total Estimated Fare</span>
+            <span className="text-xs font-bold text-slate-500 uppercase">Total Cab Rental Fare</span>
             <span className="text-2xl font-black text-brand-blue">
               ₹{calculations.totalPayable.toLocaleString('en-IN')}
             </span>
@@ -335,24 +336,24 @@ export default function RouteBookingWidget({
 
           <div className="space-y-1.5 text-xs font-semibold text-slate-600">
             <div className="flex justify-between">
-              <span>Base Fare ({calculations.billableKm} km):</span>
+              <span>Cab Fare ({calculations.billableKm} km):</span>
               <span className="font-bold text-slate-800">₹{calculations.baseFare.toLocaleString('en-IN')}</span>
             </div>
             <div className="flex justify-between">
               <span>Driver Day Allowance:</span>
               <span className="text-brand-green font-bold">Included</span>
             </div>
-            <div className="flex justify-between">
-              <span>Estimated Tolls:</span>
-              <span className="font-bold text-slate-800">~ ₹{calculations.estToll.toLocaleString('en-IN')}</span>
+            <div className="flex justify-between text-slate-500">
+              <span>Highway Toll (Est. Fastag):</span>
+              <span className="font-medium text-slate-600">~ ₹{calculations.estToll.toLocaleString('en-IN')} (At Plaza)</span>
             </div>
             <div className="flex justify-between">
               <span>Advance Token to Confirm:</span>
-              <span className="font-bold text-brand-blue">₹{calculations.tokenAmount.toLocaleString('en-IN')} (20%)</span>
+              <span className="font-bold text-brand-blue">₹{calculations.tokenAmount.toLocaleString('en-IN')} (25%)</span>
             </div>
             <div className="flex justify-between text-slate-500">
               <span>Payable to Driver on Trip:</span>
-              <span>₹{calculations.balanceAmount.toLocaleString('en-IN')}</span>
+              <span>₹{calculations.balanceAmount.toLocaleString('en-IN')} (75%)</span>
             </div>
           </div>
 
