@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { RoutePlace } from '@/lib/data/route-places-data';
-import { FaUtensils, FaGasPump, FaChargingStation, FaLandmark, FaStar, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaUtensils, FaGasPump, FaChargingStation, FaLandmark, FaExternalLinkAlt } from 'react-icons/fa';
 
 interface RoutePlacesSectionProps {
   places: RoutePlace[];
@@ -31,7 +31,7 @@ export default function RoutePlacesSection({ places, originName, destName }: Rou
       case 'restaurant': return 'Food & Dhaba';
       case 'petrol': return 'Petrol Pump';
       case 'cng': return 'CNG Station';
-      case 'attraction': return 'Sightseeing';
+      case 'attraction': return 'Attraction';
     }
   };
 
@@ -44,11 +44,11 @@ export default function RoutePlacesSection({ places, originName, destName }: Rou
               <span>⛽</span> Places Along the Route ({originName} to {destName})
             </h2>
             <p className="text-xs text-slate-500 mt-1 font-medium">
-              Verified food courts, dhabas, 24/7 petrol & CNG stations, and attractions on your corridor.
+              Popular food plazas, dhabas, petrol & CNG refueling stations, and attractions commonly visited on this corridor.
             </p>
           </div>
-          <span className="text-xs bg-emerald-50 text-brand-green font-bold px-3 py-1 rounded-full border border-emerald-200 self-start sm:self-auto">
-            Highway Verified
+          <span className="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1 rounded-full border border-slate-200 self-start sm:self-auto">
+            Traveler Suggestions
           </span>
         </div>
 
@@ -57,7 +57,7 @@ export default function RoutePlacesSection({ places, originName, destName }: Rou
           <button
             type="button"
             onClick={() => setActiveTab('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'all'
                 ? 'bg-brand-blue text-white shadow-sm'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -68,7 +68,7 @@ export default function RoutePlacesSection({ places, originName, destName }: Rou
           <button
             type="button"
             onClick={() => setActiveTab('restaurant')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'restaurant'
                 ? 'bg-brand-blue text-white shadow-sm'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -79,18 +79,18 @@ export default function RoutePlacesSection({ places, originName, destName }: Rou
           <button
             type="button"
             onClick={() => setActiveTab('cng')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'cng'
                 ? 'bg-brand-blue text-white shadow-sm'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             }`}
           >
-            <FaChargingStation className="text-emerald-500" /> CNG Pumps
+            <FaChargingStation className="text-emerald-500" /> CNG Stations
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('petrol')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'petrol'
                 ? 'bg-brand-blue text-white shadow-sm'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -101,7 +101,7 @@ export default function RoutePlacesSection({ places, originName, destName }: Rou
           <button
             type="button"
             onClick={() => setActiveTab('attraction')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'attraction'
                 ? 'bg-brand-blue text-white shadow-sm'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -120,24 +120,16 @@ export default function RoutePlacesSection({ places, originName, destName }: Rou
             className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-brand-blue hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div className="space-y-2">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-xs">
-                    {getCategoryIcon(place.category)}
-                  </div>
-                  <div>
-                    <h3 className="font-extrabold text-sm text-slate-900 leading-snug">{place.name}</h3>
-                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
-                      {getCategoryLabel(place.category)}
-                    </span>
-                  </div>
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-xs">
+                  {getCategoryIcon(place.category)}
                 </div>
-
-                {place.rating && (
-                  <span className="flex items-center gap-1 bg-amber-50 text-amber-800 text-xs font-black px-2 py-0.5 rounded-md border border-amber-200">
-                    <FaStar className="w-2.5 h-2.5 text-amber-500" /> {place.rating}
+                <div>
+                  <h3 className="font-extrabold text-sm text-slate-900 leading-snug">{place.name}</h3>
+                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+                    {getCategoryLabel(place.category)}
                   </span>
-                )}
+                </div>
               </div>
 
               <div className="text-xs text-slate-600 font-medium">

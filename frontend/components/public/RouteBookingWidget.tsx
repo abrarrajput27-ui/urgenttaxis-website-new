@@ -154,7 +154,7 @@ export default function RouteBookingWidget({
           Book {origin} to {destination} Taxi
         </h3>
         <p className="text-xs text-blue-200 mt-1 font-medium">
-          Transparent pricing • Zero hidden charges • 24/7 Service
+          Transparent pricing • Direct Booking Assistance • Reliable Fleet
         </p>
       </div>
 
@@ -358,7 +358,7 @@ export default function RouteBookingWidget({
 
           <div className="pt-2 border-t border-slate-200 flex items-center gap-1.5 text-[11px] text-slate-500">
             <FaShieldAlt className="text-brand-green" />
-            <span>Guaranteed price. Fuel & AC included. No surprise surge charges.</span>
+            <span>Clear fare estimate. Fuel & vehicle rental included. Tolls itemized clearly.</span>
           </div>
         </div>
 

@@ -67,10 +67,10 @@ export default function RouteTravelInfoSection({
             <h3>Driver & Vehicle Quality</h3>
           </div>
           <p className="text-xs text-slate-600 leading-relaxed font-medium">
-            All our outstation captains possess 5+ years of verified inter-state highway experience, with thorough knowledge of expressways, ghat roads, and bypass diversions.
+            Our outstation drivers possess extensive inter-state highway experience, with practical knowledge of expressways, ghat roads, and bypass diversions.
           </p>
           <div className="text-[11px] font-bold text-slate-500 pt-1">
-            ❄️ 100% AC Cabs (AC turned off on steep hairpin climbs for engine power safety).
+            ❄️ Air-Conditioned Cabs (AC turned off on steep hairpin climbs for engine power safety).
           </div>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import {
   calculateMasterOneWayFare,
@@ -8,7 +7,6 @@ import {
   calculateMasterAirportTransferFare,
   MasterFareInput,
 } from '@/lib/pricing/engine';
-import { resolveDynamicPricingRule } from '@/lib/pricing/calculator';
 import { randomBytes } from 'crypto';
 
 export async function POST(req: NextRequest) {
@@ -56,8 +54,8 @@ export async function POST(req: NextRequest) {
 
     const adminClient = supabaseAdmin();
 
-    // 2. Fetch Pricing Rule
-    let rule: unknown = null;
+    // 2. Fetch Pricing Rule or compute standard fallback rule
+    let rule: any = null;
     if (serviceType === 'one_way') {
       const { data } = await adminClient.from('pricing_one_way').select('*').eq('route_id', routeId).eq('category_id', categoryId).eq('is_active', true).single();
       rule = data;
@@ -72,8 +70,56 @@ export async function POST(req: NextRequest) {
       rule = data;
     }
 
+    const catLower = String(categoryId).toLowerCase();
+    const isSuv = catLower.includes('suv') && !catLower.includes('exec');
+    const isExec = catLower.includes('exec') || catLower.includes('crysta');
+    const isHatch = catLower.includes('hatch');
+
     if (!rule) {
-      return NextResponse.json({ success: false, message: 'Invalid pricing rule or route configuration.' }, { status: 400 });
+      if (serviceType === 'one_way') {
+        let baseRate = 13.5;
+        let extraKmRate = 11;
+        if (isSuv) { baseRate = 17.5; extraKmRate = 15; }
+        else if (isExec) { baseRate = 26; extraKmRate = 20; }
+        else if (isHatch) { baseRate = 11; extraKmRate = 9; }
+
+        rule = {
+          id: `standard-ow-${categoryId}`,
+          route_id: routeId || '',
+          category_id: categoryId,
+          base_fare: Math.round(numericDistance * baseRate),
+          included_km: numericDistance,
+          extra_km_rate: extraKmRate,
+          driver_allowance: 0,
+          night_charge: 0,
+          default_included_charges: ['Fuel', 'Driver Allowance'],
+          default_excluded_charges: ['Toll Tax', 'State Tax', 'Parking'],
+          is_active: true,
+          created_at: new Date().toISOString(),
+        };
+      } else if (serviceType === 'round_trip') {
+        let perKmRate = 11;
+        let minKm = 250;
+        let driverAllowance = 400;
+        if (isSuv) { perKmRate = 15; minKm = 250; driverAllowance = 400; }
+        else if (isExec) { perKmRate = 20; minKm = 300; driverAllowance = 500; }
+        else if (isHatch) { perKmRate = 9; minKm = 250; driverAllowance = 300; }
+
+        rule = {
+          id: `standard-rt-${categoryId}`,
+          category_id: categoryId,
+          min_km_per_day: minKm,
+          per_km_rate: perKmRate,
+          driver_allowance_per_day: driverAllowance,
+          night_halt_charge: 300,
+          default_included_charges: ['Fuel', 'Vehicle Rent'],
+          default_excluded_charges: ['Toll Tax', 'State Tax', 'Parking', 'Driver Night Allowance'],
+          is_active: true,
+          created_at: new Date().toISOString(),
+        };
+      } else {
+        return NextResponse.json({ success: false, message: 'Invalid pricing rule or route configuration.' }, { status: 400 });
+      }
     }
 
     // 3. Dynamic Surge
@@ -91,7 +137,7 @@ export async function POST(req: NextRequest) {
       airportLocationId,
       cityZoneLocationId,
       packageId,
-      actualDistanceKm: Number(actualDistanceKm) || 0,
+      actualDistanceKm: numericDistance,
       durationHours: Number(durationHours) || 0,
       numberOfDays: Number(numberOfDays) || 1,
       numberOfNights: Number(numberOfNights) || 0,
@@ -99,10 +145,10 @@ export async function POST(req: NextRequest) {
     };
 
     let calcResult = null;
-    if (serviceType === 'one_way') calcResult = calculateMasterOneWayFare(calcInput, rule as any, dynamicRulesData || []);
-    if (serviceType === 'round_trip') calcResult = calculateMasterRoundTripFare(calcInput, rule as any, dynamicRulesData || []);
-    if (serviceType === 'local_rental') calcResult = calculateMasterLocalRentalFare(calcInput, rule as any, dynamicRulesData || []);
-    if (serviceType === 'airport_transfer') calcResult = calculateMasterAirportTransferFare(calcInput, rule as any, dynamicRulesData || []);
+    if (serviceType === 'one_way') calcResult = calculateMasterOneWayFare(calcInput, rule, dynamicRulesData || []);
+    if (serviceType === 'round_trip') calcResult = calculateMasterRoundTripFare(calcInput, rule, dynamicRulesData || []);
+    if (serviceType === 'local_rental') calcResult = calculateMasterLocalRentalFare(calcInput, rule, dynamicRulesData || []);
+    if (serviceType === 'airport_transfer') calcResult = calculateMasterAirportTransferFare(calcInput, rule, dynamicRulesData || []);
 
     if (!calcResult) {
       return NextResponse.json({ success: false, message: 'Fare calculation failed.' }, { status: 500 });
@@ -110,7 +156,7 @@ export async function POST(req: NextRequest) {
 
     // 5. Handle Customer Record (Upsert using phone)
     let customerId = '';
-      const { data: existingCustomer } = await adminClient.from('customers').select('id').eq('phone', customerPhone).single();
+    const { data: existingCustomer } = await adminClient.from('customers').select('id').eq('phone', customerPhone).single();
     if (existingCustomer) {
       customerId = existingCustomer.id;
     } else {
@@ -126,11 +172,37 @@ export async function POST(req: NextRequest) {
     // 6. Generate Reference (12 hex chars for higher entropy)
     const bookingReference = `UT-${randomBytes(6).toString('hex').toUpperCase()}`;
 
+    // Resolve Category ID to valid UUID if slug or non-UUID passed
+    let resolvedCategoryUuid = categoryId;
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_REGEX.test(categoryId)) {
+      const { data: catData } = await adminClient
+        .from('vehicle_categories')
+        .select('id')
+        .or(`slug.eq.${categoryId},name.ilike.%${categoryId}%`)
+        .maybeSingle();
+      if (catData?.id) {
+        resolvedCategoryUuid = catData.id;
+      } else {
+        const SLUG_TO_UUID: Record<string, string> = {
+          'sedan': 'b8f8e608-491d-4c7c-847d-14456fb41696',
+          'cat-sedan': 'b8f8e608-491d-4c7c-847d-14456fb41696',
+          'suv-muv': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'cat-suv': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'executive-suv': '833d9fb3-65b6-4846-8a9d-44ba6ace6942',
+          'cat-exec-suv': '833d9fb3-65b6-4846-8a9d-44ba6ace6942',
+          'hatchback': '9e1014d2-71de-43cf-9b73-128773002872',
+          'cat-hatchback': '9e1014d2-71de-43cf-9b73-128773002872',
+        };
+        resolvedCategoryUuid = SLUG_TO_UUID[categoryId] || 'b8f8e608-491d-4c7c-847d-14456fb41696';
+      }
+    }
+
     // 7. Insert Booking
     const { data: booking, error: bookingError } = await adminClient.from('bookings').insert({
       booking_reference: bookingReference,
       customer_id: customerId,
-      category_id: categoryId,
+      category_id: resolvedCategoryUuid,
       trip_type: serviceType,
       pickup_address: pickupAddress,
       drop_address: dropAddress,
@@ -145,7 +217,8 @@ export async function POST(req: NextRequest) {
     }).select('id').single();
 
     if (bookingError || !booking) {
-      return NextResponse.json({ success: false, message: 'Failed to create booking.' }, { status: 500 });
+      console.error('Failed to create booking in DB:', bookingError);
+      return NextResponse.json({ success: false, message: 'Failed to create booking record.' }, { status: 500 });
     }
 
     // 8. Freeze Fare Snapshot

@@ -162,7 +162,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
   const mins = (route.estimated_duration_minutes || 240) % 60;
 
   // Curated Places along this corridor
-  const placesAlongRoute = getPlacesForRoute(originName, destName, distance);
+  const placesAlongRoute = getPlacesForRoute(destName, distance);
 
   // Unified transparent pricing logic
   const parseFare = (val: any, fallbackRate: number) => {
@@ -202,7 +202,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div className="max-w-7xl mx-auto relative z-10 text-center space-y-3">
           <span className="inline-block px-3.5 py-1 bg-white/20 rounded-full text-xs font-black backdrop-blur-sm border border-white/30 uppercase tracking-wider">
-            Verified One-Way & Round-Trip Taxi Service
+            One-Way & Round-Trip Taxi Service
           </span>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight drop-shadow-md">
             {originName} to {destName} Taxi Service
@@ -219,14 +219,14 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
           {/* Main Content Column */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* Live Route Map & Overview (Phase 2.3) */}
+            {/* Route Map & Overview (Phase 2.3) */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="p-6 border-b border-slate-100 flex items-center justify-between">
                 <h2 className="text-xl font-black text-brand-blue flex items-center gap-2">
-                  <span className="text-brand-green text-2xl">🗺️</span> Live Route Map & Highway Corridor
+                  <span className="text-brand-green text-2xl">🗺️</span> Route Map & Highway Corridor Overview
                 </h2>
                 <span className="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1 rounded-full">
-                  GPS Active
+                  Corridor Map
                 </span>
               </div>
               <div className="p-6 bg-slate-50 space-y-6">
@@ -237,7 +237,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                   </div>
                   <div className="bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm font-bold text-slate-700">
                     <span className="text-slate-400 text-xs block mb-1 uppercase">Estimated Toll:</span>
-                    <span className="text-brand-green">~ ₹{estimatedToll} (Fastag Automated)</span>
+                    <span className="text-brand-green">~ ₹{estimatedToll} (Fastag Plaza Estimates)</span>
                   </div>
                 </div>
 
@@ -284,8 +284,8 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
               </div>
 
               <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl space-y-1 text-xs text-blue-900 font-medium">
-                <span className="font-bold flex items-center gap-1">ℹ️ Doorstep Pickup Guarantee:</span>
-                <p>Our driver arrives at your exact home or hotel address 15 minutes before the scheduled time with AC pre-cooled.</p>
+                <span className="font-bold flex items-center gap-1">ℹ️ Doorstep Pickup Information:</span>
+                <p>Our driver arrives at your specified home or hotel address with air conditioning prepared for your journey.</p>
               </div>
             </div>
 
@@ -299,7 +299,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                   <p className="text-xs text-blue-200 mt-1">One-Way Drop Fares for {originName} to {destName}</p>
                 </div>
                 <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-bold">
-                  All-Inclusive Options
+                  Clear Breakdown Options
                 </span>
               </div>
 
