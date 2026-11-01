@@ -110,7 +110,9 @@ export default function PublicFooter() {
               <li><Link href="/routes" prefetch={true} className="hover:text-white transition-colors block">Popular Routes</Link></li>
               <li><Link href="/reviews" prefetch={true} className="hover:text-white transition-colors block">Reviews</Link></li>
               <li><Link href="/blog" prefetch={true} className="hover:text-white transition-colors block">Blog</Link></li>
+              <li><Link href="/taxi-service" prefetch={true} className="hover:text-white transition-colors block">NCR Taxi Service</Link></li>
               <li><Link href="/faq" prefetch={true} className="hover:text-white transition-colors block">FAQ</Link></li>
+              <li><Link href="/booking-policy" prefetch={true} className="hover:text-white transition-colors block">Booking Policy</Link></li>
               <li><Link href="/contact" prefetch={true} className="hover:text-white transition-colors block">Contact Us</Link></li>
             </ul>
           </div>
@@ -180,11 +182,11 @@ export default function PublicFooter() {
           <div>
             <h5 className="text-white font-bold mb-3">Popular City Taxi Services</h5>
             <div className="flex flex-wrap gap-x-2 gap-y-1">
-              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Delhi</Link> <span>•</span>
-              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Gurgaon</Link> <span>•</span>
-              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Noida</Link> <span>•</span>
-              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Ghaziabad</Link> <span>•</span>
-              <Link href="/local-rentals" className="hover:text-white transition-colors">Taxi Services in Faridabad</Link>
+              <Link href="/taxi-service/delhi" className="hover:text-white transition-colors">Taxi Services in Delhi</Link> <span>•</span>
+              <Link href="/taxi-service/gurugram" className="hover:text-white transition-colors">Taxi Services in Gurgaon</Link> <span>•</span>
+              <Link href="/taxi-service/noida" className="hover:text-white transition-colors">Taxi Services in Noida</Link> <span>•</span>
+              <Link href="/taxi-service/ghaziabad" className="hover:text-white transition-colors">Taxi Services in Ghaziabad</Link> <span>•</span>
+              <Link href="/taxi-service/faridabad" className="hover:text-white transition-colors">Taxi Services in Faridabad</Link>
             </div>
           </div>
           <div>
@@ -200,11 +202,11 @@ export default function PublicFooter() {
           <div className="sm:col-span-2 md:col-span-1">
             <h5 className="text-white font-bold mb-3">Delhi Airport Routes</h5>
             <div className="flex flex-wrap gap-x-2 gap-y-1">
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Gurgaon</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Noida</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Faridabad</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Ghaziabad</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">IGI to Meerut</Link>
+              <Link href="/airport-transfers/ghaziabad-to-delhi-airport" className="hover:text-white transition-colors">Ghaziabad to IGI Airport</Link> <span>•</span>
+              <Link href="/airport-transfers/noida-to-delhi-airport" className="hover:text-white transition-colors">Noida to IGI Airport</Link> <span>•</span>
+              <Link href="/airport-transfers/greater-noida-to-delhi-airport" className="hover:text-white transition-colors">Greater Noida to IGI</Link> <span>•</span>
+              <Link href="/airport-transfers/delhi-airport-to-ghaziabad" className="hover:text-white transition-colors">IGI Airport to Ghaziabad</Link> <span>•</span>
+              <Link href="/airport-transfers/delhi-airport-to-noida" className="hover:text-white transition-colors">IGI Airport to Noida</Link>
             </div>
           </div>
         </div>
@@ -220,6 +222,14 @@ export default function PublicFooter() {
           <span className="text-slate-700">|</span>
           <Link href="/terms" className="hover:text-brand-green transition-colors whitespace-nowrap">
             Terms of Use
+          </Link>
+          <span className="text-slate-700">|</span>
+          <Link href="/booking-policy" className="hover:text-brand-green transition-colors whitespace-nowrap">
+            Booking Policy
+          </Link>
+          <span className="text-slate-700">|</span>
+          <Link href="/cancellation" className="hover:text-brand-green transition-colors whitespace-nowrap">
+            Cancellation Policy
           </Link>
         </div>
       </div>
