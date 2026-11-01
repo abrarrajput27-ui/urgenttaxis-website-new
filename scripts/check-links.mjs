@@ -12,6 +12,7 @@ console.log('--- URGENT TAXIS INTERNAL LINK INTEGRITY AUDIT ---');
 const errors = [];
 const verifiedRoutes = new Set([
   '/',
+  '/services',
   '/about',
   '/contact',
   '/fleet',

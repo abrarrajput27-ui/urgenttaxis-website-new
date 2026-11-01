@@ -5,6 +5,11 @@ import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import Image from 'next/image';
 import Link from 'next/link';
+import RouteBookingWidget from '@/components/public/RouteBookingWidget';
+import RoutePlacesSection from '@/components/public/RoutePlacesSection';
+import RouteTravelInfoSection from '@/components/public/RouteTravelInfoSection';
+import RouteGallerySection from '@/components/public/RouteGallerySection';
+import { getPlacesForRoute } from '@/lib/data/route-places-data';
 
 interface DynamicRoutePageProps {
   params: Promise<{
@@ -60,7 +65,7 @@ async function resolveRouteBySlug(slug: string) {
     console.warn('Supabase query failed in resolveRouteBySlug:', err);
   }
 
-  // Fallback generation for the mock mass routes
+  // Fallback generation for mock mass routes
   const parts = slug.split('-to-');
   if (parts.length === 2) {
     const formatName = (str: string) => str.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -72,7 +77,7 @@ async function resolveRouteBySlug(slug: string) {
       origin: { name: formatName(parts[0].replace('-taxi', '')) },
       destination: { name: formatName(parts[1].replace('-taxi', '')) },
       sedanFare: '₹' + (Math.floor(Math.random() * 2000) + 2000).toLocaleString()
-    }
+    };
   }
 
   return null;
@@ -156,8 +161,8 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
   const hrs = Math.floor((route.estimated_duration_minutes || 240) / 60);
   const mins = (route.estimated_duration_minutes || 240) % 60;
 
-  // Check if route involves an airport
-  const isAirportRoute = originName.toLowerCase().includes('airport') || destName.toLowerCase().includes('airport') || resolvedParams.slug.includes('airport');
+  // Curated Places along this corridor
+  const placesAlongRoute = getPlacesForRoute(originName, destName, distance);
 
   // Unified transparent pricing logic
   const parseFare = (val: any, fallbackRate: number) => {
@@ -174,20 +179,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
   const crystaFareTotal = parseFare(route.crystaFare, 26);
 
   const estimatedToll = Math.round(distance * 1.6);
-  const estimatedStateTax = 350;
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Routes', href: '/routes' },
     { label: `${originName} to ${destName} Taxi Service` },
   ];
-
-  const whatsappUrl = generateWhatsAppLink(SITE_CONFIG.whatsapp, {
-    pickup: originName,
-    drop: destName,
-    tripType: 'Outstation Cab',
-    customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to book an *Outstation Cab*. 🚕'
-  });
 
   // Calculate up to 4 genuinely related routes from the same origin or sharing the destination
   const relatedRoutes = masterRoutesData
@@ -201,21 +198,18 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
       </div>
 
       {/* Hero Header */}
-      <section className="bg-brand-blue text-white py-4 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="bg-brand-blue text-white py-6 sm:py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-        <div className="max-w-7xl mx-auto relative z-10 text-center space-y-4">
-          <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-bold backdrop-blur-sm border border-white/30 uppercase tracking-wider">
-            Trusted One Way & Round Trip Taxi Service
+        <div className="max-w-7xl mx-auto relative z-10 text-center space-y-3">
+          <span className="inline-block px-3.5 py-1 bg-white/20 rounded-full text-xs font-black backdrop-blur-sm border border-white/30 uppercase tracking-wider">
+            Verified One-Way & Round-Trip Taxi Service
           </span>
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight drop-shadow-md">
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight drop-shadow-md">
             {originName} to {destName} Taxi Service
           </h1>
-          <p className="text-lg text-blue-100 font-medium max-w-2xl mx-auto">
-            Reliable AC Cabs & Professional Highway Drivers for {originName} to {destName}
+          <p className="text-base sm:text-lg text-blue-100 font-medium max-w-2xl mx-auto">
+            Reliable AC Cabs & Professional Highway Drivers for {originName} to {destName} (~{distance} km)
           </p>
-          <div className="text-sm font-semibold text-blue-200 mt-4 animate-bounce">
-            ↓ Scroll down to select your preferred vehicle and confirm booking online or via WhatsApp
-          </div>
         </div>
       </section>
 
@@ -225,24 +219,28 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
           {/* Main Content Column */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* Live Route Map & Overview */}
+            {/* Live Route Map & Overview (Phase 2.3) */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="p-6 border-b border-slate-100 flex items-center justify-between">
                 <h2 className="text-xl font-black text-brand-blue flex items-center gap-2">
-                  <span className="text-brand-green text-2xl">🗺️</span> Live Route Map, Traffic & Overview
+                  <span className="text-brand-green text-2xl">🗺️</span> Live Route Map & Highway Corridor
                 </h2>
+                <span className="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1 rounded-full">
+                  GPS Active
+                </span>
               </div>
               <div className="p-6 bg-slate-50 space-y-6">
                 <div className="flex flex-wrap gap-4 text-sm">
-                  <div className="bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm font-bold flex-1 text-slate-700">
-                    <span className="text-slate-400 text-xs block mb-1 uppercase">Active Route:</span>
-                    Primary Expressway Corridor ({originName} → {destName}) ~ {distance} km
+                  <div className="bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm font-bold flex-1 text-slate-700">
+                    <span className="text-slate-400 text-xs block mb-1 uppercase">Corridor:</span>
+                    Primary Expressway ({originName} → {destName}) ~ {distance} km
                   </div>
-                  <div className="bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm font-bold text-slate-700">
-                    <span className="text-slate-400 text-xs block mb-1 uppercase">Est. Toll:</span>
-                    <span className="text-brand-green">~ ₹573 (5 Plazas)</span>
+                  <div className="bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm font-bold text-slate-700">
+                    <span className="text-slate-400 text-xs block mb-1 uppercase">Estimated Toll:</span>
+                    <span className="text-brand-green">~ ₹{estimatedToll} (Fastag Automated)</span>
                   </div>
                 </div>
+
                 {/* Keyless OpenStreetMap Live Corridor Overview */}
                 <div className="space-y-3">
                   <div className="w-full h-64 rounded-xl overflow-hidden border border-slate-300 relative bg-slate-100">
@@ -269,12 +267,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
               </div>
             </div>
 
-            {/* Key Route Metrics */}
+            {/* Key Route Metrics (Phase 2.2) */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h2 className="text-xl font-black text-brand-blue mb-6 border-b border-slate-100 pb-4">
-                Key Route Metrics & Conditions
+              <h2 className="text-xl font-black text-brand-blue mb-4 border-b border-slate-100 pb-3">
+                Key Route Metrics & Driving Conditions
               </h2>
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                   <div className="text-xs font-bold text-slate-400 uppercase mb-1">Total Distance & Travel Time</div>
                   <div className="text-xl font-black text-slate-800">{distance} km ~ {hrs} hrs {mins} mins</div>
@@ -285,25 +283,24 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                 </div>
               </div>
 
-              <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl space-y-2">
-                <h3 className="font-bold text-amber-800 text-sm flex items-center gap-2">
-                  ⚠️ Important Customer Note:
-                </h3>
-                <ul className="list-disc list-inside text-xs text-amber-700 space-y-1 font-medium ml-2">
-                  <li>Actual distance may vary depending on exact pickup and drop location.</li>
-                  <li>Fuel type depends on vehicle availability.</li>
-                  <li>Same vehicle category is guaranteed, exact model (e.g. Dzire/Amaze) depends on availability.</li>
-                </ul>
+              <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl space-y-1 text-xs text-blue-900 font-medium">
+                <span className="font-bold flex items-center gap-1">ℹ️ Doorstep Pickup Guarantee:</span>
+                <p>Our driver arrives at your exact home or hotel address 15 minutes before the scheduled time with AC pre-cooled.</p>
               </div>
             </div>
 
-            {/* Available Vehicle Fares */}
+            {/* Available Vehicle Fares (Phase 2.5) */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-              <div className="p-6 border-b border-slate-100 bg-brand-blue text-white">
-                <h2 className="text-xl font-black flex items-center gap-2">
-                  🚕 Available Vehicle Fares & Rate Card
-                </h2>
-                <p className="text-sm text-blue-200 mt-1">One Way Drop Fares for {originName} to {destName}</p>
+              <div className="p-6 border-b border-slate-100 bg-brand-blue text-white flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-black flex items-center gap-2">
+                    🚕 Available Vehicle Fares & Rate Card
+                  </h2>
+                  <p className="text-xs text-blue-200 mt-1">One-Way Drop Fares for {originName} to {destName}</p>
+                </div>
+                <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-bold">
+                  All-Inclusive Options
+                </span>
               </div>
 
               {/* Sedan Card */}
@@ -312,12 +309,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                   <h3 className="font-black text-lg text-slate-800 uppercase tracking-wide">Sedan</h3>
                   <p className="text-xs font-bold text-slate-500">Dzire, Etios or similar</p>
                   <div className="h-24 w-40 relative my-2">
-                    <Image src="/fleet-brand/dzire.png" alt="Sedan" fill className="object-contain" />
+                    <Image src="/fleet-brand/dzire.png" alt="Sedan Dzire Cab" fill className="object-contain" />
                   </div>
                   <div className="flex gap-4 text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                    <span className="flex items-center gap-1">👤 4</span>
-                    <span className="flex items-center gap-1">💼 2</span>
-                    <span className="flex items-center gap-1">❄️ AC</span>
+                    <span>👤 4</span>
+                    <span>💼 2</span>
+                    <span>❄️ AC</span>
                   </div>
                 </div>
                 <div className="md:w-2/3 space-y-4">
@@ -329,7 +326,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                         Base: ₹{Math.max(sedanFareTotal - estimatedToll, Math.round(distance * 11)).toLocaleString('en-IN')} + Est. Toll: ~₹{estimatedToll}
                       </div>
                     </div>
-                    <span className="bg-blue-50 text-brand-blue px-3 py-1 rounded-full text-xs font-bold border border-blue-200">Fixed Rate</span>
+                    <span className="bg-blue-50 text-brand-blue px-3 py-1 rounded-full text-xs font-bold border border-blue-200">Fixed Fare</span>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-2 text-xs font-medium">
@@ -344,6 +341,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
+                    <Link
+                      href={`/checkout?serviceType=one_way&categoryId=sedan&routeId=${route.id || ''}&pickup=${encodeURIComponent(originName)}&drop=${encodeURIComponent(destName)}&km=${distance}`}
+                      className="flex-1 bg-brand-blue hover:bg-brand-blue-hover text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
+                    >
+                      Book Sedan Online
+                    </Link>
                     <a
                       href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
                         pickup: originName,
@@ -355,15 +358,11 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                         estimatedToll: estimatedToll,
                         customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Sedan* for ${originName} to ${destName}.\nEstimated Fare: ₹${sedanFareTotal.toLocaleString('en-IN')}.`
                       })}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
                     >
                       Book via WhatsApp
-                    </a>
-                    <a
-                      href={`tel:${SITE_CONFIG.phoneRaw}`}
-                      className="flex-1 bg-brand-blue hover:bg-blue-900 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
-                    >
-                      Call to Confirm (24/7)
                     </a>
                   </div>
                 </div>
@@ -375,12 +374,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                   <h3 className="font-black text-lg text-slate-800 uppercase tracking-wide">SUV / MPV</h3>
                   <p className="text-xs font-bold text-slate-500">Ertiga, Carens or similar</p>
                   <div className="h-24 w-40 relative my-2">
-                    <Image src="/fleet-brand/Ertiga.png" alt="SUV" fill className="object-contain" />
+                    <Image src="/fleet-brand/Ertiga.png" alt="SUV Ertiga Cab" fill className="object-contain" />
                   </div>
                   <div className="flex gap-4 text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                    <span className="flex items-center gap-1">👤 6</span>
-                    <span className="flex items-center gap-1">💼 4</span>
-                    <span className="flex items-center gap-1">❄️ AC</span>
+                    <span>👤 6</span>
+                    <span>💼 4</span>
+                    <span>❄️ AC</span>
                   </div>
                 </div>
                 <div className="md:w-2/3 space-y-4">
@@ -392,7 +391,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                         Base: ₹{Math.max(ertigaFareTotal - estimatedToll, Math.round(distance * 15)).toLocaleString('en-IN')} + Est. Toll: ~₹{estimatedToll}
                       </div>
                     </div>
-                    <span className="bg-blue-50 text-brand-blue px-3 py-1 rounded-full text-xs font-bold border border-blue-200">Fixed Rate</span>
+                    <span className="bg-blue-50 text-brand-blue px-3 py-1 rounded-full text-xs font-bold border border-blue-200">Spacious</span>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-2 text-xs font-medium">
@@ -407,6 +406,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
+                    <Link
+                      href={`/checkout?serviceType=one_way&categoryId=suv-muv&routeId=${route.id || ''}&pickup=${encodeURIComponent(originName)}&drop=${encodeURIComponent(destName)}&km=${distance}`}
+                      className="flex-1 bg-brand-blue hover:bg-brand-blue-hover text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
+                    >
+                      Book SUV Online
+                    </Link>
                     <a
                       href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
                         pickup: originName,
@@ -418,15 +423,11 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                         estimatedToll: estimatedToll,
                         customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book an *Ertiga SUV* for ${originName} to ${destName}.\nEstimated Fare: ₹${ertigaFareTotal.toLocaleString('en-IN')}.`
                       })}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
                     >
                       Book via WhatsApp
-                    </a>
-                    <a
-                      href={`tel:${SITE_CONFIG.phoneRaw}`}
-                      className="flex-1 bg-brand-blue hover:bg-blue-900 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
-                    >
-                      Call to Confirm (24/7)
                     </a>
                   </div>
                 </div>
@@ -438,12 +439,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                   <h3 className="font-black text-lg text-slate-800 uppercase tracking-wide">Innova Crysta</h3>
                   <p className="text-xs font-bold text-slate-500">Toyota Innova Crysta / Hycross</p>
                   <div className="h-24 w-40 relative my-2">
-                    <Image src="/fleet-brand/Innova%20Crysta.png" alt="Innova Crysta" fill className="object-contain" />
+                    <Image src="/fleet-brand/Innova%20Crysta.png" alt="Innova Crysta Luxury Taxi" fill className="object-contain" />
                   </div>
                   <div className="flex gap-4 text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                    <span className="flex items-center gap-1">👤 7</span>
-                    <span className="flex items-center gap-1">💼 5</span>
-                    <span className="flex items-center gap-1">❄️ AC</span>
+                    <span>👤 7</span>
+                    <span>💼 5</span>
+                    <span>❄️ AC</span>
                   </div>
                 </div>
                 <div className="md:w-2/3 space-y-4">
@@ -470,6 +471,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
+                    <Link
+                      href={`/checkout?serviceType=one_way&categoryId=executive-suv&routeId=${route.id || ''}&pickup=${encodeURIComponent(originName)}&drop=${encodeURIComponent(destName)}&km=${distance}`}
+                      className="flex-1 bg-brand-blue hover:bg-brand-blue-hover text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
+                    >
+                      Book Crysta Online
+                    </Link>
                     <a
                       href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
                         pickup: originName,
@@ -481,37 +488,40 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                         estimatedToll: estimatedToll,
                         customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Toyota Innova Crysta* for ${originName} to ${destName}.\nEstimated Fare: ₹${crystaFareTotal.toLocaleString('en-IN')}.`
                       })}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
                     >
                       Book via WhatsApp
-                    </a>
-                    <a
-                      href={`tel:${SITE_CONFIG.phoneRaw}`}
-                      className="flex-1 bg-brand-blue hover:bg-blue-900 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
-                    >
-                      Call to Confirm (24/7)
                     </a>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Tolls & Taxes */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h2 className="text-xl font-black text-brand-blue mb-4">Estimated Tolls & State Taxes</h2>
-              <div className="text-sm font-medium text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-slate-800 mb-1">State Border Entry Tax</div>
-                  <div className="text-xs">Applicable when crossing interstate borders.</div>
-                </div>
-                <div className="bg-white border border-slate-200 px-4 py-2 rounded-lg font-black text-slate-800">
-                  Est. Tax: ~ ₹500
-                </div>
-              </div>
-            </div>
+            {/* Places Along the Route (Phase 2.6) */}
+            <RoutePlacesSection
+              places={placesAlongRoute}
+              originName={originName}
+              destName={destName}
+            />
 
+            {/* Route Travel Info & Highway Guide (Phase 2.7 & 2.9) */}
+            <RouteTravelInfoSection
+              originName={originName}
+              destName={destName}
+              distanceKm={distance}
+              durationHours={hrs}
+              durationMins={mins}
+            />
 
-            {/* Verified Route Narrative (Rendered only when custom text exists) */}
+            {/* Route & Fleet Gallery (Phase 2.8) */}
+            <RouteGallerySection
+              originName={originName}
+              destName={destName}
+            />
+
+            {/* Verified Route Narrative (Phase 2.1) */}
             {route.about && route.about.trim().length > 0 && (
               <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
                 <h2 className="text-xl font-black text-brand-blue border-b border-slate-100 pb-3 flex items-center gap-2">
@@ -523,7 +533,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
               </div>
             )}
 
-            {/* Verified FAQs Accordion (Rendered only when FAQs exist) */}
+            {/* Verified FAQs Accordion (Phase 2.10) */}
             {route.faqs && route.faqs.length > 0 && (
               <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
                 <h2 className="text-xl font-black text-brand-blue border-b border-slate-100 pb-3 flex items-center gap-2">
@@ -545,7 +555,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
               </div>
             )}
 
-            {/* Related Corridors / Internal Linking */}
+            {/* Related Corridors / Internal Linking (Phase 2.11) */}
             {relatedRoutes.length > 0 && (
               <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
                 <h2 className="text-xl font-black text-brand-blue border-b border-slate-100 pb-3 flex items-center gap-2">
@@ -578,45 +588,30 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
 
           </div>
 
-          {/* Sidebar / Quick Booking */}
+          {/* Sidebar: Interactive Route Booking Widget (Phase 2.4) */}
           <div className="space-y-6">
-            
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 sticky top-24">
-              <h3 className="text-lg font-black text-brand-blue text-center mb-2">Quick Booking</h3>
-              <p className="text-xs text-center text-slate-500 font-medium mb-6">Need a cab urgently? Book instantly via WhatsApp or Call.</p>
-              
-              <div className="space-y-3">
-                <a href={whatsappUrl} className="w-full bg-brand-green hover:bg-emerald-600 text-white font-black py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-lg">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA" className="w-6 h-6 brightness-0 invert" />
-                  WhatsApp Booking
-                </a>
-                
-                <a href={`tel:${SITE_CONFIG.phone}`} className="w-full bg-slate-50 hover:bg-slate-100 border-2 border-slate-200 text-slate-700 font-black py-4 rounded-xl transition-all flex items-center justify-center gap-2 text-lg">
-                  📞 +91 7310651940
-                </a>
-              </div>
+            <div className="sticky top-20 space-y-6">
+              <RouteBookingWidget
+                defaultOrigin={originName}
+                defaultDestination={destName}
+                defaultDistanceKm={distance}
+                routeId={route.id}
+              />
 
-              <div className="mt-8 space-y-4">
-                <h4 className="font-black text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-2">
-                  🛡️ Booking & Support
-                </h4>
-                <ul className="text-xs font-semibold text-slate-600 space-y-3">
-                  <li className="flex items-start gap-2">
-                    <span className="text-brand-green">✓</span> Fast WhatsApp Booking
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-brand-green">✓</span> Transparent Pricing Quote
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-brand-green">✓</span> Driver Details 30 mins prior
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-brand-green">✓</span> 24/7 Emergency Support Line
-                  </li>
-                </ul>
+              {/* 24/7 Telephone Booking Card */}
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 text-center space-y-3">
+                <h4 className="font-bold text-slate-800 text-sm">Need Help Booking?</h4>
+                <p className="text-xs text-slate-500">Call our 24/7 highway dispatch desk directly:</p>
+                <a
+                  href={`tel:${SITE_CONFIG.phoneRaw}`}
+                  className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base transition-colors"
+                >
+                  📞 {SITE_CONFIG.phone}
+                </a>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
