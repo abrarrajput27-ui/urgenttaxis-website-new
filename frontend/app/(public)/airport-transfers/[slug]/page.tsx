@@ -91,6 +91,16 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
       },
     },
     serviceType: 'Airport Taxi Transfer',
+    areaServed: [
+      {
+        '@type': 'AdministrativeArea',
+        name: data.origin,
+      },
+      {
+        '@type': 'AdministrativeArea',
+        name: data.destination,
+      },
+    ],
     termsOfService: `${BUSINESS_CONFIG.canonicalDomain}/terms`,
   };
 

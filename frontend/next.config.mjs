@@ -15,6 +15,18 @@ const nextConfig = {
     return [
       {
         source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: '([a-zA-Z0-9-]+\\.vercel\\.app)',
+          },
+        ],
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
+      {
+        source: '/:path*',
         headers: [
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
           { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
@@ -28,6 +40,18 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Vercel deployment domain canonical redirect to main domain
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: '([a-zA-Z0-9-]+\\.vercel\\.app)',
+          },
+        ],
+        destination: 'https://www.urgenttaxis.in/:path*',
+        permanent: true,
+      },
       // 301 Permanent Redirects: Gurugram Airport (artificial route) -> Delhi Airport (Canonical IGI Airport)
       { source: '/routes/gurugram-airport-to-agra-taxi', destination: '/routes/delhi-airport-to-agra-taxi', permanent: true },
       { source: '/routes/gurugram-airport-to-mathura-taxi', destination: '/routes/delhi-airport-to-mathura-taxi', permanent: true },

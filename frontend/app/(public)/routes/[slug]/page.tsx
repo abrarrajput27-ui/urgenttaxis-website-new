@@ -510,29 +510,6 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
               </div>
             </div>
 
-            {/* Airport Pickup Guide (Rendered ONLY on Airport Routes) */}
-            {isAirportRoute && (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-              <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h2 className="text-xl font-black text-brand-blue">✈️ Airport Pickup Guide</h2>
-                <span className="bg-white border border-slate-200 px-3 py-1 rounded text-xs font-bold shadow-sm">DEL</span>
-              </div>
-              <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="space-y-2">
-                  <h3 className="font-black text-slate-800 border-b border-slate-200 pb-2">Terminal 1 (T1)</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium">Domestic low cost carriers. Pickup usually outside Arrivals Gate 1 & 2.</p>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="font-black text-slate-800 border-b border-slate-200 pb-2">Terminal 2 (T2)</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium">Domestic flights. Short walk from T3. Pickup at designated cab area.</p>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="font-black text-slate-800 border-b border-slate-200 pb-2">Terminal 3 (T3)</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium">International & Premium Domestic. Multi-level car parking. Pickup typically at Pillar 10 or 14 (Level 2).</p>
-                </div>
-              </div>
-            </div>
-            )}
 
             {/* Verified Route Narrative (Rendered only when custom text exists) */}
             {route.about && route.about.trim().length > 0 && (
