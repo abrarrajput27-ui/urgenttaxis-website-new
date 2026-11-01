@@ -164,53 +164,6 @@ export default function TrustSection() {
             </div>
           </div>
 
-          {/* Natural Internal Links Navigation Box (Replaces keyword-stuffed bold block) */}
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-2">
-              Popular Intercity Routes & Regional Services
-            </h3>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              We provide prompt doorstep pickup across Ghaziabad, Noida, Delhi, Gurugram, and Faridabad. Explore our most popular travel corridors with fixed outstation rates and verified drivers:
-            </p>
-            <div className="flex flex-wrap gap-2 pt-1 text-xs">
-              <Link href="/routes/delhi-to-haridwar-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Delhi to Haridwar Taxi
-              </Link>
-              <Link href="/routes/delhi-to-dehradun-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Delhi to Dehradun Taxi
-              </Link>
-              <Link href="/routes/delhi-to-rishikesh-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Delhi to Rishikesh Taxi
-              </Link>
-              <Link href="/routes/delhi-to-nainital-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Delhi to Nainital Taxi
-              </Link>
-              <Link href="/routes/delhi-to-agra-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Delhi to Agra Taxi
-              </Link>
-              <Link href="/routes/delhi-to-jaipur-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Delhi to Jaipur Taxi
-              </Link>
-              <Link href="/routes/delhi-to-chandigarh-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Delhi to Chandigarh Taxi
-              </Link>
-              <Link href="/routes/delhi-to-shimla-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Delhi to Shimla Taxi
-              </Link>
-              <Link href="/routes/delhi-to-lucknow-taxi" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Delhi to Lucknow Taxi
-              </Link>
-              <Link href="/airport-transfers" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Delhi IGI Airport Transfers
-              </Link>
-              <Link href="/local-rentals" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Hourly City Rentals
-              </Link>
-              <Link href="/tempo-traveller" className="bg-slate-50 hover:bg-brand-blue hover:text-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium">
-                Tempo Traveller Hire
-              </Link>
-            </div>
-          </div>
         </div>
       </section>
     </>

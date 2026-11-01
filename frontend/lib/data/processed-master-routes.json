@@ -17521,5 +17521,63 @@
         "answer": "Yes, we provide customizable round-trip packages including local sightseeing to Golden Temple, Jallianwala Bagh, and Wagah Border."
       }
     ]
+  },
+  {
+    "id": "master-route-510",
+    "slug": "jaipur-to-delhi-taxi",
+    "originName": "Jaipur",
+    "destName": "Delhi",
+    "estimated_distance_km": 280,
+    "estimated_duration_minutes": 300,
+    "durationText": "5 hours 00 mins",
+    "sedanFare": 3499,
+    "ertigaFare": 4699,
+    "crystaFare": 8999,
+    "seoTitle": "Jaipur to Delhi Taxi Service | One-Way & Round Trip Cab",
+    "seoDescription": "Book reliable Jaipur to Delhi cab with Urgent Taxis. Compare Sedan, Ertiga, Innova Crysta fares. Doorstep pickup in Jaipur, transparent pricing.",
+    "about": "Traveling from the Pink City of Jaipur back to Delhi NCR? Urgent Taxis provides punctual, premier Jaipur to Delhi taxi services designed for corporate travelers, tourists, and families. Travel along the smooth Delhi-Jaipur Expressway with experienced, verified highway chauffeurs. We offer clean AC Sedans (Dzire/Etios), comfortable MPVs (Ertiga), and premium Innova Crystas with doorstep pickup across all Jaipur hotels, residential areas, and airport terminals. Backed by our transparent 30% advance booking policy and 70% trip balance collection.",
+    "faqs": [
+      {
+        "question": "What is the taxi fare from Jaipur to Delhi?",
+        "answer": "One-way AC Sedan fares from Jaipur to Delhi start from ₹3,499. Spacious Ertiga (₹4,699) and Innova Crysta (₹8,999) options are also available with transparent distance-based billing."
+      },
+      {
+        "question": "Can you pick up from Jaipur Airport for a drop in Delhi?",
+        "answer": "Yes, our chauffeur will meet you at Jaipur International Airport (JAI) or any hotel in Jaipur for a direct, comfortable journey to Delhi NCR or IGI Airport."
+      },
+      {
+        "question": "How does the 30% advance payment work?",
+        "answer": "Pay a 30% advance token through secure digital payment to confirm your booking. The remaining 70% balance is payable directly to your driver during the journey."
+      }
+    ]
+  },
+  {
+    "id": "master-route-511",
+    "slug": "dehradun-to-delhi-taxi",
+    "originName": "Dehradun",
+    "destName": "Delhi",
+    "estimated_distance_km": 250,
+    "estimated_duration_minutes": 300,
+    "durationText": "5 hours 00 mins",
+    "sedanFare": 3899,
+    "ertigaFare": 5199,
+    "crystaFare": 9499,
+    "seoTitle": "Dehradun to Delhi Taxi Service | One-Way & Round Trip Cab",
+    "seoDescription": "Book reliable Dehradun to Delhi cab with Urgent Taxis. Clean AC Sedans & SUVs, experienced highway chauffeurs, transparent per-km billing.",
+    "about": "Heading down from the foothills of Dehradun to Delhi NCR? Urgent Taxis provides dedicated 24/7 outstation taxi services from Dehradun to Delhi, Ghaziabad, Noida, and IGI Airport. Our verified highway chauffeurs navigate the Delhi-Dehradun corridor safely and comfortably. Whether you are returning from a vacation in Mussoorie or business travel in Dehradun, our well-maintained fleet of Sedans, Ertigas, and Innova Crystas guarantees a stress-free highway drive.",
+    "faqs": [
+      {
+        "question": "What is the taxi fare from Dehradun to Delhi?",
+        "answer": "One-way Sedan fares from Dehradun to Delhi start from ₹3,899. Comfortable Ertiga SUVs are ₹5,199 and luxury Innova Crystas are ₹9,499."
+      },
+      {
+        "question": "How do I book a cab from Dehradun to Delhi Airport?",
+        "answer": "You can book online at urgenttaxis.in or contact our 24/7 operations desk on WhatsApp at +91 8595066033. Specify your pickup address in Dehradun and flight details."
+      },
+      {
+        "question": "Are highway tolls included in the fare?",
+        "answer": "Highway toll taxes, state border entry permits, and parking charges are paid at actuals at physical booths, ensuring transparent and honest pricing."
+      }
+    ]
   }
 ]

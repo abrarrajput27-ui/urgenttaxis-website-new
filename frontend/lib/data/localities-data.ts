@@ -1108,4 +1108,709 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       },
     ],
   },
+  dehradun: {
+  slug: "dehradun",
+  name: "Dehradun",
+  district: "Dehradun",
+  state: "Uttarakhand",
+  h1: "Taxi Service in Dehradun — Outstation Cabs & Delhi NCR Transfers",
+  metaTitle: "Taxi Service in Dehradun | Outstation Cabs to Delhi & Haridwar",
+  metaDescription: "Book reliable taxi service in Dehradun for Delhi NCR drops, Jolly Grant airport transfers & Mussoorie tours. Verified sedans & SUVs, transparent fares.",
+  tagline: "Gateway to the Garhwal Himalayas & capital city 24/7 highway taxi service",
+  pincodes: [
+    "248001",
+    "248002",
+    "248003",
+    "248007",
+    "248008"
+  ],
+  keyLandmarks: [
+    "Clock Tower (Ghanta Ghar Dehradun)",
+    "ISBT Dehradun Intercity Bus Terminal",
+    "Dehradun Junction Railway Station",
+    "Forest Research Institute (FRI Campus)",
+    "Robber's Cave (Guchhupani)",
+    "Rajpur Road Commercial Corridor",
+    "Sahastradhara Natural Sulphur Springs"
+  ],
+  metroAndTransit: [
+    "Dehradun Junction (DDN) Northern Railway",
+    "Jolly Grant Airport (DED Dehradun)",
+    "ISBT Dehradun Intercity Bus Terminal"
+  ],
+  expressways: [
+    "Delhi-Dehradun Expressway (NH-72A / NH-344)",
+    "Haridwar-Dehradun Highway (NH-7)",
+    "Mussoorie Road (NH-7 Hill Corridor)"
+  ],
+  overviewParagraphs: [
+    "Looking for a reliable, punctual taxi service in Dehradun? Urgent Taxis provides 24/7 chauffeur-driven outstation cabs with transparent per-kilometer billing and zero hidden surprises. Whether you need an early-morning transfer to Delhi IGI Airport, a scenic ride to Mussoorie or Rishikesh, or a comfortable intercity drop across Ghaziabad and Noida, our verified drivers deliver a smooth, stress-free travel experience.",
+    "We serve all residential, academic, and business hubs in Dehradun, including Rajpur Road, Jakhan, Ballupur, Clement Town, Sahastradhara Road, Subhash Nagar, and the ISBT corridor. With experienced mountain and expressway chauffeurs, your journeys along the Delhi-Dehradun Expressway and NH-7 are handled with optimal safety and comfort.",
+    "All Urgent Taxis vehicles operate on commercial yellow plates with comprehensive insurance and dual-zone air conditioning. Choose between comfortable sedans (Maruti Dzire/Etios) for individuals and couples, or spacious MPVs (Maruti Ertiga, Toyota Innova Crysta) for families carrying extra luggage. Secure your cab with an official 30% advance token; pay the remaining 70% directly to your driver during the journey."
+  ],
+  airportTransferGuide: {
+    distanceToT3Km: 260,
+    typicalDurationMins: 300,
+    recommendedRoute: "NH-72A / Delhi-Dehradun Expressway → Saharanpur Bypass → Delhi-Meerut Expressway → IGI Airport",
+    pickupAdvice: "For international flights departing from Delhi IGI Airport, we advise scheduling your pickup at least 7 to 8 hours prior to flight departure."
+  },
+  popularRoutes: [
+    {
+      destination: "Delhi",
+      distanceKm: 250,
+      durationText: "5 hr 00 min",
+      sedanFare: 3899,
+      ertigaFare: 5199,
+      crystaFare: 9499,
+      routeSlug: "delhi-to-dehradun-taxi"
+    },
+    {
+      destination: "Haridwar",
+      distanceKm: 52,
+      durationText: "1 hr 15 min",
+      sedanFare: 1499,
+      ertigaFare: 2099,
+      crystaFare: 3999,
+      routeSlug: "delhi-to-haridwar-taxi"
+    },
+    {
+      destination: "Rishikesh",
+      distanceKm: 45,
+      durationText: "1 hr 10 min",
+      sedanFare: 1399,
+      ertigaFare: 1999,
+      crystaFare: 3799,
+      routeSlug: "delhi-to-rishikesh-taxi"
+    },
+    {
+      destination: "Ghaziabad",
+      distanceKm: 230,
+      durationText: "4 hr 30 min",
+      sedanFare: 3799,
+      ertigaFare: 5099,
+      crystaFare: 9299,
+      routeSlug: "ghaziabad-to-dehradun-taxi"
+    },
+    {
+      destination: "Jaipur",
+      distanceKm: 530,
+      durationText: "9 hr 30 min",
+      sedanFare: 7499,
+      ertigaFare: 9999,
+      crystaFare: 17999,
+      routeSlug: "delhi-to-jaipur-taxi"
+    }
+  ],
+  faqs: [
+    {
+      question: "How can I book a taxi from Dehradun to Delhi NCR?",
+      answer: "You can book online through our instant booking widget on urgenttaxis.in or contact our 24/7 dispatch desk on WhatsApp or phone at +91 8595066033. Simply select your pickup address in Dehradun and preferred drop location."
+    },
+    {
+      question: "Are toll charges and state entry permits included in the fare?",
+      answer: "Tolls, parking fees, and interstate passenger taxes are paid at actuals at physical toll plazas, ensuring 100% transparent billing based strictly on your chosen highway route."
+    },
+    {
+      question: "How does the 30% advance payment work for Dehradun taxi bookings?",
+      answer: "You pay a 30% advance token via secure digital payment (UPI, card, netbanking) to confirm your car and driver allocation. The remaining 70% balance is paid directly to the driver during the trip."
+    }
+  ]
+},
+  haridwar: {
+  slug: "haridwar",
+  name: "Haridwar",
+  district: "Haridwar",
+  state: "Uttarakhand",
+  h1: "Taxi Service in Haridwar — Ganga Pilgrimage Cabs & Delhi NCR Transfers",
+  metaTitle: "Taxi Service in Haridwar | 24/7 Cabs to Delhi, Dehradun & Rishikesh",
+  metaDescription: "Book reliable taxi service in Haridwar. Doorstep pickup for Har Ki Pauri, Shantikunj, BHEL & railway station. Verified outstation sedans & SUVs to Delhi NCR.",
+  tagline: "Holy city pilgrimages, Har Ki Pauri drops & 24/7 highway cabs",
+  pincodes: [
+    "249401",
+    "249402",
+    "249403",
+    "249407",
+    "249410"
+  ],
+  keyLandmarks: [
+    "Har Ki Pauri Ghat & Brahma Kund",
+    "Mansa Devi Temple Ropeway Station",
+    "Chandi Devi Temple (Neel Parvat)",
+    "Haridwar Junction Railway Station (HW)",
+    "Shantikunj Gayatri Teerth Ashram",
+    "BHEL Township Ranipur",
+    "Patanjali Yogpeeth Campus (NH-334)"
+  ],
+  metroAndTransit: [
+    "Haridwar Junction Railway Station (HW)",
+    "Motichur Railway Station",
+    "Haridwar Inter-State Bus Stand"
+  ],
+  expressways: [
+    "Delhi-Meerut-Haridwar Highway (NH-334)",
+    "Upper Ganga Canal Expressway Route",
+    "Haridwar-Rishikesh Highway (NH-7)"
+  ],
+  overviewParagraphs: [
+    "Visiting the holy city of Haridwar for Ganga Snan, Asthi Visarjan, or spiritual retreats? Urgent Taxis offers dedicated 24/7 taxi services across all Haridwar ashrams, ghats, and residential sectors. Whether you need a direct outstation cab to Delhi Airport, Ghaziabad, Noida, or connecting transfers to Rishikesh and Dehradun, our verified drivers ensure a serene, safe journey.",
+    "Our chauffeurs are familiar with pilgrimage parking restrictions, festival crowds, and regional bypasses around Har Ki Pauri, Kankhal, Jwalapur, and Shantikunj. With direct connectivity via the smooth NH-334 and Delhi-Meerut Expressway, outstation trips between Haridwar and Delhi NCR are completed comfortably in around 4 hours.",
+    "We offer well-maintained AC sedans (Maruti Dzire, Toyota Etios) for small family visits and 6-7 seater MPVs (Maruti Ertiga, Innova Crysta) for senior citizen pilgrim groups. All bookings follow our transparent commercial policy: 30% advance token to guarantee dispatch, and 70% balance paid directly to the driver."
+  ],
+  airportTransferGuide: {
+    distanceToT3Km: 235,
+    typicalDurationMins: 260,
+    recommendedRoute: "NH-334 → Meerut Bypass → Delhi-Meerut Expressway (NE-3) → Ring Road → IGI Terminal 3",
+    pickupAdvice: "During Kanwar Yatra and major bathing festivals (Somvati Amavasya, Kumbh), allow an extra 90 minutes due to diversion routes on the Roorkee-Muzaffarnagar corridor."
+  },
+  popularRoutes: [
+    {
+      destination: "Delhi",
+      distanceKm: 220,
+      durationText: "4 hr 00 min",
+      sedanFare: 3499,
+      ertigaFare: 4699,
+      crystaFare: 8999,
+      routeSlug: "delhi-to-haridwar-taxi"
+    },
+    {
+      destination: "Rishikesh",
+      distanceKm: 25,
+      durationText: "40 min",
+      sedanFare: 999,
+      ertigaFare: 1499,
+      crystaFare: 2899,
+      routeSlug: "delhi-to-rishikesh-taxi"
+    },
+    {
+      destination: "Dehradun",
+      distanceKm: 52,
+      durationText: "1 hr 15 min",
+      sedanFare: 1499,
+      ertigaFare: 2099,
+      crystaFare: 3999,
+      routeSlug: "delhi-to-dehradun-taxi"
+    },
+    {
+      destination: "Ghaziabad",
+      distanceKm: 200,
+      durationText: "3 hr 45 min",
+      sedanFare: 3499,
+      ertigaFare: 4699,
+      crystaFare: 8999,
+      routeSlug: "ghaziabad-to-haridwar-taxi"
+    },
+    {
+      destination: "Noida",
+      distanceKm: 215,
+      durationText: "4 hr 00 min",
+      sedanFare: 3599,
+      ertigaFare: 4799,
+      crystaFare: 9199,
+      routeSlug: "delhi-to-haridwar-taxi"
+    }
+  ],
+  faqs: [
+    {
+      question: "How can I book a cab from Haridwar to Delhi Airport?",
+      answer: "You can book through our online portal or WhatsApp our 24/7 operations desk at +91 8595066033. Our chauffeur will pick you up directly from your Haridwar hotel or ashram and drop you at IGI Terminal 1, 2, or 3."
+    },
+    {
+      question: "Is one-way taxi booking available from Haridwar?",
+      answer: "Yes, Urgent Taxis provides dedicated one-way drops from Haridwar to Delhi, Ghaziabad, Noida, Gurugram, and other North Indian cities with clear per-km billing and no return fare obligations."
+    },
+    {
+      question: "What payment options are accepted?",
+      answer: "Confirm your ride with a 30% advance via UPI, cards, or netbanking. The remaining 70% balance is payable to your driver via cash or UPI during the journey."
+    }
+  ]
+},
+  rishikesh: {
+  slug: "rishikesh",
+  name: "Rishikesh",
+  district: "Dehradun",
+  state: "Uttarakhand",
+  h1: "Taxi Service in Rishikesh — Yoga Capital & Adventure Transfers",
+  metaTitle: "Taxi Service in Rishikesh | 24/7 Outstation Cabs to Delhi & Haridwar",
+  metaDescription: "Book reliable taxi service in Rishikesh for Delhi NCR outstation trips, Tapovan transfers & Jolly Grant airport drops. Transparent pricing, verified drivers.",
+  tagline: "Yoga capital & adventure hub taxi services to Delhi NCR & Himalayas",
+  pincodes: [
+    "249201",
+    "249202",
+    "249204"
+  ],
+  keyLandmarks: [
+    "Triveni Ghat (Evening Maha Aarti)",
+    "Ram Jhula & Swarg Ashram",
+    "Laxman Jhula Heritage Suspension Bridge",
+    "Tapovan International Yoga & Hostel Hub",
+    "Parmarth Niketan Ashram",
+    "Neer Garh Waterfall (Badrinath Road)",
+    "AIIMS Rishikesh Medical Campus"
+  ],
+  metroAndTransit: [
+    "Yog Nagari Rishikesh Railway Station (YNRK)",
+    "Rishikesh Old Railway Station (RKSH)",
+    "Rishikesh Roadways Bus Stand"
+  ],
+  expressways: [
+    "National Highway 7 (NH-7 / Badrinath Highway)",
+    "Rishikesh-Haridwar Highway (NH-34)",
+    "Neelkanth Temple Hill Road"
+  ],
+  overviewParagraphs: [
+    "Planning an ashram stay, yoga retreat, or white-water river rafting expedition in Rishikesh? Urgent Taxis provides 24/7 outstation and local cab services across Tapovan, Muni Ki Reti, Lakshman Jhula, and AIIMS Rishikesh. We connect the Yoga Capital of the World to Delhi NCR, Jolly Grant Airport, and Himalayan trailheads with absolute reliability.",
+    "Our drivers possess specialized experience navigating the winding hill curves and narrow bridge approaches of Rishikesh, Tapovan, and the NH-7 highway. Whether you need a punctual midnight pickup for a flight from Delhi or a scenic one-way transfer to Haridwar, your trip is managed by licensed, verified professionals.",
+    "Choose between clean, air-conditioned sedans (Maruti Dzire) or spacious SUVs (Maruti Ertiga, Toyota Innova Crysta). All bookings feature guaranteed upfront quotes, an official 30% advance confirmation policy, and 70% balance collection during travel."
+  ],
+  airportTransferGuide: {
+    distanceToT3Km: 255,
+    typicalDurationMins: 280,
+    recommendedRoute: "NH-7 → Haridwar Bypass → NH-334 → Delhi-Meerut Expressway → IGI Terminal 3",
+    pickupAdvice: "For departures from Tapovan hostels during weekend tourist rushes, schedule an extra 30 minutes to cross the Ram Jhula / Muni Ki Reti bottleneck."
+  },
+  popularRoutes: [
+    {
+      destination: "Delhi",
+      distanceKm: 240,
+      durationText: "4 hr 30 min",
+      sedanFare: 3699,
+      ertigaFare: 4999,
+      crystaFare: 9199,
+      routeSlug: "delhi-to-rishikesh-taxi"
+    },
+    {
+      destination: "Haridwar",
+      distanceKm: 25,
+      durationText: "40 min",
+      sedanFare: 999,
+      ertigaFare: 1499,
+      crystaFare: 2899,
+      routeSlug: "delhi-to-haridwar-taxi"
+    },
+    {
+      destination: "Dehradun",
+      distanceKm: 45,
+      durationText: "1 hr 10 min",
+      sedanFare: 1399,
+      ertigaFare: 1999,
+      crystaFare: 3799,
+      routeSlug: "delhi-to-dehradun-taxi"
+    },
+    {
+      destination: "Ghaziabad",
+      distanceKm: 220,
+      durationText: "4 hr 10 min",
+      sedanFare: 3699,
+      ertigaFare: 4999,
+      crystaFare: 9199,
+      routeSlug: "delhi-to-rishikesh-taxi"
+    }
+  ],
+  faqs: [
+    {
+      question: "How do I book an outstation taxi from Rishikesh to Delhi?",
+      answer: "Book easily online via our fare calculator or connect with our dispatch supervisors on WhatsApp at +91 8595066033. Specify your ashram or hotel location in Rishikesh for doorstep pickup."
+    },
+    {
+      question: "Can you provide taxi pickup directly from Tapovan or Ram Jhula?",
+      answer: "Yes, our chauffeurs provide direct pickup from all accessible motorable points near Tapovan, Muni Ki Reti, and Swarg Ashram parking areas."
+    },
+    {
+      question: "What is the payment policy for Rishikesh outstation cabs?",
+      answer: "A 30% advance payment confirms your car allocation, while the remaining 70% balance is payable to the driver via cash or UPI during the trip."
+    }
+  ]
+},
+  haldwani: {
+  slug: "haldwani",
+  name: "Haldwani",
+  district: "Nainital",
+  state: "Uttarakhand",
+  h1: "Taxi Service in Haldwani — Gateway to Kumaon & Delhi Outstation Cabs",
+  metaTitle: "Taxi Service in Haldwani | 24/7 Cabs to Nainital, Delhi & Kathgodam",
+  metaDescription: "Book reliable taxi service in Haldwani. Doorstep pickup across Kathgodam, Tikonia & Kaladhungi Road. Outstation cabs to Delhi NCR & Nainital hills.",
+  tagline: "Gateway to Kumaon hills, Nainital & Kainchi Dham taxi services",
+  pincodes: [
+    "263139",
+    "263126",
+    "263141"
+  ],
+  keyLandmarks: [
+    "Kathgodam Railway Station (KGM Terminus)",
+    "Haldwani Inter-State Bus Stand",
+    "Tikonia Chowk Commercial Centre",
+    "Sushila Tiwari Government Hospital",
+    "Walkway Mall (Nainital Road)",
+    "Gaula Barrage & Eco Tourism Zone",
+    "Kaladhungi Road Junction (Corbett Route)"
+  ],
+  metroAndTransit: [
+    "Kathgodam Railway Station (KGM)",
+    "Haldwani Railway Station (HDW)",
+    "Pantnagar Airport (PGH - 28 km)"
+  ],
+  expressways: [
+    "National Highway 109 (NH-109 / Nainital Highway)",
+    "Rampur-Haldwani Highway corridor",
+    "Kaladhungi-Ramnagar Highway"
+  ],
+  overviewParagraphs: [
+    "Haldwani serves as the premier commercial hub and gateway to the scenic Kumaon hills of Uttarakhand. Urgent Taxis provides dedicated 24/7 taxi services for passengers arriving at Kathgodam Railway Station, transiting through Haldwani, or heading to Nainital, Bhimtal, Ranikhet, Almora, and Kainchi Dham.",
+    "Whether you require an early morning drop to Delhi IGI Airport, an outstation trip across Western UP, or a dependable hill cab connecting to Jim Corbett National Park, our verified drivers deliver timely and courteous service.",
+    "Our fleet includes AC sedans (Maruti Dzire, Toyota Etios) and comfortable 6-7 seater MPVs (Maruti Ertiga, Toyota Innova Crysta). Book with complete confidence under our clear commercial guidelines: 30% advance token and 70% balance payable during the journey."
+  ],
+  airportTransferGuide: {
+    distanceToT3Km: 295,
+    typicalDurationMins: 340,
+    recommendedRoute: "NH-109 → Rampur Bypass → Moradabad Bypass (NH-9) → Delhi-Meerut Expressway → IGI Airport",
+    pickupAdvice: "When heading to Delhi Airport on Sunday evenings, factor in highway toll queues along the Hapur-Dasna stretch by scheduling pickup 7 hours prior to flight departure."
+  },
+  popularRoutes: [
+    {
+      destination: "Delhi",
+      distanceKm: 275,
+      durationText: "5 hr 30 min",
+      sedanFare: 4199,
+      ertigaFare: 5499,
+      crystaFare: 9999,
+      routeSlug: "delhi-to-haldwani-taxi"
+    },
+    {
+      destination: "Nainital",
+      distanceKm: 35,
+      durationText: "1 hr 15 min",
+      sedanFare: 1499,
+      ertigaFare: 2199,
+      crystaFare: 3999,
+      routeSlug: "delhi-to-nainital-taxi"
+    },
+    {
+      destination: "Bareilly",
+      distanceKm: 105,
+      durationText: "2 hr 30 min",
+      sedanFare: 2199,
+      ertigaFare: 2999,
+      crystaFare: 5499,
+      routeSlug: "delhi-to-bareilly-taxi"
+    },
+    {
+      destination: "Ghaziabad",
+      distanceKm: 255,
+      durationText: "5 hr 00 min",
+      sedanFare: 3999,
+      ertigaFare: 5299,
+      crystaFare: 9699,
+      routeSlug: "delhi-to-haldwani-taxi"
+    }
+  ],
+  faqs: [
+    {
+      question: "How do I book a cab from Kathgodam or Haldwani to Nainital?",
+      answer: "You can book through our instant fare calculator on urgenttaxis.in or message us on WhatsApp at +91 8595066033. Our driver will meet you outside Kathgodam railway station or at your Haldwani hotel."
+    },
+    {
+      question: "Are mountain driving charges included in the fare?",
+      answer: "Yes, vehicle hire, fuel, and experienced hill chauffeur charges are fully included in the base fare quotation. State taxes, parking, and tolls are paid at actuals."
+    },
+    {
+      question: "What is the advance booking token for Haldwani cabs?",
+      answer: "An advance token of 30% secures your vehicle reservation, with the remaining 70% balance paid to the chauffeur during your journey."
+    }
+  ]
+},
+  nainital: {
+  slug: "nainital",
+  name: "Nainital",
+  district: "Nainital",
+  state: "Uttarakhand",
+  h1: "Taxi Service in Nainital — Lake City Tours & Delhi Outstation Cabs",
+  metaTitle: "Taxi Service in Nainital | Cabs to Delhi, Kathgodam & Kainchi Dham",
+  metaDescription: "Book reliable taxi service in Nainital for lake tours, Kathgodam drops & Delhi NCR outstation cabs. Verified mountain chauffeurs, transparent per-km billing.",
+  tagline: "Lake city tour cabs, outstation drops & hill station taxi service",
+  pincodes: [
+    "263001",
+    "263002"
+  ],
+  keyLandmarks: [
+    "Naini Lake & Mall Road Promenade",
+    "Naina Devi Temple (North Shore)",
+    "Snow View Point (Ropeway Station)",
+    "Tallital & Mallital Bus Stands",
+    "Tiffin Top (Dorothy's Seat)",
+    "Governor House (Raj Bhavan Nainital)",
+    "Pangot & Kilbury Bird Sanctuary"
+  ],
+  metroAndTransit: [
+    "Kathgodam Railway Station (35 km downhill)",
+    "Pantnagar Airport (70 km downhill)",
+    "Tallital Inter-State Bus Stand"
+  ],
+  expressways: [
+    "NH-109 (Kathgodam-Bhowali-Nainital Road)",
+    "Kaladhungi-Nainital Hill Highway",
+    "Bhowali-Kainchi Dham Pilgrimage Corridor"
+  ],
+  overviewParagraphs: [
+    "Nestled around the emerald waters of Naini Lake, Nainital is one of India's most cherished hill getaways. Urgent Taxis provides punctual, safe taxi services across Tallital, Mallital, Bhowali, Pangot, and Kainchi Dham. Whether you need a downhill drop to Kathgodam railway station or a direct outstation cab to Delhi NCR, our team ensures a relaxed journey.",
+    "Our experienced hill chauffeurs understand local parking regulations, Mall Road entry timings, and monsoon road conditions, ensuring that your family travels with total peace of mind.",
+    "Choose from verified AC sedans (Maruti Dzire) or spacious hill-ready MPVs (Maruti Ertiga, Innova Crysta). All rides are backed by our transparent 30% advance booking policy with 70% balance payable during your trip."
+  ],
+  airportTransferGuide: {
+    distanceToT3Km: 325,
+    typicalDurationMins: 380,
+    recommendedRoute: "NH-109 → Kathgodam → Rampur Bypass → NH-9 Moradabad → Delhi-Meerut Expressway → IGI Airport",
+    pickupAdvice: "During peak summer and autumn tourist weekends, schedule departure from Nainital at least 8 to 9 hours prior to flights departing from Delhi IGI Airport."
+  },
+  popularRoutes: [
+    {
+      destination: "Delhi",
+      distanceKm: 300,
+      durationText: "6 hr 15 min",
+      sedanFare: 4499,
+      ertigaFare: 5899,
+      crystaFare: 10499,
+      routeSlug: "delhi-to-nainital-taxi"
+    },
+    {
+      destination: "Haldwani",
+      distanceKm: 35,
+      durationText: "1 hr 15 min",
+      sedanFare: 1499,
+      ertigaFare: 2199,
+      crystaFare: 3999,
+      routeSlug: "delhi-to-haldwani-taxi"
+    },
+    {
+      destination: "Bareilly",
+      distanceKm: 140,
+      durationText: "3 hr 30 min",
+      sedanFare: 2699,
+      ertigaFare: 3599,
+      crystaFare: 6499,
+      routeSlug: "delhi-to-bareilly-taxi"
+    },
+    {
+      destination: "Ghaziabad",
+      distanceKm: 280,
+      durationText: "5 hr 45 min",
+      sedanFare: 4299,
+      ertigaFare: 5699,
+      crystaFare: 10299,
+      routeSlug: "delhi-to-nainital-taxi"
+    }
+  ],
+  faqs: [
+    {
+      question: "How do I book a cab from Nainital to Delhi IGI Airport?",
+      answer: "You can book directly via our online platform or reach our 24/7 team on WhatsApp at +91 8595066033. Our driver will pick you up from your hotel or Tallital/Mallital parking."
+    },
+    {
+      question: "Can you arrange a day trip from Nainital to Kainchi Dham?",
+      answer: "Yes, we provide dedicated roundtrip and sightseeing cabs from Nainital to Neem Karoli Baba Ashram at Kainchi Dham, Bhimtal, and Naukuchiatal."
+    },
+    {
+      question: "What is the advance payment policy for Nainital outstation cabs?",
+      answer: "You pay 30% advance token to confirm your ride, and the remaining 70% is collected directly by your chauffeur during the trip."
+    }
+  ]
+},
+  lucknow: {
+  slug: "lucknow",
+  name: "Lucknow",
+  district: "Lucknow",
+  state: "Uttar Pradesh",
+  h1: "Taxi Service in Lucknow — Agra-Lucknow Expressway & Outstation Cabs",
+  metaTitle: "Taxi Service in Lucknow | 24/7 Cabs to Delhi, Kanpur & Ayodhya",
+  metaDescription: "Book reliable taxi service in Lucknow. 24/7 pickup across Gomti Nagar, Hazratganj & Charbagh. Outstation cabs to Delhi NCR, Kanpur & Ayodhya.",
+  tagline: "Capital city cabs, Agra-Lucknow Expressway & Purvanchal transfers",
+  pincodes: [
+    "226001",
+    "226010",
+    "226016",
+    "226028"
+  ],
+  keyLandmarks: [
+    "Hazratganj Heritage Market",
+    "Charbagh Railway Station (LKO)",
+    "Bara Imambara & Rumi Darwaza",
+    "Gomti Nagar Business Hub",
+    "Lulu Mall Lucknow (Amar Shaheed Path)",
+    "Ekana International Cricket Stadium",
+    "Chaudhary Charan Singh Airport (Amausi)"
+  ],
+  metroAndTransit: [
+    "Lucknow Charbagh (LKO) Northern Railway",
+    "Lucknow Junction (LJN) North Eastern Railway",
+    "Lucknow Metro (North-South Red Line)",
+    "Chaudhary Charan Singh Airport (Amausi LKO)"
+  ],
+  expressways: [
+    "Agra-Lucknow Expressway (ALE / 6-lane high speed corridor)",
+    "Purvanchal Expressway (connecting Eastern UP)",
+    "Amar Shaheed Path (Lucknow Outer Ring Road)",
+    "NH-30 (Lucknow-Bareilly Highway)"
+  ],
+  overviewParagraphs: [
+    "As the historic and administrative capital of Uttar Pradesh, Lucknow represents a dynamic travel nexus. Urgent Taxis provides 24/7 chauffeur-driven intercity cabs connecting Lucknow with Delhi NCR, Kanpur, Ayodhya, Prayagraj, Varanasi, and Gorakhpur.",
+    "Our drivers specialize in long-distance expressway driving along the 6-lane Agra-Lucknow Expressway and Purvanchal Expressway, ensuring comfortable, high-speed connectivity with verified safety standards.",
+    "Choose between executive sedans (Maruti Dzire) and spacious 6-7 seater MPVs (Maruti Ertiga, Toyota Innova Crysta). All bookings strictly adhere to our verified 30% advance token and 70% trip balance policy."
+  ],
+  airportTransferGuide: {
+    distanceToT3Km: 540,
+    typicalDurationMins: 460,
+    recommendedRoute: "Agra-Lucknow Expressway → Yamuna Expressway → Noida-Greater Noida Expressway → IGI Airport",
+    pickupAdvice: "Expressway travel between Lucknow and Delhi takes approximately 7.5 to 8 hours under normal conditions."
+  },
+  popularRoutes: [
+    {
+      destination: "Delhi",
+      distanceKm: 530,
+      durationText: "7 hr 30 min",
+      sedanFare: 6999,
+      ertigaFare: 9299,
+      crystaFare: 16999,
+      routeSlug: "delhi-to-lucknow-taxi"
+    },
+    {
+      destination: "Agra",
+      distanceKm: 335,
+      durationText: "4 hr 30 min",
+      sedanFare: 4499,
+      ertigaFare: 5999,
+      crystaFare: 10999,
+      routeSlug: "delhi-to-agra-taxi"
+    },
+    {
+      destination: "Bareilly",
+      distanceKm: 250,
+      durationText: "4 hr 45 min",
+      sedanFare: 3499,
+      ertigaFare: 4699,
+      crystaFare: 8499,
+      routeSlug: "delhi-to-bareilly-taxi"
+    },
+    {
+      destination: "Kanpur",
+      distanceKm: 85,
+      durationText: "1 hr 45 min",
+      sedanFare: 1799,
+      ertigaFare: 2499,
+      crystaFare: 4499,
+      routeSlug: "delhi-to-kanpur-taxi"
+    }
+  ],
+  faqs: [
+    {
+      question: "How can I book a cab from Lucknow to Delhi via Agra Expressway?",
+      answer: "You can book online on urgenttaxis.in or call our dispatch desk at +91 8595066033. Our chauffeur will pick you up at your Gomti Nagar, Hazratganj, or Alambagh address."
+    },
+    {
+      question: "Are expressway tolls included in the Lucknow to Delhi taxi fare?",
+      answer: "Expressway tolls (Agra-Lucknow Expressway and Yamuna Expressway) are payable at actuals at physical toll plazas, ensuring fully transparent accounting."
+    },
+    {
+      question: "What is the payment breakdown for Lucknow outstation bookings?",
+      answer: "A 30% advance token confirms your reservation, with the remaining 70% balance paid directly to the driver during the journey."
+    }
+  ]
+},
+  bareilly: {
+  slug: "bareilly",
+  name: "Bareilly",
+  district: "Bareilly",
+  state: "Uttar Pradesh",
+  h1: "Taxi Service in Bareilly — Rohilkhand Hub & Outstation Cabs",
+  metaTitle: "Taxi Service in Bareilly | 24/7 Outstation Cabs to Delhi & Haldwani",
+  metaDescription: "Book reliable taxi service in Bareilly for Delhi NCR drops, Haldwani & Lucknow transfers. Doorstep pickup across Civil Lines, Rajendra Nagar & Cantt.",
+  tagline: "Rohilkhand hub taxi service, Delhi-Bareilly & Kumaon highway cabs",
+  pincodes: [
+    "243001",
+    "243003",
+    "243005",
+    "243122"
+  ],
+  keyLandmarks: [
+    "Bareilly Junction Railway Station (BE)",
+    "Phoenix United Mall (Pilibhit Bypass Road)",
+    "Civil Lines Commercial Hub",
+    "Alakhnath Temple & Trivati Nath Temple",
+    "IVRI (Indian Veterinary Research Institute) Campus",
+    "Bareilly Cantonment Heritage Area",
+    "Bareilly Airport (Trishul Air Base)"
+  ],
+  metroAndTransit: [
+    "Bareilly Junction (BE) Northern Railway",
+    "Bareilly City Railway Station (BC)",
+    "Bareilly Airport (BEK)",
+    "Bareilly Satellite Bus Stand"
+  ],
+  expressways: [
+    "National Highway 24 / NH-530 (Delhi-Lucknow Highway)",
+    "Bareilly-Nainital Highway (NH-109)",
+    "Bareilly-Budaun Highway"
+  ],
+  overviewParagraphs: [
+    "Serving as the central commerce and transport nexus of Rohilkhand, Bareilly connects Delhi NCR to the Kumaon hills and Central Uttar Pradesh. Urgent Taxis provides 24/7 doorstep taxi pickups across Civil Lines, Rajendra Nagar, Izzatnagar, and Cantonment.",
+    "Whether you are traveling on corporate business, family visits, or heading to Delhi IGI Airport, our licensed chauffeurs provide reliable, comfortable transport with dedicated commercial vehicles.",
+    "Choose between economical sedans (Maruti Dzire) and spacious 6-7 seater MPVs (Maruti Ertiga, Innova Crysta). Book with complete peace of mind with our 30% advance token and 70% balance payment policy."
+  ],
+  airportTransferGuide: {
+    distanceToT3Km: 270,
+    typicalDurationMins: 310,
+    recommendedRoute: "NH-530 → Moradabad Bypass (NH-9) → Delhi-Meerut Expressway → IGI Terminal 3",
+    pickupAdvice: "Allow 5.5 to 6 hours for Delhi Airport transfers from Bareilly to comfortably account for Moradabad-Garhmukteshwar traffic."
+  },
+  popularRoutes: [
+    {
+      destination: "Delhi",
+      distanceKm: 260,
+      durationText: "5 hr 00 min",
+      sedanFare: 3799,
+      ertigaFare: 4999,
+      crystaFare: 9299,
+      routeSlug: "delhi-to-bareilly-taxi"
+    },
+    {
+      destination: "Haldwani",
+      distanceKm: 105,
+      durationText: "2 hr 30 min",
+      sedanFare: 2199,
+      ertigaFare: 2999,
+      crystaFare: 5499,
+      routeSlug: "delhi-to-haldwani-taxi"
+    },
+    {
+      destination: "Lucknow",
+      distanceKm: 250,
+      durationText: "4 hr 45 min",
+      sedanFare: 3499,
+      ertigaFare: 4699,
+      crystaFare: 8499,
+      routeSlug: "delhi-to-lucknow-taxi"
+    },
+    {
+      destination: "Moradabad",
+      distanceKm: 90,
+      durationText: "2 hr 00 min",
+      sedanFare: 1899,
+      ertigaFare: 2599,
+      crystaFare: 4699,
+      routeSlug: "delhi-to-moradabad-taxi"
+    }
+  ],
+  faqs: [
+    {
+      question: "How can I book an outstation cab from Bareilly to Delhi?",
+      answer: "Use our online booking widget on urgenttaxis.in or call our dispatch desk at +91 8595066033. Our driver will arrive at your Bareilly doorstep on time."
+    },
+    {
+      question: "Can I book a one-way cab from Bareilly to Haldwani or Nainital?",
+      answer: "Yes, we offer fixed one-way drops between Bareilly and Kumaon hill destinations with transparent per-km billing."
+    },
+    {
+      question: "What is the advance payment required to confirm my booking?",
+      answer: "An advance token of 30% confirms your vehicle, while the remaining 70% balance is payable to your chauffeur during the trip."
+    }
+  ]
+},
 };

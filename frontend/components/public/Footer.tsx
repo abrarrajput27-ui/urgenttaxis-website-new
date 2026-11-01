@@ -1,3 +1,4 @@
+import ContextualSEONavigation from '@/components/public/ContextualSEONavigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { SITE_CONFIG } from '@/lib/seo';
@@ -176,41 +177,8 @@ export default function PublicFooter() {
         </div>
       </div>
 
-      {/* 3. Bottom Links Matrix */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-b border-white/10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-[12px] text-slate-500">
-          <div>
-            <h5 className="text-white font-bold mb-3">Popular City Taxi Services</h5>
-            <div className="flex flex-wrap gap-x-2 gap-y-1">
-              <Link href="/taxi-service/delhi" className="hover:text-white transition-colors">Taxi Services in Delhi</Link> <span>•</span>
-              <Link href="/taxi-service/gurugram" className="hover:text-white transition-colors">Taxi Services in Gurgaon</Link> <span>•</span>
-              <Link href="/taxi-service/noida" className="hover:text-white transition-colors">Taxi Services in Noida</Link> <span>•</span>
-              <Link href="/taxi-service/ghaziabad" className="hover:text-white transition-colors">Taxi Services in Ghaziabad</Link> <span>•</span>
-              <Link href="/taxi-service/faridabad" className="hover:text-white transition-colors">Taxi Services in Faridabad</Link>
-            </div>
-          </div>
-          <div>
-            <h5 className="text-white font-bold mb-3">Top Airport Routes</h5>
-            <div className="flex flex-wrap gap-x-2 gap-y-1">
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">Delhi Airport</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">Jaipur Airport</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">Chandigarh Airport</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">Dehradun Airport</Link> <span>•</span>
-              <Link href="/airport-transfers" className="hover:text-white transition-colors">Amritsar Airport</Link>
-            </div>
-          </div>
-          <div className="sm:col-span-2 md:col-span-1">
-            <h5 className="text-white font-bold mb-3">Delhi Airport Routes</h5>
-            <div className="flex flex-wrap gap-x-2 gap-y-1">
-              <Link href="/airport-transfers/ghaziabad-to-delhi-airport" className="hover:text-white transition-colors">Ghaziabad to IGI Airport</Link> <span>•</span>
-              <Link href="/airport-transfers/noida-to-delhi-airport" className="hover:text-white transition-colors">Noida to IGI Airport</Link> <span>•</span>
-              <Link href="/airport-transfers/greater-noida-to-delhi-airport" className="hover:text-white transition-colors">Greater Noida to IGI</Link> <span>•</span>
-              <Link href="/airport-transfers/delhi-airport-to-ghaziabad" className="hover:text-white transition-colors">IGI Airport to Ghaziabad</Link> <span>•</span>
-              <Link href="/airport-transfers/delhi-airport-to-noida" className="hover:text-white transition-colors">IGI Airport to Noida</Link>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* 3. Structured Contextual SEO Navigation (Requirements 3 & 4) */}
+      <ContextualSEONavigation />
 
       {/* 4. Bottom Legal / Copyright Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-row items-center justify-between gap-2 text-[11px] sm:text-[12px] text-slate-500">
@@ -234,12 +202,14 @@ export default function PublicFooter() {
         </div>
       </div>
 
-      {/* 5. Permanent Designer Credit */}
-      <div className="border-t border-white/5 py-3">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="footer-designer-credit text-[13px] sm:text-[14px] text-slate-400">
-            <span className="font-normal">Designed by </span>
-            <strong className="font-bold text-slate-200">Mantsha Khan</strong>
+      {/* 5. Permanent Designer Credit with Smooth Continuous Horizontal Scrolling Animation (Requirement 8) */}
+      <div className="border-t border-white/5 py-3 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
+          <div className="designer-credit-marquee">
+            <div className="footer-designer-credit text-[13px] sm:text-[14px] text-slate-400">
+              <span className="font-normal">Designed by </span>
+              <strong className="font-bold text-slate-200">Mantsha Khan</strong>
+            </div>
           </div>
         </div>
       </div>

@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { AIRPORT_ROUTES_DATA, AirportRouteData } from '@/lib/data/airport-routes-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
+import PageFAQSection from '@/components/public/PageFAQSection';
+import { getAirportSpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
 import { Phone, MessageSquare, Plane, Shield, Clock, CheckCircle2, ArrowRight, MapPin, Navigation } from 'lucide-react';
 
 interface AirportRoutePageProps {
@@ -116,6 +118,12 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
       },
     })),
   };
+
+  // Generate Airport-specific FAQs + Common Booking FAQs (Requirement 7)
+  const airportSpecificFaqs = getAirportSpecificFAQs(data.destination, data.origin);
+  const commonFaqs = getCommonBookingFAQs().filter(f => f.question.includes('30% advance') || f.question.includes('payment options') || f.question.includes('contact'));
+  const existingFaqs = data.faqs || [];
+  const combinedAirportFaqs = [...airportSpecificFaqs, ...existingFaqs.filter(ef => !airportSpecificFaqs.some(af => af.question.toLowerCase() === ef.question.toLowerCase())), ...commonFaqs];
 
   const whatsappBaseUrl = `https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
     `Hello Urgent Taxis, I want to book an airport taxi for route: ${data.origin} to ${data.destination}. Please confirm driver and fare.`
@@ -429,30 +437,13 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
           </div>
         </section>
 
-        {/* FAQs */}
-        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-brand-blue mb-6">
-            Frequently Asked Questions — Airport Transfers
-          </h2>
-          <div className="space-y-4">
-            {data.faqs.map((faq, i) => (
-              <details
-                key={i}
-                className="group rounded-xl border border-slate-200 bg-white p-4 transition-all open:border-slate-700"
-              >
-                <summary className="flex cursor-pointer items-center justify-between font-semibold text-white">
-                  <span className="text-sm sm:text-base">{faq.question}</span>
-                  <span className="ml-4 flex-shrink-0 text-slate-600 transition-transform duration-200 group-open:rotate-180">
-                    ▼
-                  </span>
-                </summary>
-                <div className="mt-3 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-200 pt-3">
-                  {faq.answer}
-                </div>
-              </details>
-            ))}
-          </div>
-        </section>
+        {/* FAQs Section (Requirement 7) */}
+        <PageFAQSection
+          faqs={combinedAirportFaqs}
+          title={`Frequently Asked Questions — ${data.title}`}
+          subtitle={`Key details on pickup timings, flight delays, fares, and terminal drop arrangements.`}
+          includeSchema={true}
+        />
 
         {/* Other Airport Routes */}
         <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">

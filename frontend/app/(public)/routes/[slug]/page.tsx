@@ -10,6 +10,8 @@ import RoutePlacesSection from '@/components/public/RoutePlacesSection';
 import RouteTravelInfoSection from '@/components/public/RouteTravelInfoSection';
 import RouteGallerySection from '@/components/public/RouteGallerySection';
 import { getPlacesForRoute } from '@/lib/data/route-places-data';
+import PageFAQSection from '@/components/public/PageFAQSection';
+import { getRouteSpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
 
 interface DynamicRoutePageProps {
   params: Promise<{
@@ -174,6 +176,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
   const relatedRoutes = masterRoutesData
     .filter((mr) => mr.slug !== resolvedParams.slug && (mr.originName === originName || mr.destName === destName))
     .slice(0, 4);
+
+    // Generate comprehensive verified Route FAQs + Common Booking FAQs (Requirement 7)
+  const routeSpecificFaqs = getRouteSpecificFAQs(originName, destName, distance, route.sedanFare, route.ertigaFare);
+  const commonFaqs = getCommonBookingFAQs().filter(f => f.question.includes('30% advance') || f.question.includes('payment options') || f.question.includes('contact'));
+  const customFaqs = (route.faqs || []).filter((cf: any) => !routeSpecificFaqs.some(rf => rf.question.toLowerCase() === cf.question.toLowerCase()));
+  const allRouteFaqs = [...routeSpecificFaqs, ...customFaqs, ...commonFaqs];
 
   return (
     <div className="pb-20 bg-slate-50 min-h-screen text-slate-900 font-sans">
@@ -523,27 +531,13 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
               </div>
             )}
 
-            {/* Verified FAQs Accordion (Phase 2.10) */}
-            {route.faqs && route.faqs.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
-                <h2 className="text-xl font-black text-brand-blue border-b border-slate-100 pb-3 flex items-center gap-2">
-                  <span>❓</span> Frequently Asked Questions ({originName} to {destName} Cab)
-                </h2>
-                <div className="space-y-3 pt-2">
-                  {route.faqs.map((faq: { question: string; answer: string }, idx: number) => (
-                    <details key={idx} className="group border border-slate-200 rounded-xl p-4 open:bg-slate-50 transition-colors">
-                      <summary className="font-bold text-slate-800 cursor-pointer list-none flex justify-between items-center text-sm">
-                        <span>{faq.question}</span>
-                        <span className="text-brand-blue group-open:rotate-180 transition-transform font-black">▾</span>
-                      </summary>
-                      <p className="mt-3 text-xs sm:text-sm text-slate-600 leading-relaxed font-medium border-t border-slate-200/60 pt-3">
-                        {faq.answer}
-                      </p>
-                    </details>
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* Verified Page-Specific FAQs (Requirement 7) */}
+            <PageFAQSection
+              faqs={allRouteFaqs}
+              title={`Frequently Asked Questions (${originName} to ${destName} Cab)`}
+              subtitle={`Common queries regarding booking, fares, tolls, and vehicle options for ${originName} to ${destName} taxi travel.`}
+              includeSchema={true}
+            />
 
             {/* Related Corridors / Internal Linking (Phase 2.11) */}
             {relatedRoutes.length > 0 && (

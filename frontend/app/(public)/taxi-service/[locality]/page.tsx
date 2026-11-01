@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { LOCALITIES_DATA, LocalityData } from '@/lib/data/localities-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
+import PageFAQSection from '@/components/public/PageFAQSection';
+import { getCitySpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
 import { Phone, MessageSquare, MapPin, CheckCircle2, Shield, Clock, Compass, Plane, ArrowRight, Car } from 'lucide-react';
 
 interface LocalityPageProps {
@@ -117,6 +119,12 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
       },
     })),
   };
+
+  // Generate City-specific FAQs + Common Booking FAQs (Requirement 7)
+  const citySpecificFaqs = getCitySpecificFAQs(data.name, data.keyLandmarks);
+  const commonFaqs = getCommonBookingFAQs().filter(f => f.question.includes('30% advance') || f.question.includes('how is the fare calculated') || f.question.includes('contact'));
+  const existingFaqs = data.faqs || [];
+  const combinedCityFaqs = [...citySpecificFaqs, ...existingFaqs.filter(ef => !citySpecificFaqs.some(cf => cf.question.toLowerCase() === ef.question.toLowerCase())), ...commonFaqs];
 
   const whatsappBaseUrl = `https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
     `Hello Urgent Taxis, I need a taxi pickup in ${data.name}. Please share available cabs and fare details.`
@@ -448,30 +456,13 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
           </div>
         </section>
 
-        {/* FAQs Section */}
-        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-brand-blue mb-6">
-            Frequently Asked Questions — {data.name} Taxi Service
-          </h2>
-          <div className="space-y-4">
-            {data.faqs.map((faq, i) => (
-              <details
-                key={i}
-                className="group rounded-xl border border-slate-200 bg-white p-4 transition-all open:border-slate-700"
-              >
-                <summary className="flex cursor-pointer items-center justify-between font-semibold text-white">
-                  <span className="text-sm sm:text-base">{faq.question}</span>
-                  <span className="ml-4 flex-shrink-0 text-slate-600 transition-transform duration-200 group-open:rotate-180">
-                    ▼
-                  </span>
-                </summary>
-                <div className="mt-3 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-200 pt-3">
-                  {faq.answer}
-                </div>
-              </details>
-            ))}
-          </div>
-        </section>
+        {/* FAQs Section (Requirement 7) */}
+        <PageFAQSection
+          faqs={combinedCityFaqs}
+          title={`Frequently Asked Questions — ${data.name} Taxi Service`}
+          subtitle={`Everything you need to know about booking outstation cabs, airport drops, and rates in ${data.name}.`}
+          includeSchema={true}
+        />
 
         {/* Nearby Localities & Regional Coverage */}
         <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
@@ -489,10 +480,10 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
                 className="group p-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-blue-500/40 transition-all flex items-center justify-between"
               >
                 <div>
-                  <p className="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-blue-400 transition-colors">
+                  <p className="text-xs sm:text-sm font-semibold text-slate-800 group-hover:text-brand-blue transition-colors">
                     {loc.name}
                   </p>
-                  <p className="text-[11px] text-slate-600">{loc.district}</p>
+                  <p className="text-[11px] text-slate-500">{loc.district}</p>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
               </Link>
