@@ -5,6 +5,7 @@ import { AIRPORT_ROUTES_DATA, AirportRouteData } from '@/lib/data/airport-routes
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PageFAQSection from '@/components/public/PageFAQSection';
+import PublicFareWidget from '@/components/public/PublicFareWidget';
 import { getAirportSpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
 import { Phone, MessageSquare, Plane, Shield, Clock, CheckCircle2, ArrowRight, MapPin, Navigation } from 'lucide-react';
 
@@ -234,6 +235,26 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
 
       {/* Main Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+        {/* Interactive Live Airport Fare Calculator */}
+        <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-4 sm:p-6 lg:p-8">
+          <div className="mb-4">
+            <span className="text-brand-green font-bold text-xs uppercase tracking-wider block mb-1">
+              LIVE AIRPORT FARE CALCULATOR
+            </span>
+            <h2 className="text-xl sm:text-2xl font-black text-brand-blue">
+              Calculate & Book Airport Taxi ({data.origin} ⇄ {data.destination})
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium">
+              Instant fixed fare quotes with 30% advance token confirmation and zero flight delay waiting fees.
+            </p>
+          </div>
+          <PublicFareWidget
+            initialServiceType="airport_transfer"
+            defaultOrigin={data.origin}
+            defaultDestination={data.destination}
+            defaultDistanceKm={data.distanceKm}
+          />
+        </section>
         {/* Transparent Rates Grid */}
         <section>
           <div className="text-center max-w-2xl mx-auto mb-10">

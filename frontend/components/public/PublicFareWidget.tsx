@@ -24,15 +24,19 @@ export interface PublicFareWidgetProps {
  */
 export default function PublicFareWidget({
   initialServiceType = 'one_way',
+  defaultOrigin = '',
+  defaultDestination = '',
+  defaultDistanceKm = 0,
+  routeId = '',
   className = '',
 }: PublicFareWidgetProps) {
   return (
     <UnifiedBookingWidget
       initialServiceType={initialServiceType}
-      defaultOrigin=""
-      defaultDestination=""
-      defaultDistanceKm={0}
-      routeId=""
+      defaultOrigin={defaultOrigin}
+      defaultDestination={defaultDestination}
+      defaultDistanceKm={defaultDistanceKm}
+      routeId={routeId}
       className={className}
     />
   );

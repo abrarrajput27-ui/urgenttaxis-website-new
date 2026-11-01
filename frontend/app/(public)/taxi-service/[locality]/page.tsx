@@ -5,6 +5,7 @@ import { LOCALITIES_DATA, LocalityData } from '@/lib/data/localities-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PageFAQSection from '@/components/public/PageFAQSection';
+import PublicFareWidget from '@/components/public/PublicFareWidget';
 import { getCitySpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
 import { Phone, MessageSquare, MapPin, CheckCircle2, Shield, Clock, Compass, Plane, ArrowRight, Car } from 'lucide-react';
 
@@ -323,6 +324,25 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
               </ul>
             </div>
           </div>
+        </section>
+
+        {/* Interactive Live Locality Fare Calculator */}
+        <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-4 sm:p-6 lg:p-8 mb-8">
+          <div className="mb-4">
+            <span className="text-brand-green font-bold text-xs uppercase tracking-wider block mb-1">
+              LIVE FARE CALCULATOR
+            </span>
+            <h2 className="text-xl sm:text-2xl font-black text-brand-blue">
+              Calculate & Book Outstation Cab from {data.name}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium">
+              Choose your destination city, check live transparent per-km rates, and confirm with official 30% advance token.
+            </p>
+          </div>
+          <PublicFareWidget
+            initialServiceType="one_way"
+            defaultOrigin={data.name}
+          />
         </section>
 
         {/* Popular Outstation Fares Table */}

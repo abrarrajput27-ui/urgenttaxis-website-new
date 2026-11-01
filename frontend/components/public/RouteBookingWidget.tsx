@@ -18,15 +18,19 @@ export interface RouteBookingWidgetProps {
  * leaves pickup and drop blank for manual customer selection.
  */
 export default function RouteBookingWidget({
+  defaultOrigin = '',
+  defaultDestination = '',
+  defaultDistanceKm = 0,
+  routeId = '',
   className = '',
 }: RouteBookingWidgetProps) {
   return (
     <UnifiedBookingWidget
       initialServiceType="one_way"
-      defaultOrigin=""
-      defaultDestination=""
-      defaultDistanceKm={0}
-      routeId=""
+      defaultOrigin={defaultOrigin}
+      defaultDestination={defaultDestination}
+      defaultDistanceKm={defaultDistanceKm}
+      routeId={routeId}
       className={className}
     />
   );

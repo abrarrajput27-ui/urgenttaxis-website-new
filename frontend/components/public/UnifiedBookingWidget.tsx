@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
@@ -25,6 +26,7 @@ interface VehicleOption {
   models: string;
   seats: number;
   bags: number;
+  image: string;
   badge?: string;
   outstationRatePerKm: number;
   oneWayMultiplier: number;
@@ -44,6 +46,7 @@ const VEHICLE_OPTIONS: VehicleOption[] = [
     models: 'Dzire, Etios, Amaze',
     seats: 4,
     bags: 2,
+    image: '/fleet-brand/dzire.png',
     badge: 'Most Popular',
     outstationRatePerKm: 11,
     oneWayMultiplier: 13.5,
@@ -61,6 +64,7 @@ const VEHICLE_OPTIONS: VehicleOption[] = [
     models: 'Ertiga, Carens, Triber',
     seats: 6,
     bags: 4,
+    image: '/fleet-brand/Ertiga.png',
     badge: 'Family Ride',
     outstationRatePerKm: 15,
     oneWayMultiplier: 17.5,
@@ -78,6 +82,7 @@ const VEHICLE_OPTIONS: VehicleOption[] = [
     models: 'Innova Crysta, Hycross',
     seats: 7,
     bags: 5,
+    image: '/fleet-brand/Innova Crysta.png',
     badge: 'Premium Luxury',
     outstationRatePerKm: 20,
     oneWayMultiplier: 26,
@@ -95,6 +100,7 @@ const VEHICLE_OPTIONS: VehicleOption[] = [
     models: 'WagonR, Swift, Celerio',
     seats: 4,
     bags: 2,
+    image: '/fleet-brand/Hatchback.png',
     badge: 'Budget Value',
     outstationRatePerKm: 9,
     oneWayMultiplier: 11,
@@ -221,6 +227,43 @@ export default function UnifiedBookingWidget({
     isFareOnRequest: boolean;
   } | null>(null);
 
+  const matchKnownRoute = useCallback((orig: string, dest: string) => {
+    const origClean = orig.toLowerCase().trim();
+    const destClean = dest.toLowerCase().trim();
+    if (!origClean || !destClean) {
+      setDistanceKm(0);
+      setActiveRouteId('');
+      return;
+    }
+
+    const match = masterRoutesData.find(
+      (mr) =>
+        (mr.originName.toLowerCase().includes(origClean) || origClean.includes(mr.originName.toLowerCase())) &&
+        (mr.destName.toLowerCase().includes(destClean) || destClean.includes(mr.destName.toLowerCase()))
+    );
+
+    if (match) {
+      setDistanceKm(match.estimated_distance_km);
+      setActiveRouteId(match.id);
+    } else {
+      // Default baseline distance of 200 km if both are specified but unindexed
+      setDistanceKm((prev) => (prev > 0 ? prev : 200));
+    }
+  }, []);
+
+  // Synchronize incoming props (e.g. from dedicated route pages or city pages)
+  useEffect(() => {
+    if (defaultOrigin) setOrigin(defaultOrigin);
+    if (defaultDestination) setDestination(defaultDestination);
+    if (defaultDistanceKm && defaultDistanceKm > 0) {
+      setDistanceKm(defaultDistanceKm);
+    } else if (defaultOrigin && defaultDestination) {
+      matchKnownRoute(defaultOrigin, defaultDestination);
+    }
+    if (routeId) setActiveRouteId(routeId);
+    if (initialServiceType) setServiceType(initialServiceType);
+  }, [defaultOrigin, defaultDestination, defaultDistanceKm, routeId, initialServiceType, matchKnownRoute]);
+
   // Find active vehicle option
   const selectedVehicle = useMemo(() => {
     return VEHICLE_OPTIONS.find((v) => v.key === selectedVehicleKey) || VEHICLE_OPTIONS[0];
@@ -251,30 +294,6 @@ export default function UnifiedBookingWidget({
       setShowDestDropdown(false);
     }
     matchKnownRoute(origin, val);
-  };
-
-  const matchKnownRoute = (orig: string, dest: string) => {
-    const origClean = orig.toLowerCase().trim();
-    const destClean = dest.toLowerCase().trim();
-    if (!origClean || !destClean) {
-      setDistanceKm(0);
-      setActiveRouteId('');
-      return;
-    }
-
-    const match = masterRoutesData.find(
-      (mr) =>
-        (mr.originName.toLowerCase().includes(origClean) || origClean.includes(mr.originName.toLowerCase())) &&
-        (mr.destName.toLowerCase().includes(destClean) || destClean.includes(mr.destName.toLowerCase()))
-    );
-
-    if (match) {
-      setDistanceKm(match.estimated_distance_km);
-      setActiveRouteId(match.id);
-    } else {
-      // Default baseline distance of 200 km if both are specified but unindexed
-      if (distanceKm === 0) setDistanceKm(200);
-    }
   };
 
   const handleSwap = () => {
@@ -936,12 +955,18 @@ export default function UnifiedBookingWidget({
           </div>
         </div>
 
-        {/* 4. VEHICLE SELECTION CARDS (MakeMyTrip Pattern) */}
+        {/* 4. VEHICLE SELECTION CARDS (MakeMyTrip / Goibibo Pattern) */}
         <div>
-          <label className="block text-slate-700 font-bold mb-2.5 text-xs uppercase tracking-wider">
-            Select Your Cab Category
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2.5 gap-1">
+            <label className="block text-slate-800 font-black text-xs uppercase tracking-wider">
+              Select Your Cab Category (MMT / Goibibo Verified Rate Card)
+            </label>
+            <span className="text-[11px] font-bold text-brand-green bg-brand-green/10 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 w-fit">
+              <span>✓</span> All-Inclusive Fuel & Chauffeur Allowance
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
             {VEHICLE_OPTIONS.map((v) => {
               const isSelected = selectedVehicleKey === v.key;
 
@@ -972,38 +997,85 @@ export default function UnifiedBookingWidget({
                 rateBadge = `₹${v.airportBase}`;
               }
 
+              const estimatedToken = estimatedCost > 0 ? Math.round(estimatedCost * 0.30) : 0;
+              const originalCost = estimatedCost > 0 ? Math.round(estimatedCost * 1.15) : 0;
+
               return (
                 <div
                   key={v.key}
                   onClick={() => setSelectedVehicleKey(v.key)}
                   className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer relative flex flex-col justify-between ${
                     isSelected
-                      ? 'border-brand-blue bg-blue-50/40 shadow-md ring-2 ring-brand-blue/20'
-                      : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60'
+                      ? 'border-brand-blue bg-blue-50/50 shadow-md ring-2 ring-brand-blue/30 scale-[1.01]'
+                      : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60 shadow-xs'
                   }`}
                 >
-                  {v.badge && (
-                    <span className="absolute top-2.5 right-2.5 px-2 py-0.5 bg-brand-green/10 text-brand-green font-black text-[9px] rounded-full uppercase">
-                      {v.badge}
+                  {/* Top Badge & Rating */}
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-extrabold text-amber-500 flex items-center gap-0.5">
+                      ★ 4.8 <span className="text-slate-400 font-medium">(Top Rated)</span>
                     </span>
-                  )}
+                    {v.badge && (
+                      <span className="px-2 py-0.5 bg-brand-green/10 text-brand-green font-black text-[9px] rounded-full uppercase tracking-wider">
+                        {v.badge}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Vehicle Image */}
+                  <div className="relative h-20 w-full my-1.5 flex items-center justify-center">
+                    <Image
+                      src={v.image}
+                      alt={v.name}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 768px) 100vw, 25vw"
+                    />
+                  </div>
+
+                  {/* Vehicle Name & Specs */}
                   <div>
-                    <h4 className="font-extrabold text-slate-900 text-sm">{v.name}</h4>
-                    <p className="text-[11px] text-slate-500 font-medium">{v.models}</p>
-                    <div className="flex items-center gap-2 mt-2 text-[10px] text-slate-600 font-semibold">
-                      <span>👥 {v.seats} Seats</span>
-                      <span>🧳 {v.bags} Bags</span>
-                      <span>❄️ AC</span>
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-black text-slate-900 text-sm">{v.name}</h4>
+                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                        isSelected ? 'border-brand-blue bg-brand-blue text-white' : 'border-slate-300'
+                      }`}>
+                        {isSelected && <span className="text-[9px] leading-none">✓</span>}
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-semibold">{v.models}</p>
+                    <div className="flex items-center gap-2 mt-1.5 text-[10px] text-slate-600 font-bold">
+                      <span className="bg-slate-100 px-1.5 py-0.5 rounded">👥 {v.seats} Seats</span>
+                      <span className="bg-slate-100 px-1.5 py-0.5 rounded">🧳 {v.bags} Bags</span>
+                      <span className="bg-slate-100 px-1.5 py-0.5 rounded">❄️ AC</span>
                     </div>
                   </div>
 
-                  <div className="mt-3 pt-2 border-t border-slate-100 flex items-baseline justify-between">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold">
-                      {estimatedCost > 0 ? 'Estimated' : 'Rate'}
-                    </span>
-                    <span className="font-black text-slate-900 font-mono text-base">
-                      {estimatedCost > 0 ? `₹${estimatedCost.toLocaleString('en-IN')}` : rateBadge}
-                    </span>
+                  {/* Pricing Section (MMT / Goibibo Strikethrough & Token) */}
+                  <div className="mt-3 pt-2.5 border-t border-slate-100">
+                    <div className="flex items-baseline justify-between">
+                      <div>
+                        {originalCost > 0 && (
+                          <span className="text-[11px] text-slate-400 line-through mr-1 font-mono">
+                            ₹{originalCost.toLocaleString('en-IN')}
+                          </span>
+                        )}
+                        <span className="font-black text-slate-900 font-mono text-base sm:text-lg">
+                          {estimatedCost > 0 ? `₹${estimatedCost.toLocaleString('en-IN')}` : rateBadge}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-bold text-slate-500 uppercase">
+                        {serviceType === 'one_way' ? 'One-Way' : serviceType === 'round_trip' ? 'Total' : 'Base'}
+                      </span>
+                    </div>
+
+                    {/* 30% Token Info Pill */}
+                    {estimatedToken > 0 && (
+                      <div className="mt-1.5 pt-1 border-t border-dashed border-slate-200 flex items-center justify-between text-[10px]">
+                        <span className="text-emerald-700 font-bold">30% Token:</span>
+                        <span className="font-mono font-black text-emerald-800">₹{estimatedToken.toLocaleString('en-IN')}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               );

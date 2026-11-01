@@ -4,6 +4,7 @@ import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import Link from 'next/link';
 import masterRoutesData from '@/lib/data/processed-master-routes.json';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
+import PublicFareWidget from '@/components/public/PublicFareWidget';
 
 export const metadata = constructMetadata({
   title: 'Outstation Taxi Routes & Intercity Cabs Directory',
@@ -84,6 +85,11 @@ export default async function RoutesDirectoryPage() {
         <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
           Explore one-way and round-trip outstation cab routes across Delhi NCR, Uttarakhand, Himachal Pradesh, Uttar Pradesh, and Rajasthan with guaranteed transparent per-KM rates.
         </p>
+      </section>
+
+      {/* Live Fare Search & Calculator */}
+      <section className="mb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <PublicFareWidget initialServiceType="one_way" />
       </section>
 
       {/* Routes Widget (Replaces Grid) */}

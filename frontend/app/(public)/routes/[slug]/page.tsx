@@ -209,7 +209,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Main Content Column */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-8 order-2 lg:order-1">
             
             {/* Route Map & Overview (Phase 2.3) */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -573,7 +573,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
           </div>
 
           {/* Sidebar: Interactive Route Booking Widget (Phase 2.4) */}
-          <div className="space-y-6">
+          <div className="space-y-6 order-1 lg:order-2">
             <div className="sticky top-20 space-y-6">
               <RouteBookingWidget
                 defaultOrigin={originName}
