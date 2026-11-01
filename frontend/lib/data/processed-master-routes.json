@@ -17446,5 +17446,80 @@
         "answer": "Yes, Urgent Taxis operates 24/7. You can schedule early morning departures (5 AM - 7 AM) or late-night pickups with guaranteed vehicle arrival."
       }
     ]
+  },
+  {
+    "id": "master-route-507",
+    "slug": "delhi-to-jaipur-taxi",
+    "originName": "Delhi",
+    "destName": "Jaipur",
+    "estimated_distance_km": 280,
+    "estimated_duration_minutes": 300,
+    "durationText": "5 hours 00 mins",
+    "sedanFare": 3499,
+    "ertigaFare": 4699,
+    "crystaFare": 8999,
+    "seoTitle": "Delhi to Jaipur Taxi Service | One-Way & Round Trip Cab",
+    "seoDescription": "Book reliable Delhi to Jaipur taxi with Urgent Taxis. Compare Sedan, Ertiga, Innova Crysta fares. Quick booking, transparent pricing.",
+    "about": "Traveling from the National Capital to the vibrant Pink City of Rajasthan? Urgent Taxis provides premier Delhi to Jaipur cab services tailored for personal vacations, corporate visits, and weekend road trips. Choose from our well-maintained Sedans (Dzire/Etios), family-sized Ertigas, or luxury Innova Crystas. All trips are driven by courteous, verified highway chauffeurs who ensure punctual doorstep pickup anywhere in Delhi NCR. With 100% transparent pricing and an official 30% advance policy, your journey along the Delhi-Jaipur Expressway is seamless and hassle-free.",
+    "faqs": [
+      {
+        "question": "What is the taxi fare from Delhi to Jaipur?",
+        "answer": "The one-way sedan fare for Delhi to Jaipur starts from ₹3,499. Ertiga and Innova Crysta options are also available with transparent per-km billing."
+      },
+      {
+        "question": "How can I book a Delhi to Jaipur taxi?",
+        "answer": "You can book online through our instant booking widget or contact our 24/7 dispatch desk on WhatsApp at +91 8595066033."
+      }
+    ]
+  },
+  {
+    "id": "master-route-508",
+    "slug": "delhi-to-chandigarh-taxi",
+    "originName": "Delhi",
+    "destName": "Chandigarh",
+    "estimated_distance_km": 250,
+    "estimated_duration_minutes": 270,
+    "durationText": "4 hours 30 mins",
+    "sedanFare": 3499,
+    "ertigaFare": 4699,
+    "crystaFare": 8499,
+    "seoTitle": "Delhi to Chandigarh Taxi Service | Reliable Highway Cabs",
+    "seoDescription": "Book Delhi to Chandigarh taxi with Urgent Taxis. Compare Sedan, Ertiga, Innova Crysta fares. Doorstep pickup, transparent rates.",
+    "about": "Book an air-conditioned, comfortable Delhi to Chandigarh taxi with Urgent Taxis. Whether heading to the City Beautiful for official work, family visits, or transit towards Himachal Pradesh, our fleet offers prompt doorstep pickup across Delhi NCR. Travel along NH-44 Grand Trunk Road with verified chauffeurs, transparent per-km billing, and zero hidden charges.",
+    "faqs": [
+      {
+        "question": "What is the taxi fare from Delhi to Chandigarh?",
+        "answer": "The one-way sedan fare starts from ₹3,499. Ertiga and Innova Crysta are available for family and group travel."
+      },
+      {
+        "question": "How long does it take by taxi from Delhi to Chandigarh?",
+        "answer": "The 250 km journey typically takes around 4.5 to 5 hours via NH-44 depending on traffic conditions."
+      }
+    ]
+  },
+  {
+    "id": "master-route-509",
+    "slug": "delhi-to-amritsar-taxi",
+    "originName": "Delhi",
+    "destName": "Amritsar",
+    "estimated_distance_km": 450,
+    "estimated_duration_minutes": 480,
+    "durationText": "8 hours 00 mins",
+    "sedanFare": 5999,
+    "ertigaFare": 7999,
+    "crystaFare": 13999,
+    "seoTitle": "Delhi to Amritsar Taxi Service | Golden Temple Cab",
+    "seoDescription": "Book Delhi to Amritsar taxi with Urgent Taxis. Safe, comfortable outstation cabs with verified highway drivers.",
+    "about": "Planning a pilgrimage to the sacred Golden Temple or a trip to the Wagah Border? Urgent Taxis offers reliable Delhi to Amritsar taxi services with experienced highway chauffeurs. Enjoy comfortable travel in Sedans, Ertigas, or Innova Crystas with clear, upfront pricing and an official 30% advance booking policy.",
+    "faqs": [
+      {
+        "question": "What is the taxi fare from Delhi to Amritsar?",
+        "answer": "The one-way sedan fare starts from ₹5,999. SUVs and Innova Crystas are available with transparent per-km billing."
+      },
+      {
+        "question": "Can I book a round-trip taxi for Amritsar?",
+        "answer": "Yes, we provide customizable round-trip packages including local sightseeing to Golden Temple, Jallianwala Bagh, and Wagah Border."
+      }
+    ]
   }
 ]

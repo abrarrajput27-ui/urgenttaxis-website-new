@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { BLOG_ARTICLES, BlogArticle } from '@/lib/data/blog-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
-import { Calendar, Clock, User, ArrowLeft, ArrowRight, Phone, MessageSquare, Tag, Bookmark } from 'lucide-react';
+import { Calendar, Clock, User, ArrowRight, Phone, MessageSquare, Tag, Bookmark } from 'lucide-react';
 
 interface BlogPageProps {
   params: Promise<{ slug: string }>;
@@ -122,7 +122,7 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
     .slice(0, 3);
 
   return (
-    <div className="bg-slate-950 text-slate-100 min-h-screen">
+    <div className="bg-slate-50 text-slate-900 min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
@@ -135,13 +135,13 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
       )}
 
       {/* Breadcrumbs */}
-      <div className="bg-slate-900 border-b border-slate-800">
+      <div className="bg-white border-b border-slate-200">
         <PublicBreadcrumbs items={breadcrumbs} />
       </div>
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         {/* Category & Meta */}
-        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 mb-4">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 mb-4">
           <span className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 font-semibold uppercase tracking-wider">
             {article.category}
           </span>
@@ -166,37 +166,37 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         </div>
 
         {/* Article H1 */}
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-6">
+        <h1 className="text-2xl sm:text-4xl font-black text-brand-blue tracking-tight leading-tight mb-6">
           {article.title}
         </h1>
 
         {/* Excerpt Lead */}
-        <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-medium pb-8 border-b border-slate-800 italic">
+        <p className="text-base sm:text-lg text-slate-700 leading-relaxed font-medium pb-8 border-b border-slate-200 italic">
           &ldquo;{article.excerpt}&rdquo;
         </p>
 
         {/* Content Sections */}
-        <div className="py-8 space-y-10 text-slate-300 leading-relaxed">
+        <div className="py-8 space-y-10 text-slate-700 leading-relaxed">
           {article.content.map((sec, idx) => (
             <section key={idx} className="space-y-4">
-              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-bold text-brand-blue tracking-tight">
                 {sec.heading}
               </h2>
               {sec.paragraphs.map((p, pIdx) => (
-                <p key={pIdx} className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                <p key={pIdx} className="text-sm sm:text-base text-slate-700 leading-relaxed">
                   {p}
                 </p>
               ))}
 
               {sec.subsections && sec.subsections.length > 0 && (
-                <div className="mt-4 space-y-4 pl-4 border-l-2 border-slate-800">
+                <div className="mt-4 space-y-4 pl-4 border-l-2 border-slate-200">
                   {sec.subsections.map((sub, sIdx) => (
                     <div key={sIdx} className="space-y-2">
                       <h3 className="text-base font-bold text-slate-100">
                         {sub.title}
                       </h3>
                       {sub.body.map((b, bIdx) => (
-                        <p key={bIdx} className="text-xs sm:text-sm text-slate-400">
+                        <p key={bIdx} className="text-xs sm:text-sm text-slate-600">
                           {b}
                         </p>
                       ))}
@@ -210,8 +210,8 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
 
         {/* Related Routes */}
         {article.relatedRoutes && article.relatedRoutes.length > 0 && (
-          <div className="my-8 p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+          <div className="my-8 p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-600 flex items-center gap-2">
               <Bookmark className="w-4 h-4 text-emerald-400" />
               Related Routes & Fares
             </h3>
@@ -232,23 +232,23 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
 
         {/* FAQs */}
         {article.faqs && article.faqs.length > 0 && (
-          <section className="my-10 p-6 sm:p-8 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
-            <h2 className="text-lg sm:text-xl font-bold text-white">
+          <section className="my-10 p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+            <h2 className="text-lg sm:text-xl font-bold text-brand-blue">
               Frequently Asked Questions
             </h2>
             <div className="space-y-3">
               {article.faqs.map((faq, fIdx) => (
                 <details
                   key={fIdx}
-                  className="group rounded-xl border border-slate-800 bg-slate-900/80 p-4 transition-all open:border-slate-700"
+                  className="group rounded-xl border border-slate-200 bg-slate-50 p-4 transition-all open:border-slate-300"
                 >
                   <summary className="flex cursor-pointer items-center justify-between font-semibold text-white text-sm">
                     <span>{faq.question}</span>
-                    <span className="ml-4 flex-shrink-0 text-slate-400 transition-transform duration-200 group-open:rotate-180">
+                    <span className="ml-4 flex-shrink-0 text-slate-600 transition-transform duration-200 group-open:rotate-180">
                       ▼
                     </span>
                   </summary>
-                  <div className="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+                  <div className="mt-3 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-200 pt-3">
                     {faq.answer}
                   </div>
                 </details>
@@ -258,11 +258,11 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         )}
 
         {/* Tags */}
-        <div className="pt-6 border-t border-slate-800 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+        <div className="pt-6 border-t border-slate-200 flex flex-wrap items-center gap-2 text-xs text-slate-600">
           <Tag className="w-3.5 h-3.5" />
-          <span className="font-semibold text-slate-300">Tags:</span>
+          <span className="font-semibold text-slate-700">Tags:</span>
           {article.tags.map((tag) => (
-            <span key={tag} className="px-2.5 py-0.5 rounded bg-slate-800 text-slate-300">
+            <span key={tag} className="px-2.5 py-0.5 rounded bg-slate-800 text-slate-700">
               #{tag}
             </span>
           ))}
@@ -271,8 +271,8 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         {/* Action Banner */}
         <div className="my-10 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-blue-900 via-slate-900 to-slate-900 border border-blue-800/50 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center sm:text-left">
-            <h3 className="text-lg font-bold text-white">Planning this trip?</h3>
-            <p className="text-xs sm:text-sm text-slate-300">
+            <h3 className="text-lg font-bold text-brand-blue">Planning this trip?</h3>
+            <p className="text-xs sm:text-sm text-slate-700">
               Get an instant fixed quote for your door-to-door outstation cab.
             </p>
           </div>
@@ -297,9 +297,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         </div>
 
         {/* Related Articles */}
-        <div className="pt-8 border-t border-slate-800 space-y-6">
+        <div className="pt-8 border-t border-slate-200 space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-white">More Guides from Our Travel Desk</h3>
+            <h3 className="text-lg font-bold text-brand-blue">More Guides from Our Travel Desk</h3>
             <Link href="/blog" className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1">
               <span>View All Articles</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -310,17 +310,17 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
               <Link
                 key={rel.slug}
                 href={`/blog/${rel.slug}`}
-                className="p-4 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-blue-500/40 transition-all flex flex-col justify-between group"
+                className="p-4 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-blue-500/40 transition-all flex flex-col justify-between group"
               >
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-600 block mb-1">
                     {rel.category}
                   </span>
-                  <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-2">
+                  <h4 className="text-xs sm:text-sm font-bold text-brand-blue group-hover:text-blue-400 transition-colors line-clamp-2">
                     {rel.title}
                   </h4>
                 </div>
-                <div className="mt-3 pt-2 border-t border-slate-800 text-[11px] text-slate-400 flex items-center gap-1">
+                <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-600 flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   <span>{rel.readingTimeMins} min read</span>
                 </div>

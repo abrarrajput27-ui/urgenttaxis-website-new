@@ -33,6 +33,8 @@ interface VehicleOption {
   airportBase: number;
   local8hPrice: number;
   local12hPrice: number;
+  extraKmRate: number;
+  extraHourRate: number;
 }
 
 const VEHICLE_OPTIONS: VehicleOption[] = [
@@ -42,7 +44,7 @@ const VEHICLE_OPTIONS: VehicleOption[] = [
     models: 'Dzire, Etios, Amaze',
     seats: 4,
     bags: 2,
-    badge: 'Popular',
+    badge: 'Most Popular',
     outstationRatePerKm: 11,
     oneWayMultiplier: 13.5,
     minKmRoundTrip: 250,
@@ -50,6 +52,8 @@ const VEHICLE_OPTIONS: VehicleOption[] = [
     airportBase: 1300,
     local8hPrice: 1800,
     local12hPrice: 2500,
+    extraKmRate: 11,
+    extraHourRate: 180,
   },
   {
     key: 'suv-muv',
@@ -65,6 +69,8 @@ const VEHICLE_OPTIONS: VehicleOption[] = [
     airportBase: 1800,
     local8hPrice: 2500,
     local12hPrice: 3400,
+    extraKmRate: 15,
+    extraHourRate: 220,
   },
   {
     key: 'executive-suv',
@@ -80,14 +86,16 @@ const VEHICLE_OPTIONS: VehicleOption[] = [
     airportBase: 2500,
     local8hPrice: 3200,
     local12hPrice: 4500,
+    extraKmRate: 20,
+    extraHourRate: 300,
   },
   {
     key: 'hatchback',
     name: 'Hatchback',
     models: 'WagonR, Swift, Celerio',
     seats: 4,
-    bags: 1,
-    badge: 'Budget Friendly',
+    bags: 2,
+    badge: 'Budget Value',
     outstationRatePerKm: 9,
     oneWayMultiplier: 11,
     minKmRoundTrip: 250,
@@ -95,44 +103,66 @@ const VEHICLE_OPTIONS: VehicleOption[] = [
     airportBase: 1100,
     local8hPrice: 1600,
     local12hPrice: 2200,
+    extraKmRate: 10,
+    extraHourRate: 150,
   },
 ];
 
 const LOCAL_RENTAL_PACKAGES = [
   { id: '4hr40km', name: '4 Hours / 40 KM', hours: 4, km: 40, isFareOnRequest: true },
   { id: '6hr60km', name: '6 Hours / 60 KM', hours: 6, km: 60, isFareOnRequest: true },
-  { id: '8hr80km', name: '8 Hours / 80 KM (Half Day)', hours: 8, km: 80, isFareOnRequest: false },
+  { id: '8hr80km', name: '8 Hours / 80 KM', hours: 8, km: 80, isFareOnRequest: false },
   { id: '10hr100km', name: '10 Hours / 100 KM', hours: 10, km: 100, isFareOnRequest: true },
-  { id: '12hr120km', name: '12 Hours / 120 KM (Full Day)', hours: 12, km: 120, isFareOnRequest: false },
+  { id: '12hr120km', name: '12 Hours / 120 KM', hours: 12, km: 120, isFareOnRequest: false },
 ];
 
-const AIRPORTS_LIST = [
-  { id: 'delhi-igi', name: 'Delhi IGI Airport (T1, T2, T3)', city: 'Delhi' },
-  { id: 'noida-jewar', name: 'Noida International Airport (Jewar)', city: 'Jewar' },
-];
-
-const NCR_ZONES = [
+const TOP_CITIES = [
+  'Delhi',
   'Ghaziabad',
   'Noida',
   'Greater Noida',
-  'Delhi (Central / South)',
   'Gurugram',
   'Faridabad',
+  'Agra',
+  'Haridwar',
+  'Rishikesh',
+  'Dehradun',
+  'Jaipur',
+  'Chandigarh',
+  'Haldwani',
+  'Nainital',
+  'Mathura',
+  'Vrindavan',
+  'Shimla',
+  'Manali',
+  'Lucknow',
+  'Ayodhya',
+  'Meerut',
 ];
 
-// Popular cities for autocomplete
-const TOP_CITIES = [
-  'Delhi', 'Ghaziabad', 'Noida', 'Greater Noida', 'Gurugram', 'Faridabad',
-  'Agra', 'Jaipur', 'Dehradun', 'Haridwar', 'Rishikesh', 'Nainital', 'Haldwani',
-  'Mathura', 'Vrindavan', 'Lucknow', 'Chandigarh', 'Shimla', 'Manali', 'Ayodhya',
-  'Amritsar', 'Bareilly', 'Moradabad', 'Meerut', 'Aligarh'
+const AIRPORTS_LIST = [
+  { id: 'delhi-igi', name: 'Delhi IGI Airport (T1, T2, T3)' },
+  { id: 'noida-jewar', name: 'Noida International Airport (Jewar)' },
+];
+
+const AIRPORT_ZONES = [
+  'Ghaziabad',
+  'Noida',
+  'Greater Noida',
+  'East Delhi',
+  'South Delhi',
+  'West Delhi',
+  'North Delhi',
+  'Gurugram',
+  'Faridabad',
+  'Meerut',
 ];
 
 export default function UnifiedBookingWidget({
   initialServiceType = 'one_way',
-  defaultOrigin = 'Delhi NCR',
-  defaultDestination = 'Agra',
-  defaultDistanceKm = 240,
+  defaultOrigin = '',
+  defaultDestination = '',
+  defaultDistanceKm = 0,
   routeId = '',
   compact: _compact = false,
   className = '',
@@ -142,11 +172,12 @@ export default function UnifiedBookingWidget({
   // Mode Selection
   const [serviceType, setServiceType] = useState<BookingServiceType>(initialServiceType);
 
-  // Outstation Locations
-  const [origin, setOrigin] = useState(defaultOrigin);
-  const [destination, setDestination] = useState(defaultDestination);
-  const [distanceKm, setDistanceKm] = useState(defaultDistanceKm);
-  const [activeRouteId, setActiveRouteId] = useState(routeId);
+  // STRICT REQUIREMENT: Pickup & drop blank by default
+  const [origin, setOrigin] = useState(defaultOrigin || '');
+  const [destination, setDestination] = useState(defaultDestination || '');
+  const [distanceKm, setDistanceKm] = useState(defaultDistanceKm || 0);
+  const [activeRouteId, setActiveRouteId] = useState(routeId || '');
+  const [validationError, setValidationError] = useState('');
 
   // Autocomplete UI state
   const [originSuggestions, setOriginSuggestions] = useState<string[]>([]);
@@ -155,13 +186,13 @@ export default function UnifiedBookingWidget({
   const [showDestDropdown, setShowDestDropdown] = useState(false);
 
   // Local Rental Selection
-  const [rentalCity, setRentalCity] = useState(defaultOrigin.includes('Airport') ? 'Delhi NCR' : defaultOrigin);
+  const [rentalCity, setRentalCity] = useState('');
   const [selectedPackageId, setSelectedPackageId] = useState('8hr80km');
 
   // Airport Transfer Selection
   const [airportDirection, setAirportDirection] = useState<'drop' | 'pickup'>('drop');
   const [selectedAirport, setSelectedAirport] = useState(AIRPORTS_LIST[0].name);
-  const [selectedZone, setSelectedZone] = useState('Ghaziabad');
+  const [selectedZone, setSelectedZone] = useState('');
 
   // Dates & Times
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
@@ -173,6 +204,10 @@ export default function UnifiedBookingWidget({
 
   // Vehicle Category
   const [selectedVehicleKey, setSelectedVehicleKey] = useState<VehicleCategoryKey>('sedan');
+
+  // MakeMyTrip-Style Fare Breakup & Terms Modal/Accordion State
+  const [showFareBreakupModal, setShowFareBreakupModal] = useState(false);
+  const [activeBreakupTab, setActiveBreakupTab] = useState<'breakup' | 'inclusions' | 'terms'>('breakup');
 
   // Calculation state
   const [isLoading, setIsLoading] = useState(false);
@@ -194,6 +229,7 @@ export default function UnifiedBookingWidget({
   // Handle Location Autocomplete & Distance Lookups
   const handleOriginChange = (val: string) => {
     setOrigin(val);
+    setValidationError('');
     if (val.trim().length > 0) {
       const filtered = TOP_CITIES.filter((c) => c.toLowerCase().includes(val.toLowerCase()));
       setOriginSuggestions(filtered);
@@ -206,6 +242,7 @@ export default function UnifiedBookingWidget({
 
   const handleDestinationChange = (val: string) => {
     setDestination(val);
+    setValidationError('');
     if (val.trim().length > 0) {
       const filtered = TOP_CITIES.filter((c) => c.toLowerCase().includes(val.toLowerCase()));
       setDestSuggestions(filtered);
@@ -219,6 +256,12 @@ export default function UnifiedBookingWidget({
   const matchKnownRoute = (orig: string, dest: string) => {
     const origClean = orig.toLowerCase().trim();
     const destClean = dest.toLowerCase().trim();
+    if (!origClean || !destClean) {
+      setDistanceKm(0);
+      setActiveRouteId('');
+      return;
+    }
+
     const match = masterRoutesData.find(
       (mr) =>
         (mr.originName.toLowerCase().includes(origClean) || origClean.includes(mr.originName.toLowerCase())) &&
@@ -228,6 +271,9 @@ export default function UnifiedBookingWidget({
     if (match) {
       setDistanceKm(match.estimated_distance_km);
       setActiveRouteId(match.id);
+    } else {
+      // Default baseline distance of 200 km if both are specified but unindexed
+      if (distanceKm === 0) setDistanceKm(200);
     }
   };
 
@@ -265,6 +311,12 @@ export default function UnifiedBookingWidget({
     let isCancelled = false;
 
     async function fetchLiveFare() {
+      // For outstation, wait until both locations are provided
+      if ((serviceType === 'one_way' || serviceType === 'round_trip') && (!origin.trim() || !destination.trim())) {
+        setServerFare(null);
+        return;
+      }
+
       setIsLoading(true);
 
       try {
@@ -275,30 +327,35 @@ export default function UnifiedBookingWidget({
 
         if (serviceType === 'one_way') {
           payload.routeId = activeRouteId;
-          payload.actualDistanceKm = distanceKm;
+          payload.actualDistanceKm = distanceKm > 0 ? distanceKm : 200;
         } else if (serviceType === 'round_trip') {
-          payload.actualDistanceKm = distanceKm * 2;
+          const tripKm = distanceKm > 0 ? distanceKm * 2 : 400;
+          payload.actualDistanceKm = tripKm;
           payload.numberOfDays = numberOfDays;
           payload.numberOfNights = Math.max(0, numberOfDays - 1);
         } else if (serviceType === 'local_rental') {
           payload.packageId = selectedPackageId;
           const pkg = LOCAL_RENTAL_PACKAGES.find((p) => p.id === selectedPackageId);
-          if (pkg && pkg.isFareOnRequest) {
-            setServerFare({
-              customerPayable: 0,
-              tokenAmount: 0,
-              balanceAmount: 0,
-              billableKm: pkg.km,
-              baseFare: 0,
-              driverAllowance: 0,
-              isFareOnRequest: true,
-            });
-            setIsLoading(false);
-            return;
+          if (pkg) {
+            payload.durationHours = pkg.hours;
+            payload.actualDistanceKm = pkg.km;
+            if (pkg.isFareOnRequest) {
+              setServerFare({
+                customerPayable: 0,
+                tokenAmount: 0,
+                balanceAmount: 0,
+                billableKm: pkg.km,
+                baseFare: 0,
+                driverAllowance: 0,
+                isFareOnRequest: true,
+              });
+              setIsLoading(false);
+              return;
+            }
           }
         } else if (serviceType === 'airport_transfer') {
           payload.airportLocationId = selectedAirport;
-          payload.cityZoneLocationId = selectedZone;
+          payload.cityZoneLocationId = selectedZone || 'Ghaziabad';
           payload.actualDistanceKm = 40;
         }
 
@@ -322,7 +379,7 @@ export default function UnifiedBookingWidget({
               isFareOnRequest: false,
             });
           } else {
-            // Check fallback for local rental or client estimation
+            // Check fallback for local rental
             if (serviceType === 'local_rental') {
               const pkg = LOCAL_RENTAL_PACKAGES.find((p) => p.id === selectedPackageId);
               if (pkg && !pkg.isFareOnRequest) {
@@ -348,33 +405,58 @@ export default function UnifiedBookingWidget({
                   isFareOnRequest: true,
                 });
               }
-            } else {
+            } else if (serviceType === 'airport_transfer') {
+              const price = selectedVehicle.airportBase;
+              const token = Math.round(price * 0.30);
               setServerFare({
-                customerPayable: 0,
-                tokenAmount: 0,
-                balanceAmount: 0,
-                billableKm: 0,
-                baseFare: 0,
+                customerPayable: price,
+                tokenAmount: token,
+                balanceAmount: price - token,
+                billableKm: 40,
+                baseFare: price,
                 driverAllowance: 0,
-                isFareOnRequest: true,
+                isFareOnRequest: false,
               });
+            } else {
+              setServerFare(null);
             }
           }
         }
-      } catch {
+      } catch (err) {
+        console.warn('Live fare sync encountered error, applying local fallback:', err);
         if (!isCancelled) {
-          setServerFare({
-            customerPayable: 0,
-            tokenAmount: 0,
-            balanceAmount: 0,
-            billableKm: 0,
-            baseFare: 0,
-            driverAllowance: 0,
-            isFareOnRequest: true,
-          });
+          if (serviceType === 'one_way' && distanceKm > 0) {
+            const price = Math.round(distanceKm * selectedVehicle.oneWayMultiplier);
+            const token = Math.round(price * 0.30);
+            setServerFare({
+              customerPayable: price,
+              tokenAmount: token,
+              balanceAmount: price - token,
+              billableKm: distanceKm,
+              baseFare: price,
+              driverAllowance: 0,
+              isFareOnRequest: false,
+            });
+          } else if (serviceType === 'round_trip' && distanceKm > 0) {
+            const billable = Math.max(distanceKm * 2, selectedVehicle.minKmRoundTrip * numberOfDays);
+            const driverAllow = selectedVehicle.driverAllowanceDay * numberOfDays;
+            const price = Math.round(billable * selectedVehicle.outstationRatePerKm + driverAllow);
+            const token = Math.round(price * 0.30);
+            setServerFare({
+              customerPayable: price,
+              tokenAmount: token,
+              balanceAmount: price - token,
+              billableKm: billable,
+              baseFare: price - driverAllow,
+              driverAllowance: driverAllow,
+              isFareOnRequest: false,
+            });
+          }
         }
       } finally {
-        if (!isCancelled) setIsLoading(false);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     }
 
@@ -386,276 +468,334 @@ export default function UnifiedBookingWidget({
   }, [
     serviceType,
     selectedVehicleKey,
-    activeRouteId,
+    selectedVehicle,
+    origin,
+    destination,
     distanceKm,
+    activeRouteId,
     numberOfDays,
     selectedPackageId,
     selectedAirport,
     selectedZone,
-    selectedVehicle,
   ]);
 
-  // Estimated Highway Fastag Toll
+  // Fastag Highway Toll Estimate
   const estimatedHighwayToll = useMemo(() => {
-    if (serviceType === 'one_way') return Math.round(distanceKm * 1.6);
-    if (serviceType === 'round_trip') return Math.round(distanceKm * 2 * 1.5);
+    if (serviceType === 'one_way') {
+      return Math.round((distanceKm / 100) * 120);
+    }
+    if (serviceType === 'round_trip') {
+      return Math.round(((distanceKm * 2) / 100) * 110);
+    }
     return 0;
   }, [serviceType, distanceKm]);
 
-  // Navigation to Checkout
-  const handleProceedCheckout = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    let pickupParam = origin;
-    let dropParam = destination;
-
-    if (serviceType === 'local_rental') {
-      pickupParam = `${rentalCity} (${selectedPackageId})`;
-      dropParam = 'Local NCR Disposal';
-    } else if (serviceType === 'airport_transfer') {
-      if (airportDirection === 'drop') {
-        pickupParam = selectedZone;
-        dropParam = selectedAirport;
-      } else {
-        pickupParam = selectedAirport;
-        dropParam = selectedZone;
-      }
-    }
-
-    const query = new URLSearchParams({
-      serviceType,
-      categoryId: selectedVehicleKey,
-      pickup: pickupParam,
-      drop: dropParam,
-      date: `${pickupDate}T${pickupTime}`,
-      km: String(serverFare?.billableKm || distanceKm),
-      routeId: activeRouteId || '',
-      packageId: serviceType === 'local_rental' ? selectedPackageId : '',
-    });
-
-    router.push(`/checkout?${query.toString()}`);
-  };
-
-  // WhatsApp Enquiry Link Generation
+  // Construct WhatsApp Inquiry Link
   const whatsAppUrl = useMemo(() => {
-    let pickupText = origin;
-    let dropText = destination;
+    let serviceLabel = 'One-Way Outstation Taxi';
+    let tripDetails = `Pickup: ${origin || '[Specify Location]'}\nDrop: ${destination || '[Specify Location]'}\nDistance: ${distanceKm || 0} km`;
 
-    if (serviceType === 'local_rental') {
-      pickupText = rentalCity;
-      dropText = selectedPackageId;
+    if (serviceType === 'round_trip') {
+      serviceLabel = 'Round-Trip Outstation Taxi';
+      tripDetails = `Route: ${origin || '[Origin]'} ⇄ ${destination || '[Destination]'}\nDuration: ${numberOfDays} Days\nPickup Date: ${pickupDate}\nReturn Date: ${returnDate}`;
+    } else if (serviceType === 'local_rental') {
+      const pkg = LOCAL_RENTAL_PACKAGES.find((p) => p.id === selectedPackageId);
+      serviceLabel = `Local Hourly Rental (${pkg?.name})`;
+      tripDetails = `City: ${rentalCity || 'Ghaziabad / NCR'}\nPackage: ${pkg?.name}\nPickup Date: ${pickupDate} at ${pickupTime}`;
     } else if (serviceType === 'airport_transfer') {
-      pickupText = airportDirection === 'drop' ? selectedZone : selectedAirport;
-      dropText = airportDirection === 'drop' ? selectedAirport : selectedZone;
+      serviceLabel = 'Airport Transfer';
+      tripDetails = `Direction: ${airportDirection === 'drop' ? 'City Drop to Airport' : 'Airport Pickup to City'}\nAirport: ${selectedAirport}\nZone: ${selectedZone || 'Ghaziabad'}\nPickup: ${pickupDate} at ${pickupTime}`;
     }
 
-    return generateWhatsAppLink(SITE_CONFIG.whatsapp, {
-      tripType: serviceType,
-      pickupCity: pickupText,
-      dropCity: dropText,
-      pickupDate: `${pickupDate} at ${pickupTime}`,
-      returnDate: serviceType === 'round_trip' ? returnDate : undefined,
-      vehicleType: selectedVehicle.name,
+    return generateWhatsAppLink({
+      tripType: serviceLabel,
+      origin: origin || rentalCity || selectedZone || 'Ghaziabad',
+      destination: destination || selectedAirport || 'Airport / Destination',
+      category: selectedVehicle.name,
+      baseFare: serverFare && !serverFare.isFareOnRequest ? serverFare.baseFare : undefined,
       totalFare: serverFare && !serverFare.isFareOnRequest ? serverFare.customerPayable : undefined,
       tokenAmount: serverFare && !serverFare.isFareOnRequest ? serverFare.tokenAmount : undefined,
+      balanceAmount: serverFare && !serverFare.isFareOnRequest ? serverFare.balanceAmount : undefined,
+      customMessage: `Hello Urgent Taxis! 🚖\n\nI want to book a cab with the following details:\n\n• Service: ${serviceLabel}\n• Vehicle: ${selectedVehicle.name} (${selectedVehicle.models})\n${tripDetails}\n• Estimated Total: ${
+        serverFare && !serverFare.isFareOnRequest ? '₹' + serverFare.customerPayable.toLocaleString('en-IN') : 'Quote on Request'
+      }\n• Advance to Confirm (30%): ${
+        serverFare && !serverFare.isFareOnRequest ? '₹' + serverFare.tokenAmount.toLocaleString('en-IN') : '30% Policy'
+      }\n\nPlease confirm vehicle availability.`,
     });
   }, [
     serviceType,
     origin,
     destination,
-    rentalCity,
-    selectedPackageId,
-    airportDirection,
-    selectedZone,
-    selectedAirport,
+    distanceKm,
+    numberOfDays,
     pickupDate,
     pickupTime,
     returnDate,
+    rentalCity,
+    selectedPackageId,
+    airportDirection,
+    selectedAirport,
+    selectedZone,
     selectedVehicle,
     serverFare,
   ]);
 
+  // Submit Handler -> Navigate to Checkout with validated params
+  const handleProceedToCheckout = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (serviceType === 'one_way' || serviceType === 'round_trip') {
+      if (!origin.trim() || !destination.trim()) {
+        setValidationError('Please enter both pickup and drop locations to proceed.');
+        return;
+      }
+    } else if (serviceType === 'local_rental') {
+      if (!rentalCity.trim()) {
+        setValidationError('Please select a city for your local hourly rental.');
+        return;
+      }
+    } else if (serviceType === 'airport_transfer') {
+      if (!selectedZone.trim()) {
+        setValidationError('Please select your pickup or drop zone area.');
+        return;
+      }
+    }
+
+    setValidationError('');
+
+    const query = new URLSearchParams({
+      serviceType,
+      categoryId: selectedVehicleKey,
+      origin: origin || rentalCity || selectedZone || 'Delhi NCR',
+      destination: destination || selectedAirport || 'Outstation',
+      distanceKm: String(distanceKm || 200),
+      pickupDate,
+      pickupTime,
+      passengers: String(passengerCount),
+    });
+
+    if (serviceType === 'round_trip') {
+      query.set('returnDate', returnDate);
+      query.set('days', String(numberOfDays));
+    } else if (serviceType === 'local_rental') {
+      query.set('packageId', selectedPackageId);
+    } else if (serviceType === 'airport_transfer') {
+      query.set('airport', selectedAirport);
+      query.set('direction', airportDirection);
+      query.set('zone', selectedZone);
+    }
+
+    if (serverFare && !serverFare.isFareOnRequest) {
+      query.set('fare', String(serverFare.customerPayable));
+      query.set('token', String(serverFare.tokenAmount));
+      query.set('balance', String(serverFare.balanceAmount));
+    }
+
+    router.push(`/checkout?${query.toString()}`);
+  };
+
   return (
-    <div
-      className={`bg-white text-slate-900 rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl max-w-5xl mx-auto font-sans relative z-10 border border-slate-100 ${className}`}
-    >
-      {/* Header */}
-      <div className="text-center mb-6">
-        <span className="inline-block px-3 py-1 bg-brand-blue/10 text-brand-blue font-bold text-xs rounded-full uppercase tracking-wider mb-2">
-          Urgent Taxis Official Booking Engine
-        </span>
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-brand-blue">
-          Book Your Ride & Get Instant Fare
-        </h2>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">
-          Verified All-Inclusive Cabs • 30% Token Confirmation • 70% Balance on Trip
-        </p>
-      </div>
-
-      {/* 4 Service Tabs (MakeMyTrip / Savaari Pattern) */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mb-6 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/60 max-w-fit mx-auto shadow-sm">
-        <button
-          type="button"
-          onClick={() => setServiceType('one_way')}
-          className={`py-2.5 px-4 sm:px-5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-2 ${
-            serviceType === 'one_way'
-              ? 'bg-brand-blue text-white shadow-md'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-          }`}
-        >
-          <span>➔</span> One Way Drop
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setServiceType('round_trip')}
-          className={`py-2.5 px-4 sm:px-5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-2 ${
-            serviceType === 'round_trip'
-              ? 'bg-brand-blue text-white shadow-md'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-          }`}
-        >
-          <span>🔄</span> Round Trip
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setServiceType('local_rental')}
-          className={`py-2.5 px-4 sm:px-5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-2 ${
-            serviceType === 'local_rental'
-              ? 'bg-brand-blue text-white shadow-md'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-          }`}
-        >
-          <span>⏱️</span> Hourly Rental
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setServiceType('airport_transfer')}
-          className={`py-2.5 px-4 sm:px-5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-2 ${
-            serviceType === 'airport_transfer'
-              ? 'bg-brand-blue text-white shadow-md'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-          }`}
-        >
-          <span>✈️</span> Airport Cabs
-        </button>
-      </div>
-
-      {/* Main Input Form */}
-      <form onSubmit={handleProceedCheckout} className="space-y-6">
-        {/* Dynamic Route & Location Row */}
-        {(serviceType === 'one_way' || serviceType === 'round_trip') && (
-          <div className="grid grid-cols-1 md:grid-cols-11 gap-3 items-center relative">
-            {/* Origin Input */}
-            <div className="md:col-span-5 relative">
-              <label className="block text-slate-700 font-bold mb-1.5 text-xs flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Pickup Location
-              </label>
-              <input
-                type="text"
-                value={origin}
-                onChange={(e) => handleOriginChange(e.target.value)}
-                onFocus={() => setShowOriginDropdown(originSuggestions.length > 0)}
-                placeholder="Enter pickup city or locality..."
-                className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-4 py-3.5 font-bold focus:outline-none focus:ring-2 focus:ring-brand-blue shadow-sm"
-                required
-              />
-              {showOriginDropdown && (
-                <ul className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 max-h-48 overflow-y-auto py-1">
-                  {originSuggestions.map((city) => (
-                    <li
-                      key={city}
-                      onClick={() => {
-                        setOrigin(city);
-                        setShowOriginDropdown(false);
-                        matchKnownRoute(city, destination);
-                      }}
-                      className="px-4 py-2 hover:bg-blue-50 cursor-pointer font-medium text-xs text-slate-800"
-                    >
-                      📍 {city}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            {/* Swap Button */}
-            <div className="md:col-span-1 flex justify-center py-1">
+    <div className={`bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden font-sans ${className}`}>
+      {/* 1. TOP SERVICE MODE SELECTOR TABS (MakeMyTrip Pattern) */}
+      <div className="bg-slate-100/80 p-2 sm:p-2.5 border-b border-slate-200">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
+          {[
+            { id: 'one_way', label: 'One-Way Outstation', icon: '↗' },
+            { id: 'round_trip', label: 'Round-Trip Outstation', icon: '🔁' },
+            { id: 'local_rental', label: 'Local Hourly Rentals', icon: '⏱' },
+            { id: 'airport_transfer', label: 'Airport Transfers', icon: '✈' },
+          ].map((tab) => {
+            const isActive = serviceType === tab.id;
+            return (
               <button
+                key={tab.id}
                 type="button"
-                onClick={handleSwap}
-                title="Swap Pickup and Drop Locations"
-                className="w-10 h-10 rounded-full bg-slate-100 hover:bg-brand-blue hover:text-white border border-slate-300 text-slate-700 flex items-center justify-center transition-all shadow-sm cursor-pointer"
+                onClick={() => {
+                  setServiceType(tab.id as BookingServiceType);
+                  setValidationError('');
+                }}
+                className={`flex items-center justify-center gap-1.5 py-3 px-3 rounded-2xl font-black text-xs sm:text-sm transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-white text-brand-blue shadow-sm border border-slate-200 scale-[1.01]'
+                    : 'text-slate-600 hover:text-brand-blue hover:bg-white/60'
+                }`}
               >
-                ⇄
+                <span>{tab.icon}</span>
+                <span className="truncate">{tab.label}</span>
               </button>
-            </div>
+            );
+          })}
+        </div>
+      </div>
 
-            {/* Destination Input */}
-            <div className="md:col-span-5 relative">
-              <label className="block text-slate-700 font-bold mb-1.5 text-xs flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-rose-500"></span> Drop Destination
-              </label>
-              <input
-                type="text"
-                value={destination}
-                onChange={(e) => handleDestinationChange(e.target.value)}
-                onFocus={() => setShowDestDropdown(destSuggestions.length > 0)}
-                placeholder="Enter drop destination..."
-                className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-4 py-3.5 font-bold focus:outline-none focus:ring-2 focus:ring-brand-blue shadow-sm"
-                required
-              />
-              {showDestDropdown && (
-                <ul className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 max-h-48 overflow-y-auto py-1">
-                  {destSuggestions.map((city) => (
-                    <li
-                      key={city}
-                      onClick={() => {
-                        setDestination(city);
-                        setShowDestDropdown(false);
-                        matchKnownRoute(origin, city);
-                      }}
-                      className="px-4 py-2 hover:bg-blue-50 cursor-pointer font-medium text-xs text-slate-800"
-                    >
-                      🏁 {city}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+      <form onSubmit={handleProceedToCheckout} className="p-4 sm:p-6 lg:p-8 space-y-6">
+        {/* Validation Alert */}
+        {validationError && (
+          <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm font-bold rounded-xl flex items-center gap-2 animate-shake">
+            <span>⚠️</span>
+            <span>{validationError}</span>
           </div>
         )}
 
-        {/* Local Rental Fields */}
-        {serviceType === 'local_rental' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-slate-700 font-bold mb-1.5 text-xs">
-                City / Service Area
-              </label>
-              <input
-                type="text"
-                value={rentalCity}
-                onChange={(e) => setRentalCity(e.target.value)}
-                placeholder="e.g. Ghaziabad, Noida, Delhi NCR"
-                className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-4 py-3.5 font-bold focus:outline-none focus:ring-2 focus:ring-brand-blue shadow-sm"
-                required
-              />
+        {/* 2. DYNAMIC LOCATION & ROUTE INPUTS */}
+        {(serviceType === 'one_way' || serviceType === 'round_trip') && (
+          <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr,auto,1fr] gap-3 items-center">
+              {/* Pickup Input */}
+              <div className="relative">
+                <label className="block text-slate-700 font-bold mb-1 text-xs uppercase tracking-wider">
+                  Pickup Location <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-3.5 text-brand-green text-sm">📍</span>
+                  <input
+                    type="text"
+                    value={origin}
+                    onChange={(e) => handleOriginChange(e.target.value)}
+                    onFocus={() => {
+                      if (origin.trim()) setShowOriginDropdown(true);
+                    }}
+                    placeholder="Enter pickup city or location..."
+                    className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl pl-9 pr-4 py-3 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:bg-white transition-all"
+                  />
+                </div>
+
+                {/* Autocomplete Dropdown */}
+                {showOriginDropdown && originSuggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 z-30 mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl max-h-48 overflow-y-auto">
+                    {originSuggestions.map((city) => (
+                      <div
+                        key={city}
+                        onClick={() => {
+                          setOrigin(city);
+                          setShowOriginDropdown(false);
+                          matchKnownRoute(city, destination);
+                        }}
+                        className="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-blue-50/70 hover:text-brand-blue cursor-pointer transition-colors"
+                      >
+                        {city}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Swap Button (MakeMyTrip Pattern) */}
+              <div className="flex md:items-end justify-center pt-2 md:pt-4">
+                <button
+                  type="button"
+                  onClick={handleSwap}
+                  title="Swap Origin & Destination"
+                  className="p-3 bg-slate-100 hover:bg-brand-blue hover:text-white rounded-full border border-slate-200 transition-all text-sm font-bold text-slate-600 shadow-xs cursor-pointer"
+                >
+                  ⇄
+                </button>
+              </div>
+
+              {/* Destination Input */}
+              <div className="relative">
+                <label className="block text-slate-700 font-bold mb-1 text-xs uppercase tracking-wider">
+                  Drop Destination <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-3.5 text-rose-500 text-sm">🏁</span>
+                  <input
+                    type="text"
+                    value={destination}
+                    onChange={(e) => handleDestinationChange(e.target.value)}
+                    onFocus={() => {
+                      if (destination.trim()) setShowDestDropdown(true);
+                    }}
+                    placeholder="Enter destination city or drop..."
+                    className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl pl-9 pr-4 py-3 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue focus:bg-white transition-all"
+                  />
+                </div>
+
+                {/* Autocomplete Dropdown */}
+                {showDestDropdown && destSuggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 z-30 mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl max-h-48 overflow-y-auto">
+                    {destSuggestions.map((city) => (
+                      <div
+                        key={city}
+                        onClick={() => {
+                          setDestination(city);
+                          setShowDestDropdown(false);
+                          matchKnownRoute(origin, city);
+                        }}
+                        className="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-blue-50/70 hover:text-brand-blue cursor-pointer transition-colors"
+                      >
+                        {city}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+
+            {/* Quick Suggestions for Empty State */}
+            {(!origin || !destination) && (
+              <div className="flex items-center gap-2 overflow-x-auto pt-1 pb-1 text-xs">
+                <span className="text-slate-400 font-semibold flex-shrink-0">Popular:</span>
+                {['Delhi', 'Ghaziabad', 'Noida', 'Agra', 'Haridwar', 'Jaipur', 'Chandigarh', 'Dehradun'].map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => {
+                      if (!origin) {
+                        setOrigin(c);
+                        matchKnownRoute(c, destination);
+                      } else if (!destination) {
+                        setDestination(c);
+                        matchKnownRoute(origin, c);
+                      }
+                    }}
+                    className="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-brand-blue rounded-lg text-[11px] font-bold border border-slate-200 transition-colors flex-shrink-0"
+                  >
+                    + {c}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Local Rental City & Package Inputs */}
+        {serviceType === 'local_rental' && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-slate-700 font-bold mb-1.5 text-xs">
-                Rental Package Duration & Distance
+              <label className="block text-slate-700 font-bold mb-1 text-xs uppercase tracking-wider">
+                Select City / Region <span className="text-rose-500">*</span>
+              </label>
+              <select
+                value={rentalCity}
+                onChange={(e) => {
+                  setRentalCity(e.target.value);
+                  setValidationError('');
+                }}
+                className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl px-4 py-3 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
+              >
+                <option value="">Select City / NCR Area...</option>
+                <option value="Ghaziabad">Ghaziabad (Headquarters)</option>
+                <option value="Noida">Noida</option>
+                <option value="Greater Noida">Greater Noida</option>
+                <option value="Delhi">Delhi NCR</option>
+                <option value="Gurugram">Gurugram</option>
+                <option value="Faridabad">Faridabad</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-slate-700 font-bold mb-1 text-xs uppercase tracking-wider">
+                Rental Duration Package
               </label>
               <select
                 value={selectedPackageId}
                 onChange={(e) => setSelectedPackageId(e.target.value)}
-                className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-4 py-3.5 font-bold focus:outline-none focus:ring-2 focus:ring-brand-blue shadow-sm"
+                className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl px-4 py-3 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
               >
                 {LOCAL_RENTAL_PACKAGES.map((pkg) => (
                   <option key={pkg.id} value={pkg.id}>
-                    {pkg.name} {pkg.isFareOnRequest ? '(Quote on Request)' : '• Instant Fare'}
+                    {pkg.name} {pkg.isFareOnRequest ? '(Fare on Request)' : '(Instant Quote)'}
                   </option>
                 ))}
               </select>
@@ -663,41 +803,44 @@ export default function UnifiedBookingWidget({
           </div>
         )}
 
-        {/* Airport Transfer Fields */}
+        {/* Airport Transfers Inputs */}
         {serviceType === 'airport_transfer' && (
           <div className="space-y-4">
-            <div className="flex items-center justify-center gap-4 py-1">
-              <label className="inline-flex items-center gap-2 cursor-pointer font-bold text-xs text-slate-700">
-                <input
-                  type="radio"
-                  name="airportDir"
-                  checked={airportDirection === 'drop'}
-                  onChange={() => setAirportDirection('drop')}
-                  className="text-brand-blue focus:ring-brand-blue"
-                />
-                Drop to Airport
-              </label>
-              <label className="inline-flex items-center gap-2 cursor-pointer font-bold text-xs text-slate-700">
-                <input
-                  type="radio"
-                  name="airportDir"
-                  checked={airportDirection === 'pickup'}
-                  onChange={() => setAirportDirection('pickup')}
-                  className="text-brand-blue focus:ring-brand-blue"
-                />
-                Pickup from Airport
-              </label>
+            {/* Direction Selector */}
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setAirportDirection('drop')}
+                className={`flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition-all ${
+                  airportDirection === 'drop'
+                    ? 'bg-brand-blue text-white shadow-sm'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                🛫 Drop to Airport
+              </button>
+              <button
+                type="button"
+                onClick={() => setAirportDirection('pickup')}
+                className={`flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition-all ${
+                  airportDirection === 'pickup'
+                    ? 'bg-brand-blue text-white shadow-sm'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                🛬 Pickup from Airport
+              </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-slate-700 font-bold mb-1.5 text-xs">
-                  Select Airport
+                <label className="block text-slate-700 font-bold mb-1 text-xs uppercase tracking-wider">
+                  Airport Terminal
                 </label>
                 <select
                   value={selectedAirport}
                   onChange={(e) => setSelectedAirport(e.target.value)}
-                  className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-4 py-3.5 font-bold focus:outline-none focus:ring-2 focus:ring-brand-blue shadow-sm"
+                  className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl px-4 py-3 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
                 >
                   {AIRPORTS_LIST.map((a) => (
                     <option key={a.id} value={a.name}>
@@ -706,16 +849,21 @@ export default function UnifiedBookingWidget({
                   ))}
                 </select>
               </div>
+
               <div>
-                <label className="block text-slate-700 font-bold mb-1.5 text-xs">
-                  City Zone / Pickup Locality
+                <label className="block text-slate-700 font-bold mb-1 text-xs uppercase tracking-wider">
+                  City Zone / Area <span className="text-rose-500">*</span>
                 </label>
                 <select
                   value={selectedZone}
-                  onChange={(e) => setSelectedZone(e.target.value)}
-                  className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-4 py-3.5 font-bold focus:outline-none focus:ring-2 focus:ring-brand-blue shadow-sm"
+                  onChange={(e) => {
+                    setSelectedZone(e.target.value);
+                    setValidationError('');
+                  }}
+                  className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl px-4 py-3 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
                 >
-                  {NCR_ZONES.map((zone) => (
+                  <option value="">Select Pickup / Drop Zone...</option>
+                  {AIRPORT_ZONES.map((zone) => (
                     <option key={zone} value={zone}>
                       {zone}
                     </option>
@@ -726,8 +874,8 @@ export default function UnifiedBookingWidget({
           </div>
         )}
 
-        {/* Schedule & Passengers Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+        {/* 3. DATES, TIMES, PASSENGERS ROW */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
           <div>
             <label className="block text-slate-700 font-bold mb-1 text-xs">Pickup Date</label>
             <input
@@ -765,15 +913,10 @@ export default function UnifiedBookingWidget({
             </div>
           ) : (
             <div>
-              <label className="block text-slate-700 font-bold mb-1 text-xs">Distance (KM)</label>
-              <input
-                type="number"
-                min="10"
-                value={distanceKm}
-                onChange={(e) => setDistanceKm(Number(e.target.value))}
-                className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-3 py-2.5 font-semibold text-xs focus:outline-none focus:ring-2 focus:ring-brand-blue"
-                required
-              />
+              <label className="block text-slate-700 font-bold mb-1 text-xs">Est. Distance</label>
+              <div className="w-full bg-slate-100 text-slate-800 border border-slate-200 rounded-xl px-3 py-2.5 font-bold text-xs">
+                {distanceKm > 0 ? `${distanceKm} KM` : 'Auto-Calculated'}
+              </div>
             </div>
           )}
 
@@ -793,7 +936,7 @@ export default function UnifiedBookingWidget({
           </div>
         </div>
 
-        {/* Vehicle Selection Cards (MakeMyTrip / Savaari Pattern) */}
+        {/* 4. VEHICLE SELECTION CARDS (MakeMyTrip Pattern) */}
         <div>
           <label className="block text-slate-700 font-bold mb-2.5 text-xs uppercase tracking-wider">
             Select Your Cab Category
@@ -804,15 +947,29 @@ export default function UnifiedBookingWidget({
 
               // Quick estimated cost for this category
               let estimatedCost = 0;
+              let rateBadge = `₹${v.outstationRatePerKm}/km`;
+
               if (serviceType === 'one_way') {
-                estimatedCost = Math.round(distanceKm * v.oneWayMultiplier);
+                rateBadge = `₹${v.oneWayMultiplier}/km`;
+                if (distanceKm > 0) estimatedCost = Math.round(distanceKm * v.oneWayMultiplier);
               } else if (serviceType === 'round_trip') {
-                const billable = Math.max(distanceKm * 2, v.minKmRoundTrip * numberOfDays);
-                estimatedCost = Math.round(billable * v.outstationRatePerKm + v.driverAllowanceDay * numberOfDays);
+                rateBadge = `₹${v.outstationRatePerKm}/km`;
+                if (distanceKm > 0) {
+                  const billable = Math.max(distanceKm * 2, v.minKmRoundTrip * numberOfDays);
+                  estimatedCost = Math.round(billable * v.outstationRatePerKm + v.driverAllowanceDay * numberOfDays);
+                }
               } else if (serviceType === 'local_rental') {
-                estimatedCost = selectedPackageId === '12hr120km' ? v.local12hPrice : v.local8hPrice;
+                const pkg = LOCAL_RENTAL_PACKAGES.find((p) => p.id === selectedPackageId);
+                if (pkg?.isFareOnRequest) {
+                  rateBadge = 'On Request';
+                  estimatedCost = 0;
+                } else {
+                  estimatedCost = selectedPackageId === '12hr120km' ? v.local12hPrice : v.local8hPrice;
+                  rateBadge = `₹${estimatedCost}`;
+                }
               } else if (serviceType === 'airport_transfer') {
                 estimatedCost = v.airportBase;
+                rateBadge = `₹${v.airportBase}`;
               }
 
               return (
@@ -841,9 +998,11 @@ export default function UnifiedBookingWidget({
                   </div>
 
                   <div className="mt-3 pt-2 border-t border-slate-100 flex items-baseline justify-between">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold">Estimated</span>
+                    <span className="text-[10px] text-slate-500 uppercase font-bold">
+                      {estimatedCost > 0 ? 'Estimated' : 'Rate'}
+                    </span>
                     <span className="font-black text-slate-900 font-mono text-base">
-                      ₹{estimatedCost > 0 ? estimatedCost.toLocaleString('en-IN') : 'Quote'}
+                      {estimatedCost > 0 ? `₹${estimatedCost.toLocaleString('en-IN')}` : rateBadge}
                     </span>
                   </div>
                 </div>
@@ -852,7 +1011,7 @@ export default function UnifiedBookingWidget({
           </div>
         </div>
 
-        {/* Live Calculation Output / Breakdown Section */}
+        {/* 5. LIVE CALCULATION OUTPUT & TRANSPARENT BREAKDOWN SECTION */}
         {isLoading ? (
           <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center animate-pulse space-y-2">
             <div className="h-6 bg-slate-200 rounded-md w-1/3 mx-auto"></div>
@@ -860,9 +1019,9 @@ export default function UnifiedBookingWidget({
           </div>
         ) : serverFare && serverFare.isFareOnRequest ? (
           <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-3 text-center shadow-sm">
-            <p className="font-bold text-sm text-amber-700">Fare Available Upon Instant Request</p>
-            <p className="text-amber-800/90 leading-relaxed max-w-lg mx-auto">
-              This package duration or specialized route requires manual dispatch confirmation for peak-hour driver allocation.
+            <p className="font-bold text-sm text-amber-800">Fare Available Upon Instant Request</p>
+            <p className="text-amber-800/90 leading-relaxed max-w-lg mx-auto font-medium">
+              This rental package or specialized corridor requires manual dispatch confirmation to ensure confirmed driver allocation.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <a
@@ -882,12 +1041,12 @@ export default function UnifiedBookingWidget({
             </div>
           </div>
         ) : serverFare && serverFare.customerPayable > 0 ? (
-          <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4 shadow-sm">
+          <div className="p-5 rounded-3xl bg-slate-50 border border-slate-200 space-y-4 shadow-sm">
             {/* Top Fare Summary Banner */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200 gap-2">
               <div>
                 <span className="text-xs uppercase font-extrabold tracking-wider text-slate-500">
-                  Total Cab Fare (Fuel & Driver Included)
+                  Total Cab Fare (Fuel & Driver Allowance Included)
                 </span>
                 <div className="text-3xl font-black text-slate-900 font-mono tracking-tight">
                   ₹{serverFare.customerPayable.toLocaleString('en-IN')}
@@ -897,7 +1056,7 @@ export default function UnifiedBookingWidget({
               {/* 30% Token & 70% Balance Badges */}
               <div className="flex items-center gap-3">
                 <div className="bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl text-center">
-                  <span className="text-[10px] text-emerald-700 uppercase font-bold block">
+                  <span className="text-[10px] text-emerald-700 uppercase font-black block">
                     30% Token Advance
                   </span>
                   <span className="font-mono font-black text-emerald-800 text-base">
@@ -905,8 +1064,8 @@ export default function UnifiedBookingWidget({
                   </span>
                 </div>
                 <div className="bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-xl text-center">
-                  <span className="text-[10px] text-blue-700 uppercase font-bold block">
-                    70% Remaining
+                  <span className="text-[10px] text-blue-700 uppercase font-black block">
+                    70% Remaining Balance
                   </span>
                   <span className="font-mono font-black text-blue-800 text-base">
                     ₹{serverFare.balanceAmount.toLocaleString('en-IN')}
@@ -915,24 +1074,18 @@ export default function UnifiedBookingWidget({
               </div>
             </div>
 
-            {/* Metrics Breakdown Grid (Phase 4) */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-white p-3.5 rounded-xl border border-slate-200">
+            {/* Metrics Breakdown Grid (Phase 6) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-white p-3.5 rounded-2xl border border-slate-200">
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Billable KM</span>
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Billable Distance</span>
                 <span className="font-mono font-bold text-slate-800 text-sm">
                   {serverFare.billableKm} KM
                 </span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Base Cab Fare</span>
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Base Cab Rental</span>
                 <span className="font-mono font-bold text-slate-800 text-sm">
                   ₹{serverFare.baseFare.toLocaleString('en-IN')}
-                </span>
-              </div>
-              <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Est. Fastag Toll</span>
-                <span className="font-mono font-bold text-slate-800 text-sm">
-                  {estimatedHighwayToll > 0 ? `~₹${estimatedHighwayToll}` : 'Actuals'}
                 </span>
               </div>
               <div>
@@ -941,27 +1094,236 @@ export default function UnifiedBookingWidget({
                   {serverFare.driverAllowance > 0 ? `₹${serverFare.driverAllowance}` : 'Included'}
                 </span>
               </div>
+              <div>
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Est. Fastag Toll</span>
+                <span className="font-mono font-bold text-slate-800 text-sm">
+                  {estimatedHighwayToll > 0 ? `~₹${estimatedHighwayToll}` : 'At Actuals'}
+                </span>
+              </div>
             </div>
 
-            {/* Inclusions & Exclusions */}
+            {/* Inclusions & Exclusions Summary */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
               <div className="space-y-1">
                 <span className="text-brand-green font-bold flex items-center gap-1">
                   ✓ Included in Quoted Fare:
                 </span>
                 <p className="text-slate-600 font-medium">
-                  Vehicle rental, fuel cost, chauffeur allowance, and passenger pickup.
+                  Vehicle rental, fuel cost, chauffeur allowance, and doorstep pickup.
                 </p>
               </div>
               <div className="space-y-1">
                 <span className="text-amber-700 font-bold flex items-center gap-1">
-                  ⚠️ Payable at Actuals during trip:
+                  ⚠️ Payable at Actuals During Trip:
                 </span>
                 <p className="text-slate-600 font-medium">
-                  Fastag highway tolls, interstate state entrance taxes, and parking fees.
+                  Fastag highway tolls, interstate border entrance taxes, and parking fees.
                 </p>
               </div>
             </div>
+
+            {/* MakeMyTrip-Style 'View Fare Details & Inclusions' Button */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setShowFareBreakupModal(!showFareBreakupModal)}
+                className="text-xs font-bold text-brand-blue hover:text-brand-blue-hover flex items-center gap-1.5 cursor-pointer underline underline-offset-4"
+              >
+                <span>{showFareBreakupModal ? '▲ Hide' : '▼ View'} Detailed Fare Breakdown & Important Terms (Read Before You Book)</span>
+              </button>
+            </div>
+
+            {/* Expandable MMT / Savaari Style Fare Details Section */}
+            {showFareBreakupModal && (
+              <div className="mt-3 p-4 bg-white rounded-2xl border border-slate-200 space-y-4 text-xs animate-fadeIn">
+                {/* Modal Tab Switcher */}
+                <div className="flex border-b border-slate-200 pb-2 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setActiveBreakupTab('breakup')}
+                    className={`font-black pb-1 transition-all ${
+                      activeBreakupTab === 'breakup'
+                        ? 'text-brand-blue border-b-2 border-brand-blue'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    1. Fare Summary
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveBreakupTab('inclusions')}
+                    className={`font-black pb-1 transition-all ${
+                      activeBreakupTab === 'inclusions'
+                        ? 'text-brand-blue border-b-2 border-brand-blue'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    2. Inclusions & Exclusions
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveBreakupTab('terms')}
+                    className={`font-black pb-1 transition-all ${
+                      activeBreakupTab === 'terms'
+                        ? 'text-brand-blue border-b-2 border-brand-blue'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    3. Read Before You Book
+                  </button>
+                </div>
+
+                {/* Tab 1: Detailed Fare Breakup Table */}
+                {activeBreakupTab === 'breakup' && (
+                  <div className="space-y-3">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-slate-200 text-[11px] font-bold text-slate-400 uppercase">
+                            <th className="py-2">Component</th>
+                            <th className="py-2">Rate / Amount</th>
+                            <th className="py-2 text-right">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+                          <tr>
+                            <td className="py-2 font-semibold">Base Cab Rental ({serverFare.billableKm} KM)</td>
+                            <td className="py-2">₹{serverFare.baseFare.toLocaleString('en-IN')}</td>
+                            <td className="py-2 text-right">
+                              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-[10px]">
+                                INCLUDED
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 font-semibold">Chauffeur Day Allowance</td>
+                            <td className="py-2">₹{serverFare.driverAllowance > 0 ? serverFare.driverAllowance : 'Included in Base'}</td>
+                            <td className="py-2 text-right">
+                              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-[10px]">
+                                INCLUDED
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 font-semibold">Fuel & Vehicle Maintenance</td>
+                            <td className="py-2">100% Covered</td>
+                            <td className="py-2 text-right">
+                              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-[10px]">
+                                INCLUDED
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 font-semibold">Night Allowance (10 PM to 6 AM)</td>
+                            <td className="py-2">₹300 / Night</td>
+                            <td className="py-2 text-right">
+                              <span className="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-bold text-[10px]">
+                                IF APPLICABLE
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 font-semibold">Extra Distance Beyond Quoted KM</td>
+                            <td className="py-2">₹{selectedVehicle.extraKmRate}/km</td>
+                            <td className="py-2 text-right">
+                              <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded font-bold text-[10px]">
+                                IF EXCEEDED
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 font-semibold">Highway Toll Tax (FASTag)</td>
+                            <td className="py-2">Electronic Toll Plaza Charge</td>
+                            <td className="py-2 text-right">
+                              <span className="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-bold text-[10px]">
+                                AT ACTUALS
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 font-semibold">Interstate State Border Tax</td>
+                            <td className="py-2">Commercial Border Receipt</td>
+                            <td className="py-2 text-right">
+                              <span className="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-bold text-[10px]">
+                                AT ACTUALS
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 font-semibold">Parking Charges (Airport / Monument)</td>
+                            <td className="py-2">Physical Parking Ticket</td>
+                            <td className="py-2 text-right">
+                              <span className="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-bold text-[10px]">
+                                AT ACTUALS
+                              </span>
+                            </td>
+                          </tr>
+                          <tr className="border-t-2 border-slate-200 font-bold text-slate-900">
+                            <td className="py-2 text-sm">Total Quoted Cab Fare</td>
+                            <td className="py-2 text-sm text-brand-blue font-black font-mono">₹{serverFare.customerPayable.toLocaleString('en-IN')}</td>
+                            <td className="py-2 text-right text-xs">Final Quote</td>
+                          </tr>
+                          <tr className="bg-emerald-50/60 font-bold text-emerald-900">
+                            <td className="py-2 pl-2">Required 30% Token to Confirm</td>
+                            <td className="py-2 font-mono">₹{serverFare.tokenAmount.toLocaleString('en-IN')}</td>
+                            <td className="py-2 pr-2 text-right text-[11px]">Pay Online</td>
+                          </tr>
+                          <tr className="bg-blue-50/60 font-bold text-blue-900">
+                            <td className="py-2 pl-2">Remaining 70% Balance on Trip</td>
+                            <td className="py-2 font-mono">₹{serverFare.balanceAmount.toLocaleString('en-IN')}</td>
+                            <td className="py-2 pr-2 text-right text-[11px]">Pay to Driver</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Tab 2: Inclusions & Exclusions */}
+                {activeBreakupTab === 'inclusions' && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 space-y-2">
+                      <span className="font-bold text-emerald-900 block text-xs">✓ Explicitly Included:</span>
+                      <ul className="list-disc pl-4 space-y-1 text-slate-700 font-medium">
+                        <li>Dedicated vehicle reserved solely for your group.</li>
+                        <li>All fuel costs for the booked distance.</li>
+                        <li>Chauffeur daily allowance.</li>
+                        <li>Doorstep pickup and drop.</li>
+                        <li>Clean, air-conditioned commercial vehicle.</li>
+                      </ul>
+                    </div>
+                    <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-200 space-y-2">
+                      <span className="font-bold text-amber-900 block text-xs">⚠️ Explicitly Excluded (Pay at Actuals):</span>
+                      <ul className="list-disc pl-4 space-y-1 text-slate-700 font-medium">
+                        <li>FASTag highway toll plaza deductions.</li>
+                        <li>State commercial border permit entry taxes.</li>
+                        <li>Airport parking fee (e.g. IGI MLCP).</li>
+                        <li>Driver night allowance (₹300) if driving 10 PM - 6 AM.</li>
+                        <li>Extra distance charged at ₹{selectedVehicle.extraKmRate}/km.</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {/* Tab 3: Read Before You Book */}
+                {activeBreakupTab === 'terms' && (
+                  <div className="space-y-2.5 text-slate-700 font-medium text-xs leading-relaxed">
+                    <p>
+                      <strong>• 30% Advance Token Policy:</strong> A 30% token payment confirms your booking and vehicle allocation. The remaining 70% is payable during the journey.
+                    </p>
+                    <p>
+                      <strong>• Zero Cancellation Penalty:</strong> Cancel free of charge up to 6 hours before departure for a full 100% refund of your advance token.
+                    </p>
+                    <p>
+                      <strong>• Driver Details:</strong> Chauffeur name, phone number, and vehicle registration are dispatched via SMS & WhatsApp 2 hours prior to scheduled pickup.
+                    </p>
+                    <p>
+                      <strong>• Airport Waiting Grace:</strong> For airport pickups, flight tracking is included at no extra charge. We monitor your flight schedule and adjust pickup times automatically without waiting fees.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* CTA Buttons Row */}
             <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-200">
@@ -987,25 +1349,17 @@ export default function UnifiedBookingWidget({
               </div>
             </div>
           </div>
-        ) : null}
-
-        {/* Bottom Fallback Button if no fare displayed */}
-        {(!serverFare || serverFare.customerPayable === 0) && (
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+        ) : (
+          <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="text-xs text-slate-600 font-medium">
+              💡 Please select your pickup & drop locations above to view your live calculated fare, itemized breakdown, and 30% advance token.
+            </div>
             <button
               type="submit"
-              className="w-full sm:w-auto px-8 py-4 bg-brand-blue hover:bg-brand-blue-hover text-white font-black text-sm rounded-xl shadow-lg shadow-brand-blue/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-6 py-2.5 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold text-xs rounded-xl shadow-sm transition-all"
             >
-              Check Availability & Book ➔
+              Calculate Fare ➔
             </button>
-            <a
-              href={whatsAppUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-6 py-4 bg-brand-green hover:bg-brand-green-hover text-white font-bold text-sm rounded-xl transition-all shadow-md flex items-center justify-center gap-2 text-center"
-            >
-              💬 WhatsApp Fast Booking
-            </a>
           </div>
         )}
       </form>

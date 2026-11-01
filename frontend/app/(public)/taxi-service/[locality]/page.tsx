@@ -128,7 +128,7 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
     .slice(0, 12);
 
   return (
-    <div className="bg-slate-950 text-slate-100 min-h-screen">
+    <div className="bg-slate-50 text-slate-900 min-h-screen font-sans">
       {/* Structured Data Scripts */}
       <script
         type="application/ld+json"
@@ -140,12 +140,12 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
       />
 
       {/* Breadcrumbs */}
-      <div className="bg-slate-900 border-b border-slate-800">
+      <div className="bg-white border-b border-slate-200">
         <PublicBreadcrumbs items={breadcrumbs} />
       </div>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 pt-10 pb-16 border-b border-slate-800/80">
+      <section className="relative overflow-hidden bg-brand-blue text-white pt-10 pb-16 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             {/* Verified Badge */}
@@ -155,21 +155,21 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
             </div>
 
             {/* H1 Heading */}
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-brand-blue tracking-tight leading-tight">
               {data.h1}
             </h1>
 
             {/* Tagline */}
-            <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed">
+            <p className="mt-4 text-base sm:text-lg text-slate-700 leading-relaxed">
               {data.tagline}. Dedicated outstation cabs, one-way drops, and reliable IGI Airport transfers with verified local drivers.
             </p>
 
             {/* Pincodes Served */}
             {data.pincodes.length > 0 && (
-              <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                <span className="font-semibold text-slate-300">Pincodes Served:</span>
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                <span className="font-semibold text-slate-700">Pincodes Served:</span>
                 {data.pincodes.map((pin) => (
-                  <span key={pin} className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">
+                  <span key={pin} className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-700 font-mono">
                     {pin}
                   </span>
                 ))}
@@ -209,7 +209,7 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
       </section>
 
       {/* Trust Pillars Bar */}
-      <section className="bg-slate-900/60 border-b border-slate-800/80 py-6">
+      <section className="bg-white border-b border-slate-200 py-6 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             <div className="flex items-center gap-3">
@@ -217,8 +217,8 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
                 <MapPin className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white">Doorstep Pickup</p>
-                <p className="text-xs text-slate-400">Any sector or address in {data.name}</p>
+                <p className="text-sm font-bold text-brand-blue">Doorstep Pickup</p>
+                <p className="text-xs text-slate-500 font-medium">Any sector or address in {data.name}</p>
               </div>
             </div>
 
@@ -227,8 +227,8 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
                 <Shield className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white">Commercial Cabs</p>
-                <p className="text-xs text-slate-400">Yellow-plate certified vehicles</p>
+                <p className="text-sm font-bold text-brand-blue">Commercial Cabs</p>
+                <p className="text-xs text-slate-500 font-medium">Yellow-plate certified vehicles</p>
               </div>
             </div>
 
@@ -237,8 +237,8 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white">Zero Hidden Charges</p>
-                <p className="text-xs text-slate-400">Transparent per-km rate matrix</p>
+                <p className="text-sm font-bold text-brand-blue">Zero Hidden Charges</p>
+                <p className="text-xs text-slate-500 font-medium">Transparent per-km rate matrix</p>
               </div>
             </div>
 
@@ -247,8 +247,8 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white">24/7 Availability</p>
-                <p className="text-xs text-slate-400">Early morning & late night rides</p>
+                <p className="text-sm font-bold text-brand-blue">24/7 Availability</p>
+                <p className="text-xs text-slate-500 font-medium">Early morning & late night rides</p>
               </div>
             </div>
           </div>
@@ -258,24 +258,24 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
       {/* Main Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
         {/* Comprehensive Locality Overview */}
-        <section className="bg-slate-900/40 rounded-2xl border border-slate-800 p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-blue mb-6">
             About Our Taxi Service in {data.name}, {data.district}
           </h2>
-          <div className="space-y-4 text-slate-300 leading-relaxed text-sm sm:text-base">
+          <div className="space-y-4 text-slate-700 leading-relaxed text-sm sm:text-base">
             {data.overviewParagraphs.map((para, idx) => (
               <p key={idx}>{para}</p>
             ))}
           </div>
 
           {/* Landmarks & Connectivity Highlights */}
-          <div className="mt-8 pt-8 border-t border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mt-8 pt-8 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-blue-400" />
                 Key Landmarks Served
               </h3>
-              <ul className="space-y-1.5 text-xs sm:text-sm text-slate-400">
+              <ul className="space-y-1.5 text-xs sm:text-sm text-slate-600">
                 {data.keyLandmarks.map((lm, i) => (
                   <li key={i} className="flex items-start gap-2">
                     <span className="text-blue-400 mt-1">•</span>
@@ -290,7 +290,7 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
                 <Compass className="w-4 h-4 text-emerald-400" />
                 Metro & Transit Access
               </h3>
-              <ul className="space-y-1.5 text-xs sm:text-sm text-slate-400">
+              <ul className="space-y-1.5 text-xs sm:text-sm text-slate-600">
                 {data.metroAndTransit.map((mt, i) => (
                   <li key={i} className="flex items-start gap-2">
                     <span className="text-emerald-400 mt-1">•</span>
@@ -305,7 +305,7 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
                 <Car className="w-4 h-4 text-amber-400" />
                 Expressways & Highways
               </h3>
-              <ul className="space-y-1.5 text-xs sm:text-sm text-slate-400">
+              <ul className="space-y-1.5 text-xs sm:text-sm text-slate-600">
                 {data.expressways.map((exp, i) => (
                   <li key={i} className="flex items-start gap-2">
                     <span className="text-amber-400 mt-1">•</span>
@@ -321,21 +321,21 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
         <section id="fares" className="scroll-mt-20">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6">
             <div>
-              <h2 className="text-xl sm:text-3xl font-bold text-white">
+              <h2 className="text-xl sm:text-3xl font-bold text-brand-blue">
                 Popular Outstation & Airport Taxi Fares from {data.name}
               </h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-slate-600">
                 Estimated one-way fares with verified commercial vehicles. Toll and state tax calculated at actuals.
               </p>
             </div>
-            <span className="mt-2 sm:mt-0 text-xs text-slate-400">
+            <span className="mt-2 sm:mt-0 text-xs text-slate-600">
               * Fares may vary depending on exact sector pickup.
             </span>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60 shadow-xl">
-            <table className="w-full text-left text-sm text-slate-300">
-              <thead className="bg-slate-800/80 text-xs uppercase font-semibold text-slate-300 border-b border-slate-700">
+          <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+            <table className="w-full text-left text-sm text-slate-700">
+              <thead className="bg-slate-800/80 text-xs uppercase font-semibold text-slate-700 border-b border-slate-700">
                 <tr>
                   <th scope="col" className="px-4 py-3.5 sm:px-6">Destination</th>
                   <th scope="col" className="px-4 py-3.5 sm:px-6">Distance & Time</th>
@@ -345,15 +345,15 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
                   <th scope="col" className="px-4 py-3.5 sm:px-6 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-slate-200">
                 {data.popularRoutes.map((route, i) => (
-                  <tr key={i} className="hover:bg-slate-800/40 transition-colors">
+                  <tr key={i} className="hover:bg-slate-50 transition-colors">
                     <td className="px-4 py-4 sm:px-6 font-semibold text-white">
                       {route.destination}
                     </td>
-                    <td className="px-4 py-4 sm:px-6 text-slate-400 text-xs sm:text-sm">
+                    <td className="px-4 py-4 sm:px-6 text-slate-600 text-xs sm:text-sm">
                       <div>{route.distanceKm} km</div>
-                      <div className="text-slate-400 font-mono">{route.durationText}</div>
+                      <div className="text-slate-600 font-mono">{route.durationText}</div>
                     </td>
                     <td className="px-4 py-4 sm:px-6 font-bold text-emerald-400">
                       ₹{route.sedanFare.toLocaleString('en-IN')}
@@ -391,10 +391,10 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
               <Plane className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
+              <h2 className="text-xl sm:text-2xl font-bold text-brand-blue">
                 Delhi IGI Airport Transfer Guide from {data.name}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-400">
+              <p className="text-xs sm:text-sm text-slate-600">
                 Punctual airport pickups and drop-offs to Terminal 1, Terminal 2, and Terminal 3.
               </p>
             </div>
@@ -402,43 +402,43 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
-                <span className="text-xs font-semibold uppercase text-slate-400 block mb-1">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="text-xs font-semibold uppercase text-slate-600 block mb-1">
                   Distance & Travel Duration
                 </span>
-                <p className="text-lg font-bold text-white">
+                <p className="text-lg font-bold text-brand-blue">
                   Approx. {data.airportTransferGuide.distanceToT3Km} km • ~{data.airportTransferGuide.typicalDurationMins} minutes
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
-                <span className="text-xs font-semibold uppercase text-slate-400 block mb-1">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="text-xs font-semibold uppercase text-slate-600 block mb-1">
                   Recommended Transit Corridor
                 </span>
-                <p className="text-sm text-slate-300">
+                <p className="text-sm text-slate-700">
                   {data.airportTransferGuide.recommendedRoute}
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-col justify-between p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div className="flex flex-col justify-between p-4 rounded-xl bg-slate-50 border border-slate-200">
               <div>
                 <span className="text-xs font-semibold uppercase text-amber-400 block mb-1">
                   Departure Advice for Passengers
                 </span>
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <p className="text-sm text-slate-700 leading-relaxed">
                   {data.airportTransferGuide.pickupAdvice}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div className="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
                 <div>
-                  <span className="text-xs text-slate-400 block">Fixed Airport Fare from</span>
+                  <span className="text-xs text-slate-600 block">Fixed Airport Fare from</span>
                   <span className="text-lg font-bold text-emerald-400">₹1,199 (Sedan)</span>
                 </div>
                 <a
                   href={`tel:${BUSINESS_CONFIG.phone.primaryRaw}`}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-slate-900 font-semibold text-xs sm:text-sm transition-colors"
                 >
                   <Phone className="w-4 h-4" />
                   <span>Call for Airport Cab</span>
@@ -449,23 +449,23 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
         </section>
 
         {/* FAQs Section */}
-        <section className="bg-slate-900/40 rounded-2xl border border-slate-800 p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-blue mb-6">
             Frequently Asked Questions — {data.name} Taxi Service
           </h2>
           <div className="space-y-4">
             {data.faqs.map((faq, i) => (
               <details
                 key={i}
-                className="group rounded-xl border border-slate-800 bg-slate-900/70 p-4 transition-all open:border-slate-700"
+                className="group rounded-xl border border-slate-200 bg-white p-4 transition-all open:border-slate-700"
               >
                 <summary className="flex cursor-pointer items-center justify-between font-semibold text-white">
                   <span className="text-sm sm:text-base">{faq.question}</span>
-                  <span className="ml-4 flex-shrink-0 text-slate-400 transition-transform duration-200 group-open:rotate-180">
+                  <span className="ml-4 flex-shrink-0 text-slate-600 transition-transform duration-200 group-open:rotate-180">
                     ▼
                   </span>
                 </summary>
-                <div className="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+                <div className="mt-3 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-200 pt-3">
                   {faq.answer}
                 </div>
               </details>
@@ -474,11 +474,11 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
         </section>
 
         {/* Nearby Localities & Regional Coverage */}
-        <section className="bg-slate-900/30 rounded-2xl border border-slate-800/80 p-6 sm:p-8">
-          <h2 className="text-lg sm:text-xl font-bold text-white mb-2">
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+          <h2 className="text-lg sm:text-xl font-bold text-brand-blue mb-2">
             Taxi Services in Nearby Localities & NCR Hubs
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 mb-6">
+          <p className="text-xs sm:text-sm text-slate-600 mb-6">
             We provide doorstep pickup and transparent outstation cab booking across all areas in Ghaziabad and Delhi NCR.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -486,15 +486,15 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
               <Link
                 key={loc.slug}
                 href={`/taxi-service/${loc.slug}`}
-                className="group p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/40 transition-all flex items-center justify-between"
+                className="group p-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-blue-500/40 transition-all flex items-center justify-between"
               >
                 <div>
                   <p className="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-blue-400 transition-colors">
                     {loc.name}
                   </p>
-                  <p className="text-[11px] text-slate-400">{loc.district}</p>
+                  <p className="text-[11px] text-slate-600">{loc.district}</p>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
               </Link>
             ))}
           </div>
@@ -502,10 +502,10 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
 
         {/* Bottom Booking CTA Banner */}
         <section className="rounded-2xl bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 p-8 text-center border border-blue-800/50 shadow-2xl">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+          <h2 className="text-2xl sm:text-3xl font-black text-brand-blue">
             Need an Urgent Cab in {data.name}?
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-slate-300 max-w-2xl mx-auto">
+          <p className="mt-2 text-sm sm:text-base text-slate-700 max-w-2xl mx-auto">
             Book your verified outstation or airport taxi in under 60 seconds. Our chauffeurs arrive at your exact address on time.
           </p>
           <div className="mt-6 flex flex-wrap justify-center items-center gap-4">

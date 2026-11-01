@@ -104,7 +104,7 @@ export default async function HomePage() {
       />
 
       {/* 2. HERO SECTION */}
-      <section className="relative bg-slate-950 pt-28 sm:pt-32 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/10 overflow-hidden">
+      <section className="relative bg-brand-blue pt-28 sm:pt-32 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/10 overflow-hidden">
         {/* Background Decorative Elements */}
         <video 
           autoPlay 

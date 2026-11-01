@@ -145,7 +145,7 @@ export default async function LocalRentalsPage() {
                     <div className="bg-slate-50 p-5 rounded-xl border border-slate-100 text-sm space-y-3 text-slate-600 font-medium">
                       <div className="flex justify-between border-b border-slate-200 pb-2">
                         <span>Base Package Fare:</span>
-                        <span className="font-mono text-brand-green font-black text-lg">₹{pkg.base_fare}</span>
+                        <span className="font-mono text-brand-green font-black text-lg">₹{pkg.base_fare || pkg.package_price}</span>
                       </div>
                       <div className="flex justify-between pt-1">
                         <span>Extra KM Rate:</span>

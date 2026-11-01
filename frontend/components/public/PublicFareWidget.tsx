@@ -17,27 +17,22 @@ export interface PublicFareWidgetProps {
   className?: string;
 }
 
+/**
+ * PublicFareWidget adapter.
+ * Strict Requirement: Pickup and Drop fields must remain blank by default.
+ * Locations must be selected manually by the customer.
+ */
 export default function PublicFareWidget({
   initialServiceType = 'one_way',
-  routes = [],
-  defaultOrigin,
-  defaultDestination,
-  defaultDistanceKm,
-  routeId,
   className = '',
 }: PublicFareWidgetProps) {
-  const origin = defaultOrigin || routes[0]?.origin?.name || 'Delhi NCR';
-  const dest = defaultDestination || routes[0]?.destination?.name || 'Agra';
-  const dist = defaultDistanceKm || (routes[0]?.estimated_distance_km ? Number(routes[0].estimated_distance_km) : 240);
-  const rId = routeId || routes[0]?.id || '';
-
   return (
     <UnifiedBookingWidget
       initialServiceType={initialServiceType}
-      defaultOrigin={origin}
-      defaultDestination={dest}
-      defaultDistanceKm={dist}
-      routeId={rId}
+      defaultOrigin=""
+      defaultDestination=""
+      defaultDistanceKm={0}
+      routeId=""
       className={className}
     />
   );

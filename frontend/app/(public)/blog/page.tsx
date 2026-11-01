@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { BLOG_ARTICLES } from '@/lib/data/blog-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
-import { Calendar, Clock, ArrowRight, BookOpen, Compass } from 'lucide-react';
+import { Clock, ArrowRight, BookOpen } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Travel Blog & Highway Guides | Urgent Taxis',
@@ -43,13 +43,13 @@ export default function BlogListPage() {
   };
 
   return (
-    <div className="pb-16 bg-slate-950 min-h-screen text-slate-100">
+    <div className="pb-16 bg-slate-50 text-slate-900 min-h-screen text-slate-100">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
       />
 
-      <div className="bg-slate-900 border-b border-slate-800">
+      <div className="bg-white border-b border-slate-200">
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
@@ -59,10 +59,10 @@ export default function BlogListPage() {
           <BookOpen className="w-4 h-4" />
           Highway Guides & Fare Advice
         </span>
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-black text-brand-blue tracking-tight">
           Urgent Taxis Travel & Highway Blog
         </h1>
-        <p className="text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base md:text-lg text-slate-700 max-w-2xl mx-auto leading-relaxed">
           Expert highway guides, expressway route reviews, toll calculators, and taxi fare insights from our experienced transport team in Ghaziabad.
         </p>
       </section>
@@ -73,11 +73,11 @@ export default function BlogListPage() {
           {articles.map((blog) => (
             <article
               key={blog.slug}
-              className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-5 hover:border-blue-500/50 hover:bg-slate-850 transition-all duration-200 group"
+              className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 flex flex-col justify-between space-y-5 hover:border-blue-500/50 hover:bg-slate-850 transition-all duration-200 group"
             >
               <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs text-slate-400">
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-blue-400 font-semibold uppercase tracking-wider text-[10px]">
+                <div className="flex items-center justify-between text-xs text-slate-600">
+                  <span className="px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-300 text-blue-400 font-semibold uppercase tracking-wider text-[10px]">
                     {blog.category}
                   </span>
                   <span className="flex items-center gap-1 text-[11px]">
@@ -87,18 +87,18 @@ export default function BlogListPage() {
                 </div>
 
                 <Link href={`/blog/${blog.slug}`}>
-                  <h2 className="text-base sm:text-lg font-bold text-white group-hover:text-blue-400 transition-colors leading-snug">
+                  <h2 className="text-base sm:text-lg font-bold text-brand-blue group-hover:text-blue-400 transition-colors leading-snug">
                     {blog.title}
                   </h2>
                 </Link>
 
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed line-clamp-3">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">
                   {blog.excerpt}
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <span className="text-slate-400">
+              <div className="pt-4 border-t border-slate-200/80 flex items-center justify-between text-xs">
+                <span className="text-slate-600">
                   {new Date(blog.publishedDate).toLocaleDateString('en-IN', {
                     day: 'numeric',
                     month: 'short',

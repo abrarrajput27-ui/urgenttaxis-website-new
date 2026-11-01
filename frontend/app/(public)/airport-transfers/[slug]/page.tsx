@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { AIRPORT_ROUTES_DATA, AirportRouteData } from '@/lib/data/airport-routes-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
-import { Phone, MessageSquare, Plane, Shield, Clock, CheckCircle2, ArrowRight, Car, MapPin, Navigation } from 'lucide-react';
+import { Phone, MessageSquare, Plane, Shield, Clock, CheckCircle2, ArrowRight, MapPin, Navigation } from 'lucide-react';
 
 interface AirportRoutePageProps {
   params: Promise<{ slug: string }>;
@@ -124,7 +124,7 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
   const otherAirportRoutes = Object.values(AIRPORT_ROUTES_DATA).filter((r) => r.slug !== data.slug);
 
   return (
-    <div className="bg-slate-950 text-slate-100 min-h-screen">
+    <div className="bg-slate-50 text-slate-900 min-h-screen font-sans">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(taxiServiceSchema) }}
@@ -135,12 +135,12 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
       />
 
       {/* Breadcrumbs */}
-      <div className="bg-slate-900 border-b border-slate-800">
+      <div className="bg-white border-b border-slate-200">
         <PublicBreadcrumbs items={breadcrumbs} />
       </div>
 
       {/* Hero Header */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 pt-10 pb-16 border-b border-slate-800">
+      <section className="relative overflow-hidden bg-brand-blue text-white pt-10 pb-16 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs sm:text-sm font-medium mb-4">
@@ -148,11 +148,11 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
               Delhi IGI Airport Transfer (T1, T2, T3)
             </div>
 
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-brand-blue tracking-tight leading-tight">
               {data.h1}
             </h1>
 
-            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-300">
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-700">
               <div className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-emerald-400" />
                 <span>Distance: <strong>{data.distanceKm} km</strong></span>
@@ -189,35 +189,35 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
       </section>
 
       {/* Trust Highlights */}
-      <section className="bg-slate-900/60 border-b border-slate-800 py-6">
+      <section className="bg-white border-b border-slate-200 py-6 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex items-center gap-3">
               <Clock className="w-5 h-5 text-emerald-400 flex-shrink-0" />
               <div>
-                <p className="text-sm font-bold text-white">100% On-Time Guarantee</p>
-                <p className="text-xs text-slate-400">Arrives 10 mins before pickup</p>
+                <p className="text-sm font-bold text-brand-blue">100% On-Time Guarantee</p>
+                <p className="text-xs text-slate-500 font-medium">Arrives 10 mins before pickup</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Plane className="w-5 h-5 text-blue-400 flex-shrink-0" />
               <div>
-                <p className="text-sm font-bold text-white">Free Flight Tracking</p>
-                <p className="text-xs text-slate-400">Zero charges for flight delays</p>
+                <p className="text-sm font-bold text-brand-blue">Free Flight Tracking</p>
+                <p className="text-xs text-slate-500 font-medium">Zero charges for flight delays</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Shield className="w-5 h-5 text-purple-400 flex-shrink-0" />
               <div>
-                <p className="text-sm font-bold text-white">Commercial Yellow Plate</p>
-                <p className="text-xs text-slate-400">Verified highway chauffeurs</p>
+                <p className="text-sm font-bold text-brand-blue">Commercial Yellow Plate</p>
+                <p className="text-xs text-slate-500 font-medium">Verified highway chauffeurs</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <CheckCircle2 className="w-5 h-5 text-amber-400 flex-shrink-0" />
               <div>
-                <p className="text-sm font-bold text-white">No Cancellation Shock</p>
-                <p className="text-xs text-slate-400">Guaranteed vehicle dispatch</p>
+                <p className="text-sm font-bold text-brand-blue">No Cancellation Shock</p>
+                <p className="text-xs text-slate-500 font-medium">Guaranteed vehicle dispatch</p>
               </div>
             </div>
           </div>
@@ -229,31 +229,31 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
         {/* Transparent Rates Grid */}
         <section>
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold text-brand-blue">
               Fixed Airport Taxi Fares — {data.origin} to {data.destination}
             </h2>
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="mt-2 text-sm text-slate-600">
               Clear, upfront pricing with zero surge charges. Toll and parking charged at actuals.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Sedan Card */}
-            <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/50 transition-all flex flex-col justify-between shadow-xl">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-emerald-500/50 transition-all flex flex-col justify-between shadow-xl">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full">
                     Most Economical
                   </span>
-                  <span className="text-xs text-slate-400">4 Seater AC</span>
+                  <span className="text-xs text-slate-600">4 Seater AC</span>
                 </div>
-                <h3 className="text-xl font-bold text-white">Sedan</h3>
-                <p className="text-xs text-slate-400 mt-1">Maruti Dzire, Toyota Etios, Honda Amaze</p>
+                <h3 className="text-xl font-bold text-brand-blue">Sedan</h3>
+                <p className="text-xs text-slate-600 mt-1">Maruti Dzire, Toyota Etios, Honda Amaze</p>
                 <div className="mt-6 mb-6">
-                  <span className="text-3xl font-extrabold text-white">₹{data.sedanFare.toLocaleString('en-IN')}</span>
-                  <span className="text-xs text-slate-400 ml-2">fixed one-way</span>
+                  <span className="text-3xl font-black text-brand-blue">₹{data.sedanFare.toLocaleString('en-IN')}</span>
+                  <span className="text-xs text-slate-600 ml-2">fixed one-way</span>
                 </div>
-                <ul className="space-y-2 text-xs text-slate-300">
+                <ul className="space-y-2 text-xs text-slate-700">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                     <span>Up to 4 Passengers</span>
@@ -281,7 +281,7 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
             </div>
 
             {/* Ertiga SUV Card */}
-            <div className="p-6 rounded-2xl bg-slate-900 border-2 border-blue-500/60 transition-all flex flex-col justify-between shadow-xl relative">
+            <div className="p-6 rounded-2xl bg-white border-2 border-brand-blue transition-all flex flex-col justify-between shadow-md relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[11px] font-bold px-3 py-0.5 rounded-full uppercase tracking-wider">
                 Family & Luggage Choice
               </div>
@@ -290,15 +290,15 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
                   <span className="text-xs font-semibold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-full">
                     6 Seater MPV
                   </span>
-                  <span className="text-xs text-slate-400">Spacious SUV</span>
+                  <span className="text-xs text-slate-600">Spacious SUV</span>
                 </div>
-                <h3 className="text-xl font-bold text-white">Maruti Ertiga</h3>
-                <p className="text-xs text-slate-400 mt-1">Ertiga, Triber, Carens</p>
+                <h3 className="text-xl font-bold text-brand-blue">Maruti Ertiga</h3>
+                <p className="text-xs text-slate-600 mt-1">Ertiga, Triber, Carens</p>
                 <div className="mt-6 mb-6">
-                  <span className="text-3xl font-extrabold text-white">₹{data.ertigaFare.toLocaleString('en-IN')}</span>
-                  <span className="text-xs text-slate-400 ml-2">fixed one-way</span>
+                  <span className="text-3xl font-black text-brand-blue">₹{data.ertigaFare.toLocaleString('en-IN')}</span>
+                  <span className="text-xs text-slate-600 ml-2">fixed one-way</span>
                 </div>
-                <ul className="space-y-2 text-xs text-slate-300">
+                <ul className="space-y-2 text-xs text-slate-700">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-blue-400" />
                     <span>Up to 6 Passengers</span>
@@ -326,21 +326,21 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
             </div>
 
             {/* Innova Crysta Card */}
-            <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-purple-500/50 transition-all flex flex-col justify-between shadow-xl">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-purple-500/50 transition-all flex flex-col justify-between shadow-xl">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-semibold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-full">
                     Premium Travel
                   </span>
-                  <span className="text-xs text-slate-400">7 Seater Luxury</span>
+                  <span className="text-xs text-slate-600">7 Seater Luxury</span>
                 </div>
-                <h3 className="text-xl font-bold text-white">Innova Crysta</h3>
-                <p className="text-xs text-slate-400 mt-1">Toyota Innova Crysta / Hycross</p>
+                <h3 className="text-xl font-bold text-brand-blue">Innova Crysta</h3>
+                <p className="text-xs text-slate-600 mt-1">Toyota Innova Crysta / Hycross</p>
                 <div className="mt-6 mb-6">
-                  <span className="text-3xl font-extrabold text-white">₹{data.crystaFare.toLocaleString('en-IN')}</span>
-                  <span className="text-xs text-slate-400 ml-2">fixed one-way</span>
+                  <span className="text-3xl font-black text-brand-blue">₹{data.crystaFare.toLocaleString('en-IN')}</span>
+                  <span className="text-xs text-slate-600 ml-2">fixed one-way</span>
                 </div>
-                <ul className="space-y-2 text-xs text-slate-300">
+                <ul className="space-y-2 text-xs text-slate-700">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-purple-400" />
                     <span>Up to 7 Passengers</span>
@@ -370,20 +370,20 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
         </section>
 
         {/* Detailed Overview */}
-        <section className="bg-slate-900/40 rounded-2xl border border-slate-800 p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-blue mb-6">
             About This Airport Transfer Route
           </h2>
-          <div className="space-y-4 text-slate-300 leading-relaxed text-sm sm:text-base">
+          <div className="space-y-4 text-slate-700 leading-relaxed text-sm sm:text-base">
             {data.overview.map((para, i) => (
               <p key={i}>{para}</p>
             ))}
           </div>
 
-          <div className="mt-8 p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-start gap-3">
+          <div className="mt-8 p-4 rounded-xl bg-white border border-slate-200 shadow-sm flex items-start gap-3">
             <Navigation className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
                 Recommended Highway Corridor
               </p>
               <p className="text-sm font-medium text-white mt-1">
@@ -394,16 +394,16 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
         </section>
 
         {/* Airport Terminals Guide */}
-        <section className="bg-slate-900/30 rounded-2xl border border-slate-800 p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-blue mb-6">
             Delhi IGI Airport Terminals Served
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {data.terminals.map((term, i) => (
-              <div key={i} className="p-5 rounded-xl bg-slate-900/80 border border-slate-800">
-                <h3 className="text-base font-bold text-white mb-2">{term.terminal}</h3>
-                <p className="text-xs text-slate-300 leading-relaxed mb-4">{term.details}</p>
-                <div className="pt-3 border-t border-slate-800 text-[11px] text-blue-400 font-medium">
+              <div key={i} className="p-5 rounded-xl bg-slate-50 border border-slate-200">
+                <h3 className="text-base font-bold text-brand-blue mb-2">{term.terminal}</h3>
+                <p className="text-xs text-slate-700 leading-relaxed mb-4">{term.details}</p>
+                <div className="pt-3 border-t border-slate-200 text-[11px] text-blue-400 font-medium">
                   {term.airlines}
                 </div>
               </div>
@@ -412,41 +412,41 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
         </section>
 
         {/* Step-by-Step Pickup Process */}
-        <section className="bg-slate-900/40 rounded-2xl border border-slate-800 p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-blue mb-6">
             How Your Airport Ride Works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {data.pickupDropProcess.map((step, i) => (
-              <div key={i} className="p-5 rounded-xl bg-slate-900 border border-slate-800">
+              <div key={i} className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm">
                 <div className="w-8 h-8 rounded-full bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center text-sm mb-3">
                   {i + 1}
                 </div>
-                <h3 className="text-sm font-bold text-white mb-2">{step.title}</h3>
-                <p className="text-xs text-slate-300 leading-relaxed">{step.step}</p>
+                <h3 className="text-sm font-bold text-brand-blue mb-2">{step.title}</h3>
+                <p className="text-xs text-slate-700 leading-relaxed">{step.step}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* FAQs */}
-        <section className="bg-slate-900/40 rounded-2xl border border-slate-800 p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-blue mb-6">
             Frequently Asked Questions — Airport Transfers
           </h2>
           <div className="space-y-4">
             {data.faqs.map((faq, i) => (
               <details
                 key={i}
-                className="group rounded-xl border border-slate-800 bg-slate-900/70 p-4 transition-all open:border-slate-700"
+                className="group rounded-xl border border-slate-200 bg-white p-4 transition-all open:border-slate-700"
               >
                 <summary className="flex cursor-pointer items-center justify-between font-semibold text-white">
                   <span className="text-sm sm:text-base">{faq.question}</span>
-                  <span className="ml-4 flex-shrink-0 text-slate-400 transition-transform duration-200 group-open:rotate-180">
+                  <span className="ml-4 flex-shrink-0 text-slate-600 transition-transform duration-200 group-open:rotate-180">
                     ▼
                   </span>
                 </summary>
-                <div className="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+                <div className="mt-3 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-200 pt-3">
                   {faq.answer}
                 </div>
               </details>
@@ -455,8 +455,8 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
         </section>
 
         {/* Other Airport Routes */}
-        <section className="bg-slate-900/30 rounded-2xl border border-slate-800 p-6 sm:p-8">
-          <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+          <h2 className="text-lg sm:text-xl font-bold text-brand-blue mb-4">
             Other Airport Transfer Routes
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -464,15 +464,15 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
               <Link
                 key={route.slug}
                 href={`/airport-transfers/${route.slug}`}
-                className="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/40 transition-all flex items-center justify-between group"
+                className="p-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-brand-blue/40 transition-all flex items-center justify-between group shadow-xs"
               >
                 <div>
-                  <p className="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-blue-400 transition-colors">
+                  <p className="text-xs sm:text-sm font-semibold text-slate-800 group-hover:text-brand-blue transition-colors">
                     {route.origin} → {route.destination}
                   </p>
-                  <p className="text-[11px] text-slate-400">From ₹{route.sedanFare} • {route.distanceKm} km</p>
+                  <p className="text-[11px] text-slate-600">From ₹{route.sedanFare} • {route.distanceKm} km</p>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
+                <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
               </Link>
             ))}
           </div>
