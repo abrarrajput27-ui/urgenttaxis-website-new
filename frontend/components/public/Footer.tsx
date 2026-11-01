@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { SITE_CONFIG } from '@/lib/seo';
+import { BUSINESS_CONFIG } from '@/lib/config';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { FaFacebookF, FaInstagram, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
 
@@ -70,20 +71,31 @@ export default function PublicFooter() {
               />
             </div>
             <p className="text-slate-400 text-[13px] leading-relaxed">
-              Your reliable travel partner for outstation trips, local rentals and airport transfers across India.
+              Your reliable travel partner for outstation trips, local rentals and airport transfers in Ghaziabad, Delhi NCR and North India.
             </p>
-            {/* Social Media Icons */}
-            <div className="flex items-center gap-3">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#1877f2] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Facebook">
-                <FaFacebookF size={14} />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Instagram">
-                <FaInstagram size={14} />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#ff0000] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="YouTube">
-                <FaYoutube size={14} />
-              </a>
-            </div>
+            <p className="text-brand-green font-bold text-xs tracking-wider">
+              हमेशा आपके साथ!
+            </p>
+            {/* Social Media Profiles (Rendered only when verified URLs are configured) */}
+            {(BUSINESS_CONFIG.socialProfiles.facebook || BUSINESS_CONFIG.socialProfiles.instagram || BUSINESS_CONFIG.socialProfiles.youtube) && (
+              <div className="flex items-center gap-3">
+                {BUSINESS_CONFIG.socialProfiles.facebook && (
+                  <a href={BUSINESS_CONFIG.socialProfiles.facebook} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#1877f2] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Facebook">
+                    <FaFacebookF size={14} />
+                  </a>
+                )}
+                {BUSINESS_CONFIG.socialProfiles.instagram && (
+                  <a href={BUSINESS_CONFIG.socialProfiles.instagram} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Instagram">
+                    <FaInstagram size={14} />
+                  </a>
+                )}
+                {BUSINESS_CONFIG.socialProfiles.youtube && (
+                  <a href={BUSINESS_CONFIG.socialProfiles.youtube} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#ff0000] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="YouTube">
+                    <FaYoutube size={14} />
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Column 2: Quick Links */}
@@ -123,11 +135,11 @@ export default function PublicFooter() {
               Top Routes
             </h4>
             <ul className="space-y-3 text-[13px] text-slate-400">
-              <li><Link href="/routes/delhi-to-haridwar" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haridwar</Link></li>
-              <li><Link href="/routes/delhi-to-dehradun" prefetch={true} className="hover:text-white transition-colors block">Delhi to Dehradun</Link></li>
-              <li><Link href="/routes/delhi-to-haldwani" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haldwani</Link></li>
-              <li><Link href="/routes/delhi-to-rishikesh" prefetch={true} className="hover:text-white transition-colors block">Delhi to Rishikesh</Link></li>
-              <li><Link href="/routes/delhi-to-shimla" prefetch={true} className="hover:text-white transition-colors block">Delhi to Shimla</Link></li>
+              <li><Link href="/routes/delhi-to-haridwar-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haridwar</Link></li>
+              <li><Link href="/routes/delhi-to-dehradun-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Dehradun</Link></li>
+              <li><Link href="/routes/delhi-to-haldwani-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haldwani</Link></li>
+              <li><Link href="/routes/delhi-to-rishikesh-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Rishikesh</Link></li>
+              <li><Link href="/routes/delhi-to-shimla-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Shimla</Link></li>
             </ul>
           </div>
 

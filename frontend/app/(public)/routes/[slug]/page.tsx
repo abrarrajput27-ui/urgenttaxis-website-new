@@ -81,10 +81,15 @@ async function resolveRouteBySlug(slug: string) {
 export async function generateMetadata({ params }: DynamicRoutePageProps) {
   const resolvedParams = await params;
 
-  // 301 Permanent redirect for deprecated Gurugram Airport routes to canonical Delhi Airport routes
+  // 301 Permanent redirect for deprecated Gurugram Airport routes
   if (resolvedParams.slug?.startsWith('gurugram-airport-to-')) {
     const canonicalSlug = resolvedParams.slug.replace('gurugram-airport-to-', 'delhi-airport-to-');
     permanentRedirect(`/routes/${canonicalSlug}`);
+  }
+
+  // 301 Permanent redirect for non-suffix routes (e.g. /routes/delhi-to-haridwar -> /routes/delhi-to-haridwar-taxi)
+  if (resolvedParams.slug && !resolvedParams.slug.endsWith('-taxi')) {
+    permanentRedirect(`/routes/${resolvedParams.slug}-taxi`);
   }
 
   const route = await resolveRouteBySlug(resolvedParams.slug);
@@ -130,10 +135,15 @@ export async function generateStaticParams() {
 export default async function RouteDetailPage({ params }: DynamicRoutePageProps) {
   const resolvedParams = await params;
 
-  // 301 Permanent redirect for deprecated Gurugram Airport routes to canonical Delhi Airport routes
+  // 301 Permanent redirect for deprecated Gurugram Airport routes
   if (resolvedParams.slug?.startsWith('gurugram-airport-to-')) {
     const canonicalSlug = resolvedParams.slug.replace('gurugram-airport-to-', 'delhi-airport-to-');
     permanentRedirect(`/routes/${canonicalSlug}`);
+  }
+
+  // 301 Permanent redirect for non-suffix routes
+  if (resolvedParams.slug && !resolvedParams.slug.endsWith('-taxi')) {
+    permanentRedirect(`/routes/${resolvedParams.slug}-taxi`);
   }
 
   const route = await resolveRouteBySlug(resolvedParams.slug);
@@ -142,9 +152,29 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
 
   const originName = route.origin?.name || 'Origin';
   const destName = route.destination?.name || 'Destination';
-  const distance = route.estimated_distance_km;
+  const distance = route.estimated_distance_km || 200;
   const hrs = Math.floor((route.estimated_duration_minutes || 240) / 60);
   const mins = (route.estimated_duration_minutes || 240) % 60;
+
+  // Check if route involves an airport
+  const isAirportRoute = originName.toLowerCase().includes('airport') || destName.toLowerCase().includes('airport') || resolvedParams.slug.includes('airport');
+
+  // Unified transparent pricing logic
+  const parseFare = (val: any, fallbackRate: number) => {
+    if (typeof val === 'number' && val > 0) return val;
+    if (typeof val === 'string') {
+      const parsed = parseInt(val.replace(/[^0-9]/g, ''), 10);
+      if (!isNaN(parsed) && parsed > 0) return parsed;
+    }
+    return Math.round(distance * fallbackRate);
+  };
+
+  const sedanFareTotal = parseFare(route.sedanFare, 13.5);
+  const ertigaFareTotal = parseFare(route.ertigaFare, 17.5);
+  const crystaFareTotal = parseFare(route.crystaFare, 26);
+
+  const estimatedToll = Math.round(distance * 1.6);
+  const estimatedStateTax = 350;
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
@@ -213,13 +243,27 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                     <span className="text-brand-green">~ ₹573 (5 Plazas)</span>
                   </div>
                 </div>
-                {/* Mock Map Image representing the iframe */}
-                <div className="w-full h-64 bg-slate-200 rounded-xl overflow-hidden border border-slate-300 relative group">
-                  <Image src="/logo.jpg" alt="Map" fill className="object-cover opacity-30 grayscale blur-sm" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <button className="bg-brand-blue text-white px-6 py-3 rounded-full font-bold shadow-lg flex items-center gap-2 hover:bg-blue-800 transition-colors">
-                      📍 Open Direct Highway Corridor in Maps
-                    </button>
+                {/* Keyless OpenStreetMap Live Corridor Overview */}
+                <div className="space-y-3">
+                  <div className="w-full h-64 rounded-xl overflow-hidden border border-slate-300 relative bg-slate-100">
+                    <iframe
+                      title={`Interactive Highway Corridor Route Map from ${originName} to ${destName}`}
+                      src="https://www.openstreetmap.org/export/embed.html?bbox=76.5%2C26.5%2C80.0%2C31.0&layer=mapnik"
+                      width="100%"
+                      height="256"
+                      loading="lazy"
+                      className="w-full h-full border-0"
+                    />
+                  </div>
+                  <div className="flex justify-end">
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originName)}&destination=${encodeURIComponent(destName)}&travelmode=driving`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-bold text-brand-blue hover:text-brand-green flex items-center gap-1.5 transition-colors"
+                    >
+                      📍 Open Turn-by-Turn GPS Directions in Google Maps →
+                    </a>
                   </div>
                 </div>
               </div>
@@ -279,37 +323,54 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                 <div className="md:w-2/3 space-y-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase line-through">₹3652</div>
-                      <div className="text-3xl font-black text-brand-blue">₹2889</div>
-                      <div className="text-xs font-bold text-slate-500 mt-1">₹2889 + ₹245 (Taxes & Tolls)</div>
+                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Estimated Total Fare</div>
+                      <div className="text-3xl font-black text-brand-blue">₹{sedanFareTotal.toLocaleString('en-IN')}</div>
+                      <div className="text-xs text-slate-600 mt-1 font-medium">
+                        Base: ₹{Math.max(sedanFareTotal - estimatedToll, Math.round(distance * 11)).toLocaleString('en-IN')} + Est. Toll: ~₹{estimatedToll}
+                      </div>
                     </div>
-                    <span className="bg-brand-green/10 text-brand-green px-3 py-1 rounded-full text-xs font-black border border-brand-green/20">SAVE 20%</span>
+                    <span className="bg-blue-50 text-brand-blue px-3 py-1 rounded-full text-xs font-bold border border-blue-200">Fixed Rate</span>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-2 text-xs font-medium">
-                    <div className="bg-white border border-slate-200 p-2 rounded flex flex-col">
+                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
                       <span className="text-slate-400 text-[10px] uppercase font-bold">Extra km fare</span>
-                      <span>₹15/km after {distance} kms</span>
+                      <span className="font-bold text-slate-800">₹11/km after {distance} kms</span>
                     </div>
-                    <div className="bg-white border border-slate-200 p-2 rounded flex flex-col">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold">Fuel Type</span>
-                      <span>CNG / Petrol with refills</span>
+                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
+                      <span className="text-slate-400 text-[10px] uppercase font-bold">Driver Allowance</span>
+                      <span className="font-bold text-brand-green">Included in Base</span>
                     </div>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
-                    <a href={whatsappUrl} className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm">
+                    <a
+                      href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                        pickup: originName,
+                        drop: destName,
+                        tripType: 'Outstation Drop',
+                        vehicleCategory: 'Sedan (Dzire/Etios)',
+                        totalFare: sedanFareTotal,
+                        baseFare: Math.max(sedanFareTotal - estimatedToll, Math.round(distance * 11)),
+                        estimatedToll: estimatedToll,
+                        customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Sedan* for ${originName} to ${destName}.\nEstimated Fare: ₹${sedanFareTotal.toLocaleString('en-IN')}.`
+                      })}
+                      className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
+                    >
                       Book via WhatsApp
                     </a>
-                    <button className="flex-1 bg-brand-blue hover:bg-blue-900 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm">
-                      Book Direct Online
-                    </button>
+                    <a
+                      href={`tel:${SITE_CONFIG.phoneRaw}`}
+                      className="flex-1 bg-brand-blue hover:bg-blue-900 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
+                    >
+                      Call to Confirm (24/7)
+                    </a>
                   </div>
                 </div>
               </div>
 
-              {/* SUV Card */}
-              <div className="p-6 flex flex-col md:flex-row gap-6 hover:bg-slate-50 transition-colors">
+              {/* SUV / MPV Card */}
+              <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row gap-6 hover:bg-slate-50 transition-colors">
                 <div className="md:w-1/3 flex flex-col items-center text-center space-y-2">
                   <h3 className="font-black text-lg text-slate-800 uppercase tracking-wide">SUV / MPV</h3>
                   <p className="text-xs font-bold text-slate-500">Ertiga, Carens or similar</p>
@@ -325,31 +386,111 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                 <div className="md:w-2/3 space-y-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase line-through">₹4780</div>
-                      <div className="text-3xl font-black text-brand-blue">₹3591</div>
-                      <div className="text-xs font-bold text-slate-500 mt-1">₹3591 + ₹309 (Taxes & Tolls)</div>
+                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Estimated Total Fare</div>
+                      <div className="text-3xl font-black text-brand-blue">₹{ertigaFareTotal.toLocaleString('en-IN')}</div>
+                      <div className="text-xs text-slate-600 mt-1 font-medium">
+                        Base: ₹{Math.max(ertigaFareTotal - estimatedToll, Math.round(distance * 15)).toLocaleString('en-IN')} + Est. Toll: ~₹{estimatedToll}
+                      </div>
                     </div>
-                    <span className="bg-brand-green/10 text-brand-green px-3 py-1 rounded-full text-xs font-black border border-brand-green/20">SAVE 25%</span>
+                    <span className="bg-blue-50 text-brand-blue px-3 py-1 rounded-full text-xs font-bold border border-blue-200">Fixed Rate</span>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-2 text-xs font-medium">
-                    <div className="bg-white border border-slate-200 p-2 rounded flex flex-col">
+                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
                       <span className="text-slate-400 text-[10px] uppercase font-bold">Extra km fare</span>
-                      <span>₹18/km after {distance} kms</span>
+                      <span className="font-bold text-slate-800">₹15/km after {distance} kms</span>
                     </div>
-                    <div className="bg-white border border-slate-200 p-2 rounded flex flex-col">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold">Fuel Type</span>
-                      <span>CNG / Petrol with refills</span>
+                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
+                      <span className="text-slate-400 text-[10px] uppercase font-bold">Driver Allowance</span>
+                      <span className="font-bold text-brand-green">Included in Base</span>
                     </div>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
-                    <a href={whatsappUrl} className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm">
+                    <a
+                      href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                        pickup: originName,
+                        drop: destName,
+                        tripType: 'Outstation Drop',
+                        vehicleCategory: 'SUV (Ertiga/Carens)',
+                        totalFare: ertigaFareTotal,
+                        baseFare: Math.max(ertigaFareTotal - estimatedToll, Math.round(distance * 15)),
+                        estimatedToll: estimatedToll,
+                        customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book an *Ertiga SUV* for ${originName} to ${destName}.\nEstimated Fare: ₹${ertigaFareTotal.toLocaleString('en-IN')}.`
+                      })}
+                      className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
+                    >
                       Book via WhatsApp
                     </a>
-                    <button className="flex-1 bg-brand-blue hover:bg-blue-900 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm">
-                      Book Direct Online
-                    </button>
+                    <a
+                      href={`tel:${SITE_CONFIG.phoneRaw}`}
+                      className="flex-1 bg-brand-blue hover:bg-blue-900 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
+                    >
+                      Call to Confirm (24/7)
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Premium Innova Crysta Card */}
+              <div className="p-6 flex flex-col md:flex-row gap-6 hover:bg-slate-50 transition-colors">
+                <div className="md:w-1/3 flex flex-col items-center text-center space-y-2">
+                  <h3 className="font-black text-lg text-slate-800 uppercase tracking-wide">Innova Crysta</h3>
+                  <p className="text-xs font-bold text-slate-500">Toyota Innova Crysta / Hycross</p>
+                  <div className="h-24 w-40 relative my-2">
+                    <Image src="/fleet-brand/Innova%20Crysta.png" alt="Innova Crysta" fill className="object-contain" />
+                  </div>
+                  <div className="flex gap-4 text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
+                    <span className="flex items-center gap-1">👤 7</span>
+                    <span className="flex items-center gap-1">💼 5</span>
+                    <span className="flex items-center gap-1">❄️ AC</span>
+                  </div>
+                </div>
+                <div className="md:w-2/3 space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Estimated Total Fare</div>
+                      <div className="text-3xl font-black text-brand-blue">₹{crystaFareTotal.toLocaleString('en-IN')}</div>
+                      <div className="text-xs text-slate-600 mt-1 font-medium">
+                        Base: ₹{Math.max(crystaFareTotal - estimatedToll, Math.round(distance * 20)).toLocaleString('en-IN')} + Est. Toll: ~₹{estimatedToll}
+                      </div>
+                    </div>
+                    <span className="bg-amber-50 text-amber-800 px-3 py-1 rounded-full text-xs font-bold border border-amber-200">Luxury</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 text-xs font-medium">
+                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
+                      <span className="text-slate-400 text-[10px] uppercase font-bold">Extra km fare</span>
+                      <span className="font-bold text-slate-800">₹20/km after {distance} kms</span>
+                    </div>
+                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
+                      <span className="text-slate-400 text-[10px] uppercase font-bold">Captain Seats</span>
+                      <span className="font-bold text-brand-green">Guaranteed</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
+                    <a
+                      href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+                        pickup: originName,
+                        drop: destName,
+                        tripType: 'Outstation Drop',
+                        vehicleCategory: 'Premium SUV (Innova Crysta)',
+                        totalFare: crystaFareTotal,
+                        baseFare: Math.max(crystaFareTotal - estimatedToll, Math.round(distance * 20)),
+                        estimatedToll: estimatedToll,
+                        customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Toyota Innova Crysta* for ${originName} to ${destName}.\nEstimated Fare: ₹${crystaFareTotal.toLocaleString('en-IN')}.`
+                      })}
+                      className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
+                    >
+                      Book via WhatsApp
+                    </a>
+                    <a
+                      href={`tel:${SITE_CONFIG.phoneRaw}`}
+                      className="flex-1 bg-brand-blue hover:bg-blue-900 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
+                    >
+                      Call to Confirm (24/7)
+                    </a>
                   </div>
                 </div>
               </div>
@@ -369,7 +510,8 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
               </div>
             </div>
 
-            {/* Airport Pickup Guide */}
+            {/* Airport Pickup Guide (Rendered ONLY on Airport Routes) */}
+            {isAirportRoute && (
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h2 className="text-xl font-black text-brand-blue">✈️ Airport Pickup Guide</h2>
@@ -390,6 +532,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
                 </div>
               </div>
             </div>
+            )}
 
             {/* Verified Route Narrative (Rendered only when custom text exists) */}
             {route.about && route.about.trim().length > 0 && (

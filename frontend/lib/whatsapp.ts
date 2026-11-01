@@ -1,3 +1,5 @@
+import { BUSINESS_CONFIG } from './config';
+
 export interface WhatsAppMessageParams {
   pickup?: string;
   drop?: string;
@@ -25,159 +27,94 @@ export interface WhatsAppMessageParams {
   inclusions?: string[];
   exclusions?: string[];
 
-  customMessage?: string; // For simple inquiries
+  pageUrl?: string;
+  customMessage?: string;
 }
 
-export function generateWhatsAppLink(phone: string, params: WhatsAppMessageParams): string {
-  const parts: string[] = [];
+/**
+ * Generates a clean, polite, human-readable WhatsApp inquiry message.
+ * Formatted without markdown links, divider lines, or confusing header markers.
+ */
+export function generateWhatsAppLink(
+  phoneOrParams: string | WhatsAppMessageParams,
+  maybeParams?: WhatsAppMessageParams
+): string {
+  let targetPhone = BUSINESS_CONFIG.phone.whatsappRaw;
+  let params: WhatsAppMessageParams = {};
 
-  parts.push('✨ *URGENT TAXIS - TRIP BOOKING REQUEST* ✨');
+  if (typeof phoneOrParams === 'string') {
+    // If phone string is passed, extract raw digits or fall back to default
+    const digits = phoneOrParams.replace(/[^0-9]/g, '');
+    if (digits.length >= 10) targetPhone = digits;
+    if (maybeParams) params = maybeParams;
+  } else if (typeof phoneOrParams === 'object') {
+    params = phoneOrParams;
+  }
 
-  // If it's just a custom message (like from Header/Footer), we can prepend it or just use the template
+  const lines: string[] = [];
+
+  // 1. Warm Greeting
+  lines.push('Hello Urgent Taxis!');
+  lines.push('');
+
+  // 2. Custom Message (if provided)
   if (params.customMessage) {
-    parts.push('');
-    parts.push(params.customMessage);
+    lines.push(params.customMessage.trim());
+    lines.push('');
+  } else {
+    lines.push('I would like to inquire about booking a taxi.');
+    lines.push('');
   }
 
-  const hasServiceDetails = params.pickup || params.drop || params.tripType || params.journeyDate || params.pickupTime || params.distance;
-  if (hasServiceDetails) {
-    parts.push('');
-    parts.push('---');
-    parts.push('');
-    parts.push('SERVICE DETAILS');
-    parts.push('');
-    
-    if (params.pickup && params.drop) {
-      parts.push(`📍 *Route/City:* ${params.pickup} → ${params.drop}`);
-    } else if (params.pickup) {
-      parts.push(`📍 *Pickup:* ${params.pickup}`);
-    } else if (params.drop) {
-      parts.push(`🏁 *Drop:* ${params.drop}`);
-    }
+  // 3. Trip & Route Details
+  const tripDetails: string[] = [];
+  if (params.tripType) tripDetails.push(`• Service: ${params.tripType}`);
+  if (params.pickup && params.drop) {
+    tripDetails.push(`• Route: ${params.pickup} to ${params.drop}`);
+  } else if (params.pickup) {
+    tripDetails.push(`• Pickup Location: ${params.pickup}`);
+  } else if (params.drop) {
+    tripDetails.push(`• Drop Location: ${params.drop}`);
+  }
+  if (params.journeyDate) tripDetails.push(`• Travel Date: ${params.journeyDate}`);
+  if (params.pickupTime) tripDetails.push(`• Pickup Time: ${params.pickupTime}`);
+  if (params.distance) tripDetails.push(`• Distance: ~${params.distance} km`);
 
-    if (params.tripType) parts.push(`🔄 *Trip Type:* ${params.tripType}`);
-    if (params.journeyDate) parts.push(`📅 *Journey Date:* ${params.journeyDate}`);
-    if (params.pickupTime) parts.push(`🕒 *Pickup Time:* ${params.pickupTime}`);
-    if (params.distance) parts.push(`📏 *Distance:* ~${params.distance} km`);
+  if (tripDetails.length > 0) {
+    lines.push('Trip Details:');
+    tripDetails.forEach((detail) => lines.push(detail));
+    lines.push('');
   }
 
-  const hasVehicleDetails = params.vehicleCategory || params.vehicleModel || params.capacity || params.luggageCapacity;
-  if (hasVehicleDetails) {
-    parts.push('');
-    parts.push('---');
-    parts.push('');
-    parts.push('VEHICLE DETAILS');
-    parts.push('');
-    
-    if (params.vehicleCategory) parts.push(`🚗 *Vehicle Category:* ${params.vehicleCategory}`);
-    if (params.vehicleModel) parts.push(`🚙 *Vehicle Model:* ${params.vehicleModel}`);
-    if (params.capacity) parts.push(`👥 *Capacity:* ${params.capacity}`);
-    if (params.luggageCapacity) parts.push(`🧳 *Luggage Capacity:* ${params.luggageCapacity}`);
-    
-    if (params.includedFeatures && params.includedFeatures.length > 0) {
-      parts.push('');
-      parts.push('✨ *Included Features*');
-      params.includedFeatures.forEach(feature => parts.push(`✔️ ${feature}`));
-    } else if (hasVehicleDetails) {
-      parts.push('');
-      parts.push('✨ *Included Features*');
-      parts.push('✔️ AC');
-      parts.push('✔️ Music System');
-      parts.push('✔️ Clean Vehicle');
-      parts.push('✔️ Professional Driver');
-      parts.push('✔️ Same Category Guaranteed');
-    }
+  // 4. Vehicle Selection
+  const vehicleDetails: string[] = [];
+  if (params.vehicleCategory) vehicleDetails.push(`• Vehicle: ${params.vehicleCategory}`);
+  if (params.vehicleModel) vehicleDetails.push(`• Preferred Car: ${params.vehicleModel}`);
+
+  if (vehicleDetails.length > 0) {
+    lines.push('Vehicle Details:');
+    vehicleDetails.forEach((detail) => lines.push(detail));
+    lines.push('');
   }
 
-  const hasFareDetails = params.totalFare !== undefined || params.baseFare !== undefined;
-  if (hasFareDetails) {
-    parts.push('');
-    parts.push('---');
-    parts.push('');
-    parts.push('FARE BREAKDOWN');
-    parts.push('');
-    parts.push('---');
-    parts.push('');
-    
-    const formatMoney = (amount: number) => `₹${amount.toLocaleString('en-IN')}`;
-
-    if (params.baseFare) parts.push(`💰 *Base Fare:* ${formatMoney(params.baseFare)}`);
-    if (params.promoDiscount) parts.push(`🎁 *Promo Discount:* ${formatMoney(params.promoDiscount)}`);
-    if (params.estimatedToll) parts.push(`🛣️ *Estimated Toll:* ${formatMoney(params.estimatedToll)}`);
-    if (params.estimatedStateTax) parts.push(`🏢 *Estimated State Tax:* ${formatMoney(params.estimatedStateTax)}`);
-    if (params.parking) parts.push(`🅿️ *Parking:* ${formatMoney(params.parking)}`);
-    if (params.nightCharges) parts.push(`🌙 *Night Charges:* ${formatMoney(params.nightCharges)}`);
-    if (params.platformFee) parts.push(`📱 *Platform Fee:* ${formatMoney(params.platformFee)}`);
-    if (params.gst) parts.push(`🧾 *GST:* ${formatMoney(params.gst)}`);
-    
-    parts.push('');
-    parts.push('---');
-    parts.push('');
-    if (params.totalFare) parts.push(`💵 *TOTAL FARE:* ${formatMoney(params.totalFare)}`);
-    parts.push('');
-    parts.push('---');
+  // 5. Estimated Fare (if available)
+  if (params.totalFare || params.baseFare) {
+    lines.push('Quotation:');
+    if (params.baseFare) lines.push(`• Base Fare: ₹${params.baseFare.toLocaleString('en-IN')}`);
+    if (params.estimatedToll) lines.push(`• Est. Toll: ₹${params.estimatedToll.toLocaleString('en-IN')}`);
+    if (params.estimatedStateTax) lines.push(`• Est. State Tax: ₹${params.estimatedStateTax.toLocaleString('en-IN')}`);
+    if (params.totalFare) lines.push(`• Estimated Total: ₹${params.totalFare.toLocaleString('en-IN')}`);
+    lines.push('');
   }
 
-  const hasInclusions = params.inclusions && params.inclusions.length > 0;
-  if (hasInclusions || hasFareDetails) {
-    parts.push('');
-    parts.push('INCLUSIONS');
-    parts.push('');
-    parts.push('✅ Included');
-    if (hasInclusions) {
-      params.inclusions?.forEach(inc => parts.push(inc));
-    } else {
-      parts.push('Driver Charges');
-      parts.push('Fuel (Applicable Distance)');
-      parts.push('AC');
-      parts.push('Toll (if included)');
-      parts.push('State Tax (if included)');
-    }
-  }
+  // 6. Page Context URL (https)
+  const websiteUrl = params.pageUrl || BUSINESS_CONFIG.canonicalDomain;
+  lines.push(`Reference Page: ${websiteUrl}`);
+  lines.push('');
 
-  const hasExclusions = params.exclusions && params.exclusions.length > 0;
-  if (hasExclusions || hasFareDetails) {
-    parts.push('');
-    parts.push('---');
-    parts.push('');
-    parts.push('EXCLUSIONS');
-    parts.push('');
-    if (hasExclusions) {
-      params.exclusions?.forEach(exc => parts.push(`❌ ${exc}`));
-    } else {
-      parts.push('❌ Parking');
-      parts.push('❌ Waiting');
-      parts.push('❌ Extra KM');
-      parts.push('❌ Night Charges');
-    }
-  }
+  // 7. Clear Call to Action as required
+  lines.push('Please confirm availability, final fare and driver details.');
 
-  parts.push('');
-  parts.push('---');
-  parts.push('');
-  parts.push('CUSTOMER REQUEST');
-  parts.push('');
-  parts.push('📌');
-  parts.push('');
-  parts.push('Please confirm:');
-  parts.push('');
-  parts.push('✅ Vehicle Availability');
-  parts.push('');
-  parts.push('✅ Final Fare');
-  parts.push('');
-  parts.push('✅ Driver Assignment');
-  
-  parts.push('');
-  parts.push('---');
-  parts.push('');
-  parts.push('FOOTER');
-  parts.push('');
-  parts.push('Thank you for choosing');
-  parts.push('');
-  parts.push('🚖 *Urgent Taxis*');
-  parts.push('');
-  parts.push('🌐 [www.urgenttaxis.in](http://www.urgenttaxis.in)');
-
-  const text = parts.join('\n');
-  return `https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(text)}`;
+  const text = lines.join('\n');
+  return `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`;
 }

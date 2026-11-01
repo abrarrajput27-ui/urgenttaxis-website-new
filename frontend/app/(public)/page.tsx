@@ -17,8 +17,8 @@ import {
 } from '@/lib/data/fallback-data';
 
 export const metadata = constructMetadata({
-  title: 'Taxi Service in Ghaziabad & Outstation Cabs Delhi NCR',
-  description: 'Leading taxi service in Ghaziabad, Noida & Delhi NCR. Book reliable one-way outstation cabs, IGI airport transfers & local rentals. Transparent fares & 24/7 verified drivers.',
+  title: 'Taxi Service in Ghaziabad & Outstation Cabs',
+  description: 'Book reliable taxi service in Ghaziabad, Noida & Delhi NCR. Verified AC cabs for outstation trips, IGI airport transfers & local rentals. Call 24/7.',
 });
 
 export default async function HomePage() {
@@ -197,11 +197,6 @@ export default async function HomePage() {
               { image: "/fleet-brand/Urbania.png", title: "16 Seater Urbania", models: "Force Urbania Premium", seats: "16 Seats", bags: "14 Bags", ac: true, music: true, outstationPrice: "₹34/km", localPrice: "₹6000" },
               { image: "/fleet-brand/Bus.png", title: "27 Seater Bus", models: "Luxury AC Bus", seats: "27 Seats", bags: "27 Bags", ac: true, music: true, outstationPrice: "₹45/km", localPrice: "₹8000" },
               { image: "/fleet-brand/volvo bus.png", title: "45 Seater Bus", models: "Luxury AC Bus", seats: "45 Seats", bags: "45 Bags", ac: true, music: true, outstationPrice: "₹55/km", localPrice: "₹10000" },
-              // Duplicate to create seamless loop
-              { image: "/fleet-brand/Hatchback.png", title: "Hatchback", models: "(WagonR, Swift, Celerio)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹10/km", localPrice: "₹1200" },
-              { image: "/fleet-brand/dzire.png", title: "Sedan", models: "(Dzire, Etios, Amaze)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹11/km", localPrice: "₹1500" },
-              { image: "/fleet-brand/Ertiga.png", title: "SUV / MPV", models: "(Ertiga, Triber, Carens)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹15/km", localPrice: "₹2000" },
-              { image: "/fleet-brand/Innova%20Crysta.png", title: "Premium SUV", models: "(Innova Crysta, Hycross)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹20/km", localPrice: "₹2500" }
             ].map((v, i) => (
               <div key={i} className="shrink-0 w-[300px] bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col border border-slate-100 transition-transform hover:-translate-y-1">
                 <div className="bg-slate-50 flex items-center justify-center border-b border-slate-100 overflow-hidden h-40">
