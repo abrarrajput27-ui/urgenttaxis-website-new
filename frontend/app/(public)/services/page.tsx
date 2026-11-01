@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
+import UnifiedBookingWidget from '@/components/public/UnifiedBookingWidget';
 import {
   FaCar,
   FaPlane,
@@ -207,6 +208,11 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
+      {/* Unified Master Fare Calculator & Booking Form */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+        <UnifiedBookingWidget initialServiceType="one_way" />
+      </div>
 
       {/* 3.2 Introduction */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

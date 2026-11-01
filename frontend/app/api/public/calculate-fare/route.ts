@@ -171,9 +171,58 @@ export async function POST(request: NextRequest) {
       }
       calcResult = calculateMasterRoundTripFare(calcInput, rule, dynamicRules || []);
     } else if (serviceType === 'local_rental') {
-      const pkg = (localPackages || []).find((p) => p.id === packageId && p.category_id === categoryId);
+      let pkg = (localPackages || []).find((p) => p.id === packageId && p.category_id === categoryId);
       if (!pkg) {
-        return NextResponse.json({ success: true, isFareOnRequest: true, message: 'No active local package found.' } as PublicQuotationDTO);
+        // Authoritative fallback from BUSINESS_CONFIG for verified local packages
+        const pkgKey = String(packageId || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const is8h = pkgKey.includes('8h') || pkgKey.includes('80') || Number(durationHours) === 8;
+        const is12h = pkgKey.includes('12h') || pkgKey.includes('120') || Number(durationHours) === 12;
+
+        if (is8h) {
+          const price = isExec ? 3200 : isSuv ? 2500 : isHatch ? 1600 : 1800;
+          const extraHr = isExec ? 300 : isSuv ? 220 : isHatch ? 150 : 180;
+          const extraKm = isExec ? 20 : isSuv ? 15 : isHatch ? 10 : 11;
+          pkg = {
+            id: `pkg-8hr80km-${categoryId}`,
+            category_id: categoryId,
+            package_name: '8 Hours / 80 KM',
+            included_hours: 8,
+            included_km: 80,
+            package_price: price,
+            extra_hour_rate: extraHr,
+            extra_km_rate: extraKm,
+            default_included_charges: ['Fuel', 'Driver Allowance'],
+            default_excluded_charges: ['Toll Tax', 'Parking'],
+            is_active: true,
+            created_at: new Date().toISOString(),
+          };
+        } else if (is12h) {
+          const price = isExec ? 4500 : isSuv ? 3400 : isHatch ? 2200 : 2500;
+          const extraHr = isExec ? 300 : isSuv ? 220 : isHatch ? 150 : 180;
+          const extraKm = isExec ? 20 : isSuv ? 15 : isHatch ? 10 : 11;
+          pkg = {
+            id: `pkg-12hr120km-${categoryId}`,
+            category_id: categoryId,
+            package_name: '12 Hours / 120 KM',
+            included_hours: 12,
+            included_km: 120,
+            package_price: price,
+            extra_hour_rate: extraHr,
+            extra_km_rate: extraKm,
+            default_included_charges: ['Fuel', 'Driver Allowance'],
+            default_excluded_charges: ['Toll Tax', 'Parking'],
+            is_active: true,
+            created_at: new Date().toISOString(),
+          };
+        }
+      }
+
+      if (!pkg) {
+        return NextResponse.json({
+          success: true,
+          isFareOnRequest: true,
+          message: 'Fare Available Upon Instant Request. Dispatch confirmation required for this rental package.',
+        } as PublicQuotationDTO);
       }
       calcResult = calculateMasterLocalRentalFare(calcInput, pkg, dynamicRules || []);
     } else if (serviceType === 'airport_transfer') {

@@ -117,6 +117,67 @@ export async function POST(req: NextRequest) {
           is_active: true,
           created_at: new Date().toISOString(),
         };
+      } else if (serviceType === 'local_rental') {
+        const pkgKey = String(packageId || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const is8h = pkgKey.includes('8h') || pkgKey.includes('80') || Number(durationHours) === 8;
+        const is12h = pkgKey.includes('12h') || pkgKey.includes('120') || Number(durationHours) === 12;
+
+        if (is8h) {
+          const price = isExec ? 3200 : isSuv ? 2500 : isHatch ? 1600 : 1800;
+          const extraHr = isExec ? 300 : isSuv ? 220 : isHatch ? 150 : 180;
+          const extraKm = isExec ? 20 : isSuv ? 15 : isHatch ? 10 : 11;
+          rule = {
+            id: `pkg-8hr80km-${categoryId}`,
+            category_id: categoryId,
+            package_name: '8 Hours / 80 KM',
+            included_hours: 8,
+            included_km: 80,
+            package_price: price,
+            extra_hour_rate: extraHr,
+            extra_km_rate: extraKm,
+            default_included_charges: ['Fuel', 'Driver Allowance'],
+            default_excluded_charges: ['Toll Tax', 'Parking'],
+            is_active: true,
+            created_at: new Date().toISOString(),
+          };
+        } else if (is12h) {
+          const price = isExec ? 4500 : isSuv ? 3400 : isHatch ? 2200 : 2500;
+          const extraHr = isExec ? 300 : isSuv ? 220 : isHatch ? 150 : 180;
+          const extraKm = isExec ? 20 : isSuv ? 15 : isHatch ? 10 : 11;
+          rule = {
+            id: `pkg-12hr120km-${categoryId}`,
+            category_id: categoryId,
+            package_name: '12 Hours / 120 KM',
+            included_hours: 12,
+            included_km: 120,
+            package_price: price,
+            extra_hour_rate: extraHr,
+            extra_km_rate: extraKm,
+            default_included_charges: ['Fuel', 'Driver Allowance'],
+            default_excluded_charges: ['Toll Tax', 'Parking'],
+            is_active: true,
+            created_at: new Date().toISOString(),
+          };
+        } else {
+          return NextResponse.json({ success: false, message: 'Custom rental package requires manual WhatsApp dispatch confirmation.' }, { status: 400 });
+        }
+      } else if (serviceType === 'airport_transfer') {
+        const airportBase = isExec ? 2500 : isSuv ? 1800 : isHatch ? 1100 : 1300;
+        rule = {
+          id: `standard-airport-${categoryId}`,
+          airport_location_id: airportLocationId || '',
+          city_zone_location_id: cityZoneLocationId || '',
+          category_id: categoryId,
+          base_fare: airportBase,
+          included_km: 40,
+          extra_km_rate: isExec ? 20 : isSuv ? 15 : isHatch ? 9 : 11,
+          driver_allowance: 0,
+          night_charge: 0,
+          default_included_charges: ['Fuel', 'Driver Allowance', 'Terminal Drop'],
+          default_excluded_charges: ['Parking Fee'],
+          is_active: true,
+          created_at: new Date().toISOString(),
+        };
       } else {
         return NextResponse.json({ success: false, message: 'Invalid pricing rule or route configuration.' }, { status: 400 });
       }
