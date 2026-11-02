@@ -1209,7 +1209,7 @@ export default function UnifiedBookingWidget({
             {showFareBreakupModal && (
               <div className="mt-3 p-4 bg-white rounded-2xl border border-slate-200 space-y-4 text-xs animate-fadeIn">
                 {/* Modal Tab Switcher */}
-                <div className="flex border-b border-slate-200 pb-2 gap-4">
+                <div className="flex border-b border-slate-200 pb-2 gap-2 sm:gap-4 overflow-x-auto no-scrollbar">
                   <button
                     type="button"
                     onClick={() => setActiveBreakupTab('breakup')}

@@ -80,7 +80,7 @@ export default function RoutesTabWidget() {
   const currentRoutes = generateDynamicRoutes(activeCity);
 
   return (
-    <div className="w-full font-sans">
+    <div className="w-full max-w-full min-w-0 font-sans">
       <div className="flex overflow-x-auto hide-scrollbar gap-2 py-2 px-2 mb-2 sm:mb-4">
         {Object.keys(STATES_DATA).map((state) => (
           <button

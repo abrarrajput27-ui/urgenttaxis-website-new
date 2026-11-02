@@ -22,7 +22,7 @@ export default function PublicFooter() {
                 Get instant confirmation via WhatsApp
               </p>
               
-              <div className="flex flex-row items-center justify-center gap-2 sm:gap-3 mt-2 lg:mt-3 pb-6 lg:pb-0 w-full">
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-2 lg:mt-3 pb-6 lg:pb-0 w-full">
                 <a
                   href={`tel:${SITE_CONFIG.phoneRaw}`}
                   className="bg-white hover:bg-slate-50 text-[#1a419c] font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-none sm:flex-none"
@@ -181,30 +181,30 @@ export default function PublicFooter() {
       <ContextualSEONavigation />
 
       {/* 4. Bottom Legal / Copyright Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-row items-center justify-between gap-2 text-[11px] sm:text-[12px] text-slate-500">
-        <p>© 2026 Urgent Taxis.</p>
-        <div className="flex items-center gap-3 sm:gap-6">
-          <Link href="/privacy" className="hover:text-brand-green transition-colors whitespace-nowrap">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] sm:text-[12px] text-slate-500 text-center sm:text-left">
+        <p>© 2026 Urgent Taxis. All rights reserved.</p>
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 sm:gap-6">
+          <Link href="/privacy" className="hover:text-brand-green transition-colors">
             Privacy Policy
           </Link>
-          <span className="text-slate-700">|</span>
-          <Link href="/terms" className="hover:text-brand-green transition-colors whitespace-nowrap">
+          <span className="text-slate-700 hidden sm:inline">|</span>
+          <Link href="/terms" className="hover:text-brand-green transition-colors">
             Terms of Use
           </Link>
-          <span className="text-slate-700">|</span>
-          <Link href="/booking-policy" className="hover:text-brand-green transition-colors whitespace-nowrap">
+          <span className="text-slate-700 hidden sm:inline">|</span>
+          <Link href="/booking-policy" className="hover:text-brand-green transition-colors">
             Booking Policy
           </Link>
-          <span className="text-slate-700">|</span>
-          <Link href="/cancellation" className="hover:text-brand-green transition-colors whitespace-nowrap">
+          <span className="text-slate-700 hidden sm:inline">|</span>
+          <Link href="/cancellation" className="hover:text-brand-green transition-colors">
             Cancellation Policy
           </Link>
         </div>
       </div>
 
       {/* 5. Permanent Designer Credit with Smooth Continuous Horizontal Scrolling Animation (Requirement 8) */}
-      <div className="border-t border-white/5 py-3 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
+      <div className="border-t border-white/5 py-3 overflow-hidden w-full max-w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden w-full max-w-full">
           <div className="designer-credit-marquee">
             <div className="footer-designer-credit text-[13px] sm:text-[14px] text-slate-400">
               <span className="font-normal">Designed by </span>

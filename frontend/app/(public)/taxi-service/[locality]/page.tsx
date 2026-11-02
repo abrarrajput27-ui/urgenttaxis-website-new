@@ -361,9 +361,9 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
             </span>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="w-full max-w-full min-w-0 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
             <table className="w-full text-left text-sm text-slate-700">
-              <thead className="bg-slate-800/80 text-xs uppercase font-semibold text-slate-700 border-b border-slate-700">
+              <thead className="bg-slate-800/80 text-xs uppercase font-semibold text-slate-200 border-b border-slate-700">
                 <tr>
                   <th scope="col" className="px-4 py-3.5 sm:px-6">Destination</th>
                   <th scope="col" className="px-4 py-3.5 sm:px-6">Distance & Time</th>
