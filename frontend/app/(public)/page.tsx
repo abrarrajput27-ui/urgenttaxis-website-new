@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaUser, FaSuitcase, FaSnowflake, FaMusic, FaMapMarkerAlt, FaRoute } from 'react-icons/fa';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
+import { buildWhatsAppBookingLink } from '@/lib/pricing';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
 import TrustSection from '@/components/public/TrustSection';
 import {
@@ -423,36 +424,94 @@ export default async function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-          {localPackages?.slice(0, 3).map((pkg) => (
-              <div key={pkg.id} className="bg-white rounded-3xl overflow-hidden border border-slate-100 p-8 space-y-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300 group flex flex-col w-full">
-              <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-brand-blue/10 text-brand-blue border border-brand-blue/20 block w-fit">
-                {pkg.package_name || `${pkg.included_hours}h / ${pkg.included_km}km`}
-              </span>
-              <div>
-                <h3 className="text-2xl font-black text-slate-900">
-                  {pkg.included_hours} Hours
-                </h3>
-                <span className="text-sm text-brand-green font-bold block mt-1">{pkg.included_km} KM Included</span>
+          {[
+            {
+              id: 'sedan-8h',
+              name: 'Sedan (Dzire / Etios)',
+              badge: 'Most Popular',
+              hours: 8,
+              km: 80,
+              price: 1500,
+              extraKm: 11,
+              extraHour: 180,
+              vehicle: 'Sedan',
+            },
+            {
+              id: 'ertiga-8h',
+              name: 'SUV / MPV (Ertiga)',
+              badge: 'Family Ride',
+              hours: 8,
+              km: 80,
+              price: 2000,
+              extraKm: 15,
+              extraHour: 220,
+              vehicle: 'SUV / Ertiga',
+            },
+            {
+              id: 'crysta-8h',
+              name: 'Innova Crysta',
+              badge: 'Premium Luxury',
+              hours: 8,
+              km: 80,
+              price: 2500,
+              extraKm: 20,
+              extraHour: 250,
+              vehicle: 'Innova Crysta',
+            },
+          ].map((pkg) => {
+            const waUrl = buildWhatsAppBookingLink({
+              serviceType: 'Local rental',
+              vehicleName: pkg.vehicle,
+              origin: 'Ghaziabad / Delhi NCR',
+              destination: '8h/80km Local Rental Package',
+              estimatedFare: pkg.price,
+              pageUrl: 'https://www.urgenttaxis.in/local-rentals',
+            });
+
+            return (
+              <div
+                key={pkg.id}
+                className="bg-white rounded-3xl overflow-hidden border border-slate-200 p-8 space-y-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between w-full"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-900 border border-indigo-100 block w-fit">
+                      {pkg.name}
+                    </span>
+                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 uppercase">
+                      {pkg.badge}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-2xl font-black text-slate-900">
+                      {pkg.hours} Hours / {pkg.km} KM
+                    </h3>
+                    <span className="text-2xl text-emerald-800 font-mono font-black block mt-2">
+                      ₹{pkg.price.toLocaleString('en-IN')}
+                    </span>
+                    <span className="text-xs text-slate-500 font-medium block">30% Advance Token: ₹{Math.round(pkg.price * 0.30)}</span>
+                  </div>
+
+                  <p className="text-xs text-slate-600 font-medium bg-slate-50 p-3 rounded-2xl border border-slate-100 mt-4 space-y-1">
+                    <span className="block">Extra KM: <strong>₹{pkg.extraKm}/km</strong></span>
+                    <span className="block">Extra Hour: <strong>₹{pkg.extraHour}/hr</strong></span>
+                  </p>
+                </div>
+
+                <div className="pt-2">
+                  <a
+                    href={waUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full bg-[#1e1b4b] hover:bg-slate-800 text-white text-sm font-bold py-3.5 rounded-2xl transition-all shadow-md"
+                  >
+                    💬 Book Package
+                  </a>
+                </div>
               </div>
-              <p className="text-sm text-slate-500 font-medium bg-slate-50 p-3 rounded-xl border border-slate-100">
-                <span className="block">Extra KM: ₹{pkg.extra_km_rate}/km</span>
-                <span className="block mt-1">Extra Hour: ₹{pkg.extra_hour_rate}/hr</span>
-              </p>
-              <div className="pt-2">
-                <a
-                  href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
-                    tripType: 'Local Rental',
-                    customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Local Rental Cab*. 🚖\n⏱️ *Package*: ${pkg.included_hours}H / ${pkg.included_km}KM`
-                  })}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full bg-brand-blue hover:bg-brand-blue-light text-white text-sm font-bold py-3.5 rounded-xl transition-all shadow-md"
-                >
-                  Book Package
-                </a>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 

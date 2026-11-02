@@ -3,6 +3,7 @@ import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
+import LocalRentalsViewer from '@/components/public/LocalRentalsViewer';
 import {
   FALLBACK_CATEGORIES,
   FALLBACK_LOCATIONS,
@@ -114,75 +115,16 @@ export default async function LocalRentalsPage() {
         </p>
       </section>
 
-      {/* 3. Active Local Rental Packages Grid */}
+      {/* 3. Confirmed Local Rental Packages & Interactive Fleet Selector */}
       <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center space-y-3 mb-4">
-          <h2 className="text-3xl font-black text-slate-900">Active Database Rental Packages</h2>
-          <p className="text-sm text-slate-500 font-medium">Available hourly packages and extra usage rates.</p>
+        <div className="text-center space-y-3 mb-8">
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900">Confirmed Hourly Rental Packages</h2>
+          <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto font-medium">
+            Transparent flat rates for 8-Hour / 80-KM and 12-Hour / 120-KM city travel across Delhi NCR. 30% advance token confirms your ride.
+          </p>
         </div>
 
-        {localPackages && localPackages.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {localPackages.map((pkg) => {
-              const catName = pkg.vehicle_categories?.name || 'Standard Category';
-
-              return (
-                <div key={pkg.id} className="bg-white border border-slate-200 p-8 rounded-3xl space-y-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-brand-blue/10 text-brand-blue border border-brand-blue/20">
-                        {catName}
-                      </span>
-                      <span className="font-mono text-sm text-brand-green font-bold">
-                        {pkg.included_hours}H / {pkg.included_km}KM
-                      </span>
-                    </div>
-
-                    <h3 className="text-2xl font-black text-slate-900">
-                      {pkg.package_name || `${pkg.included_hours}H / ${pkg.included_km}KM Package`}
-                    </h3>
-
-                    <div className="bg-slate-50 p-5 rounded-xl border border-slate-100 text-sm space-y-3 text-slate-600 font-medium">
-                      <div className="flex justify-between border-b border-slate-200 pb-2">
-                        <span>Base Package Fare:</span>
-                        <span className="font-mono text-brand-green font-black text-lg">₹{pkg.base_fare || pkg.package_price}</span>
-                      </div>
-                      <div className="flex justify-between pt-1">
-                        <span>Extra KM Rate:</span>
-                        <span className="font-mono text-slate-900 font-bold">₹{pkg.extra_km_rate}/KM</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Extra Hour Rate:</span>
-                        <span className="font-mono text-slate-900 font-bold">₹{pkg.extra_hour_rate}/Hour</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-3">
-                    <a
-                      href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
-                        tripType: 'Local Rental',
-                        customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Local Rental Cab*. 🚖\n⏱️ *Package*: ${catName} (${pkg.included_hours}H/${pkg.included_km}KM)`
-                      })}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-center bg-brand-green hover:bg-brand-green-hover text-white text-sm font-bold py-3.5 rounded-xl transition-colors shadow-sm"
-                    >
-                      Book Package via WhatsApp
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="bg-white border border-slate-200 p-10 rounded-3xl text-center space-y-4 shadow-sm">
-            <h3 className="text-xl font-black text-amber-600">Fare on Request</h3>
-            <p className="text-sm text-slate-600 max-w-md mx-auto font-medium">
-              Custom local rental packages (4h/40km, 8h/80km, 12h/120km) are available upon request through our support desk.
-            </p>
-          </div>
-        )}
+        <LocalRentalsViewer />
       </section>
 
       {/* 4. Fare Calculator Widget */}
