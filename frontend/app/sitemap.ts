@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { SITE_CONFIG } from '@/lib/seo';
 import masterRoutesData from '@/lib/data/processed-master-routes.json';
+import verifiedRoutesData from '@/lib/data/verified-routes.json';
 import { LOCALITIES_DATA } from '@/lib/data/localities-data';
 import { AIRPORT_ROUTES_DATA } from '@/lib/data/airport-routes-data';
 import { BLOG_ARTICLES } from '@/lib/data/blog-data';
@@ -51,13 +52,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.75,
   }));
 
-  // 490 Outstation Routes (/routes/[slug])
-  const dynamicRoutePages: MetadataRoute.Sitemap = masterRoutesData.map((mr) => ({
-    url: `${baseUrl}/routes/${mr.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  }));
+  // Verified Outstation Routes only (/routes/[slug]) - Excludes placeholder / unverified corridors
+  const verifiedSet = new Set(verifiedRoutesData as string[]);
+  const dynamicRoutePages: MetadataRoute.Sitemap = masterRoutesData
+    .filter((mr) => verifiedSet.has(mr.slug))
+    .map((mr) => ({
+      url: `${baseUrl}/routes/${mr.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }));
 
   return [
     ...staticPages,

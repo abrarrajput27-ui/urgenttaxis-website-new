@@ -3,6 +3,8 @@ import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import Link from 'next/link';
 import masterRoutesData from '@/lib/data/processed-master-routes.json';
+import verifiedRoutesData from '@/lib/data/verified-routes.json';
+import { resolveOneWayFare } from '@/lib/pricing';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
 
@@ -77,7 +79,7 @@ export default async function RoutesDirectoryPage() {
       {/* Header Banner */}
       <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
-          {allRoutes.length} Verified Intercity Corridors
+          {verifiedRoutesData.length} Verified Intercity Corridors
         </span>
         <h1 className="text-4xl sm:text-5xl font-black text-brand-blue tracking-tight">
           Outstation Taxi Routes Directory
@@ -108,27 +110,35 @@ export default async function RoutesDirectoryPage() {
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 pt-2">
             {[
-              { name: 'Delhi to Nainital Taxi', slug: 'delhi-to-nainital-taxi', fare: '₹4,999' },
-              { name: 'Delhi to Haldwani Taxi', slug: 'delhi-to-haldwani-taxi', fare: '₹3,999' },
-              { name: 'Delhi to Haridwar Taxi', slug: 'delhi-to-haridwar-taxi', fare: '₹2,999' },
-              { name: 'Delhi to Rishikesh Taxi', slug: 'delhi-to-rishikesh-taxi', fare: '₹3,299' },
-              { name: 'Delhi to Dehradun Taxi', slug: 'delhi-to-dehradun-taxi', fare: '₹3,499' },
-              { name: 'Delhi to Mussoorie Taxi', slug: 'delhi-to-mussoorie-taxi', fare: '₹4,499' },
-              { name: 'Delhi to Agra Taxi', slug: 'delhi-to-agra-taxi', fare: '₹3,499' },
-              { name: 'Delhi to Jaipur Taxi', slug: 'delhi-to-jaipur-taxi', fare: '₹3,499' },
-              { name: 'Delhi to Bareilly Taxi', slug: 'delhi-to-bareilly-taxi', fare: '₹3,499' },
-              { name: 'Delhi to Jim Corbett Taxi', slug: 'delhi-to-jim-corbett-taxi', fare: '₹3,999' },
-              { name: 'Delhi to Shimla Taxi', slug: 'delhi-to-shimla-taxi', fare: '₹5,499' },
-              { name: 'Delhi to Manali Taxi', slug: 'delhi-to-manali-taxi', fare: '₹8,999' },
-              { name: 'Delhi to Ayodhya Taxi', slug: 'delhi-to-ayodhya-taxi', fare: '₹8,999' },
-              { name: 'Delhi to Mathura Taxi', slug: 'delhi-to-mathura-taxi', fare: '₹3,499' },
-              { name: 'Delhi to Vrindavan Taxi', slug: 'delhi-to-vrindavan-taxi', fare: '₹3,499' },
-              { name: 'Delhi to Chandigarh Taxi', slug: 'delhi-to-chandigarh-taxi', fare: '₹3,499' },
-              { name: 'Noida to Dehradun Taxi', slug: 'noida-to-dehradun-taxi', fare: '₹3,499' },
-              { name: 'Noida to Haldwani Taxi', slug: 'noida-to-haldwani-taxi', fare: '₹3,999' },
-              { name: 'Ghaziabad to Haridwar Taxi', slug: 'ghaziabad-to-haridwar-taxi', fare: '₹2,999' },
-              { name: 'Ghaziabad to Nainital Taxi', slug: 'ghaziabad-to-nainital-taxi', fare: '₹4,999' },
-            ].map((route) => (
+              { name: 'Ghaziabad to Haridwar Taxi', slug: 'ghaziabad-to-haridwar-taxi', origin: 'Ghaziabad', dest: 'Haridwar' },
+              { name: 'Ghaziabad to Nainital Taxi', slug: 'ghaziabad-to-nainital-taxi', origin: 'Ghaziabad', dest: 'Nainital' },
+              { name: 'Ghaziabad to Haldwani Taxi', slug: 'ghaziabad-to-haldwani-taxi', origin: 'Ghaziabad', dest: 'Haldwani' },
+              { name: 'Ghaziabad to Jaipur Taxi', slug: 'ghaziabad-to-jaipur-taxi', origin: 'Ghaziabad', dest: 'Jaipur' },
+              { name: 'Ghaziabad to Chandigarh Taxi', slug: 'ghaziabad-to-chandigarh-taxi', origin: 'Ghaziabad', dest: 'Chandigarh' },
+              { name: 'Delhi to Haridwar Taxi', slug: 'delhi-to-haridwar-taxi', origin: 'Delhi', dest: 'Haridwar' },
+              { name: 'Delhi to Rishikesh Taxi', slug: 'delhi-to-rishikesh-taxi', origin: 'Delhi', dest: 'Rishikesh' },
+              { name: 'Delhi to Dehradun Taxi', slug: 'delhi-to-dehradun-taxi', origin: 'Delhi', dest: 'Dehradun' },
+              { name: 'Delhi to Mussoorie Taxi', slug: 'delhi-to-mussoorie-taxi', origin: 'Delhi', dest: 'Mussoorie' },
+              { name: 'Delhi to Nainital Taxi', slug: 'delhi-to-nainital-taxi', origin: 'Delhi', dest: 'Nainital' },
+              { name: 'Delhi to Haldwani Taxi', slug: 'delhi-to-haldwani-taxi', origin: 'Delhi', dest: 'Haldwani' },
+              { name: 'Delhi to Jim Corbett Taxi', slug: 'delhi-to-jim-corbett-taxi', origin: 'Delhi', dest: 'Jim Corbett' },
+              { name: 'Delhi to Agra Taxi', slug: 'delhi-to-agra-taxi', origin: 'Delhi', dest: 'Agra' },
+              { name: 'Delhi to Jaipur Taxi', slug: 'delhi-to-jaipur-taxi', origin: 'Delhi', dest: 'Jaipur' },
+              { name: 'Delhi to Chandigarh Taxi', slug: 'delhi-to-chandigarh-taxi', origin: 'Delhi', dest: 'Chandigarh' },
+              { name: 'Delhi to Shimla Taxi', slug: 'delhi-to-shimla-taxi', origin: 'Delhi', dest: 'Shimla' },
+              { name: 'Delhi to Manali Taxi', slug: 'delhi-to-manali-taxi', origin: 'Delhi', dest: 'Manali' },
+              { name: 'Delhi to Mathura Taxi', slug: 'delhi-to-mathura-taxi', origin: 'Delhi', dest: 'Mathura' },
+              { name: 'Delhi to Vrindavan Taxi', slug: 'delhi-to-vrindavan-taxi', origin: 'Delhi', dest: 'Vrindavan' },
+              { name: 'Delhi to Ayodhya Taxi', slug: 'delhi-to-ayodhya-taxi', origin: 'Delhi', dest: 'Ayodhya' },
+              { name: 'Noida to Dehradun Taxi', slug: 'noida-to-dehradun-taxi', origin: 'Noida', dest: 'Dehradun' },
+              { name: 'Noida to Haldwani Taxi', slug: 'noida-to-haldwani-taxi', origin: 'Noida', dest: 'Haldwani' },
+              { name: 'Noida to Jaipur Taxi', slug: 'noida-to-jaipur-taxi', origin: 'Noida', dest: 'Jaipur' },
+              { name: 'Noida to Chandigarh Taxi', slug: 'noida-to-chandigarh-taxi', origin: 'Noida', dest: 'Chandigarh' },
+            ].map((route) => {
+              const q = resolveOneWayFare(route.origin, route.dest);
+              const fare = q?.sedanFare ? `₹${q.sedanFare.toLocaleString('en-IN')}` : '₹3,499';
+              return { ...route, fare };
+            }).map((route) => (
               <Link
                 key={route.slug}
                 href={`/routes/${route.slug}`}

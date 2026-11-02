@@ -76,7 +76,7 @@ export function constructMetadata({
       images: [fullImageUrl],
     },
     robots: noIndex
-      ? { index: false, follow: false }
+      ? { index: false, follow: true }
       : { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   };
 }

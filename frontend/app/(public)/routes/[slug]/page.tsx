@@ -24,6 +24,7 @@ function generateSlug(originName: string, destName: string): string {
 }
 
 import masterRoutesData from '@/lib/data/processed-master-routes.json';
+import verifiedRoutesData from '@/lib/data/verified-routes.json';
 
 async function resolveRouteBySlug(slug: string) {
   // 1. Check local master routes first for instant zero-latency resolution
@@ -93,10 +94,13 @@ export async function generateMetadata({ params }: DynamicRoutePageProps) {
   const originName = route.origin?.name || 'Origin';
   const destName = route.destination?.name || 'Destination';
 
+  const isVerified = (verifiedRoutesData as string[]).includes(resolvedParams.slug);
+
   return constructMetadata({
     title: `${originName} to ${destName} Taxi Service | Reliable AC Cabs`,
     description: `Reliable AC Cabs & Professional Highway Drivers for ${originName} to ${destName}. Explore one way drops, tolls, distance and fare breakdown.`,
     canonicalPath: `/routes/${resolvedParams.slug}`,
+    noIndex: !isVerified,
   });
 }
 
