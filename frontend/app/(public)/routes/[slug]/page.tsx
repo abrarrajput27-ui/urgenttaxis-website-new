@@ -343,10 +343,8 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
 
   return (
     <div className="bg-slate-50 min-h-screen text-slate-900 font-sans pb-16">
-      {/* Breadcrumbs Navigation */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
-        <PublicBreadcrumbs items={breadcrumbItems} />
-      </div>
+      {/* Breadcrumbs Navigation - Schema preserved, visible row removed */}
+      <PublicBreadcrumbs items={breadcrumbItems} />
 
       {/* 1. ROUTE HERO SECTION (Urgent Taxis Brand Theme: Navy + Gold CTA + Real Branded Car) */}
       <section className="bg-gradient-to-b from-[#0a1128] via-[#101b3b] to-[#141f42] text-white pt-8 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">

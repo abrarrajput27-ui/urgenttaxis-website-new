@@ -112,17 +112,19 @@ export default async function HomePage() {
           loop 
           muted 
           playsInline 
+          poster="/hero-poster.webp"
+          preload="metadata"
           className="absolute inset-0 w-full h-full object-cover z-0"
         >
           <source src="/hero-video.mp4" type="video/mp4" />
         </video>
         {/* Dark overlay for contrast */}
-        <div className="absolute inset-0 bg-brand-blue/70 z-0"></div>
+        <div className="absolute inset-0 bg-[#0a1128]/75 z-0"></div>
 
         <div className="max-w-5xl mx-auto text-center space-y-3 mb-6 relative z-10">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white border border-white/20 text-xs font-bold tracking-wide shadow-sm">
             <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse"></span>
-            Guaranteed & Transparent Outstation Fares
+            Verified & Transparent Outstation Fares
           </span>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight drop-shadow-sm">

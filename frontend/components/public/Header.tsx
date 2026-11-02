@@ -136,7 +136,7 @@ export default function PublicHeader() {
         {/* Right Action Block */}
         <div className="hidden lg:flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#3b2c85] flex items-center justify-center text-white shadow-sm">
+            <div className="w-8 h-8 rounded-full bg-[#1e1b4b] flex items-center justify-center text-white shadow-sm">
               <FaPhoneAlt className="w-[12px] h-[12px]" />
             </div>
             <div className="flex flex-col justify-center">
@@ -222,7 +222,7 @@ export default function PublicHeader() {
           </nav>
           
           <div className="pt-4 border-t border-slate-100 flex flex-row gap-3">
-            <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="flex-1 flex items-center justify-center gap-1.5 bg-[#3b2c85] text-white font-bold text-[14px] py-3 rounded-xl shadow-md">
+            <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="flex-1 flex items-center justify-center gap-1.5 bg-[#1e1b4b] hover:bg-[#15133c] text-white font-bold text-[14px] py-3 rounded-xl shadow-md transition-colors">
               <FaPhoneAlt className="w-3.5 h-3.5" /> Call Now
             </a>
             <a href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1.5 bg-[#00a859] text-white font-bold text-[14px] py-3 rounded-xl shadow-md">

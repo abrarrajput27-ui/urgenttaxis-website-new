@@ -83,3 +83,8 @@ iframe {
     transform: none;
   }
 }
+
+/* Collapse empty breadcrumb wrapper divs with zero visual footprint while preserving JSON-LD script */
+div:has(> script[type="application/ld+json"]:only-child) {
+  display: contents;
+}
