@@ -23,11 +23,23 @@ export default function RouteMilestonesWeatherTips({
 }: RouteMilestonesWeatherTipsProps) {
   const tipIcons = [
     <FaCar key="car" className="w-4 h-4 text-brand-blue shrink-0" />,
-    <FaTshirt key="tshirt" className="w-4 h-4 text-amber-600 shrink-0" />,
-    <FaMoneyBillWave key="money" className="w-4 h-4 text-emerald-600 shrink-0" />,
-    <FaMapMarkedAlt key="map" className="w-4 h-4 text-indigo-600 shrink-0" />,
-    <FaCalendarCheck key="calendar" className="w-4 h-4 text-rose-600 shrink-0" />,
+    <FaTshirt key="tshirt" className="w-4 h-4 text-amber-500 shrink-0" />,
+    <FaMoneyBillWave key="money" className="w-4 h-4 text-brand-green shrink-0" />,
+    <FaMapMarkedAlt key="map" className="w-4 h-4 text-brand-blue shrink-0" />,
+    <FaCalendarCheck key="calendar" className="w-4 h-4 text-amber-500 shrink-0" />,
   ];
+
+  const scrollToMap = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const mapElement = document.getElementById('route-map');
+    if (mapElement) {
+      mapElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const weatherSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(
+    `weather in ${destName}`
+  )}`;
 
   return (
     <div className={`grid grid-cols-1 lg:grid-cols-12 gap-8 font-sans ${className}`}>
@@ -57,7 +69,7 @@ export default function RouteMilestonesWeatherTips({
                       isFirst
                         ? 'bg-emerald-500 border-white ring-4 ring-emerald-100'
                         : isLast
-                        ? 'bg-rose-500 border-white ring-4 ring-rose-100'
+                        ? 'bg-amber-500 border-white ring-4 ring-amber-100'
                         : 'bg-brand-blue border-white ring-2 ring-blue-100 group-hover:scale-110'
                     }`}
                   />
@@ -93,74 +105,92 @@ export default function RouteMilestonesWeatherTips({
 
         <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
           <span>* Travel times may vary during rush hours and holiday periods.</span>
+          <a
+            href="#route-map"
+            onClick={scrollToMap}
+            className="font-bold text-brand-blue hover:text-brand-green transition-colors cursor-pointer"
+          >
+            View on Map ↑
+          </a>
         </div>
       </div>
 
       {/* Right Column: Weather in Destination + Travel Tips */}
       <div className="lg:col-span-5 space-y-6 flex flex-col justify-between">
-        {/* Weather in Destination Card */}
-        <div className="bg-gradient-to-br from-blue-50/80 via-white to-sky-50/40 rounded-3xl p-6 border border-blue-100 shadow-xs">
-          <div className="flex items-center justify-between pb-4 border-b border-blue-100/60">
-            <h3 className="text-lg font-black text-slate-900">Weather in {destName}</h3>
+        {/* Weather Card */}
+        <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h3 className="font-black text-slate-900 text-lg flex items-center gap-2">
+              <span>🌤️</span> Weather in {destName}
+            </h3>
             <a
-              href={`https://www.google.com/search?q=${encodeURIComponent(`weather in ${destName}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-bold text-brand-blue hover:text-brand-green flex items-center gap-1 transition-colors"
+              href="#route-map"
+              onClick={scrollToMap}
+              className="text-xs font-bold text-brand-blue hover:text-brand-green flex items-center gap-1 transition-colors cursor-pointer"
             >
-              <span>View 7 Day Forecast</span>
-              <FaExternalLinkAlt className="w-2.5 h-2.5" />
+              <span>View Route on Map</span>
+              <span className="text-amber-500 font-black">→</span>
             </a>
           </div>
 
-          <div className="flex items-center justify-between pt-4">
-            <div className="flex items-center gap-3.5">
-              <div className="w-14 h-14 rounded-2xl bg-amber-100/80 text-amber-500 flex items-center justify-center text-3xl shadow-inner">
-                <FaCloudSun />
+          <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50/80 to-slate-50 rounded-2xl border border-blue-100/70">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-xs flex items-center justify-center text-amber-500 border border-slate-100">
+                <FaCloudSun className="w-7 h-7" />
               </div>
               <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-blue-700 bg-blue-100 px-2 py-0.5 rounded-md">
-                  Current Conditions
+                <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                  Today in {destName}
                 </span>
-                <div className="text-3xl font-black text-slate-900 mt-1">
+                <span className="text-3xl font-black text-slate-900 tracking-tight">
                   {weather.temp}
-                </div>
-                <div className="text-xs font-bold text-slate-600">
+                </span>
+                <p className="text-xs font-bold text-brand-blue">
                   {weather.condition}
-                </div>
+                </p>
               </div>
             </div>
 
             <div className="text-right">
-              <span className="text-xs text-slate-400 font-medium block">Feels like</span>
-              <span className="text-base font-black text-slate-700">{weather.feelsLike}</span>
+              <span className="text-[10px] text-slate-400 uppercase font-bold block">Feels Like</span>
+              <span className="text-sm font-black text-slate-700">{weather.feelsLike}</span>
             </div>
+          </div>
+
+          <div className="pt-1 text-right">
+            <a
+              href={weatherSearchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-black text-brand-blue hover:text-brand-green inline-flex items-center gap-1 transition-colors"
+            >
+              <span>View 7-Day Forecast</span>
+              <FaExternalLinkAlt className="w-2.5 h-2.5 ml-0.5 text-brand-green" />
+            </a>
           </div>
         </div>
 
         {/* Travel Tips Card */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs flex-1 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                <span>💡</span> Travel Tips
-              </h3>
-              <span className="text-xs font-bold text-slate-400">Driver Recommendations</span>
-            </div>
-
-            <ul className="space-y-3 pt-3.5">
-              {travelTips.map((tip, idx) => (
-                <li key={idx} className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                    {tipIcons[idx % tipIcons.length]}
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
-                    {tip}
-                  </p>
-                </li>
-              ))}
-            </ul>
+        <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs flex-1 space-y-4">
+          <div className="border-b border-slate-100 pb-3">
+            <h3 className="font-black text-slate-900 text-lg flex items-center gap-2">
+              <span>💡</span> Travel Tips
+            </h3>
+            <p className="text-xs text-slate-500 font-medium mt-0.5">
+              Important recommendations for a hassle-free trip to {destName}.
+            </p>
           </div>
+
+          <ul className="space-y-3.5">
+            {travelTips.map((tip, idx) => (
+              <li key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                <span className="mt-0.5 p-1 rounded-lg bg-slate-50 border border-slate-100">
+                  {tipIcons[idx % tipIcons.length]}
+                </span>
+                <span>{tip}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

@@ -82,18 +82,21 @@ export default function PublicHeader() {
       </div>
 
       {/* Main Header */}
-      <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 py-0 flex items-center h-[56px]">
+      <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 py-0 flex items-center h-[60px] overflow-hidden">
         
         {/* Logo */}
         <Link href="/" className="flex items-center flex-shrink-0" onClick={() => setMobileOpen(false)} prefetch={true}>
-          <Image
-            src="/logo.jpg"
-            alt="Urgent Taxis Logo"
-            width={200}
-            height={55}
-            className="h-12 w-auto object-contain"
-            priority
-          />
+          <div className="relative h-10 sm:h-11 w-36 sm:w-44 flex items-center overflow-hidden">
+            <Image
+              src="/logo.jpg"
+              alt="Urgent Taxis Logo"
+              width={176}
+              height={44}
+              className="max-h-10 sm:max-h-11 w-auto object-contain object-left"
+              style={{ maxHeight: '42px', width: 'auto', height: 'auto' }}
+              priority
+            />
+          </div>
         </Link>
 
         {/* Desktop Navigation */}

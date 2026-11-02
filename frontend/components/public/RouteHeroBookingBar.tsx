@@ -135,7 +135,7 @@ export default function RouteHeroBookingBar({
             serviceType === 'local_rental' ? 'md:col-span-4' : 'md:col-span-3'
           } bg-slate-50 hover:bg-slate-100/80 p-2.5 rounded-xl border border-slate-200 transition-colors flex items-center gap-2.5`}
         >
-          <FaMapMarkerAlt className="text-rose-600 text-base shrink-0" />
+          <FaMapMarkerAlt className="text-amber-500 text-base shrink-0" />
           <div className="flex-1 min-w-0">
             <label htmlFor="drop-input" className="block text-[10px] uppercase font-bold text-slate-400">
               {serviceType === 'local_rental' ? 'City / Area' : 'Drop Location'}

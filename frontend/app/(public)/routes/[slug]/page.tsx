@@ -14,9 +14,10 @@ import RoutePlacesSection from '@/components/public/RoutePlacesSection';
 import RouteMilestonesWeatherTips from '@/components/public/RouteMilestonesWeatherTips';
 import RouteGallerySection from '@/components/public/RouteGallerySection';
 import RouteSimilarRoutes, { SimilarRouteItem } from '@/components/public/RouteSimilarRoutes';
+import DestinationConnectingRoutes, { ConnectingRouteItem } from '@/components/public/DestinationConnectingRoutes';
 import PageFAQSection from '@/components/public/PageFAQSection';
 import { getRouteSpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
-import { FaRoad, FaArrowRight, FaShieldAlt, FaUserCheck, FaHeadset } from 'react-icons/fa';
+import { FaRoad, FaArrowRight, FaShieldAlt, FaUserCheck, FaHeadset, FaCheckCircle, FaCar } from 'react-icons/fa';
 
 interface DynamicRoutePageProps {
   params: Promise<{
@@ -128,8 +129,13 @@ export async function generateStaticParams() {
   return Array.from(slugsSet).map((slug) => ({ slug }));
 }
 
-export default async function RouteDetailPage({ params }: DynamicRoutePageProps) {
+export default async function DynamicRoutePage({ params }: DynamicRoutePageProps) {
   const resolvedParams = await params;
+
+  // 301 Permanent redirect for non-suffix routes
+  if (resolvedParams.slug && !resolvedParams.slug.endsWith('-taxi')) {
+    permanentRedirect(`/routes/${resolvedParams.slug}-taxi`);
+  }
 
   // 301 Permanent redirect for deprecated Gurugram Airport routes
   if (resolvedParams.slug?.startsWith('gurugram-airport-to-')) {
@@ -137,14 +143,11 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
     permanentRedirect(`/routes/${canonicalSlug}`);
   }
 
-  // 301 Permanent redirect for non-suffix routes
-  if (resolvedParams.slug && !resolvedParams.slug.endsWith('-taxi')) {
-    permanentRedirect(`/routes/${resolvedParams.slug}-taxi`);
-  }
-
   const route = await resolveRouteBySlug(resolvedParams.slug);
 
-  if (!route) notFound();
+  if (!route) {
+    notFound();
+  }
 
   const originName = route.origin?.name || 'Origin';
   const destName = route.destination?.name || 'Destination';
@@ -177,12 +180,6 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
     { label: `${originName} to ${destName} Taxi` },
   ];
 
-  // Curate 5 similar routes from master dataset with real starting fares (NEVER "on demand")
-  const normDest = destName.toLowerCase();
-  const similarRoutesMatches = masterRoutesData
-    .filter((mr) => mr.slug !== resolvedParams.slug && mr.originName.toLowerCase() === originName.toLowerCase())
-    .slice(0, 5);
-
   const getDestinationImage = (dest: string) => {
     const d = dest.toLowerCase();
     if (d.includes('mussoorie')) return '/destinations/mussoorie.webp';
@@ -195,8 +192,13 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
     if (d.includes('shimla')) return '/destinations/shimla.webp';
     if (d.includes('agra')) return '/destinations/agra.jpg';
     if (d.includes('chandigarh')) return '/destinations/chandigarh.jpg';
-    return '/destinations/agra.jpg';
+    return '/destinations/chandigarh.jpg';
   };
+
+  // 1. Curate 5 similar routes from originName
+  const similarRoutesMatches = masterRoutesData
+    .filter((mr) => mr.slug !== resolvedParams.slug && mr.originName.toLowerCase() === originName.toLowerCase())
+    .slice(0, 5);
 
   const similarRoutesList: SimilarRouteItem[] = similarRoutesMatches.length > 0
     ? similarRoutesMatches.map((mr) => ({
@@ -214,6 +216,66 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
         { slug: 'delhi-to-rishikesh-taxi', originName: 'Delhi', destName: 'Rishikesh', distanceKm: 240, startingFare: 3299, image: '/destinations/rishikesh.webp' },
         { slug: 'delhi-to-ramnagar-taxi', originName: 'Delhi', destName: 'Jim Corbett', distanceKm: 260, startingFare: 3699, image: '/destinations/ramnagar.webp' },
       ];
+
+  // 2. Curate connecting routes originating from destName (User's explicit requirement)
+  const directConnectingFromDest = masterRoutesData
+    .filter((mr) => mr.originName.toLowerCase() === destName.toLowerCase())
+    .map((mr) => ({
+      title: `${mr.originName} to ${mr.destName} Taxi`,
+      fromCity: mr.originName,
+      toCity: mr.destName,
+      distanceKm: mr.estimated_distance_km,
+      durationText: mr.durationText || `${Math.round(mr.estimated_distance_km / 50)} Hours`,
+      startingFare: typeof mr.sedanFare === 'number' ? mr.sedanFare : 3499,
+      image: getDestinationImage(mr.destName),
+      href: `/routes/${mr.slug}`,
+      isDirectRoutePage: true,
+    }));
+
+  const connectingRoutesList: ConnectingRouteItem[] = [...directConnectingFromDest];
+
+  // Add return cab to origin if not already in list
+  const hasReturnToOrigin = connectingRoutesList.some((r) => r.toCity.toLowerCase() === originName.toLowerCase());
+  if (!hasReturnToOrigin) {
+    connectingRoutesList.unshift({
+      title: `${destName} to ${originName} Return Cab`,
+      fromCity: destName,
+      toCity: originName,
+      distanceKm: distance,
+      durationText: durationText,
+      startingFare: sedanFareTotal,
+      image: getDestinationImage(originName),
+      href: `/checkout?serviceType=one_way&pickup=${encodeURIComponent(destName)}&drop=${encodeURIComponent(originName)}&km=${distance}`,
+      isDirectRoutePage: false,
+    });
+  }
+
+  // Ensure 5 solid connecting options departing from destName
+  if (connectingRoutesList.length < 5) {
+    const hubFallbacks = [
+      { name: 'Delhi Airport (IGI T3)', dist: Math.round(distance + 20), fare: sedanFareTotal + 400, img: '/destinations/chandigarh.jpg' },
+      { name: 'Noida International Airport', dist: Math.round(distance + 15), fare: sedanFareTotal + 300, img: '/destinations/lucknow.jpg' },
+      { name: 'Gurugram Cyber City', dist: Math.round(distance + 35), fare: sedanFareTotal + 500, img: '/destinations/jaipur.webp' },
+      { name: 'Ghaziabad Junction', dist: Math.round(distance - 10), fare: Math.max(2500, sedanFareTotal - 200), img: '/destinations/agra.jpg' },
+    ];
+
+    for (const hub of hubFallbacks) {
+      if (connectingRoutesList.length >= 5) break;
+      if (!connectingRoutesList.some((r) => r.toCity.toLowerCase().includes(hub.name.toLowerCase()))) {
+        connectingRoutesList.push({
+          title: `${destName} to ${hub.name} Cab`,
+          fromCity: destName,
+          toCity: hub.name,
+          distanceKm: hub.dist,
+          durationText: `${Math.round(hub.dist / 50)} - ${Math.round(hub.dist / 45)} Hours`,
+          startingFare: hub.fare,
+          image: hub.img,
+          href: `/checkout?serviceType=one_way&pickup=${encodeURIComponent(destName)}&drop=${encodeURIComponent(hub.name)}&km=${hub.dist}`,
+          isDirectRoutePage: false,
+        });
+      }
+    }
+  }
 
   // Route-specific FAQs
   const routeSpecificFaqs = getRouteSpecificFAQs(originName, destName, distance, sedanFareTotal, ertigaFareTotal);
@@ -286,7 +348,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      {/* 1. ROUTE HERO SECTION (Same layout as reference concept, with Urgent Taxis Brand Theme) */}
+      {/* 1. ROUTE HERO SECTION (Urgent Taxis Brand Theme: Navy + Gold CTA + Real Branded Car) */}
       <section className="bg-gradient-to-b from-[#0a1128] via-[#101b3b] to-[#141f42] text-white pt-8 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -348,15 +410,15 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
               </div>
             </div>
 
-            {/* Right Hero Image (Vehicle) */}
-            <div className="lg:col-span-5 relative h-48 sm:h-64 lg:h-72 w-full flex items-center justify-center">
-              <div className="relative w-full h-full">
+            {/* Right Hero Image (Real Branded Vehicle cleanly anchored) */}
+            <div className="lg:col-span-5 relative h-52 sm:h-64 lg:h-80 w-full flex items-end justify-center lg:justify-end">
+              <div className="relative w-full max-w-lg h-full">
                 <Image
                   src="/fleet-brand/Hero.png"
                   alt={`${originName} to ${destName} Taxi Cab Fleet`}
                   fill
                   priority
-                  className="object-contain drop-shadow-2xl"
+                  className="object-contain object-bottom drop-shadow-[0_20px_25px_rgba(0,0,0,0.5)]"
                   sizes="(max-width: 1024px) 100vw, 45vw"
                 />
               </div>
@@ -430,13 +492,14 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
             </div>
           </div>
 
-          {/* Card 2: Route Map (4 cols) */}
+          {/* Card 2: Route Map (4 cols) - Live Interactive Highway Corridor Map */}
           <div className="lg:col-span-4 flex flex-col">
             <RouteMapCard
               originName={originName}
               destName={destName}
               distanceKm={distance}
               durationText={durationText}
+              highwayName={corridor.highway}
               className="h-full"
             />
           </div>
@@ -510,7 +573,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
           />
         </section>
 
-        {/* 4. PLACES ON THIS ROUTE (4 Categorized Columns with Logos/Images) */}
+        {/* 4. PLACES ON THIS ROUTE (4 Categorized Columns with Show More options & verified maps) */}
         <section>
           <RoutePlacesSection
             originName={originName}
@@ -539,7 +602,16 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
           />
         </section>
 
-        {/* 7. FREQUENTLY ASKED QUESTIONS (2-Column Layout matching concept) */}
+        {/* 7. POPULAR CABS & CONNECTING ROUTES FROM DESTINATION (New Section for destination routes) */}
+        <section>
+          <DestinationConnectingRoutes
+            destName={destName}
+            originName={originName}
+            routes={connectingRoutesList}
+          />
+        </section>
+
+        {/* 8. FREQUENTLY ASKED QUESTIONS (2-Column Layout matching concept) */}
         <section>
           <PageFAQSection
             faqs={allRouteFaqs}
@@ -550,7 +622,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
           />
         </section>
 
-        {/* 8. SIMILAR ROUTES (Visible directly before Bottom CTA / Footer with real photos and calculated fares) */}
+        {/* 9. SIMILAR ROUTES FROM ORIGIN (Real photos and calculated fares - no "on demand") */}
         <section>
           <RouteSimilarRoutes
             originName={originName}
@@ -558,7 +630,7 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
           />
         </section>
 
-        {/* 9. BOTTOM CALL-TO-ACTION BANNER */}
+        {/* 10. BOTTOM CALL-TO-ACTION BANNER */}
         <section className="bg-gradient-to-r from-[#0f172a] via-[#1e1b4b] to-[#0f172a] rounded-3xl p-6 sm:p-10 text-white shadow-xl border border-blue-900/40 relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
