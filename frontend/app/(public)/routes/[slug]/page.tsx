@@ -1,17 +1,22 @@
 import { notFound, permanentRedirect } from 'next/navigation';
 import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
-import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import Image from 'next/image';
 import Link from 'next/link';
-import RouteBookingWidget from '@/components/public/RouteBookingWidget';
+import masterRoutesData from '@/lib/data/processed-master-routes.json';
+import verifiedRoutesData from '@/lib/data/verified-routes.json';
+import { getRouteCorridorDetails } from '@/lib/data/route-corridor-details';
+import RouteMapCard from '@/components/public/RouteMapCard';
+import RouteHighlights from '@/components/public/RouteHighlights';
+import RouteHeroBookingBar from '@/components/public/RouteHeroBookingBar';
 import RoutePlacesSection from '@/components/public/RoutePlacesSection';
-import RouteTravelInfoSection from '@/components/public/RouteTravelInfoSection';
+import RouteMilestonesWeatherTips from '@/components/public/RouteMilestonesWeatherTips';
 import RouteGallerySection from '@/components/public/RouteGallerySection';
-import { getPlacesForRoute } from '@/lib/data/route-places-data';
+import RouteSimilarRoutes, { SimilarRouteItem } from '@/components/public/RouteSimilarRoutes';
 import PageFAQSection from '@/components/public/PageFAQSection';
 import { getRouteSpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
+import { FaRoad, FaClock, FaArrowRight, FaShieldAlt, FaUserCheck, FaHeadset } from 'react-icons/fa';
 
 interface DynamicRoutePageProps {
   params: Promise<{
@@ -23,11 +28,8 @@ function generateSlug(originName: string, destName: string): string {
   return `${originName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-to-${destName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-taxi`;
 }
 
-import masterRoutesData from '@/lib/data/processed-master-routes.json';
-import verifiedRoutesData from '@/lib/data/verified-routes.json';
-
 async function resolveRouteBySlug(slug: string) {
-  // 1. Check local master routes first for instant zero-latency resolution
+  // 1. Check local master routes first for zero-latency resolution
   const masterMatch = masterRoutesData.find((mr) => mr.slug === slug);
   if (masterMatch) {
     return {
@@ -80,7 +82,7 @@ export async function generateMetadata({ params }: DynamicRoutePageProps) {
     permanentRedirect(`/routes/${canonicalSlug}`);
   }
 
-  // 301 Permanent redirect for non-suffix routes (e.g. /routes/delhi-to-haridwar -> /routes/delhi-to-haridwar-taxi)
+  // 301 Permanent redirect for non-suffix routes
   if (resolvedParams.slug && !resolvedParams.slug.endsWith('-taxi')) {
     permanentRedirect(`/routes/${resolvedParams.slug}-taxi`);
   }
@@ -98,12 +100,11 @@ export async function generateMetadata({ params }: DynamicRoutePageProps) {
 
   return constructMetadata({
     title: `${originName} to ${destName} Taxi Service | Reliable AC Cabs`,
-    description: `Reliable AC Cabs & Professional Highway Drivers for ${originName} to ${destName}. Explore one way drops, tolls, distance and fare breakdown.`,
+    description: `Reliable AC Cabs & Professional Highway Drivers for ${originName} to ${destName}. Explore fares, route map, waypoints and verified driver service.`,
     canonicalPath: `/routes/${resolvedParams.slug}`,
     noIndex: !isVerified,
   });
 }
-
 
 export async function generateStaticParams() {
   const supabase = getPublicSupabaseClient();
@@ -147,12 +148,12 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
 
   const originName = route.origin?.name || 'Origin';
   const destName = route.destination?.name || 'Destination';
-  const distance = route.estimated_distance_km || 200;
-  const hrs = Math.floor((route.estimated_duration_minutes || 240) / 60);
-  const mins = (route.estimated_duration_minutes || 240) % 60;
+  const distance = route.estimated_distance_km || 300;
+  const hrs = Math.floor((route.estimated_duration_minutes || 360) / 60);
+  const durationText = `${hrs} - ${hrs + 1} Hours`;
 
-  // Curated Places along this corridor
-  const placesAlongRoute = getPlacesForRoute(destName, distance);
+  // Corridor details (milestones, weather, tips, places, highway)
+  const corridor = getRouteCorridorDetails(originName, destName, distance);
 
   // Unified transparent pricing logic
   const parseFare = (val: any, fallbackRate: number) => {
@@ -164,443 +165,450 @@ export default async function RouteDetailPage({ params }: DynamicRoutePageProps)
     return Math.round(distance * fallbackRate);
   };
 
-  const sedanFareTotal = parseFare(route.sedanFare, 13.5);
-  const ertigaFareTotal = parseFare(route.ertigaFare, 17.5);
-  const crystaFareTotal = parseFare(route.crystaFare, 26);
-
-  const estimatedToll = Math.round(distance * 1.6);
+  const hatchbackFareTotal = Math.max(1200, Math.round(distance * 10));
+  const sedanFareTotal = parseFare(route.sedanFare, 11);
+  const ertigaFareTotal = parseFare(route.ertigaFare, 15);
+  const crystaFareTotal = parseFare(route.crystaFare, 20);
+  const tempoFareTotal = Math.max(3500, Math.round(distance * 26));
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Routes', href: '/routes' },
-    { label: `${originName} to ${destName} Taxi Service` },
+    { label: 'Outstation Taxi', href: '/routes' },
+    { label: `${originName} to ${destName} Taxi` },
   ];
 
-  // Calculate up to 4 genuinely related routes from the same origin or sharing the destination
-  const relatedRoutes = masterRoutesData
-    .filter((mr) => mr.slug !== resolvedParams.slug && (mr.originName === originName || mr.destName === destName))
-    .slice(0, 4);
+  // Curate 5 similar routes
+  const normDest = destName.toLowerCase();
+  const similarRoutesMatches = masterRoutesData
+    .filter((mr) => mr.slug !== resolvedParams.slug && mr.originName.toLowerCase() === originName.toLowerCase())
+    .slice(0, 5);
 
-    // Generate comprehensive verified Route FAQs + Common Booking FAQs (Requirement 7)
-  const routeSpecificFaqs = getRouteSpecificFAQs(originName, destName, distance, route.sedanFare, route.ertigaFare);
-  const commonFaqs = getCommonBookingFAQs().filter(f => f.question.includes('30% advance') || f.question.includes('payment options') || f.question.includes('contact'));
-  const customFaqs = (route.faqs || []).filter((cf: any) => !routeSpecificFaqs.some(rf => rf.question.toLowerCase() === cf.question.toLowerCase()));
-  const allRouteFaqs = [...routeSpecificFaqs, ...customFaqs, ...commonFaqs];
+  const getDestinationImage = (dest: string) => {
+    const d = dest.toLowerCase();
+    if (d.includes('mussoorie')) return '/destinations/mussoorie.webp';
+    if (d.includes('dehradun')) return '/destinations/dehradun.webp';
+    if (d.includes('haridwar')) return '/destinations/haridwar.webp';
+    if (d.includes('rishikesh')) return '/destinations/rishikesh.webp';
+    if (d.includes('ramnagar') || d.includes('corbett')) return '/destinations/ramnagar.webp';
+    if (d.includes('nainital')) return '/destinations/nainital.webp';
+    if (d.includes('jaipur')) return '/destinations/jaipur.webp';
+    if (d.includes('shimla')) return '/destinations/shimla.webp';
+    if (d.includes('agra')) return '/destinations/agra.jpg';
+    if (d.includes('chandigarh')) return '/destinations/chandigarh.jpg';
+    return '/destinations/agra.jpg';
+  };
+
+  const similarRoutesList: SimilarRouteItem[] = similarRoutesMatches.length > 0
+    ? similarRoutesMatches.map((mr) => ({
+        slug: mr.slug,
+        originName: mr.originName,
+        destName: mr.destName,
+        distanceKm: mr.estimated_distance_km,
+        startingFare: mr.sedanFare,
+        image: getDestinationImage(mr.destName),
+      }))
+    : [
+        { slug: 'delhi-to-mussoorie-taxi', originName: 'Delhi', destName: 'Mussoorie', distanceKm: 290, startingFare: 3499, image: '/destinations/mussoorie.webp' },
+        { slug: 'delhi-to-dehradun-taxi', originName: 'Delhi', destName: 'Dehradun', distanceKm: 245, startingFare: 3199, image: '/destinations/dehradun.webp' },
+        { slug: 'delhi-to-haridwar-taxi', originName: 'Delhi', destName: 'Haridwar', distanceKm: 215, startingFare: 2899, image: '/destinations/haridwar.webp' },
+        { slug: 'delhi-to-rishikesh-taxi', originName: 'Delhi', destName: 'Rishikesh', distanceKm: 240, startingFare: 3299, image: '/destinations/rishikesh.webp' },
+        { slug: 'delhi-to-ramnagar-taxi', originName: 'Delhi', destName: 'Jim Corbett', distanceKm: 260, startingFare: 3699, image: '/destinations/ramnagar.webp' },
+      ];
+
+  // Route-specific FAQs
+  const routeSpecificFaqs = getRouteSpecificFAQs(originName, destName, distance, sedanFareTotal, ertigaFareTotal);
+  const commonFaqs = getCommonBookingFAQs().filter(
+    (f) => f.question.includes('30% advance') || f.question.includes('payment options') || f.question.includes('cancellation')
+  );
+  const customFaqs = (route.faqs || []).filter(
+    (cf: any) => !routeSpecificFaqs.some((rf) => rf.question.toLowerCase() === cf.question.toLowerCase())
+  );
+  const allRouteFaqs = [...routeSpecificFaqs, ...customFaqs, ...commonFaqs].slice(0, 6);
+
+  // Cab options cards definition
+  const cabOptions = [
+    {
+      category: 'Hatchback',
+      models: 'WagonR, Swift or similar',
+      seats: 4,
+      bags: 2,
+      ratePerKm: 10,
+      totalFare: hatchbackFareTotal,
+      image: '/fleet-brand/Hatchback.png',
+      checkoutCat: 'hatchback',
+    },
+    {
+      category: 'Sedan',
+      models: 'Dzire, Etios or similar',
+      seats: 4,
+      bags: 3,
+      ratePerKm: 11,
+      totalFare: sedanFareTotal,
+      image: '/fleet-brand/dzire.png',
+      checkoutCat: 'sedan',
+    },
+    {
+      category: 'SUV',
+      models: 'Ertiga, Carens or similar',
+      seats: 6,
+      bags: 4,
+      ratePerKm: 15,
+      totalFare: ertigaFareTotal,
+      image: '/fleet-brand/Ertiga.png',
+      checkoutCat: 'suv-muv',
+    },
+    {
+      category: 'Innova Crysta',
+      models: 'Toyota Innova Crysta / Hycross',
+      seats: 7,
+      bags: 4,
+      ratePerKm: 20,
+      totalFare: crystaFareTotal,
+      image: '/fleet-brand/Innova Crysta.png',
+      checkoutCat: 'executive-suv',
+    },
+    {
+      category: 'Tempo Traveller',
+      models: 'Force Tempo Traveller 12-16 Seater',
+      seats: '12+',
+      bags: 10,
+      ratePerKm: 26,
+      totalFare: tempoFareTotal,
+      image: '/fleet-brand/Tempo Traveller.png',
+      checkoutCat: 'tempo12',
+    },
+  ];
 
   return (
-    <div className="pb-20 bg-slate-50 min-h-screen text-slate-900 font-sans">
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div className="bg-slate-50 min-h-screen text-slate-900 font-sans pb-16">
+      {/* Breadcrumbs Navigation */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      {/* Hero Header */}
-      <section className="bg-brand-blue text-white py-6 sm:py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-        <div className="max-w-7xl mx-auto relative z-10 text-center space-y-3">
-          <span className="inline-block px-3.5 py-1 bg-white/20 rounded-full text-xs font-black backdrop-blur-sm border border-white/30 uppercase tracking-wider">
-            One-Way & Round-Trip Taxi Service
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight drop-shadow-md">
-            {originName} to {destName} Taxi Service
-          </h1>
-          <p className="text-base sm:text-lg text-blue-100 font-medium max-w-2xl mx-auto">
-            Reliable AC Cabs & Professional Highway Drivers for {originName} to {destName} (~{distance} km)
-          </p>
+      {/* 1. ROUTE HERO SECTION */}
+      <section className="bg-gradient-to-b from-[#0a1128] via-[#101b3b] to-[#141f42] text-white pt-8 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Subtle Background Elements */}
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+        <div className="absolute -top-32 -right-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto relative z-10 space-y-6">
+          {/* Top Hero Grid: Title + Badges + Car Graphic */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            {/* Left Content */}
+            <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white drop-shadow-md">
+                {originName} to <span className="text-amber-400">{destName}</span> Taxi
+              </h1>
+
+              {/* Subtitle Pills */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 text-xs sm:text-sm font-bold text-blue-100">
+                <span className="bg-white/10 backdrop-blur-xs px-3 py-1 rounded-full border border-white/20">
+                  Comfortable
+                </span>
+                <span>•</span>
+                <span className="bg-white/10 backdrop-blur-xs px-3 py-1 rounded-full border border-white/20">
+                  Safe
+                </span>
+                <span>•</span>
+                <span className="bg-white/10 backdrop-blur-xs px-3 py-1 rounded-full border border-white/20">
+                  Affordable
+                </span>
+                <span>•</span>
+                <span className="bg-white/10 backdrop-blur-xs px-3 py-1 rounded-full border border-white/20">
+                  One-way & Round Trip
+                </span>
+              </div>
+
+              {/* Trip Details Strip (Horizontal Icons) */}
+              <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 text-xs sm:text-sm text-slate-200 font-semibold">
+                <div className="flex items-center gap-2">
+                  <span className="text-amber-400 text-base">📏</span>
+                  <span>
+                    Distance: <strong className="text-white font-black">{distance} km</strong>
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-amber-400 text-base">⏱️</span>
+                  <span>
+                    Travel Time: <strong className="text-white font-black">{durationText}</strong>
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-amber-400 text-base">🛣️</span>
+                  <span>
+                    Best Route: <strong className="text-white font-black">{corridor.highway}</strong>
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-amber-400 text-base">🔄</span>
+                  <span>
+                    Trip Type: <strong className="text-white font-black">One-way • Round Trip</strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Hero Image (Vehicle) */}
+            <div className="lg:col-span-5 relative h-48 sm:h-64 lg:h-72 w-full flex items-center justify-center">
+              <div className="relative w-full h-full">
+                <Image
+                  src="/fleet-brand/Hero.png"
+                  alt={`${originName} to ${destName} Taxi Cab Fleet`}
+                  fill
+                  priority
+                  className="object-contain drop-shadow-2xl"
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Embedded Hero Booking Bar */}
+          <div className="pt-2">
+            <RouteHeroBookingBar
+              defaultOrigin={originName}
+              defaultDestination={destName}
+              defaultDistanceKm={distance}
+            />
+          </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Main Content Column */}
-          <div className="lg:col-span-2 space-y-8 order-2 lg:order-1">
-            
-            {/* Route Map & Overview (Phase 2.3) */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-              <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                <h2 className="text-xl font-black text-brand-blue flex items-center gap-2">
-                  <span className="text-brand-green text-2xl">🗺️</span> Route Map & Highway Corridor Overview
+      {/* MAIN CONTAINER */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12">
+        {/* 2. TOP 3-CARD ROW (Route Overview + Route Map + Cab Options & Fare) */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          {/* Card 1: Route Overview (4 cols) */}
+          <div className="lg:col-span-4 bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-5">
+            <div className="space-y-4">
+              <div className="border-b border-slate-100 pb-3">
+                <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+                  <span>📖</span> Route Overview
                 </h2>
-                <span className="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1 rounded-full">
-                  Corridor Map
+              </div>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                {originName} to {destName} is one of the most popular travel corridors, offering scenic views, pleasant weather, and a comfortable highway journey. We provide clean, air-conditioned cabs with experienced highway drivers for safe doorstep rides.
+              </p>
+
+              {/* 2 Stat Boxes */}
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Distance</span>
+                  <span className="text-lg font-black text-slate-900">{distance} km</span>
+                </div>
+                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Travel Time</span>
+                  <span className="text-lg font-black text-slate-900">{durationText}</span>
+                </div>
+              </div>
+
+              {/* Best Route Chain */}
+              <div className="space-y-1.5 pt-1">
+                <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
+                  <FaRoad className="text-brand-blue" />
+                  <span>Best Route: <strong className="text-brand-blue">{corridor.highway}</strong></span>
+                </span>
+                <p className="text-xs text-slate-500 font-medium leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                  {corridor.routeChain}
+                </p>
+              </div>
+
+              {/* Road Type */}
+              <div className="pt-1">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  Road Type
+                </span>
+                <span className="inline-block text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
+                  {corridor.roadType}
                 </span>
               </div>
-              <div className="p-6 bg-slate-50 space-y-6">
-                <div className="flex flex-wrap gap-4 text-sm">
-                  <div className="bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm font-bold flex-1 text-slate-700">
-                    <span className="text-slate-400 text-xs block mb-1 uppercase">Corridor:</span>
-                    Primary Expressway ({originName} → {destName}) ~ {distance} km
-                  </div>
-                  <div className="bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm font-bold text-slate-700">
-                    <span className="text-slate-400 text-xs block mb-1 uppercase">Estimated Toll:</span>
-                    <span className="text-brand-green">~ ₹{estimatedToll} (Fastag Plaza Estimates)</span>
-                  </div>
-                </div>
-
-                {/* Keyless OpenStreetMap Live Corridor Overview */}
-                <div className="space-y-3">
-                  <div className="w-full h-64 rounded-xl overflow-hidden border border-slate-300 relative bg-slate-100">
-                    <iframe
-                      title={`Interactive Highway Corridor Route Map from ${originName} to ${destName}`}
-                      src="https://www.openstreetmap.org/export/embed.html?bbox=76.5%2C26.5%2C80.0%2C31.0&layer=mapnik"
-                      width="100%"
-                      height="256"
-                      loading="lazy"
-                      className="w-full h-full border-0"
-                    />
-                  </div>
-                  <div className="flex justify-end">
-                    <a
-                      href={`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originName)}&destination=${encodeURIComponent(destName)}&travelmode=driving`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-bold text-brand-blue hover:text-brand-green flex items-center gap-1.5 transition-colors"
-                    >
-                      📍 Open Turn-by-Turn GPS Directions in Google Maps →
-                    </a>
-                  </div>
-                </div>
-              </div>
             </div>
 
-            {/* Key Route Metrics (Phase 2.2) */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h2 className="text-xl font-black text-brand-blue mb-4 border-b border-slate-100 pb-3">
-                Key Route Metrics & Driving Conditions
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                  <div className="text-xs font-bold text-slate-400 uppercase mb-1">Total Distance & Travel Time</div>
-                  <div className="text-xl font-black text-slate-800">{distance} km ~ {hrs} hrs {mins} mins</div>
-                </div>
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                  <div className="text-xs font-bold text-slate-400 uppercase mb-1">Recommended Departure</div>
-                  <div className="text-xl font-black text-slate-800">Early Morning <span className="text-sm font-bold text-slate-500">(5 AM - 7 AM)</span></div>
-                </div>
-              </div>
-
-              <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl space-y-1 text-xs text-blue-900 font-medium">
-                <span className="font-bold flex items-center gap-1">ℹ️ Doorstep Pickup Information:</span>
-                <p>Our driver arrives at your specified home or hotel address with air conditioning prepared for your journey.</p>
-              </div>
+            <div className="pt-2 border-t border-slate-100 text-xs text-slate-500 font-medium flex items-center gap-2">
+              <span>🛡️</span>
+              <span>24/7 Doorstep Pickup with verified highway drivers.</span>
             </div>
+          </div>
 
-            {/* Available Vehicle Fares (Phase 2.5) */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-              <div className="p-6 border-b border-slate-100 bg-brand-blue text-white flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl font-black flex items-center gap-2">
-                    🚕 Available Vehicle Fares & Rate Card
-                  </h2>
-                  <p className="text-xs text-blue-200 mt-1">One-Way Drop Fares for {originName} to {destName}</p>
-                </div>
-                <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-bold">
-                  Clear Breakdown Options
-                </span>
-              </div>
-
-              {/* Sedan Card */}
-              <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row gap-6 hover:bg-slate-50 transition-colors">
-                <div className="md:w-1/3 flex flex-col items-center text-center space-y-2">
-                  <h3 className="font-black text-lg text-slate-800 uppercase tracking-wide">Sedan</h3>
-                  <p className="text-xs font-bold text-slate-500">Dzire, Etios or similar</p>
-                  <div className="h-24 w-40 relative my-2">
-                    <Image src="/fleet-brand/dzire.png" alt="Sedan Dzire Cab" fill className="object-contain" />
-                  </div>
-                  <div className="flex gap-4 text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                    <span>👤 4</span>
-                    <span>💼 2</span>
-                    <span>❄️ AC</span>
-                  </div>
-                </div>
-                <div className="md:w-2/3 space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Estimated Total Fare</div>
-                      <div className="text-3xl font-black text-brand-blue">₹{sedanFareTotal.toLocaleString('en-IN')}</div>
-                      <div className="text-xs text-slate-600 mt-1 font-medium">
-                        Base: ₹{Math.max(sedanFareTotal - estimatedToll, Math.round(distance * 11)).toLocaleString('en-IN')} + Est. Toll: ~₹{estimatedToll}
-                      </div>
-                    </div>
-                    <span className="bg-blue-50 text-brand-blue px-3 py-1 rounded-full text-xs font-bold border border-blue-200">Fixed Fare</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-2 text-xs font-medium">
-                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold">Extra km fare</span>
-                      <span className="font-bold text-slate-800">₹11/km after {distance} kms</span>
-                    </div>
-                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold">Driver Allowance</span>
-                      <span className="font-bold text-brand-green">Included in Base</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
-                    <Link
-                      href={`/checkout?serviceType=one_way&categoryId=sedan&routeId=${route.id || ''}&pickup=${encodeURIComponent(originName)}&drop=${encodeURIComponent(destName)}&km=${distance}`}
-                      className="flex-1 bg-brand-blue hover:bg-brand-blue-hover text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
-                    >
-                      Book Sedan Online
-                    </Link>
-                    <a
-                      href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
-                        pickup: originName,
-                        drop: destName,
-                        tripType: 'Outstation Drop',
-                        vehicleCategory: 'Sedan (Dzire/Etios)',
-                        totalFare: sedanFareTotal,
-                        tokenAmount: Math.round(sedanFareTotal * 0.30),
-                        balanceAmount: sedanFareTotal - Math.round(sedanFareTotal * 0.30),
-                        baseFare: Math.max(sedanFareTotal - estimatedToll, Math.round(distance * 11)),
-                        estimatedToll: estimatedToll,
-                        customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Sedan* for ${originName} to ${destName}.\nEstimated Fare: ₹${sedanFareTotal.toLocaleString('en-IN')}.`
-                      })}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
-                    >
-                      Book via WhatsApp
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* SUV / MPV Card */}
-              <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row gap-6 hover:bg-slate-50 transition-colors">
-                <div className="md:w-1/3 flex flex-col items-center text-center space-y-2">
-                  <h3 className="font-black text-lg text-slate-800 uppercase tracking-wide">SUV / MPV</h3>
-                  <p className="text-xs font-bold text-slate-500">Ertiga, Carens or similar</p>
-                  <div className="h-24 w-40 relative my-2">
-                    <Image src="/fleet-brand/Ertiga.png" alt="SUV Ertiga Cab" fill className="object-contain" />
-                  </div>
-                  <div className="flex gap-4 text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                    <span>👤 6</span>
-                    <span>💼 4</span>
-                    <span>❄️ AC</span>
-                  </div>
-                </div>
-                <div className="md:w-2/3 space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Estimated Total Fare</div>
-                      <div className="text-3xl font-black text-brand-blue">₹{ertigaFareTotal.toLocaleString('en-IN')}</div>
-                      <div className="text-xs text-slate-600 mt-1 font-medium">
-                        Base: ₹{Math.max(ertigaFareTotal - estimatedToll, Math.round(distance * 15)).toLocaleString('en-IN')} + Est. Toll: ~₹{estimatedToll}
-                      </div>
-                    </div>
-                    <span className="bg-blue-50 text-brand-blue px-3 py-1 rounded-full text-xs font-bold border border-blue-200">Spacious</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-2 text-xs font-medium">
-                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold">Extra km fare</span>
-                      <span className="font-bold text-slate-800">₹15/km after {distance} kms</span>
-                    </div>
-                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold">Driver Allowance</span>
-                      <span className="font-bold text-brand-green">Included in Base</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
-                    <Link
-                      href={`/checkout?serviceType=one_way&categoryId=suv-muv&routeId=${route.id || ''}&pickup=${encodeURIComponent(originName)}&drop=${encodeURIComponent(destName)}&km=${distance}`}
-                      className="flex-1 bg-brand-blue hover:bg-brand-blue-hover text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
-                    >
-                      Book SUV Online
-                    </Link>
-                    <a
-                      href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
-                        pickup: originName,
-                        drop: destName,
-                        tripType: 'Outstation Drop',
-                        vehicleCategory: 'SUV (Ertiga/Carens)',
-                        totalFare: ertigaFareTotal,
-                        tokenAmount: Math.round(ertigaFareTotal * 0.30),
-                        balanceAmount: ertigaFareTotal - Math.round(ertigaFareTotal * 0.30),
-                        baseFare: Math.max(ertigaFareTotal - estimatedToll, Math.round(distance * 15)),
-                        estimatedToll: estimatedToll,
-                        customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book an *Ertiga SUV* for ${originName} to ${destName}.\nEstimated Fare: ₹${ertigaFareTotal.toLocaleString('en-IN')}.`
-                      })}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
-                    >
-                      Book via WhatsApp
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Premium Innova Crysta Card */}
-              <div className="p-6 flex flex-col md:flex-row gap-6 hover:bg-slate-50 transition-colors">
-                <div className="md:w-1/3 flex flex-col items-center text-center space-y-2">
-                  <h3 className="font-black text-lg text-slate-800 uppercase tracking-wide">Innova Crysta</h3>
-                  <p className="text-xs font-bold text-slate-500">Toyota Innova Crysta / Hycross</p>
-                  <div className="h-24 w-40 relative my-2">
-                    <Image src="/fleet-brand/Innova%20Crysta.png" alt="Innova Crysta Luxury Taxi" fill className="object-contain" />
-                  </div>
-                  <div className="flex gap-4 text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-                    <span>👤 7</span>
-                    <span>💼 5</span>
-                    <span>❄️ AC</span>
-                  </div>
-                </div>
-                <div className="md:w-2/3 space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Estimated Total Fare</div>
-                      <div className="text-3xl font-black text-brand-blue">₹{crystaFareTotal.toLocaleString('en-IN')}</div>
-                      <div className="text-xs text-slate-600 mt-1 font-medium">
-                        Base: ₹{Math.max(crystaFareTotal - estimatedToll, Math.round(distance * 20)).toLocaleString('en-IN')} + Est. Toll: ~₹{estimatedToll}
-                      </div>
-                    </div>
-                    <span className="bg-amber-50 text-amber-800 px-3 py-1 rounded-full text-xs font-bold border border-amber-200">Luxury</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-2 text-xs font-medium">
-                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold">Extra km fare</span>
-                      <span className="font-bold text-slate-800">₹20/km after {distance} kms</span>
-                    </div>
-                    <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex flex-col">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold">Captain Seats</span>
-                      <span className="font-bold text-brand-green">Guaranteed</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
-                    <Link
-                      href={`/checkout?serviceType=one_way&categoryId=executive-suv&routeId=${route.id || ''}&pickup=${encodeURIComponent(originName)}&drop=${encodeURIComponent(destName)}&km=${distance}`}
-                      className="flex-1 bg-brand-blue hover:bg-brand-blue-hover text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
-                    >
-                      Book Crysta Online
-                    </Link>
-                    <a
-                      href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
-                        pickup: originName,
-                        drop: destName,
-                        tripType: 'Outstation Drop',
-                        vehicleCategory: 'Premium SUV (Innova Crysta)',
-                        totalFare: crystaFareTotal,
-                        tokenAmount: Math.round(crystaFareTotal * 0.30),
-                        balanceAmount: crystaFareTotal - Math.round(crystaFareTotal * 0.30),
-                        baseFare: Math.max(crystaFareTotal - estimatedToll, Math.round(distance * 20)),
-                        estimatedToll: estimatedToll,
-                        customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *Toyota Innova Crysta* for ${originName} to ${destName}.\nEstimated Fare: ₹${crystaFareTotal.toLocaleString('en-IN')}.`
-                      })}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 bg-brand-green hover:bg-emerald-600 text-white text-center font-bold py-2.5 rounded-lg shadow-sm transition-colors text-sm"
-                    >
-                      Book via WhatsApp
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Places Along the Route (Phase 2.6) */}
-            <RoutePlacesSection
-              places={placesAlongRoute}
-              originName={originName}
-              destName={destName}
-            />
-
-            {/* Route Travel Info & Highway Guide (Phase 2.7 & 2.9) */}
-            <RouteTravelInfoSection
+          {/* Card 2: Route Map (4 cols) */}
+          <div className="lg:col-span-4 flex flex-col">
+            <RouteMapCard
               originName={originName}
               destName={destName}
               distanceKm={distance}
-              durationHours={hrs}
-              durationMins={mins}
+              durationText={durationText}
+              className="h-full"
             />
-
-            {/* Route & Fleet Gallery (Phase 2.8) */}
-            <RouteGallerySection
-              originName={originName}
-              destName={destName}
-            />
-
-            {/* Verified Route Narrative (Phase 2.1) */}
-            {route.about && route.about.trim().length > 0 && (
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
-                <h2 className="text-xl font-black text-brand-blue border-b border-slate-100 pb-3 flex items-center gap-2">
-                  <span>📖</span> Route Overview & Travel Guide
-                </h2>
-                <div className="prose prose-slate max-w-none text-slate-600 text-sm leading-relaxed font-medium space-y-3">
-                  <p>{route.about}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Verified Page-Specific FAQs (Requirement 7) */}
-            <PageFAQSection
-              faqs={allRouteFaqs}
-              title={`Frequently Asked Questions (${originName} to ${destName} Cab)`}
-              subtitle={`Common queries regarding booking, fares, tolls, and vehicle options for ${originName} to ${destName} taxi travel.`}
-              includeSchema={true}
-            />
-
-            {/* Related Corridors / Internal Linking (Phase 2.11) */}
-            {relatedRoutes.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
-                <h2 className="text-xl font-black text-brand-blue border-b border-slate-100 pb-3 flex items-center gap-2">
-                  <span>🔄</span> Popular Related Outstation Taxi Corridors
-                </h2>
-                <p className="text-xs text-slate-500 font-medium">
-                  Frequently traveled connecting routes and destinations from {originName}:
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  {relatedRoutes.map((rel) => (
-                    <Link
-                      key={rel.slug}
-                      href={`/routes/${rel.slug}`}
-                      className="group p-3 rounded-xl border border-slate-200 hover:border-brand-blue bg-slate-50 hover:bg-blue-50/50 transition-all flex items-center justify-between"
-                    >
-                      <div>
-                        <div className="font-bold text-slate-800 group-hover:text-brand-blue text-sm">
-                          {rel.originName} to {rel.destName} Cab
-                        </div>
-                        <div className="text-xs text-slate-500 font-medium">
-                          ~{rel.estimated_distance_km} km | From ₹{rel.sedanFare}
-                        </div>
-                      </div>
-                      <span className="text-brand-blue group-hover:translate-x-1 transition-transform text-lg">→</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-
           </div>
 
-          {/* Sidebar: Interactive Route Booking Widget (Phase 2.4) */}
-          <div className="space-y-6 order-1 lg:order-2">
-            <div className="sticky top-20 space-y-6">
-              <RouteBookingWidget
-                defaultOrigin={originName}
-                defaultDestination={destName}
-                defaultDistanceKm={distance}
-                routeId={route.id}
-              />
-
-              {/* 24/7 Telephone Booking Card */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 text-center space-y-3">
-                <h4 className="font-bold text-slate-800 text-sm">Need Help Booking?</h4>
-                <p className="text-xs text-slate-500">Call our 24/7 highway dispatch desk directly:</p>
-                <a
-                  href={`tel:${SITE_CONFIG.phoneRaw}`}
-                  className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base transition-colors"
+          {/* Card 3: Cab Options & Fare (4 cols) */}
+          <div id="cab-options" className="lg:col-span-4 bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-4">
+            <div>
+              <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+                <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+                  <span>🚕</span> Cab Options & Fare
+                </h2>
+                <Link
+                  href="/fleet"
+                  className="text-xs font-black text-brand-blue hover:text-brand-green transition-colors"
                 >
-                  📞 {SITE_CONFIG.phone}
-                </a>
+                  View All →
+                </Link>
+              </div>
+
+              {/* Stack of 5 Vehicles */}
+              <div className="divide-y divide-slate-100 space-y-3 pt-2">
+                {cabOptions.map((cab, idx) => (
+                  <div key={idx} className="pt-3 first:pt-0 flex items-center justify-between gap-3 group">
+                    <div className="relative w-14 h-11 shrink-0 bg-slate-50 rounded-lg p-1 border border-slate-100">
+                      <Image
+                        src={cab.image}
+                        alt={`${cab.category} Cab`}
+                        fill
+                        className="object-contain"
+                        sizes="60px"
+                      />
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-black text-xs sm:text-sm text-slate-900 group-hover:text-brand-blue transition-colors truncate">
+                        {cab.category}
+                      </h3>
+                      <p className="text-[11px] text-slate-500 font-medium">
+                        👤 {cab.seats} Seats • 💼 {cab.bags} Bags
+                      </p>
+                      <div className="text-[11px] font-black text-brand-blue">
+                        From ₹{cab.ratePerKm}/km <span className="text-slate-400 font-medium">(₹{cab.totalFare.toLocaleString('en-IN')})</span>
+                      </div>
+                    </div>
+
+                    <div className="shrink-0">
+                      <Link
+                        href={`/checkout?serviceType=one_way&categoryId=${cab.checkoutCat}&routeId=${route.id || ''}&pickup=${encodeURIComponent(originName)}&drop=${encodeURIComponent(destName)}&km=${distance}`}
+                        className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all shadow-xs inline-block"
+                      >
+                        Book Now
+                      </Link>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
 
-        </div>
+            <div className="pt-3 border-t border-slate-100 text-[11px] text-slate-500 font-medium text-center">
+              * Fares exclude toll taxes, payable at actuals. 30% advance token.
+            </div>
+          </div>
+        </section>
+
+        {/* 3. QUICK ROUTE HIGHLIGHTS (5 Cards) */}
+        <section>
+          <RouteHighlights
+            originName={originName}
+            destName={destName}
+            highwayName={corridor.highway}
+          />
+        </section>
+
+        {/* 4. PLACES ON THIS ROUTE (4 Categorized Columns) */}
+        <section>
+          <RoutePlacesSection
+            originName={originName}
+            destName={destName}
+            places={corridor.places}
+          />
+        </section>
+
+        {/* 5. ROUTE GALLERY (5 Cards Carousel) */}
+        <section>
+          <RouteGallerySection
+            originName={originName}
+            destName={destName}
+            galleryItems={corridor.gallery}
+          />
+        </section>
+
+        {/* 6. DISTANCE & ROUTE DETAILS (Milestones) + WEATHER + TRAVEL TIPS */}
+        <section>
+          <RouteMilestonesWeatherTips
+            originName={originName}
+            destName={destName}
+            milestones={corridor.milestones}
+            weather={corridor.weather}
+            travelTips={corridor.travelTips}
+          />
+        </section>
+
+        {/* 7. FREQUENTLY ASKED QUESTIONS */}
+        <section>
+          <PageFAQSection
+            faqs={allRouteFaqs}
+            title={`Frequently Asked Questions (${originName} to ${destName} Cab)`}
+            subtitle={`Quick answers to help you plan your ${originName} to ${destName} trip with Urgent Taxis.`}
+            twoColumnLayout={true}
+            includeSchema={true}
+          />
+        </section>
+
+        {/* 8. SIMILAR ROUTES */}
+        <section>
+          <RouteSimilarRoutes
+            originName={originName}
+            similarRoutes={similarRoutesList}
+          />
+        </section>
+
+        {/* 9. BOTTOM CALL-TO-ACTION BANNER */}
+        <section className="bg-gradient-to-r from-[#0f172a] via-[#1e1b4b] to-[#0f172a] rounded-3xl p-6 sm:p-10 text-white shadow-xl border border-blue-900/40 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="space-y-3 max-w-2xl">
+              <span className="text-xs font-black uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
+                Instant Online Booking
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                Plan Your Next Journey with <span className="text-amber-400">Urgent Taxis</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 font-medium">
+                Comfortable rides. Transparent pricing. Professional service across all major North India corridors.
+              </p>
+
+              {/* Badges */}
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs font-bold text-slate-200">
+                <div className="flex items-center gap-1.5">
+                  <FaShieldAlt className="text-amber-400" />
+                  <span>Best Price Guaranteed</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <FaUserCheck className="text-emerald-400" />
+                  <span>Verified Drivers</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <FaHeadset className="text-blue-400" />
+                  <span>24/7 Support</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="shrink-0 flex flex-col sm:flex-row gap-3">
+              <Link
+                href={`/checkout?serviceType=one_way&pickup=${encodeURIComponent(originName)}&drop=${encodeURIComponent(destName)}&km=${distance}`}
+                className="py-3.5 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm text-center shadow-lg transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>Book Your Ride</span>
+                <FaArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <a
+                href={`tel:${SITE_CONFIG.phoneRaw}`}
+                className="py-3.5 px-6 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm text-center border border-white/20 backdrop-blur-xs transition-colors"
+              >
+                📞 {SITE_CONFIG.phone}
+              </a>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
