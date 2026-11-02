@@ -27,8 +27,8 @@ export default function RouteBookingWidget({
   return (
     <UnifiedBookingWidget
       initialServiceType="one_way"
-      defaultOrigin={defaultOrigin}
-      defaultDestination={defaultDestination}
+      defaultOrigin=""
+      defaultDestination=""
       defaultDistanceKm={defaultDistanceKm}
       routeId={routeId}
       className={className}
