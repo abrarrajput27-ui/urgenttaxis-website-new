@@ -1,110 +1,95 @@
-'use client';
-
-import React, { useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-
-interface GalleryItem {
-  src: string;
-  caption: string;
-  alt: string;
-}
 
 interface RouteGallerySectionProps {
   originName: string;
   destName: string;
-  galleryItems: GalleryItem[];
-  className?: string;
 }
 
-export default function RouteGallerySection({
-  originName,
-  destName,
-  galleryItems,
-  className = '',
-}: RouteGallerySectionProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+export default function RouteGallerySection({ originName, destName }: RouteGallerySectionProps) {
+  const normDest = destName.toLowerCase();
 
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -320, behavior: 'smooth' });
-    }
-  };
+  // Match destination image
+  let destImage = '/destinations/agra.jpg';
+  if (normDest.includes('dehradun')) destImage = '/destinations/dehradun.webp';
+  else if (normDest.includes('haridwar')) destImage = '/destinations/haridwar.webp';
+  else if (normDest.includes('rishikesh')) destImage = '/destinations/rishikesh.webp';
+  else if (normDest.includes('jaipur')) destImage = '/destinations/jaipur.webp';
+  else if (normDest.includes('chandigarh')) destImage = '/destinations/chandigarh.webp';
+  else if (normDest.includes('shimla')) destImage = '/destinations/shimla.webp';
+  else if (normDest.includes('manali')) destImage = '/destinations/manali.jpg';
+  else if (normDest.includes('nainital')) destImage = '/destinations/nainital.webp';
+  else if (normDest.includes('mussoorie')) destImage = '/destinations/mussoorie.webp';
+  else if (normDest.includes('ramnagar') || normDest.includes('corbett')) destImage = '/destinations/ramnagar.webp';
+  else if (normDest.includes('amritsar')) destImage = '/destinations/amritsar.jpg';
+  else if (normDest.includes('lucknow')) destImage = '/destinations/lucknow.jpg';
+  else if (normDest.includes('udaipur')) destImage = '/destinations/udaipur.jpg';
 
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 320, behavior: 'smooth' });
-    }
-  };
+  const galleryItems = [
+    {
+      src: destImage,
+      alt: `${destName} destination landmark and travel attraction for taxi trip from ${originName}`,
+      caption: `${destName} Tourism & City Landmarks`,
+      tag: 'Destination View',
+    },
+    {
+      src: '/fleet-brand/dzire.png',
+      alt: `Sedan Dzire AC cab for ${originName} to ${destName} highway taxi journey`,
+      caption: 'Sedan (Dzire / Etios) - 4 Seater',
+      tag: 'Comfort Sedan',
+    },
+    {
+      src: '/fleet-brand/Ertiga.png',
+      alt: `Maruti Ertiga 6 seater family SUV cab for ${originName} to ${destName}`,
+      caption: 'SUV / MPV (Ertiga / Carens) - 6 Seater',
+      tag: 'Family SUV',
+    },
+    {
+      src: '/fleet-brand/Innova%20Crysta.png',
+      alt: `Toyota Innova Crysta luxury 7 seater taxi for ${originName} to ${destName} outstation trip`,
+      caption: 'Innova Crysta - Luxury 7 Seater',
+      tag: 'Premium Luxury',
+    },
+  ];
 
   return (
-    <div className={`space-y-4 font-sans ${className}`}>
-      {/* Header with Arrow Controls */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            Route Gallery
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-            Scenic highway views and landmarks on the {originName} to {destName} corridor.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={scrollLeft}
-            aria-label="Previous gallery image"
-            className="w-8 h-8 rounded-full bg-white border border-slate-200 shadow-xs flex items-center justify-center text-slate-600 hover:text-brand-blue hover:bg-slate-50 transition-all cursor-pointer"
-          >
-            <FaChevronLeft className="w-3 h-3" />
-          </button>
-          <button
-            type="button"
-            onClick={scrollRight}
-            aria-label="Next gallery image"
-            className="w-8 h-8 rounded-full bg-white border border-slate-200 shadow-xs flex items-center justify-center text-slate-600 hover:text-brand-blue hover:bg-slate-50 transition-all cursor-pointer"
-          >
-            <FaChevronRight className="w-3 h-3" />
-          </button>
-        </div>
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4 font-sans">
+      <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+        <h2 className="text-xl font-black text-brand-blue flex items-center gap-2">
+          <span>📸</span> Route & Fleet Gallery ({originName} to {destName})
+        </h2>
+        <span className="text-xs bg-blue-50 text-brand-blue font-bold px-3 py-1 rounded-full border border-blue-200">
+          Clean AC Fleet
+        </span>
       </div>
+      <p className="text-xs text-slate-500 font-medium">
+        Take a visual tour of our sanitized vehicles and scenic landmarks on the {originName} to {destName} corridor:
+      </p>
 
-      {/* Gallery Cards Row / Carousel */}
-      <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto pb-2 scrollbar-none snap-x snap-mandatory"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
         {galleryItems.map((item, idx) => (
           <div
             key={idx}
-            className="min-w-[220px] sm:min-w-[240px] md:min-w-[260px] flex-1 snap-start bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-all group flex flex-col justify-between"
+            className="group rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
-            <div className="relative h-40 sm:h-44 w-full bg-slate-100 overflow-hidden">
+            <div className="relative h-44 w-full bg-slate-100 overflow-hidden">
               <Image
                 src={item.src}
                 alt={item.alt}
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
-                sizes="(max-width: 640px) 70vw, (max-width: 1024px) 30vw, 20vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <span className="absolute top-2 left-2 bg-brand-blue/80 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
+                {item.tag}
+              </span>
             </div>
-            <div className="p-3 bg-white border-t border-slate-100 text-center">
-              <p className="text-xs font-black text-slate-800 line-clamp-1">{item.caption}</p>
+            <div className="p-3 bg-white border-t border-slate-100">
+              <p className="text-xs font-bold text-slate-800 text-center">{item.caption}</p>
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Subtle Dot Indicator */}
-      <div className="flex justify-center items-center gap-1.5 pt-1">
-        <span className="w-2.5 h-2.5 rounded-full bg-brand-blue" />
-        <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-        <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-        <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
       </div>
     </div>
   );
