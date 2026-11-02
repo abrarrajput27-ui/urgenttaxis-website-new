@@ -84,20 +84,76 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       ],
       attractions: [
         { name: 'Naini Lake', category: 'attraction', location: 'Nainital, Uttarakhand', distanceKm: 300, image: '/destinations/nainital.webp' },
-        { name: 'Naina Devi Temple', category: 'attraction', location: 'Nainital, Uttarakhand', distanceKm: 300, image: '/destinations/nainital.webp' },
-        { name: 'Snow View Point', category: 'attraction', location: 'Nainital, Uttarakhand', distanceKm: 302, image: '/destinations/nainital.webp' },
+        { name: 'Naina Devi Temple', category: 'attraction', location: 'Nainital, Uttarakhand', distanceKm: 300, image: '/destinations/haridwar.webp' },
+        { name: 'Snow View Point', category: 'attraction', location: 'Nainital, Uttarakhand', distanceKm: 302, image: '/destinations/mussoorie.webp' },
       ],
     },
     gallery: [
-      { src: '/destinations/nainital.webp', caption: 'NH9 Highway Corridor View', alt: 'NH9 Highway Corridor View from Delhi to Nainital' },
-      { src: '/destinations/ramnagar.webp', caption: 'Corbett National Park Foothills', alt: 'Jim Corbett National Park and scenic foothill drive' },
-      { src: '/destinations/dehradun.webp', caption: 'Haldwani Foothills View', alt: 'Haldwani base town approaching Nainital hills' },
-      { src: '/destinations/nainital.webp', caption: 'Naini Lake & Mall Road', alt: 'Naini Lake surrounded by green mountain peaks' },
-      { src: '/destinations/haridwar.webp', caption: 'Naina Devi Temple Shrine', alt: 'Historic Naina Devi Temple on northern shore of Naini Lake' },
+      { src: '/destinations/nainital.webp', caption: 'NH9 Highway View', alt: 'NH9 Highway Corridor View from Delhi to Nainital' },
+      { src: '/destinations/ramnagar.webp', caption: 'Corbett National Park', alt: 'Jim Corbett National Park and scenic foothill drive' },
+      { src: '/destinations/dehradun.webp', caption: 'Haldwani City View', alt: 'Haldwani base town approaching Nainital hills' },
+      { src: '/destinations/nainital.webp', caption: 'Naini Lake', alt: 'Naini Lake surrounded by green mountain peaks' },
+      { src: '/destinations/haridwar.webp', caption: 'Naina Devi Temple', alt: 'Historic Naina Devi Temple on northern shore of Naini Lake' },
     ],
   },
 
-  // Delhi to Jaipur / Ajmer
+  // Delhi to Dehradun
+  'delhi-dehradun': {
+    highway: 'via Delhi-Meerut Expressway & NH334',
+    routeChain: 'Delhi → Ghaziabad → Meerut → Muzaffarnagar → Roorkee → Dehradun',
+    roadType: 'Delhi-Meerut Expressway & Smooth 4-Lane NH334',
+    weather: {
+      temp: '24°C',
+      condition: 'Pleasant & Breezy',
+      feelsLike: '23°C',
+    },
+    travelTips: [
+      'Delhi-Meerut Expressway saves over 45 minutes on the initial highway stretch.',
+      'Cheetal Grand at Khatauli Bypass is the legendary breakfast and snack stopover.',
+      'When visiting Dehradun, plan day trips to nearby Sahastradhara and Robber’s Cave.',
+      'Hill climb from Dehradun to Mussoorie takes around 1 - 1.5 hours on scenic ghats.',
+      'Cabs are fully equipped with luggage carriers and trained mountain drivers.',
+    ],
+    milestones: [
+      { town: 'Delhi', km: 0, timeText: '0 hr', description: 'Depart Delhi via Akshardham Delhi-Meerut Expressway' },
+      { town: 'Meerut Outer', km: 55, timeText: '45 mins', description: 'Bypass Meerut and merge smoothly onto NH334' },
+      { town: 'Khatauli (Cheetal)', km: 98, timeText: '1.5 - 2 hr', description: 'Cheetal Grand and highway food plazas' },
+      { town: 'Muzaffarnagar', km: 125, timeText: '2.5 hr', description: 'Smooth bypass around Muzaffarnagar city' },
+      { town: 'Roorkee', km: 175, timeText: '3.5 hr', description: 'Historic IIT Roorkee town near Ganga Canal' },
+      { town: 'Dehradun', km: 245, timeText: '4.5 - 5 hr', description: 'Arrive at Dehradun valley, capital of Uttarakhand' },
+    ],
+    places: {
+      restaurants: [
+        { name: 'Cheetal Grand Dhaba', category: 'restaurant', location: 'Khatauli Bypass, UP', distanceKm: 98, image: '/destinations/chandigarh.jpg' },
+        { name: 'Namaste Midway Food Plaza', category: 'restaurant', location: 'Mansurpur, UP', distanceKm: 115, image: '/destinations/lucknow.jpg' },
+        { name: 'Haldiram Midway Plaza', category: 'restaurant', location: 'Roorkee Bypass, UK', distanceKm: 170, image: '/destinations/amritsar.jpg' },
+      ],
+      petrolPumps: [
+        { name: 'HPCL Auto LPG & Fuel', category: 'petrol', location: 'Partapur Meerut, UP', distanceKm: 52 },
+        { name: 'Indian Oil COCO Pump', category: 'petrol', location: 'Purkaji UP Border', distanceKm: 152 },
+        { name: 'BPCL Shivalik Fuel', category: 'petrol', location: 'Raiwala Haridwar, UK', distanceKm: 215 },
+      ],
+      cngPumps: [
+        { name: 'HPCL CNG Station', category: 'cng', location: 'Meerut DME Outer', distanceKm: 52 },
+        { name: 'Indraprastha Gas CNG', category: 'cng', location: 'Muzaffarnagar Bypass', distanceKm: 120 },
+        { name: 'Haridwar Natural Gas CNG', category: 'cng', location: 'Haridwar Industrial Area', distanceKm: 205 },
+      ],
+      attractions: [
+        { name: 'Robber’s Cave (Guchhupani)', category: 'attraction', location: 'Anarwala, Dehradun', distanceKm: 248, image: '/destinations/dehradun.webp' },
+        { name: 'Sahastradhara Natural Spring', category: 'attraction', location: 'Timilimanjri, Dehradun', distanceKm: 252, image: '/destinations/dehradun.webp' },
+        { name: 'Mindrolling Buddha Temple', category: 'attraction', location: 'Clement Town, Dehradun', distanceKm: 246, image: '/destinations/dehradun.webp' },
+      ],
+    },
+    gallery: [
+      { src: '/destinations/chandigarh.jpg', caption: 'Delhi-Meerut Expressway View', alt: 'Delhi-Meerut Expressway Highway View' },
+      { src: '/destinations/dehradun.webp', caption: 'Rajaji National Park Foothills', alt: 'Rajaji forest foothills approaching Dehradun' },
+      { src: '/destinations/dehradun.webp', caption: 'Dehradun Valley City View', alt: 'Dehradun valley city view' },
+      { src: '/destinations/dehradun.webp', caption: 'Robber’s Cave (Guchhupani)', alt: 'Robbers Cave natural limestone stream in Dehradun' },
+      { src: '/destinations/dehradun.webp', caption: 'Sahastradhara Thousandfold Spring', alt: 'Sahastradhara natural waterfall and spring' },
+    ],
+  },
+
+  // Delhi to Jaipur
   'delhi-jaipur': {
     highway: 'via NH48',
     routeChain: 'Delhi → Gurugram → Dharuhera → Neemrana → Kotputli → Shahpura → Jaipur',
@@ -139,16 +195,16 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
         { name: 'Torrent Gas CNG', category: 'cng', location: 'Jaipur Outer, Rajasthan', distanceKm: 260 },
       ],
       attractions: [
-        { name: 'Neemrana Fort-Palace', category: 'attraction', location: 'Neemrana, Rajasthan', distanceKm: 122, image: '/destinations/jaipur.webp' },
         { name: 'Amber Palace & Fort', category: 'attraction', location: 'Amer, Jaipur', distanceKm: 265, image: '/destinations/jaipur.webp' },
-        { name: 'Hawa Mahal & City Palace', category: 'attraction', location: 'Jaipur, Rajasthan', distanceKm: 275, image: '/destinations/jaipur.webp' },
+        { name: 'Hawa Mahal Palace of Winds', category: 'attraction', location: 'Pink City, Jaipur', distanceKm: 275, image: '/destinations/jaipur.webp' },
+        { name: 'Jal Mahal (Water Palace)', category: 'attraction', location: 'Man Sagar Lake, Jaipur', distanceKm: 270, image: '/destinations/jaipur.webp' },
       ],
     },
     gallery: [
+      { src: '/destinations/chandigarh.jpg', caption: 'NH48 Expressway View', alt: 'NH48 Expressway from Delhi to Jaipur' },
+      { src: '/destinations/agra.jpg', caption: 'Aravalli Range Highway Drive', alt: 'Scenic mountain views along Rajasthan highway' },
       { src: '/destinations/jaipur.webp', caption: 'Amber Fort Historic Gateway', alt: 'Majestic Amber Fort in Jaipur' },
       { src: '/destinations/jaipur.webp', caption: 'Hawa Mahal Palace of Winds', alt: 'Iconic pink sandstone facade of Hawa Mahal' },
-      { src: '/destinations/chandigarh.jpg', caption: 'NH48 Expressway Corridor', alt: 'Wide multi-lane highway from Delhi to Jaipur' },
-      { src: '/destinations/agra.jpg', caption: 'Aravalli Range Highway Drive', alt: 'Scenic mountain views along Rajasthan highway' },
       { src: '/destinations/jaipur.webp', caption: 'Jal Mahal Scenic View', alt: 'Jal Mahal water palace in Jaipur lake' },
     ],
   },
@@ -195,129 +251,17 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
         { name: 'Agra City Gas CNG', category: 'cng', location: 'Agra Outer Bypass', distanceKm: 205 },
       ],
       attractions: [
-        { name: 'Shree Krishna Janmabhoomi', category: 'attraction', location: 'Mathura, UP', distanceKm: 120, image: '/destinations/agra.jpg' },
         { name: 'Taj Mahal Monument', category: 'attraction', location: 'Tajganj, Agra', distanceKm: 210, image: '/destinations/agra.jpg' },
         { name: 'Agra Fort UNESCO Site', category: 'attraction', location: 'Agra, UP', distanceKm: 212, image: '/destinations/agra.jpg' },
+        { name: 'Shree Krishna Janmabhoomi', category: 'attraction', location: 'Mathura, UP', distanceKm: 120, image: '/destinations/agra.jpg' },
       ],
     },
     gallery: [
-      { src: '/destinations/agra.jpg', caption: 'Taj Mahal Iconic Marble Mausoleum', alt: 'Taj Mahal white marble monument in Agra' },
+      { src: '/destinations/chandigarh.jpg', caption: 'Yamuna Expressway Highway View', alt: 'Fast access controlled concrete expressway' },
+      { src: '/destinations/agra.jpg', caption: 'Brijwasi Mathura Heritage', alt: 'Mathura temples and cultural stopovers' },
+      { src: '/destinations/agra.jpg', caption: 'Agra City Approaching View', alt: 'Approaching Agra city corridor' },
+      { src: '/destinations/agra.jpg', caption: 'Taj Mahal Monument', alt: 'Taj Mahal white marble monument in Agra' },
       { src: '/destinations/agra.jpg', caption: 'Agra Fort Red Sandstone Walls', alt: 'Mughal architectural citadel Agra Fort' },
-      { src: '/destinations/chandigarh.jpg', caption: 'Yamuna Expressway 6-Lane Drive', alt: 'Fast access controlled concrete expressway' },
-      { src: '/destinations/agra.jpg', caption: 'Brijwasi Mathura Cultural Heritage', alt: 'Mathura temples and cultural stopovers' },
-      { src: '/destinations/agra.jpg', caption: 'Mehtab Bagh Sunset View', alt: 'View of Taj Mahal across Yamuna river' },
-    ],
-  },
-
-  // Delhi to Dehradun / Haridwar / Rishikesh / Mussoorie
-  'delhi-dehradun': {
-    highway: 'via Delhi-Meerut Expressway & NH334',
-    routeChain: 'Delhi → Ghaziabad → Meerut → Muzaffarnagar → Roorkee → Haridwar → Dehradun',
-    roadType: 'Delhi-Meerut Expressway & Smooth 4-Lane NH334',
-    weather: {
-      temp: '24°C',
-      condition: 'Pleasant & Breezy',
-      feelsLike: '23°C',
-    },
-    travelTips: [
-      'Delhi-Meerut Expressway saves over 45 minutes on the initial highway stretch.',
-      'Cheetal Grand at Khatauli Bypass is the legendary breakfast and snack stopover.',
-      'When visiting Haridwar for evening Ganga Aarti, plan arrival by 4:30 PM.',
-      'Hill climb from Dehradun to Mussoorie takes around 1 - 1.5 hours on scenic ghats.',
-      'Cabs are fully equipped with luggage carriers and trained mountain drivers.',
-    ],
-    milestones: [
-      { town: 'Delhi', km: 0, timeText: '0 hr', description: 'Depart Delhi via Akshardham Delhi-Meerut Expressway' },
-      { town: 'Meerut Outer', km: 55, timeText: '45 mins', description: 'Bypass Meerut and merge smoothly onto NH334' },
-      { town: 'Khatauli (Cheetal)', km: 98, timeText: '1.5 - 2 hr', description: 'Cheetal Grand and highway food plazas' },
-      { town: 'Muzaffarnagar', km: 125, timeText: '2.5 hr', description: 'Smooth bypass around Muzaffarnagar city' },
-      { town: 'Roorkee', km: 175, timeText: '3.5 hr', description: 'Historic IIT Roorkee town near Ganga Canal' },
-      { town: 'Dehradun', km: 245, timeText: '4.5 - 5 hr', description: 'Arrive at Dehradun valley, capital of Uttarakhand' },
-    ],
-    places: {
-      restaurants: [
-        { name: 'Cheetal Grand Dhaba', category: 'restaurant', location: 'Khatauli Bypass, UP', distanceKm: 98, image: '/destinations/dehradun.webp' },
-        { name: 'Namaste Midway Food Plaza', category: 'restaurant', location: 'Mansurpur, UP', distanceKm: 115, image: '/destinations/haridwar.webp' },
-        { name: 'Haldiram Midway Plaza', category: 'restaurant', location: 'Roorkee Bypass, UK', distanceKm: 170, image: '/destinations/rishikesh.webp' },
-      ],
-      petrolPumps: [
-        { name: 'HPCL Auto LPG & Fuel', category: 'petrol', location: 'Partapur Meerut, UP', distanceKm: 52 },
-        { name: 'Indian Oil COCO Pump', category: 'petrol', location: 'Purkaji UP Border', distanceKm: 152 },
-        { name: 'BPCL Shivalik Fuel', category: 'petrol', location: 'Raiwala Haridwar, UK', distanceKm: 215 },
-      ],
-      cngPumps: [
-        { name: 'HPCL CNG Station', category: 'cng', location: 'Meerut DME Outer', distanceKm: 52 },
-        { name: 'Indraprastha Gas CNG', category: 'cng', location: 'Muzaffarnagar Bypass', distanceKm: 120 },
-        { name: 'Haridwar Natural Gas CNG', category: 'cng', location: 'Haridwar Industrial Area', distanceKm: 205 },
-      ],
-      attractions: [
-        { name: 'Har Ki Pauri Ghat', category: 'attraction', location: 'Haridwar, Uttarakhand', distanceKm: 215, image: '/destinations/haridwar.webp' },
-        { name: 'Ram Jhula & Ganga Ghats', category: 'attraction', location: 'Rishikesh, Uttarakhand', distanceKm: 240, image: '/destinations/rishikesh.webp' },
-        { name: 'Robber’s Cave & Sahastradhara', category: 'attraction', location: 'Dehradun, Uttarakhand', distanceKm: 250, image: '/destinations/dehradun.webp' },
-      ],
-    },
-    gallery: [
-      { src: '/destinations/dehradun.webp', caption: 'Dehradun Valley & Foothills', alt: 'Scenic mountain valley of Dehradun' },
-      { src: '/destinations/haridwar.webp', caption: 'Har Ki Pauri Evening Ganga Aarti', alt: 'Ganga Aarti ceremony at Haridwar ghat' },
-      { src: '/destinations/rishikesh.webp', caption: 'Rishikesh Ganga River Suspension Bridge', alt: 'Iconic suspension bridge in Rishikesh' },
-      { src: '/destinations/mussoorie.webp', caption: 'Mussoorie Queen of the Hills', alt: 'Panoramic hill view of Mussoorie' },
-      { src: '/destinations/chandigarh.jpg', caption: 'Delhi-Meerut Expressway Section', alt: 'Modern 14-lane high speed expressway corridor' },
-    ],
-  },
-
-  // Delhi to Chandigarh / Shimla / Manali
-  'delhi-chandigarh': {
-    highway: 'via NH44 (Grand Trunk Road)',
-    routeChain: 'Delhi → Murthal → Panipat → Karnal → Kurukshetra → Ambala → Chandigarh',
-    roadType: 'National Highway (NH44) 6-Lane Expressway',
-    weather: {
-      temp: '26°C',
-      condition: 'Pleasant & Sunny',
-      feelsLike: '25°C',
-    },
-    travelTips: [
-      'Murthal paranthas at Amrik Sukhdev or Mannat Dhaba are must-visit breakfast stops.',
-      'NH44 has excellent road surfaces and fully automated FASTag plaza gantries.',
-      'Keep headlights clean during winter mornings when northern plains experience fog.',
-      'Direct highway drop at Chandigarh Airport (IXC) or Sector 17 city center.',
-      'Drivers are experienced on connecting hill roads towards Kalka and Shimla.',
-    ],
-    milestones: [
-      { town: 'Delhi (Mukarba Chowk)', km: 0, timeText: '0 hr', description: 'Start north via GT Karnal Road / NH44' },
-      { town: 'Murthal', km: 50, timeText: '45 mins - 1 hr', description: 'Famous Murthal dhabas: Amrik Sukhdev, Gulshan & Haveli' },
-      { town: 'Panipat', km: 90, timeText: '1.5 hr', description: 'Pass Panipat elevated toll highway' },
-      { town: 'Karnal', km: 130, timeText: '2 - 2.5 hr', description: 'Karnal Oasis food plaza and heritage eateries' },
-      { town: 'Ambala Cantt', km: 200, timeText: '3.5 hr', description: 'Ambala flyovers linking Haryana & Punjab border' },
-      { town: 'Chandigarh', km: 245, timeText: '4 - 4.5 hr', description: 'Arrive in Chandigarh, the City Beautiful' },
-    ],
-    places: {
-      restaurants: [
-        { name: 'Amrik Sukhdev Dhaba', category: 'restaurant', location: 'Murthal, Haryana', distanceKm: 52, image: '/destinations/chandigarh.jpg' },
-        { name: 'Haveli Heritage Dhaba', category: 'restaurant', location: 'Karnal Bypass, Haryana', distanceKm: 128, image: '/destinations/amritsar.jpg' },
-        { name: 'Mayur Dhaba', category: 'restaurant', location: 'Samalkha, Haryana', distanceKm: 75, image: '/destinations/chandigarh.jpg' },
-      ],
-      petrolPumps: [
-        { name: 'Indian Oil COCO Station', category: 'petrol', location: 'Murthal, Haryana', distanceKm: 55 },
-        { name: 'BPCL Fuel Oasis', category: 'petrol', location: 'Ambala Bypass, Punjab', distanceKm: 200 },
-        { name: 'HPCL Smart Fuel', category: 'petrol', location: 'Dera Bassi, Punjab', distanceKm: 230 },
-      ],
-      cngPumps: [
-        { name: 'Haryana City Gas CNG', category: 'cng', location: 'Murthal KM 62', distanceKm: 62 },
-        { name: 'Adani Total Gas CNG', category: 'cng', location: 'Panipat Highway', distanceKm: 95 },
-        { name: 'Indian Oil CNG Station', category: 'cng', location: 'Ambala Cantt Outer', distanceKm: 198 },
-      ],
-      attractions: [
-        { name: 'Rock Garden of Chandigarh', category: 'attraction', location: 'Sector 1, Chandigarh', distanceKm: 248, image: '/destinations/chandigarh.jpg' },
-        { name: 'Sukhna Lake Promenade', category: 'attraction', location: 'Sector 6, Chandigarh', distanceKm: 250, image: '/destinations/chandigarh.jpg' },
-        { name: 'Rose Garden & Capitol Complex', category: 'attraction', location: 'Chandigarh City', distanceKm: 252, image: '/destinations/chandigarh.jpg' },
-      ],
-    },
-    gallery: [
-      { src: '/destinations/chandigarh.jpg', caption: 'Rock Garden Sculpture Art', alt: 'Rock Garden in Chandigarh' },
-      { src: '/destinations/chandigarh.jpg', caption: 'Sukhna Lake Waterfront', alt: 'Sukhna Lake promenade with Shivalik hills background' },
-      { src: '/destinations/shimla.webp', caption: 'Scenic Gateway to Himachal Hills', alt: 'Himalayan foothills landscape from Chandigarh' },
-      { src: '/destinations/amritsar.jpg', caption: 'NH44 Grand Trunk Highway', alt: 'Smooth multi lane highway from Delhi to Chandigarh' },
-      { src: '/destinations/chandigarh.jpg', caption: 'Clean Green Avenues of Chandigarh', alt: 'Tree lined avenues in Chandigarh' },
     ],
   },
 };
@@ -331,17 +275,17 @@ export function getRouteCorridorDetails(origin: string, destination: string, dis
   if (normDest.includes('nainital') || normDest.includes('haldwani') || normDest.includes('ramnagar') || normDest.includes('jim corbett') || normDest.includes('almora')) {
     return KNOWN_CORRIDORS['delhi-nainital'];
   }
+  if (normDest.includes('dehradun')) {
+    return KNOWN_CORRIDORS['delhi-dehradun'];
+  }
   if (normDest.includes('jaipur') || normDest.includes('ajmer') || normDest.includes('udaipur') || normDest.includes('jodhpur')) {
     return KNOWN_CORRIDORS['delhi-jaipur'];
   }
   if (normDest.includes('agra') || normDest.includes('mathura') || normDest.includes('vrindavan')) {
     return KNOWN_CORRIDORS['delhi-agra'];
   }
-  if (normDest.includes('dehradun') || normDest.includes('haridwar') || normDest.includes('rishikesh') || normDest.includes('mussoorie')) {
+  if (normDest.includes('haridwar') || normDest.includes('rishikesh') || normDest.includes('mussoorie')) {
     return KNOWN_CORRIDORS['delhi-dehradun'];
-  }
-  if (normDest.includes('chandigarh') || normDest.includes('shimla') || normDest.includes('manali') || normDest.includes('amritsar') || normDest.includes('ludhiana')) {
-    return KNOWN_CORRIDORS['delhi-chandigarh'];
   }
 
   // Dynamic synthesis for any other route
@@ -393,17 +337,17 @@ export function getRouteCorridorDetails(origin: string, destination: string, dis
         { name: 'City Gas CNG Station', category: 'cng', location: `Destination Outer KM ${threeQuarter - 5}`, distanceKm: threeQuarter - 5 },
       ],
       attractions: [
-        { name: `${destination} Heritage & City Center`, category: 'attraction', location: destination, distanceKm: distanceKm },
-        { name: `${destination} Scenic Viewpoint`, category: 'attraction', location: `${destination} Hills`, distanceKm: distanceKm + 2 },
-        { name: `${destination} Popular Promenade`, category: 'attraction', location: `${destination} Lake / Market`, distanceKm: distanceKm + 4 },
+        { name: `${destination} Heritage & City Center`, category: 'attraction', location: destination, distanceKm: distanceKm, image: '/destinations/nainital.webp' },
+        { name: `${destination} Scenic Viewpoint`, category: 'attraction', location: `${destination} Hills`, distanceKm: distanceKm + 2, image: '/destinations/mussoorie.webp' },
+        { name: `${destination} Popular Promenade`, category: 'attraction', location: `${destination} Lake / Market`, distanceKm: distanceKm + 4, image: '/destinations/haridwar.webp' },
       ],
     },
     gallery: [
-      { src: '/destinations/nainital.webp', caption: `${origin} to ${destination} Highway Corridor`, alt: `Highway Corridor from ${origin} to ${destination}` },
+      { src: '/destinations/chandigarh.jpg', caption: `${origin} to ${destination} Highway View`, alt: `Highway Corridor from ${origin} to ${destination}` },
       { src: '/destinations/dehradun.webp', caption: 'Scenic En-Route Landscape', alt: 'Scenic landscape along the route' },
-      { src: '/destinations/jaipur.webp', caption: 'Highway Rest Stop & Food Plaza', alt: 'Highway rest stop' },
-      { src: '/destinations/chandigarh.jpg', caption: 'Approaching Destination Landmark', alt: `Approaching ${destination}` },
-      { src: '/destinations/mussoorie.webp', caption: `${destination} Arrival Destination`, alt: `${destination} cityscape` },
+      { src: '/destinations/jaipur.webp', caption: `${destination} Approach City View`, alt: `Approaching ${destination}` },
+      { src: '/destinations/nainital.webp', caption: `${destination} Tourism Landmark`, alt: `${destination} tourist landmark` },
+      { src: '/destinations/mussoorie.webp', caption: `${destination} City Promenade`, alt: `${destination} cityscape` },
     ],
   };
 }
