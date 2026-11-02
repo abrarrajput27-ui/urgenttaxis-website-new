@@ -6,6 +6,37 @@ Everything else in the code, website structure, speed, security, and search engi
 
 ---
 
+## 0. PHASE 1 PRICING RECONCILIATIONS & RATE CONFIRMATIONS
+
+During our comprehensive Phase 1 pricing audit across the website, we eliminated all pricing conflicts and implemented `frontend/lib/pricing.ts` as the single source of truth:
+
+### A. Route Price Conflicts Resolved
+1. **Ghaziabad to Haridwar:** Previous directory showed ₹2,970, old route page showed ₹3,999 (due to adding toll). We locked the single master fare at **₹3,499** (30% token: ₹1,050; driver balance: ₹2,449). Tolls and parking are now shown separately as "estimated at actuals".
+2. **Delhi to Haridwar:** Master fixed fare is **₹3,999** (30% token: ₹1,200; driver balance: ₹2,799).
+3. **Delhi to Agra:** Master fixed fare is **₹3,499** (30% token: ₹1,050; driver balance: ₹2,449).
+4. **Delhi to Jaipur:** Master fixed fare is **₹4,499** (30% token: ₹1,350; driver balance: ₹3,149).
+5. **Delhi to Dehradun:** Master fixed fare is **₹4,299** (30% token: ₹1,290; driver balance: ₹3,009).
+6. **Delhi to Chandigarh:** Master fixed fare is **₹4,199** (30% token: ₹1,260; driver balance: ₹2,939).
+
+### B. Confirmed Local Rental Rates (8h/80km) & Derived 12h/120km Rates
+Formula for 12h/120km: `8h Base Price + (40 km × extra_km_rate) + (4 hr × extra_hour_rate)`
+- **Hatchback:** 8h/80km: ₹1,200 | 12h/120km: ₹2,200 (extra ₹10/km, ₹150/hr)
+- **Sedan:** 8h/80km: ₹1,500 | 12h/120km: ₹2,660 (extra ₹11/km, ₹180/hr)
+- **SUV/MPV (Ertiga):** 8h/80km: ₹2,000 | 12h/120km: ₹3,480 (extra ₹15/km, ₹220/hr)
+- **Innova Crysta:** 8h/80km: ₹2,500 | 12h/120km: ₹4,300 (extra ₹20/km, ₹250/hr)
+- **Tempo 12:** 8h/80km: ₹3,500 | 12h/120km: ₹5,660 (extra ₹24/km, ₹300/hr)
+- **Tempo 16:** 8h/80km: ₹4,500 | 12h/120km: ₹6,940 (extra ₹26/km, ₹350/hr)
+- **Tempo 20:** 8h/80km: ₹5,500 | 12h/120km: ₹8,220 (extra ₹28/km, ₹400/hr)
+- **Tempo 26:** 8h/80km: ₹6,500 | 12h/120km: ₹9,580 (extra ₹32/km, ₹450/hr)
+- **Force Urbania 12:** 8h/80km: ₹5,000 | 12h/120km: ₹7,600 (extra ₹30/km, ₹350/hr)
+- **Force Urbania 16:** 8h/80km: ₹6,000 | 12h/120km: ₹8,960 (extra ₹34/km, ₹400/hr)
+- **Mini Bus 27:** 8h/80km: ₹8,000 | 12h/120km: ₹12,000 (extra ₹45/km, ₹550/hr)
+- **Bus 45:** 8h/80km: ₹12,000 | 12h/120km: ₹17,200 (extra ₹55/km, ₹750/hr)
+
+*Review item:* If you prefer round figures for 12h/120km (e.g. ₹2,500 flat for Sedan), you can update us anytime.
+
+---
+
 ## 1. Questions Requiring Your Immediate Clarification
 
 ### A. Official Business Email
@@ -13,14 +44,10 @@ The website currently displays **`info@urgenttaxis.in`** as the single unified c
 - [ ] **Question:** Is `info@urgenttaxis.in` already set up with active email hosting / MX records to receive incoming emails from customers, or would you like customer inquiries routed to an alternate email address (e.g. a business Gmail)?
 
 ### B. Extra-Km Rate Conflicts (Local Package Pricing)
-Our pre-deployment audit identified a discrepancy between your master rate card and fallback local rental package rates:
-- **Rate Definition 1 (`frontend/lib/config.ts`):**  
-  - Sedan: ₹1,800 for 8h/80km | Extra km: **₹11/km**
-  - Ertiga SUV: ₹2,500 for 8h/80km | Extra km: **₹15/km**
-- **Rate Definition 2 (`frontend/lib/data/fallback-data.ts`):**  
-  - Sedan: ₹2,000 for 8h/80km | Extra km: **₹15/km**
-  - Sedan: ₹2,800 for 12h/120km | Extra km: **₹15/km**
-- [ ] **Decision Required:** Which rate card should be active for your local rentals? Should extra kilometers beyond the package limit be billed at the vehicle's standard rate (**₹11/km** for Sedan) or at the higher local package rate (**₹15/km**)?
+We unified all extra km rates across outstation and local packages based on your confirmed inputs:
+- Sedan extra km: **₹11/km**
+- Ertiga SUV extra km: **₹15/km**
+- Innova Crysta extra km: **₹20/km**
 
 ### C. Airport Transfer Fares & Flight Delay Policy Approval
 The dedicated IGI Airport transfer pages (`/airport-transfers/...`) display the following starting fares:
@@ -80,7 +107,7 @@ Never buy fake reviews. To rank higher in local search:
 ---
 
 ## 7. Official WhatsApp Business Account
-- [ ] Download **WhatsApp Business** on the phone holding number **+91 8595066033**.
+- [ ] Download **WhatsApp Business** on the phone holding number **+91 73106 51940**.
 - [ ] Set your display name to **Urgent Taxis**.
 - [ ] Add your logo (`logo.jpg`), business address (Masuri, Ghaziabad), opening hours (24/7), and website (`https://www.urgenttaxis.in`).
 - [ ] Enable automated quick replies (e.g. Greeting message when a customer inquires for fares).

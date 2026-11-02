@@ -19,3 +19,9 @@ dist/
 # Supabase CLI temp files
 supabase/.temp/
 
+
+# Test results and reports
+test-results/
+frontend/test-results/
+playwright-report/
+frontend/playwright-report/
