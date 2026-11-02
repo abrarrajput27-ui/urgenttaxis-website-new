@@ -104,9 +104,7 @@ export default function ReviewsPage() {
             </a>
           </div>
 
-          <p className="text-xs text-slate-500 pt-4 font-medium">
-            * Verified Google Business reviews link will be integrated upon completion of our verified Google Business Profile setup.
-          </p>
+
         </div>
       </section>
     </div>

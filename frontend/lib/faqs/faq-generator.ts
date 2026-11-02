@@ -19,7 +19,7 @@ export function getCommonBookingFAQs(): FAQItem[] {
   return [
     {
       question: 'How can I book a taxi with Urgent Taxis?',
-      answer: `You can book a cab online in under a minute via our website (urgenttaxis.in), call our 24/7 dispatch desk at ${BUSINESS_CONFIG.phone.display}, or message us on WhatsApp at ${BUSINESS_CONFIG.phone.whatsappDisplay}. Simply select your pickup locality, destination, travel date, and preferred vehicle category.`,
+      answer: `You can book a cab online in under a minute via our website (urgenttaxis.in), call our 24/7 dispatch desk at ${BUSINESS_CONFIG.phone.display}, or message us on WhatsApp at ${BUSINESS_CONFIG.phone.whatsapp || BUSINESS_CONFIG.phone.display}. Simply select your pickup locality, destination, travel date, and preferred vehicle category.`,
     },
     {
       question: 'What payment options are available?',
@@ -43,7 +43,7 @@ export function getCommonBookingFAQs(): FAQItem[] {
     },
     {
       question: 'How can I contact Urgent Taxis?',
-      answer: `Our Ghaziabad operational dispatch desk is available 24 hours a day, 7 days a week. You can call us directly at ${BUSINESS_CONFIG.phone.display}, WhatsApp us at ${BUSINESS_CONFIG.phone.whatsappDisplay}, or email ${BUSINESS_CONFIG.supportEmail}.`,
+      answer: `Our Ghaziabad operational dispatch desk is available 24 hours a day, 7 days a week. You can call us directly at ${BUSINESS_CONFIG.phone.display}, WhatsApp us at ${BUSINESS_CONFIG.phone.whatsapp || BUSINESS_CONFIG.phone.display}, or email ${BUSINESS_CONFIG.phone.email}.`,
     },
   ];
 }

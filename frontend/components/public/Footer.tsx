@@ -156,7 +156,7 @@ export default function PublicFooter() {
                 <FaPhoneAlt className="text-slate-400 mt-1 shrink-0" />
                 <div>
                   <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="hover:text-white transition-colors block">
-                    +91 {SITE_CONFIG.phone}
+                    {SITE_CONFIG.phone}
                   </a>
                 </div>
               </div>
