@@ -35,6 +35,17 @@ Formula for 12h/120km: `8h Base Price + (40 km × extra_km_rate) + (4 hr × extr
 
 *Review item:* If you prefer round figures for 12h/120km (e.g. ₹2,500 flat for Sedan), you can update us anytime.
 
+### C. Hourly Rental Package Base Fares (Owner Confirmation Required)
+Phase 2 expanded the hourly rental package selector to exactly 5 customer packages:
+1. **4 Hours / 40 KM:** Base rates unapproved. Currently showing *"Rate on Request / Confirm on WhatsApp"* to prevent inventing fares.
+   - [ ] Please provide approved base rates for Hatchback, Sedan, SUV, and Crysta.
+2. **6 Hours / 60 KM:** Base rates unapproved. Currently showing *"Rate on Request / Confirm on WhatsApp"*.
+   - [ ] Please provide approved base rates for Hatchback, Sedan, SUV, and Crysta.
+3. **8 Hours / 80 KM:** **APPROVED & LIVE** (Hatchback: ₹1,200 | Sedan: ₹1,500 | SUV: ₹2,000 | Crysta: ₹2,500).
+4. **10 Hours / 100 KM:** Base rates unapproved. Currently showing *"Rate on Request / Confirm on WhatsApp"*.
+   - [ ] Please provide approved base rates for Hatchback, Sedan, SUV, and Crysta.
+5. **12 Hours / 120 KM:** **APPROVED & LIVE** (Hatchback: ₹2,200 | Sedan: ₹2,660 | SUV: ₹3,480 | Crysta: ₹4,500).
+
 ---
 
 ## 1. Questions Requiring Your Immediate Clarification
@@ -111,3 +122,27 @@ Never buy fake reviews. To rank higher in local search:
 - [ ] Set your display name to **Urgent Taxis**.
 - [ ] Add your logo (`logo.jpg`), business address (Masuri, Ghaziabad), opening hours (24/7), and website (`https://www.urgenttaxis.in`).
 - [ ] Enable automated quick replies (e.g. Greeting message when a customer inquires for fares).
+
+---
+
+## 8. Transactional Email Provider (Resend API Key)
+Transactional booking confirmation emails have been built and tested with graceful fallbacks. To enable live email dispatch to customers upon booking creation:
+- [ ] Sign up at [Resend](https://resend.com) (or your preferred transactional email service).
+- [ ] Verify your domain `urgenttaxis.in` with SPF and DKIM DNS records.
+- [ ] Create an API Key and add it to your Vercel Project Environment Variables / `.env.local`:
+  ```env
+  RESEND_API_KEY=re_your_api_key_here
+  EMAIL_FROM=Urgent Taxis <bookings@urgenttaxis.in>
+  ```
+*(Note: Until `RESEND_API_KEY` is added, the website safely skips sending emails and logs cleanly without throwing errors or rolling back any customer bookings).*
+
+---
+
+## 9. Official Business Legal & GST Details for Invoices
+The downloadable PDF invoice system is live. Per legal requirements, placeholder notices are currently displayed so no fake tax registrations are ever generated:
+- [ ] Provide your official Legal Entity Name (e.g., Sole Proprietorship, LLP, or Private Limited).
+- [ ] Provide your GSTIN (Goods and Services Tax Identification Number), if registered.
+- [ ] Confirm your registered billing address if different from:  
+  *2nd Floor, Block B, Sector 62, Noida, Uttar Pradesh 201309*
+- [ ] Specify if you want GST (5% with ITC or without ITC) itemized on outstation passenger transport invoices.
+

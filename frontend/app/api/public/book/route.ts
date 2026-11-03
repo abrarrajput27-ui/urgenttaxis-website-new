@@ -7,6 +7,9 @@ import {
   calculateMasterAirportTransferFare,
   MasterFareInput,
 } from '@/lib/pricing/engine';
+import { calculateAdvanceToken } from '@/lib/pricing';
+import { validateAndComputeAddOns } from '@/lib/pricing/add-ons';
+import { sendBookingConfirmationEmail } from '@/lib/email/booking-mailer';
 import { randomBytes } from 'crypto';
 
 export async function POST(req: NextRequest) {
@@ -30,6 +33,8 @@ export async function POST(req: NextRequest) {
       passengerCount = 1,
       luggageCount = 0,
       specialInstructions,
+      stops = [],
+      selectedAddOns = [],
       
       // Customer Details
       customerFullName,
@@ -40,6 +45,12 @@ export async function POST(req: NextRequest) {
     // 1. Basic validation
     if (!serviceType || !categoryId || !pickupAddress || !travelDateTime || !customerFullName || !customerPhone) {
       return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
+    }
+
+    // Server-side validation of chargeable add-ons
+    const addOnValidation = validateAndComputeAddOns(selectedAddOns, categoryId);
+    if (addOnValidation.errors.length > 0) {
+      return NextResponse.json({ success: false, message: addOnValidation.errors.join(' ') }, { status: 400 });
     }
 
     const numericPassengerCount = Number(passengerCount);
@@ -215,6 +226,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Fare calculation failed.' }, { status: 500 });
     }
 
+    // Phase 3 Add-on Calculation
+    const baseVehicleFare = calcResult.customerPayable;
+    const finalCustomerPayable = baseVehicleFare + addOnValidation.addOnTotal;
+    const finalTokenAmount = calculateAdvanceToken(finalCustomerPayable, 30);
+    const finalBalanceAmount = finalCustomerPayable - finalTokenAmount;
+
     // 5. Handle Customer Record (Upsert using phone)
     let customerId = '';
     const { data: existingCustomer } = await adminClient.from('customers').select('id').eq('phone', customerPhone).single();
@@ -260,6 +277,14 @@ export async function POST(req: NextRequest) {
     }
 
     // 7. Insert Booking
+    // Format special instructions including intermediate stops and add-ons
+    const stopDetails = Array.isArray(stops) && stops.length > 0 ? `Stops: ${stops.join(' ➔ ')}` : '';
+    const addOnDetails = addOnValidation.validAddOns.length > 0
+      ? `[ADD-ONS: ${addOnValidation.validAddOns.map(a => `${a.name} (₹${a.price})`).join(', ')}]`
+      : '';
+    const instructionParts = [specialInstructions?.trim(), stopDetails, addOnDetails].filter(Boolean);
+    const finalInstructions = instructionParts.length > 0 ? instructionParts.join(' | ') : null;
+
     const { data: booking, error: bookingError } = await adminClient.from('bookings').insert({
       booking_reference: bookingReference,
       customer_id: customerId,
@@ -271,7 +296,7 @@ export async function POST(req: NextRequest) {
       return_datetime: returnDateTime || null,
       passenger_count: numericPassengerCount,
       luggage_count: luggageCount ? Number(luggageCount) : 0,
-      special_instructions: specialInstructions,
+      special_instructions: finalInstructions,
       status: 'pending',
       payment_status: 'unpaid',
       booking_source: 'public_website',
@@ -282,21 +307,35 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Failed to create booking record.' }, { status: 500 });
     }
 
-    // 8. Freeze Fare Snapshot
+    // 8. Freeze Fare Snapshot with Authoritative Financial Calculations
     const snapshotPayload = {
       booking_id: booking.id,
-      automatic_fare: calcResult.automaticFare,
+      automatic_fare: calcResult.automaticFare + addOnValidation.addOnTotal,
       manual_override_fare: null,
-      final_fare: calcResult.customerPayable,
+      final_fare: finalCustomerPayable,
       base_fare: calcResult.baseFare,
       included_km: calcResult.includedKm,
       extra_km_rate: calcResult.extraKmRate,
-      toll_tax: calcResult.charges.find((c: any) => c.id === 'toll_tax')?.amount || 0,
-      state_tax: calcResult.charges.find((c: any) => c.id === 'state_tax')?.amount || 0,
-      customer_payable: calcResult.customerPayable,
-      token_amount: calcResult.tokenAmount,
-      balance_amount: calcResult.balanceAmount,
-      breakdown_json: calcResult as any,
+      toll_tax: calcResult.charges?.find((c: any) => c.id === 'toll_tax')?.amount || 0,
+      state_tax: calcResult.charges?.find((c: any) => c.id === 'state_tax')?.amount || 0,
+      customer_payable: finalCustomerPayable,
+      token_amount: finalTokenAmount,
+      balance_amount: finalBalanceAmount,
+      breakdown_json: {
+        ...calcResult,
+        baseVehicleFare,
+        addOns: addOnValidation.validAddOns.map((a) => ({
+          id: a.id,
+          name: a.name,
+          price: a.price,
+          disclaimer: a.disclaimer,
+        })),
+        addOnTotal: addOnValidation.addOnTotal,
+        customerPayable: finalCustomerPayable,
+        tokenAmount: finalTokenAmount,
+        balanceAmount: finalBalanceAmount,
+        intermediateStops: Array.isArray(stops) ? stops : [],
+      } as any,
     };
 
     const { error: snapError } = await adminClient.from('fare_snapshots').insert(snapshotPayload);
@@ -307,12 +346,39 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Failed to freeze fare snapshot. Booking aborted to ensure consistency.' }, { status: 500 });
     }
 
+    // 9. Dispatch Transactional Confirmation Email (Non-blocking, never fails booking)
+    const categoryName = isExec ? 'Executive SUV (Innova Crysta)' : isSuv ? 'SUV / MUV (Ertiga / Carens)' : isHatch ? 'Hatchback (WagonR / Swift)' : 'Sedan (Dzire / Etios)';
+    sendBookingConfirmationEmail(bookingReference, {
+      bookingId: booking.id,
+      customerId: customerId,
+      customerName: customerFullName,
+      customerEmail: customerEmail || null,
+      customerPhone: customerPhone,
+      serviceType,
+      pickupAddress,
+      dropAddress,
+      intermediateStops: Array.isArray(stops) ? stops : [],
+      travelDateTime,
+      returnDateTime,
+      vehicleName: categoryName,
+      baseFare: baseVehicleFare,
+      addOns: addOnValidation.validAddOns.map((a) => ({ name: a.name, price: a.price })),
+      addOnTotal: addOnValidation.addOnTotal,
+      customerPayable: finalCustomerPayable,
+      tokenAmount: finalTokenAmount,
+      balanceAmount: finalBalanceAmount,
+      bookingStatus: 'pending',
+      paymentStatus: 'unpaid',
+    }).catch((emailErr) => {
+      console.warn('[BOOKING_EMAIL_ERROR] Asynchronous email failure (non-blocking):', emailErr);
+    });
+
     return NextResponse.json({
       success: true,
       bookingReference,
       bookingId: booking.id,
-      payable: calcResult.customerPayable,
-      token: calcResult.tokenAmount,
+      payable: finalCustomerPayable,
+      token: finalTokenAmount,
     });
 
   } catch (error: unknown) {

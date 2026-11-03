@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/lib/seo';
+import { BOOKING_ADDONS, isAddOnSupported } from '@/lib/pricing/add-ons';
 
 function CheckoutContent() {
   const searchParams = useSearchParams();
@@ -17,6 +18,10 @@ function CheckoutContent() {
   const dropAddress = searchParams.get('drop') || '';
   const travelDateTime = searchParams.get('date') || '';
   const actualDistanceKm = searchParams.get('km') || '0';
+  const rawStops = searchParams.get('stops') || '';
+  const stops = rawStops ? rawStops.split('|').map((s) => s.trim()).filter(Boolean) : [];
+  const rawAddOns = searchParams.get('addOns') || '';
+  const initialAddOns = rawAddOns.split(',').map((s) => s.trim()).filter(Boolean);
 
   // State
   const [customerFullName, setCustomerFullName] = useState('');
@@ -24,8 +29,18 @@ function CheckoutContent() {
   const [customerEmail, setCustomerEmail] = useState('');
   const [passengerCount, setPassengerCount] = useState(1);
   const [specialInstructions, setSpecialInstructions] = useState('');
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>(initialAddOns);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Sync with URL search params after client hydration
+  useEffect(() => {
+    const raw = searchParams.get('addOns');
+    if (raw) {
+      const parsed = raw.split(',').map((s) => s.trim()).filter(Boolean);
+      setSelectedAddOns(parsed);
+    }
+  }, [searchParams]);
 
   // Re-verify fare locally (just visual, true authority is backend)
   const [fareData, setFareData] = useState<any>(null);
@@ -43,7 +58,8 @@ function CheckoutContent() {
         categoryId,
         routeId,
         pickupDateTime: travelDateTime,
-        actualDistanceKm: Number(actualDistanceKm)
+        actualDistanceKm: Number(actualDistanceKm),
+        selectedAddOns
       })
     })
     .then(res => res.json())
@@ -56,7 +72,7 @@ function CheckoutContent() {
     })
     .catch(() => setError('Network error.'))
     .finally(() => setIsLoadingFare(false));
-  }, [serviceType, categoryId, routeId, travelDateTime, actualDistanceKm]);
+  }, [serviceType, categoryId, routeId, travelDateTime, actualDistanceKm, selectedAddOns]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,9 +95,12 @@ function CheckoutContent() {
           pickupAddress,
           dropAddress,
           travelDateTime,
+          returnDateTime: searchParams.get('returnDate') || undefined,
           actualDistanceKm,
           passengerCount,
           specialInstructions,
+          stops,
+          selectedAddOns,
           customerFullName,
           customerPhone,
           customerEmail,
@@ -166,6 +185,75 @@ function CheckoutContent() {
               </form>
             </div>
 
+            {/* Phase 3: Chargeable Vehicle Add-ons Review */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <span>✨</span> Optional Trip Add-ons
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Select optional preferences for your journey. Fixed at ₹300 per add-on.
+                  </p>
+                </div>
+                <span className="text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full border border-amber-200 shrink-0">
+                  ₹300 each
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {Object.values(BOOKING_ADDONS).map((addon) => {
+                  const isCompatible = isAddOnSupported(addon.id, categoryId);
+                  const isChecked = selectedAddOns.includes(addon.id);
+
+                  return (
+                    <div
+                      key={addon.id}
+                      onClick={() => {
+                        if (!isCompatible) return;
+                        setSelectedAddOns((prev) =>
+                          prev.includes(addon.id) ? prev.filter((id) => id !== addon.id) : [...prev, addon.id]
+                        );
+                      }}
+                      className={`p-4 rounded-xl border transition-all ${
+                        !isCompatible
+                          ? 'bg-slate-50 border-slate-200 opacity-60 cursor-not-allowed'
+                          : isChecked
+                          ? 'bg-blue-50/60 border-brand-blue ring-1 ring-brand-blue/30 cursor-pointer'
+                          : 'bg-white border-slate-200 hover:border-slate-300 cursor-pointer'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <label className="flex items-center gap-3 cursor-pointer pointer-events-none">
+                          <input
+                            type="checkbox"
+                            checked={isChecked && isCompatible}
+                            disabled={!isCompatible}
+                            readOnly
+                            className="w-4 h-4 text-brand-blue rounded border-slate-300 focus:ring-brand-blue cursor-pointer"
+                          />
+                          <div>
+                            <span className="font-bold text-sm text-slate-900 block">{addon.name}</span>
+                            <span className="text-xs text-slate-600 block mt-0.5">{addon.shortDescription}</span>
+                          </div>
+                        </label>
+                        <span className="font-mono font-bold text-xs text-slate-800 bg-slate-100 px-2.5 py-1 rounded-md shrink-0">
+                          +₹{addon.price}
+                        </span>
+                      </div>
+                      {!isCompatible ? (
+                        <p className="text-[11px] text-rose-600 font-semibold pl-7 mt-2">
+                          ⚠️ {addon.ineligibleMessage || 'Not compatible with selected vehicle.'}
+                        </p>
+                      ) : (
+                        <p className="text-[11px] text-slate-400 italic pl-7 mt-1.5">{addon.disclaimer}</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
               <h2 className="text-xl font-bold text-slate-900 mb-6 pb-4 border-b border-slate-100">Trip Requirements</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -224,6 +312,12 @@ function CheckoutContent() {
                     <span className="font-medium text-slate-700">{dropAddress}</span>
                   </div>
                 )}
+                {stops && stops.length > 0 && (
+                  <div className="md:col-span-2">
+                    <span className="text-xs text-slate-500 uppercase font-bold block">Intermediate Stops</span>
+                    <span className="font-medium text-slate-700">{stops.join(' ➔ ')}</span>
+                  </div>
+                )}
                 <div>
                   <span className="text-xs text-slate-500 uppercase font-bold block">Date & Time</span>
                   <span className="font-medium text-slate-700">{new Date(travelDateTime).toLocaleString()}</span>
@@ -236,9 +330,25 @@ function CheckoutContent() {
                 ) : fareData ? (
                   <>
                     <div className="flex justify-between items-center text-slate-600 text-sm">
-                      <span>Base Fare ({fareData.includedKm} KM)</span>
-                      <span>₹{fareData.baseFare.toLocaleString('en-IN')}</span>
+                      <span>Base Vehicle Fare ({fareData.includedKm} KM)</span>
+                      <span>₹{(fareData.baseVehicleFare || fareData.baseFare).toLocaleString('en-IN')}</span>
                     </div>
+
+                    {fareData.addOns && fareData.addOns.length > 0 && (
+                      <div className="border-t border-slate-100 pt-3 mt-3 space-y-1.5">
+                        <span className="text-xs font-bold text-slate-700 uppercase block">Selected Add-ons</span>
+                        {fareData.addOns.map((addon: any) => (
+                          <div key={addon.id} className="flex justify-between items-center text-slate-600 text-xs">
+                            <span>• {addon.name}</span>
+                            <span className="font-semibold text-slate-800">₹{addon.price}</span>
+                          </div>
+                        ))}
+                        <div className="flex justify-between items-center text-xs font-bold text-indigo-900 pt-1 border-t border-slate-100">
+                          <span>Total Add-on Charges</span>
+                          <span>₹{fareData.addOnTotal || 0}</span>
+                        </div>
+                      </div>
+                    )}
                     {fareData.distanceCharge > 0 && (
                       <div className="flex justify-between items-center text-slate-600 text-sm">
                         <span>Extra Distance Charge</span>

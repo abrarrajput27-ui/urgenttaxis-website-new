@@ -137,12 +137,14 @@ export default async function HomePage() {
         </div>
 
         {/* 3. PUBLIC FARE SEARCH WIDGET */}
-        <PublicFareWidget
-          localPackages={localPackages || []}
-          categories={categories || []}
-          routes={routes || []}
-          locations={locations || []}
-        />
+        <div className="relative z-10">
+          <PublicFareWidget
+            localPackages={localPackages || []}
+            categories={categories || []}
+            routes={routes || []}
+            locations={locations || []}
+          />
+        </div>
       </section>
 
       {/* PHASE 6B: TRUST SECTION (Moved below Hero) */}

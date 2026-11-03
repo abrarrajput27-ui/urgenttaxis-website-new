@@ -258,6 +258,120 @@ export function resolveOneWayFare(
   return null;
 }
 
+export interface MultiStopFareQuote {
+  origin: string;
+  stops: string[];
+  destination: string;
+  sequence: string[];
+  totalDistanceKm: number;
+  durationText: string;
+  isReliablyCalculated: boolean;
+  requiresWhatsAppQuote: boolean;
+  explanation: string;
+  sedanFare: number;
+  ertigaFare: number;
+  crystaFare: number;
+  startsAt: number;
+  estimatedToll: number;
+}
+
+export function resolveMultiStopRoute(
+  origin: string,
+  stops: string[] = [],
+  destination: string
+): MultiStopFareQuote | null {
+  if (!origin || !destination) return null;
+  const validStops = stops.map((s) => s.trim()).filter(Boolean);
+  const sequence = [origin, ...validStops, destination];
+
+  if (validStops.length === 0) {
+    const direct = resolveOneWayFare(origin, destination);
+    if (!direct) return null;
+    return {
+      origin,
+      stops: [],
+      destination,
+      sequence,
+      totalDistanceKm: direct.distanceKm,
+      durationText: direct.durationText,
+      isReliablyCalculated: direct.isFixed,
+      requiresWhatsAppQuote: !direct.isFixed,
+      explanation: `${origin} ➔ ${destination} direct route (${direct.distanceKm} KM)`,
+      sedanFare: direct.sedanFare,
+      ertigaFare: direct.ertigaFare,
+      crystaFare: direct.crystaFare,
+      startsAt: direct.startsAt,
+      estimatedToll: direct.estimatedToll,
+    };
+  }
+
+  // Calculate leg-by-leg
+  let totalDistance = 0;
+  let allLegsFound = true;
+  const legDescriptions: string[] = [];
+
+  for (let i = 0; i < sequence.length - 1; i++) {
+    const legFrom = sequence[i];
+    const legTo = sequence[i + 1];
+    const directLeg = resolveOneWayFare(legFrom, legTo);
+    if (directLeg && directLeg.distanceKm > 0) {
+      totalDistance += directLeg.distanceKm;
+      legDescriptions.push(`${legFrom}➔${legTo} (${directLeg.distanceKm} km)`);
+    } else {
+      allLegsFound = false;
+      legDescriptions.push(`${legFrom}➔${legTo}`);
+    }
+  }
+
+  const estHours = Math.max(1, Math.round(totalDistance / 50));
+  const durationText = totalDistance > 0 ? `~${estHours} hrs` : 'Custom duration';
+  const explanation = `Multi-stop sequence: ${sequence.join(' ➔ ')}`;
+
+  // If intermediate legs cannot all be reliably calculated from database, do NOT display misleading fare
+  if (!allLegsFound || totalDistance === 0) {
+    return {
+      origin,
+      stops: validStops,
+      destination,
+      sequence,
+      totalDistanceKm: totalDistance,
+      durationText,
+      isReliablyCalculated: false,
+      requiresWhatsAppQuote: true,
+      explanation: `${explanation}. Custom intermediate stop distance confirmed via WhatsApp.`,
+      sedanFare: 0,
+      ertigaFare: 0,
+      crystaFare: 0,
+      startsAt: 0,
+      estimatedToll: 0,
+    };
+  }
+
+  // Standard transparent multi-stop rate based on verified leg distances
+  const sedanFare = Math.round((totalDistance * 13.5) / 50) * 50;
+  const ertigaFare = Math.round((totalDistance * 17.5) / 50) * 50;
+  const crystaFare = Math.round((totalDistance * 26) / 50) * 50;
+  const startsAt = Math.min(sedanFare, ertigaFare, crystaFare);
+  const estimatedToll = Math.round(totalDistance * 1.6);
+
+  return {
+    origin,
+    stops: validStops,
+    destination,
+    sequence,
+    totalDistanceKm: totalDistance,
+    durationText,
+    isReliablyCalculated: true,
+    requiresWhatsAppQuote: false,
+    explanation: `${explanation} (Total: ${totalDistance} KM)`,
+    sedanFare,
+    ertigaFare,
+    crystaFare,
+    startsAt,
+    estimatedToll,
+  };
+}
+
 // -----------------------------------------------------------------------------
 // 4. AIRPORT TRANSFER FARE RESOLUTION
 // -----------------------------------------------------------------------------
@@ -397,9 +511,19 @@ export function calculateRoundTripFare(
 // 6. LOCAL HOURLY RENTAL CALCULATION
 // -----------------------------------------------------------------------------
 
+export type HourlyRentalPackageId = '4h40km' | '6h60km' | '8h80km' | '10h100km' | '12h120km';
+
+export const HOURLY_RENTAL_PACKAGES = [
+  { id: '4h40km' as const, name: '4 Hours / 40 KM', hours: 4, km: 40, hasApprovedRate: false },
+  { id: '6h60km' as const, name: '6 Hours / 60 KM', hours: 6, km: 60, hasApprovedRate: false },
+  { id: '8h80km' as const, name: '8 Hours / 80 KM', hours: 8, km: 80, hasApprovedRate: true },
+  { id: '10h100km' as const, name: '10 Hours / 100 KM', hours: 10, km: 100, hasApprovedRate: false },
+  { id: '12h120km' as const, name: '12 Hours / 120 KM', hours: 12, km: 120, hasApprovedRate: true },
+] as const;
+
 export interface LocalRentalQuote {
   category: string;
-  packageId: '8h80km' | '12h120km';
+  packageId: HourlyRentalPackageId;
   packageName: string;
   hours: number;
   km: number;
@@ -408,30 +532,56 @@ export interface LocalRentalQuote {
   extraHourRate: number;
   tokenAmount: number;
   balanceAmount: number;
+  isFixed: boolean;
+  requiresConfirmation?: boolean;
+  confirmationMessage?: string;
 }
 
 export function calculateLocalRentalFare(
-  packageId: '8h80km' | '12h120km' = '8h80km',
+  packageId: HourlyRentalPackageId = '8h80km',
   vehicleCategory: string = 'sedan'
 ): LocalRentalQuote {
   const normCategory = vehicleCategory.toLowerCase();
-  const catConfig = LOCAL_RENTAL_CONFIG[normCategory] || LOCAL_RENTAL_CONFIG['sedan'];
-  const pkg = catConfig[packageId] || catConfig['8h80km'];
+  const pkgMeta = HOURLY_RENTAL_PACKAGES.find((p) => p.id === packageId) || HOURLY_RENTAL_PACKAGES[2];
 
-  const tokenAmount = calculateAdvanceToken(pkg.basePrice, ADVANCE_PERCENT);
-  const balanceAmount = pkg.basePrice - tokenAmount;
+  // Verified rates exist only for 8h/80km and 12h/120km
+  if (packageId === '8h80km' || packageId === '12h120km') {
+    const catConfig = LOCAL_RENTAL_CONFIG[normCategory] || LOCAL_RENTAL_CONFIG['sedan'];
+    const pkg = catConfig[packageId];
 
+    const tokenAmount = calculateAdvanceToken(pkg.basePrice, ADVANCE_PERCENT);
+    const balanceAmount = pkg.basePrice - tokenAmount;
+
+    return {
+      category: normCategory,
+      packageId,
+      packageName: pkgMeta.name,
+      hours: pkg.hours,
+      km: pkg.km,
+      basePrice: pkg.basePrice,
+      extraKmRate: pkg.extraKmRate,
+      extraHourRate: pkg.extraHourRate,
+      tokenAmount,
+      balanceAmount,
+      isFixed: true,
+    };
+  }
+
+  // Strict commercial rule: Do NOT invent prices for 4/40, 6/60, or 10/100
   return {
     category: normCategory,
     packageId,
-    packageName: packageId === '8h80km' ? '8 Hours / 80 KM' : '12 Hours / 120 KM',
-    hours: pkg.hours,
-    km: pkg.km,
-    basePrice: pkg.basePrice,
-    extraKmRate: pkg.extraKmRate,
-    extraHourRate: pkg.extraHourRate,
-    tokenAmount,
-    balanceAmount,
+    packageName: pkgMeta.name,
+    hours: pkgMeta.hours,
+    km: pkgMeta.km,
+    basePrice: 0,
+    extraKmRate: EXTRA_KM_RATES[normCategory] || 11,
+    extraHourRate: 180,
+    tokenAmount: 0,
+    balanceAmount: 0,
+    isFixed: false,
+    requiresConfirmation: true,
+    confirmationMessage: `Rate confirmation required for ${pkgMeta.name}. Please confirm live dispatch rates on WhatsApp.`,
   };
 }
 
@@ -480,3 +630,9 @@ export function buildWhatsAppBookingLink(params: WhatsAppBookingParams): string 
   const message = lines.join('\n');
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
+
+// -----------------------------------------------------------------------------
+// 8. RE-EXPORT CHARGEABLE VEHICLE ADD-ONS (PHASE 3)
+// -----------------------------------------------------------------------------
+export * from './pricing/add-ons';
+

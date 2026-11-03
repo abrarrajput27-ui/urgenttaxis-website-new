@@ -8,6 +8,8 @@ import {
   MasterFareInput,
   MasterFareResult,
 } from '@/lib/pricing/engine';
+import { calculateAdvanceToken } from '@/lib/pricing';
+import { validateAndComputeAddOns } from '@/lib/pricing/add-ons';
 
 export interface PublicQuotationDTO {
   success: boolean;
@@ -36,6 +38,9 @@ export interface PublicQuotationDTO {
     includedCharges: string[];
     excludedCharges: string[];
     calculatedAt: string;
+    baseVehicleFare?: number;
+    addOns?: Array<{ id: string; name: string; price: number; disclaimer: string }>;
+    addOnTotal?: number;
   };
 }
 
@@ -50,18 +55,50 @@ export async function POST(request: NextRequest) {
       airportLocationId,
       cityZoneLocationId,
       packageId,
+      stops = [],
       actualDistanceKm = 0,
       durationHours = 0,
       numberOfDays = 1,
       numberOfNights = 0,
       pickupDateTime,
       fuelTypePreference,
-    } = body as Partial<MasterFareInput>;
+      selectedAddOns = [],
+    } = body as Partial<MasterFareInput> & { stops?: string[]; selectedAddOns?: string[] };
 
     // 1. Basic input validation
     if (!serviceType || !categoryId) {
       return NextResponse.json(
         { success: false, isFareOnRequest: true, message: 'Missing required parameters (serviceType, categoryId).' },
+        { status: 400 }
+      );
+    }
+
+    // Server-side validation of chargeable add-ons
+    const addOnValidation = validateAndComputeAddOns(selectedAddOns, categoryId);
+    if (addOnValidation.errors.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          isFareOnRequest: true,
+          message: addOnValidation.errors.join(' '),
+        },
+        { status: 400 }
+      );
+    }
+
+    // Validate serviceType
+    const validServiceTypes = ['one_way', 'round_trip', 'local_rental', 'airport_transfer'];
+    if (!validServiceTypes.includes(serviceType)) {
+      return NextResponse.json(
+        { success: false, isFareOnRequest: true, message: `Invalid serviceType '${serviceType}'. Must be one of: ${validServiceTypes.join(', ')}.` },
+        { status: 400 }
+      );
+    }
+
+    // Validate dates if provided
+    if (pickupDateTime && isNaN(Date.parse(pickupDateTime))) {
+      return NextResponse.json(
+        { success: false, isFareOnRequest: true, message: 'Invalid pickupDateTime format.' },
         { status: 400 }
       );
     }
@@ -177,9 +214,20 @@ export async function POST(request: NextRequest) {
         const pkgKey = String(packageId || '').toLowerCase().replace(/[^a-z0-9]/g, '');
         const is8h = pkgKey.includes('8h') || pkgKey.includes('80') || Number(durationHours) === 8;
         const is12h = pkgKey.includes('12h') || pkgKey.includes('120') || Number(durationHours) === 12;
+        const is4h = pkgKey.includes('4h') || pkgKey.includes('40') || Number(durationHours) === 4;
+        const is6h = pkgKey.includes('6h') || pkgKey.includes('60') || Number(durationHours) === 6;
+        const is10h = pkgKey.includes('10h') || pkgKey.includes('100') || Number(durationHours) === 10;
+
+        if (is4h || is6h || is10h) {
+          return NextResponse.json({
+            success: true,
+            isFareOnRequest: true,
+            message: 'Rate confirmation required for this rental package. Please confirm live dispatch rates on WhatsApp.',
+          } as PublicQuotationDTO);
+        }
 
         if (is8h) {
-          const price = isExec ? 3200 : isSuv ? 2500 : isHatch ? 1600 : 1800;
+          const price = isExec ? 2500 : isSuv ? 2000 : isHatch ? 1200 : 1500;
           const extraHr = isExec ? 300 : isSuv ? 220 : isHatch ? 150 : 180;
           const extraKm = isExec ? 20 : isSuv ? 15 : isHatch ? 10 : 11;
           pkg = {
@@ -197,7 +245,7 @@ export async function POST(request: NextRequest) {
             created_at: new Date().toISOString(),
           };
         } else if (is12h) {
-          const price = isExec ? 4500 : isSuv ? 3400 : isHatch ? 2200 : 2500;
+          const price = isExec ? 4500 : isSuv ? 3480 : isHatch ? 2200 : 2660;
           const extraHr = isExec ? 300 : isSuv ? 220 : isHatch ? 150 : 180;
           const extraKm = isExec ? 20 : isSuv ? 15 : isHatch ? 10 : 11;
           pkg = {
@@ -257,6 +305,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, isFareOnRequest: true, message: 'Unsupported service type or rule combination.' } as PublicQuotationDTO);
     }
 
+    // Phase 3 Add-on Calculation: baseFare + addOnTotal, calculate 30% advance token & 70% balance
+    const baseVehicleFare = calcResult.customerPayable;
+    const finalCustomerPayable = baseVehicleFare + addOnValidation.addOnTotal;
+    const finalTokenAmount = calculateAdvanceToken(finalCustomerPayable, 30);
+    const finalBalanceAmount = finalCustomerPayable - finalTokenAmount;
+
     // 5. Build sanitized Public Quotation DTO
     const quotation: PublicQuotationDTO = {
       success: true,
@@ -276,14 +330,22 @@ export async function POST(request: NextRequest) {
         driverAllowance: calcResult.driverAllowance,
         nightCharge: calcResult.nightCharge,
         dynamicSurgeAmount: calcResult.dynamicSurgeAmount,
-        automaticFare: calcResult.automaticFare,
-        customerPayable: calcResult.customerPayable,
-        tokenAmount: calcResult.tokenAmount,
-        balanceAmount: calcResult.balanceAmount,
+        automaticFare: calcResult.automaticFare + addOnValidation.addOnTotal,
+        customerPayable: finalCustomerPayable,
+        tokenAmount: finalTokenAmount,
+        balanceAmount: finalBalanceAmount,
         pricingMode: calcResult.pricingMode,
         includedCharges: calcResult.includedCharges || [],
         excludedCharges: calcResult.excludedCharges || [],
         calculatedAt: calcResult.calculationTimestamp,
+        baseVehicleFare,
+        addOns: addOnValidation.validAddOns.map((a) => ({
+          id: a.id,
+          name: a.name,
+          price: a.price,
+          disclaimer: a.disclaimer,
+        })),
+        addOnTotal: addOnValidation.addOnTotal,
       },
     };
 
