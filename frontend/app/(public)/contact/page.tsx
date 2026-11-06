@@ -155,7 +155,7 @@ export default function ContactUsPage() {
           </div>
 
           {/* Full Color Interactive Map Viewport */}
-          <div className="relative min-h-[380px] bg-slate-100 flex-1">
+          <div className="relative min-h-[460px] h-[480px] w-full bg-slate-100 flex-1">
             <iframe
               src={`https://maps.google.com/maps?q=${encodeURIComponent(SITE_CONFIG.address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
               className="w-full h-full absolute inset-0 border-0"

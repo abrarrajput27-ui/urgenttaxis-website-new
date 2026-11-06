@@ -191,6 +191,7 @@ export default function UnifiedBookingWidget({
 
   // Active Vehicle Selection
   const [selectedVehicleKey, setSelectedVehicleKey] = useState<VehicleCategoryKey>('sedan');
+  const [hasSearched, setHasSearched] = useState(isDedicatedPage);
 
   // Phase 3: Chargeable Vehicle Add-ons State
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
@@ -729,6 +730,7 @@ export default function UnifiedBookingWidget({
     }
 
     setValidationError('');
+    setHasSearched(true);
 
     // If already on /cabs page or in dedicated results mode, smooth scroll to cab selection panel
     if (isDedicatedPage || (typeof window !== 'undefined' && window.location.pathname.startsWith('/cabs'))) {
@@ -1318,15 +1320,16 @@ export default function UnifiedBookingWidget({
             type="button"
             id="search-cabs-button"
             onClick={handleCalculateClick}
-            className="w-full sm:w-auto px-8 py-3.5 bg-[#1e1b4b] hover:bg-slate-800 text-white font-extrabold text-sm rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-10 py-3.5 bg-[#059669] hover:bg-[#047857] text-white font-extrabold text-sm uppercase tracking-wider rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>🔍</span>
-            <span>Search Available Cabs</span>
+            <span>Search Cabs</span>
           </button>
         </div>
 
         {/* 4. LIVE FARE CALCULATION & VEHICLE CARDS */}
-        {!hasRequiredLocations ? (
+        {(isDedicatedPage || hasSearched) ? (
+          !hasRequiredLocations ? (
           <div className="p-4 sm:p-5 rounded-2xl bg-blue-50/70 border border-blue-200 text-slate-700 text-xs sm:text-sm flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <span className="text-lg">💡</span>
@@ -1376,8 +1379,8 @@ export default function UnifiedBookingWidget({
             </div>
 
             {/* Vehicle Tiers Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {VEHICLE_CARDS.slice(0, 3).map((v) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {VEHICLE_CARDS.map((v) => {
                 const isSelected = selectedVehicleKey === v.key;
                 const quote = vehicleQuotes[v.key];
                 const isConfirmationOnly = quote?.requiresConfirmation;
@@ -1743,7 +1746,7 @@ export default function UnifiedBookingWidget({
               </div>
             )}
           </div>
-        )}
+        )) : null}
       </form>
     </div>
   );

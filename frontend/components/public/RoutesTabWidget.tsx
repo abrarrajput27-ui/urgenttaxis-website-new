@@ -81,14 +81,10 @@ export default function RoutesTabWidget() {
         price,
         slug,
         image: (() => {
-          let k = dest.toLowerCase().replace(/ /g, '-');
-          if (k === 'haldwani') k = 'nainital';
-          if (k === 'jim-corbett') k = 'ramnagar';
-          if (k === 'vrindavan' || k === 'mathura') k = 'agra';
-          if (k === 'ayodhya' || k === 'kanpur' || k === 'bareilly' || k === 'moradabad') k = 'lucknow';
-          const validWebps = ['agra', 'amritsar', 'chandigarh', 'dehradun', 'haridwar', 'jaipur', 'lucknow', 'manali', 'mussoorie', 'nainital', 'ramnagar', 'rishikesh', 'shimla', 'udaipur'];
-          const target = validWebps.includes(k) ? k : 'nainital';
-          return `/destinations/${target}.webp`;
+          let k = dest.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+          if (k === 'noida-airport') k = 'noida-international-airport';
+          if (k === 'corbett') k = 'jim-corbett';
+          return `/destinations/${k}.webp`;
         })(),
       };
     });

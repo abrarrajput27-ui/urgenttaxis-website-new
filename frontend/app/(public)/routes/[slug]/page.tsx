@@ -181,22 +181,10 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
   ];
 
   const getDestinationImage = (dest: string) => {
-    const d = dest.toLowerCase();
-    if (d.includes('mussoorie')) return '/destinations/mussoorie.webp';
-    if (d.includes('dehradun')) return '/destinations/dehradun.webp';
-    if (d.includes('haridwar')) return '/destinations/haridwar.webp';
-    if (d.includes('rishikesh')) return '/destinations/rishikesh.webp';
-    if (d.includes('ramnagar') || d.includes('corbett')) return '/destinations/ramnagar.webp';
-    if (d.includes('nainital') || d.includes('haldwani') || d.includes('kathgodam') || d.includes('bhimtal') || d.includes('sattal') || d.includes('kainchi') || d.includes('mukteshwar') || d.includes('ranikhet') || d.includes('almora') || d.includes('kausani')) return '/destinations/nainital.webp';
-    if (d.includes('jaipur') || d.includes('ajmer') || d.includes('pushkar') || d.includes('jodhpur')) return '/destinations/jaipur.webp';
-    if (d.includes('shimla') || d.includes('kullu') || d.includes('kasol') || d.includes('dharamshala') || d.includes('dalhousie')) return '/destinations/shimla.webp';
-    if (d.includes('manali')) return '/destinations/manali.webp';
-    if (d.includes('agra') || d.includes('mathura') || d.includes('vrindavan') || d.includes('aligarh')) return '/destinations/agra.webp';
-    if (d.includes('lucknow') || d.includes('kanpur') || d.includes('ayodhya') || d.includes('varanasi') || d.includes('prayagraj') || d.includes('gorakhpur') || d.includes('bareilly') || d.includes('moradabad') || d.includes('rampur') || d.includes('rudrapur')) return '/destinations/lucknow.webp';
-    if (d.includes('amritsar') || d.includes('jalandhar') || d.includes('ludhiana')) return '/destinations/amritsar.webp';
-    if (d.includes('udaipur')) return '/destinations/udaipur.webp';
-    if (d.includes('chandigarh') || d.includes('ambala') || d.includes('panipat') || d.includes('karnal') || d.includes('kurukshetra') || d.includes('sonipat') || d.includes('rohtak')) return '/destinations/chandigarh.webp';
-    return '/destinations/chandigarh.webp';
+    let slug = dest.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    if (slug === 'noida-airport') slug = 'noida-international-airport';
+    if (slug === 'corbett') slug = 'jim-corbett';
+    return `/destinations/${slug}.webp`;
   };
 
   // 1. Curate 5 similar routes from originName
@@ -440,29 +428,32 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
 
       {/* MAIN CONTAINER */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12">
-        {/* 2. TOP 3-CARD ROW (Route Overview + Route Map + Cab Options & Fare) */}
+        {/* 2. TOP ROW: Route Overview (6 cols) & Cab Options & Fare (6 cols) */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          {/* Card 1: Route Overview (4 cols) */}
-          <div className="lg:col-span-4 bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-5">
+          {/* Card 1: Route Overview (6 cols) */}
+          <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-6">
             <div className="space-y-4">
-              <div className="border-b border-slate-100 pb-3">
+              <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                 <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
                   <span>📖</span> Route Overview
                 </h2>
+                <span className="text-xs font-bold text-brand-green bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  Verified Corridor
+                </span>
               </div>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
                 {originName} to {destName} is one of the most popular travel corridors, offering scenic views, pleasant weather, and a comfortable highway journey. We provide clean, air-conditioned cabs with experienced highway drivers for safe doorstep rides.
               </p>
 
               {/* 2 Stat Boxes */}
-              <div className="grid grid-cols-2 gap-3 pt-1">
-                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Distance</span>
-                  <span className="text-lg font-black text-slate-900">{distance} km</span>
+              <div className="grid grid-cols-2 gap-4 pt-1">
+                <div className="bg-slate-50 border border-slate-200/80 p-3.5 rounded-2xl shadow-2xs">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Highway Distance</span>
+                  <span className="text-xl font-black text-slate-900">{distance} km</span>
                 </div>
-                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Travel Time</span>
-                  <span className="text-lg font-black text-slate-900">{durationText}</span>
+                <div className="bg-slate-50 border border-slate-200/80 p-3.5 rounded-2xl shadow-2xs">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Drive Duration</span>
+                  <span className="text-xl font-black text-slate-900">{durationText}</span>
                 </div>
               </div>
 
@@ -470,9 +461,9 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
               <div className="space-y-1.5 pt-1">
                 <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
                   <FaRoad className="text-brand-blue" />
-                  <span>Best Route: <strong className="text-brand-blue">{corridor.highway}</strong></span>
+                  <span>Best Highway Route: <strong className="text-brand-blue">{corridor.highway}</strong></span>
                 </span>
-                <p className="text-xs text-slate-500 font-medium leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                <p className="text-xs text-slate-600 font-medium leading-relaxed bg-slate-50 p-3 rounded-2xl border border-slate-100">
                   {corridor.routeChain}
                 </p>
               </div>
@@ -480,34 +471,22 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
               {/* Road Type */}
               <div className="pt-1">
                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                  Road Type
+                  Corridor Condition & Road Type
                 </span>
-                <span className="inline-block text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
+                <span className="inline-block text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-xl">
                   {corridor.roadType}
                 </span>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-slate-100 text-xs text-slate-500 font-medium flex items-center gap-2">
+            <div className="pt-3 border-t border-slate-100 text-xs text-slate-500 font-medium flex items-center gap-2">
               <span>🛡️</span>
-              <span>24/7 Doorstep Pickup with verified highway drivers.</span>
+              <span>24/7 Doorstep Pickup with verified commercial yellow-plate chauffeurs.</span>
             </div>
           </div>
 
-          {/* Card 2: Route Map (4 cols) - Live Interactive Highway Corridor Map */}
-          <div className="lg:col-span-4 flex flex-col">
-            <RouteMapCard
-              originName={originName}
-              destName={destName}
-              distanceKm={distance}
-              durationText={durationText}
-              highwayName={corridor.highway}
-              className="h-full"
-            />
-          </div>
-
-          {/* Card 3: Cab Options & Fare (4 cols) */}
-          <div id="cab-options" className="lg:col-span-4 bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-4">
+          {/* Card 2: Cab Options & Fare (6 cols) */}
+          <div id="cab-options" className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs flex flex-col justify-between space-y-4">
             <div>
               <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                 <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
@@ -564,6 +543,17 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
               * Fares exclude toll taxes, payable at actuals. 30% advance token.
             </div>
           </div>
+        </section>
+
+        {/* Dedicated Full-Container Highway Route Map */}
+        <section className="w-full">
+          <RouteMapCard
+            originName={originName}
+            destName={destName}
+            distanceKm={distance}
+            durationText={durationText}
+            highwayName={corridor.highway}
+          />
         </section>
 
         {/* 3. QUICK ROUTE HIGHLIGHTS (5 Cards) */}

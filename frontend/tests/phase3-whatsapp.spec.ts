@@ -187,7 +187,7 @@ test.describe('Phase 3: WhatsApp Integration & Consistency Verification', () => 
     await page.goto('http://localhost:3000/fleet', { waitUntil: 'domcontentloaded' });
 
     // Target WhatsApp buttons inside vehicle cards (excluding header/footer)
-    const cardWhatsAppLinks = await page.locator('.grid a[href*="wa.me"]').all();
+    const cardWhatsAppLinks = await page.locator('main .grid a[href*="wa.me"]').all();
     expect(cardWhatsAppLinks.length).toBeGreaterThan(4);
 
     for (const link of cardWhatsAppLinks) {

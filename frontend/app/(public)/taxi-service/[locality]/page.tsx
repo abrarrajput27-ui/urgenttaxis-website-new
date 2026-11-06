@@ -634,7 +634,7 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
               </a>
             </div>
 
-            <div className="relative h-72 sm:h-80 w-full bg-slate-100">
+            <div className="relative h-[420px] sm:h-[480px] w-full bg-slate-100">
               <iframe
                 src={`https://maps.google.com/maps?saddr=${encodeURIComponent(data.name)}&daddr=${encodeURIComponent('Indira Gandhi International Airport, New Delhi')}&output=embed`}
                 className="w-full h-full border-0 absolute inset-0"
