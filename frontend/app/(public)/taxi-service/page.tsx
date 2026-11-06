@@ -135,14 +135,14 @@ export default function TaxiServiceHubPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-5 h-5 text-amber-400 flex-shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-brand-green flex-shrink-0" />
               <div>
                 <p className="text-sm font-bold text-brand-blue">Fixed Rates from ₹9/km</p>
                 <p className="text-xs text-slate-500 font-medium">No surprise surges or hidden fees</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Plane className="w-5 h-5 text-purple-400 flex-shrink-0" />
+              <Plane className="w-5 h-5 text-brand-blue flex-shrink-0" />
               <div>
                 <p className="text-sm font-bold text-brand-blue">IGI Airport Transfers</p>
                 <p className="text-xs text-slate-500 font-medium">Fixed-rate drops from ₹1,199</p>
@@ -238,7 +238,7 @@ export default function TaxiServiceHubPage() {
 
         {/* Group 3: Western UP & Outer NCR */}
         <div>
-          <h3 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-brand-blue mb-4 flex items-center gap-2">
             <MapPin className="w-5 h-5" />
             Western UP & Extended NCR Hubs
           </h3>
@@ -247,10 +247,10 @@ export default function TaxiServiceHubPage() {
               <Link
                 key={loc.slug}
                 href={`/taxi-service/${loc.slug}`}
-                className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-amber-500/50 hover:bg-blue-50/40 transition-all group flex flex-col justify-between"
+                className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-brand-blue/50 hover:bg-blue-50/40 transition-all group flex flex-col justify-between"
               >
                 <div>
-                  <h4 className="text-base font-bold text-brand-blue group-hover:text-amber-400 transition-colors mb-2">
+                  <h4 className="text-base font-bold text-brand-blue group-hover:text-brand-blue transition-colors mb-2">
                     {loc.name}
                   </h4>
                   <p className="text-xs text-slate-600 line-clamp-2">
@@ -260,7 +260,7 @@ export default function TaxiServiceHubPage() {
                     District: {loc.district} • {loc.state}
                   </div>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs font-semibold text-amber-400">
+                <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs font-semibold text-brand-green">
                   <span>View Rates & Book</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -271,7 +271,7 @@ export default function TaxiServiceHubPage() {
 
         {/* Group 4: Noida, Delhi & Gurgaon */}
         <div>
-          <h3 className="text-lg font-bold text-purple-400 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-brand-blue mb-4 flex items-center gap-2">
             <MapPin className="w-5 h-5" />
             Noida, Greater Noida, Delhi & NCR Cities
           </h3>
@@ -280,10 +280,10 @@ export default function TaxiServiceHubPage() {
               <Link
                 key={loc.slug}
                 href={`/taxi-service/${loc.slug}`}
-                className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-purple-500/50 hover:bg-blue-50/40 transition-all group flex flex-col justify-between"
+                className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-brand-blue/40 hover:bg-blue-50/30 transition-all group flex flex-col justify-between"
               >
                 <div>
-                  <h4 className="text-base font-bold text-brand-blue group-hover:text-purple-400 transition-colors mb-2">
+                  <h4 className="text-base font-bold text-brand-blue group-hover:text-brand-green transition-colors mb-2">
                     {loc.name}
                   </h4>
                   <p className="text-xs text-slate-600 line-clamp-2">
@@ -293,7 +293,7 @@ export default function TaxiServiceHubPage() {
                     District: {loc.district} • {loc.state}
                   </div>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs font-semibold text-purple-400">
+                <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs font-semibold text-brand-green">
                   <span>View Rates & Book</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>

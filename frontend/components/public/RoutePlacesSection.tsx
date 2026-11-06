@@ -86,7 +86,7 @@ export default function RoutePlacesSection({
       return (
         <div className="w-10 h-10 rounded-xl bg-[#15803d] border border-emerald-400/40 p-1 flex flex-col items-center justify-center shrink-0 shadow-2xs">
           <span className="text-[9px] font-black tracking-tighter text-white leading-none">GGL</span>
-          <span className="text-[7px] font-bold text-amber-200 leading-none">CNG</span>
+          <span className="text-[7px] font-bold text-blue-200 leading-none">CNG</span>
         </div>
       );
     }
@@ -173,7 +173,7 @@ export default function RoutePlacesSection({
                 >
                   <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-slate-200">
                     <Image
-                      src={item.image || '/destinations/chandigarh.jpg'}
+                      src={item.image || '/destinations/chandigarh.webp'}
                       alt={item.name}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform"
@@ -319,12 +319,12 @@ export default function RoutePlacesSection({
           <div className="space-y-3">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xs">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 text-brand-blue flex items-center justify-center text-xs">
                   <FaLandmark className="w-3.5 h-3.5" />
                 </div>
                 <h3 className="font-black text-sm text-slate-900">Nearby Attractions</h3>
               </div>
-              <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-bold text-brand-blue bg-blue-50 px-2 py-0.5 rounded-full">
                 {places.attractions.length} Places
               </span>
             </div>
@@ -336,7 +336,7 @@ export default function RoutePlacesSection({
                   href={getMapLink(item.name, item.location)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group p-2.5 rounded-xl border border-slate-100 bg-slate-50/70 hover:bg-amber-50/50 hover:border-amber-300 transition-all flex items-center gap-3 block"
+                  className="group p-2.5 rounded-xl border border-slate-100 bg-slate-50/70 hover:bg-blue-50/50 hover:border-blue-300 transition-all flex items-center gap-3 block"
                 >
                   <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-slate-200">
                     <Image
@@ -348,16 +348,16 @@ export default function RoutePlacesSection({
                     />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h4 className="font-bold text-xs text-slate-800 group-hover:text-amber-700 truncate">
+                    <h4 className="font-bold text-xs text-slate-800 group-hover:text-brand-blue truncate">
                       {item.name}
                     </h4>
                     <p className="text-[11px] text-slate-500 truncate">{item.location}</p>
-                    <div className="flex items-center gap-1 text-[10px] font-bold text-amber-600 mt-0.5">
+                    <div className="flex items-center gap-1 text-[10px] font-bold text-brand-blue mt-0.5">
                       <FaMapMarkerAlt className="w-2.5 h-2.5" />
                       <span>{item.distanceKm} km mark</span>
                     </div>
                   </div>
-                  <FaExternalLinkAlt className="w-2.5 h-2.5 text-slate-400 group-hover:text-amber-600 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <FaExternalLinkAlt className="w-2.5 h-2.5 text-slate-400 group-hover:text-brand-blue shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </a>
               ))}
             </div>
@@ -367,7 +367,7 @@ export default function RoutePlacesSection({
             <button
               type="button"
               onClick={() => toggleCol('attractions')}
-              className="w-full mt-2 py-1.5 px-3 rounded-xl bg-slate-50 hover:bg-amber-50 text-amber-700 text-xs font-bold border border-slate-200 hover:border-amber-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full mt-2 py-1.5 px-3 rounded-xl bg-slate-50 hover:bg-blue-50 text-brand-blue text-xs font-bold border border-slate-200 hover:border-blue-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <span>{expandedCols.attractions ? 'Show Less' : `+ Show ${places.attractions.length - 3} More Attractions`}</span>
               {expandedCols.attractions ? <FaChevronUp className="w-2.5 h-2.5" /> : <FaChevronDown className="w-2.5 h-2.5" />}

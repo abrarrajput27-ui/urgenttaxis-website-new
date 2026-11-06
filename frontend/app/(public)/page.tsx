@@ -9,6 +9,7 @@ import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { buildWhatsAppBookingLink } from '@/lib/pricing';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
 import TrustSection from '@/components/public/TrustSection';
+import PageFAQSection from '@/components/public/PageFAQSection';
 import {
   FALLBACK_CATEGORIES,
   FALLBACK_LOCATIONS,
@@ -79,29 +80,13 @@ export default async function HomePage() {
     },
   ];
 
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: visibleFaqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
-  };
 
   return (
-    <div className="bg-slate-50 min-h-screen font-sans">
+    <div className="bg-slate-50 min-h-screen">
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       {/* 2. HERO SECTION */}
@@ -131,7 +116,7 @@ export default async function HomePage() {
             Reliable Outstation Taxi & Cab Service <br className="hidden sm:block" /> in Ghaziabad & Delhi NCR
           </h1>
 
-          <p className="text-indigo-100 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium">
+          <p className="text-blue-100 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium">
             Book verified sedan and SUV cabs for one-way outstation trips, round-trip journeys, local hourly packages, and airport transfers with transparent per-KM pricing.
           </p>
         </div>
@@ -190,18 +175,18 @@ export default async function HomePage() {
           <div className="overflow-hidden relative w-full pb-8">
             <div className="flex gap-6 w-max animate-slow-slide hover:[animation-play-state:paused]">
             {[
-              { image: "/fleet-brand/Hatchback.png", title: "Hatchback", models: "(WagonR, Swift, Celerio)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹10/km", localPrice: "₹1200" },
-              { image: "/fleet-brand/dzire.png", title: "Sedan", models: "(Dzire, Etios, Amaze)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹11/km", localPrice: "₹1500" },
-              { image: "/fleet-brand/Ertiga.png", title: "SUV / MPV", models: "(Ertiga, Triber, Carens)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹15/km", localPrice: "₹2000" },
-              { image: "/fleet-brand/Innova%20Crysta.png", title: "Premium SUV", models: "(Innova Crysta, Hycross)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹20/km", localPrice: "₹2500" },
-              { image: "/fleet-brand/Tempo Traveller.png", title: "12 Seater Traveller", models: "Force Traveller 1x1", seats: "12 Seats", bags: "10 Bags", ac: true, music: true, outstationPrice: "₹24/km", localPrice: "₹3500" },
-              { image: "/fleet-brand/Tempo Traveller.png", title: "16 Seater Traveller", models: "Force Traveller 2x1", seats: "16 Seats", bags: "12 Bags", ac: true, music: true, outstationPrice: "₹26/km", localPrice: "₹4500" },
-              { image: "/fleet-brand/Tempo Traveller.png", title: "20 Seater Traveller", models: "Force Traveller 2x1", seats: "20 Seats", bags: "15 Bags", ac: true, music: true, outstationPrice: "₹28/km", localPrice: "₹5500" },
-              { image: "/fleet-brand/Tempo Traveller.png", title: "26 Seater Traveller", models: "Force Traveller 2x2", seats: "26 Seats", bags: "20 Bags", ac: true, music: true, outstationPrice: "₹32/km", localPrice: "₹6500" },
-              { image: "/fleet-brand/Urbania.png", title: "12 Seater Urbania", models: "Force Urbania Premium", seats: "12 Seats", bags: "10 Bags", ac: true, music: true, outstationPrice: "₹30/km", localPrice: "₹5000" },
-              { image: "/fleet-brand/Urbania.png", title: "16 Seater Urbania", models: "Force Urbania Premium", seats: "16 Seats", bags: "14 Bags", ac: true, music: true, outstationPrice: "₹34/km", localPrice: "₹6000" },
-              { image: "/fleet-brand/Bus.png", title: "27 Seater Bus", models: "Luxury AC Bus", seats: "27 Seats", bags: "27 Bags", ac: true, music: true, outstationPrice: "₹45/km", localPrice: "₹8000" },
-              { image: "/fleet-brand/volvo bus.png", title: "45 Seater Bus", models: "Luxury AC Bus", seats: "45 Seats", bags: "45 Bags", ac: true, music: true, outstationPrice: "₹55/km", localPrice: "₹10000" },
+              { image: "/fleet-brand/Hatchback.webp", title: "Hatchback", models: "(WagonR, Swift, Celerio)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹10/km", localPrice: "₹1200", href: "/fleet/hatchback" },
+              { image: "/fleet-brand/dzire.webp", title: "Sedan", models: "(Dzire, Etios, Amaze)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹11/km", localPrice: "₹1500", href: "/fleet/sedan" },
+              { image: "/fleet-brand/Ertiga.webp", title: "SUV / MPV", models: "(Ertiga, Triber, Carens)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹15/km", localPrice: "₹2000", href: "/fleet/suv-muv" },
+              { image: "/fleet-brand/Innova Crysta.webp", title: "Premium SUV", models: "(Innova Crysta, Hycross)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹20/km", localPrice: "₹2500", href: "/fleet/executive-suv" },
+              { image: "/fleet-brand/Tempo Traveller.webp", title: "12 Seater Traveller", models: "Force Traveller 1x1", seats: "12 Seats", bags: "10 Bags", ac: true, music: true, outstationPrice: "₹24/km", localPrice: "₹3500", href: "/tempo-traveller" },
+              { image: "/fleet-brand/Tempo Traveller.webp", title: "16 Seater Traveller", models: "Force Traveller 2x1", seats: "16 Seats", bags: "12 Bags", ac: true, music: true, outstationPrice: "₹26/km", localPrice: "₹4500", href: "/tempo-traveller" },
+              { image: "/fleet-brand/Tempo Traveller.webp", title: "20 Seater Traveller", models: "Force Traveller 2x1", seats: "20 Seats", bags: "15 Bags", ac: true, music: true, outstationPrice: "₹28/km", localPrice: "₹5500", href: "/tempo-traveller" },
+              { image: "/fleet-brand/Tempo Traveller.webp", title: "26 Seater Traveller", models: "Force Traveller 2x2", seats: "26 Seats", bags: "20 Bags", ac: true, music: true, outstationPrice: "₹32/km", localPrice: "₹6500", href: "/tempo-traveller" },
+              { image: "/fleet-brand/Urbania.webp", title: "12 Seater Urbania", models: "Force Urbania Premium", seats: "12 Seats", bags: "10 Bags", ac: true, music: true, outstationPrice: "₹30/km", localPrice: "₹5000", href: "/tempo-traveller" },
+              { image: "/fleet-brand/Urbania.webp", title: "16 Seater Urbania", models: "Force Urbania Premium", seats: "16 Seats", bags: "14 Bags", ac: true, music: true, outstationPrice: "₹34/km", localPrice: "₹6000", href: "/tempo-traveller" },
+              { image: "/fleet-brand/Bus.webp", title: "27 Seater Bus", models: "Luxury AC Bus", seats: "27 Seats", bags: "27 Bags", ac: true, music: true, outstationPrice: "₹45/km", localPrice: "₹8000", href: "/bus-charter" },
+              { image: "/fleet-brand/volvo bus.webp", title: "45 Seater Bus", models: "Luxury AC Bus", seats: "45 Seats", bags: "45 Bags", ac: true, music: true, outstationPrice: "₹55/km", localPrice: "₹10000", href: "/bus-charter" },
             ].map((v, i) => (
               <div key={i} className="shrink-0 w-[300px] bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col border border-slate-100 transition-transform hover:-translate-y-1">
                 <div className="bg-slate-50 flex items-center justify-center border-b border-slate-100 overflow-hidden h-40">
@@ -225,8 +210,8 @@ export default async function HomePage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 mb-6 mt-auto">
-                    <div className="bg-purple-50 rounded-xl p-3 text-center border border-purple-100">
-                      <div className="text-[10px] text-purple-600 font-bold uppercase tracking-wider mb-1">Outstation</div>
+                    <div className="bg-blue-50 rounded-xl p-3 text-center border border-blue-100">
+                      <div className="text-[10px] text-brand-blue font-bold uppercase tracking-wider mb-1">Outstation</div>
                       <div className="text-sm font-black text-slate-800">{v.outstationPrice}</div>
                     </div>
                     <div className="bg-emerald-50 rounded-xl p-3 text-center border border-emerald-100">
@@ -237,7 +222,7 @@ export default async function HomePage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <Link
-                      href={`/fleet/${v.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                      href={v.href}
                       className="flex items-center justify-center gap-2 border-2 border-brand-blue text-brand-blue font-bold rounded-full py-2 hover:bg-brand-blue hover:text-white transition-colors text-xs"
                     >
                       View Details
@@ -286,7 +271,7 @@ export default async function HomePage() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
               Airport Transfers & Railway Pickups
             </h2>
-            <p className="text-sm sm:text-base text-indigo-100 leading-relaxed font-medium">
+            <p className="text-sm sm:text-base text-blue-100 leading-relaxed font-medium">
               Hassle-free transfers to and from IGI Airport Delhi (T3/T1) and Noida International Airport with flight tracking and guaranteed clean vehicles.
             </p>
             <div className="pt-3">
@@ -358,7 +343,7 @@ export default async function HomePage() {
           </div>
 
           <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden w-full">
-            <div className="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-black px-3 py-1 rounded-bl-xl tracking-wider">POPULAR</div>
+            <div className="absolute top-0 right-0 bg-brand-green text-white text-[10px] font-black px-3 py-1 rounded-bl-xl tracking-wider">POPULAR</div>
             <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-brand-green/10 text-brand-green border border-brand-green/20 block w-fit">
               Spiritual Express (2N / 3D)
             </span>
@@ -383,7 +368,7 @@ export default async function HomePage() {
           </div>
 
           <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300 w-full">
-            <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 block w-fit">
+            <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-brand-blue/10 text-brand-blue border border-brand-blue/20 block w-fit">
               Golden Triangle (2N / 3D)
             </span>
             <h3 className="text-xl font-black text-brand-blue leading-tight">Delhi ↔ Agra Taj Mahal ↔ Jaipur</h3>
@@ -479,7 +464,7 @@ export default async function HomePage() {
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-900 border border-indigo-100 block w-fit">
+                    <span className="text-xs font-black px-3 py-1.5 rounded-lg bg-blue-50 text-brand-blue border border-blue-100 block w-fit">
                       {pkg.name}
                     </span>
                     <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 uppercase">
@@ -491,7 +476,7 @@ export default async function HomePage() {
                     <h3 className="text-2xl font-black text-slate-900">
                       {pkg.hours} Hours / {pkg.km} KM
                     </h3>
-                    <span className="text-2xl text-emerald-800 font-mono font-black block mt-2">
+                    <span className="text-2xl text-emerald-800 tabular-nums font-black block mt-2">
                       ₹{pkg.price.toLocaleString('en-IN')}
                     </span>
                     <span className="text-xs text-slate-500 font-medium block">30% Advance Token: ₹{Math.round(pkg.price * 0.30)}</span>
@@ -522,24 +507,15 @@ export default async function HomePage() {
 
 
       {/* 9. VISIBLE FAQS SECTION */}
-      <section id="faq" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
-        <div className="text-center space-y-3 mb-4">
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-sm text-slate-500 font-medium">
-            Clear answers regarding outstation fares, toll inclusions, and driver allowances.
-          </p>
-        </div>
-
-        <div className="space-y-5 text-sm">
-          {visibleFaqs.map((faq, idx) => (
-            <div key={idx} className="bg-white border border-slate-200 p-6 rounded-2xl space-y-2.5 shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="text-base font-black text-brand-blue">{faq.question}</h3>
-              <p className="text-slate-600 leading-relaxed font-medium">{faq.answer}</p>
-            </div>
-          ))}
-        </div>
+      {/* 9. VISIBLE FAQS SECTION (Migrated to shared PageFAQSection component) */}
+      <section id="faq" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <PageFAQSection
+          faqs={visibleFaqs}
+          title="Frequently Asked Questions"
+          subtitle="Clear answers regarding outstation fares, toll inclusions, and driver allowances."
+          twoColumnLayout={true}
+          includeSchema={true}
+        />
       </section>
 
     </div>

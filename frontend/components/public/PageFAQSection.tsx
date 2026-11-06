@@ -56,7 +56,7 @@ export default function PageFAQSection({
           <div className="lg:col-span-5 space-y-5">
             <div>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
-                Frequently Asked <span className="text-amber-500">Questions</span>
+                Frequently Asked <span className="text-brand-green">Questions</span>
               </h2>
               {subtitle && (
                 <p className="mt-2 text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
@@ -66,9 +66,9 @@ export default function PageFAQSection({
             </div>
 
             {/* Stylized Question Graphic Box */}
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50/50 border border-blue-100 flex items-center gap-4">
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-slate-50 border border-blue-100 flex items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-brand-blue text-white flex items-center justify-center text-3xl shadow-lg shrink-0">
-                <FaQuestionCircle className="text-amber-300" />
+                <FaQuestionCircle className="text-brand-green" />
               </div>
               <div>
                 <h4 className="font-black text-sm text-slate-900">Have Questions?</h4>

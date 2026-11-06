@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
+import PageFAQSection from '@/components/public/PageFAQSection';
 import UnifiedBookingWidget from '@/components/public/UnifiedBookingWidget';
 import {
   FaCar,
@@ -28,7 +29,7 @@ const serviceList = [
     id: 'oneway',
     title: '1. One-Way Outstation Taxi',
     href: '/routes',
-    image: '/services/oneway.jpg',
+    image: '/services/oneway.webp',
     tag: 'Pay for Distance Traveled',
     description: 'One-way intercity cab service connecting Delhi NCR with destinations across Uttar Pradesh, Uttarakhand, Rajasthan, Haryana, and Punjab. Pay for the distance of your one-way journey.',
     benefits: ['No return journey billing', 'Doorstep pickup and drop', 'Itemized toll and tax breakdown', 'Advance booking confirmation'],
@@ -40,7 +41,7 @@ const serviceList = [
     id: 'roundtrip',
     title: '2. Round-Trip Outstation Taxi',
     href: '/routes',
-    image: '/services/roundtrip.jpg',
+    image: '/services/roundtrip.webp',
     tag: 'Multi-Day Outstation Travel',
     description: 'Round-trip outstation car rental with a dedicated driver for weekend getaways, family holidays, business visits, and multi-city travel.',
     benefits: ['Dedicated driver throughout your trip', 'Flexible stops en route', 'Standard daily km limits and driver allowance', 'Air-conditioned vehicles'],
@@ -52,7 +53,7 @@ const serviceList = [
     id: 'airport',
     title: '3. Airport Transfers',
     href: '/airport-transfers',
-    image: '/services/airport.jpg',
+    image: '/services/airport.webp',
     tag: 'Airport Pickup & Drop',
     description: 'Scheduled airport pickups and drop-offs connecting Delhi IGI Airport (T1, T2, T3) with Ghaziabad, Noida, Greater Noida, Gurugram, Faridabad, and regional cities.',
     benefits: ['Scheduled terminal drop and pickup', 'Driver details shared prior to journey', 'Direct telephone coordination', 'Transparent price breakdown'],
@@ -64,7 +65,7 @@ const serviceList = [
     id: 'local',
     title: '4. Local Taxi Rentals (Hourly Packages)',
     href: '/local-rentals',
-    image: '/services/local.jpg',
+    image: '/services/local.webp',
     tag: 'Hourly City Packages',
     description: 'City taxi hire by the hour for local errands, meetings, and shopping trips in Ghaziabad, Delhi, Noida, and Gurugram. Choose from 4-Hour / 40 km or 8-Hour / 80 km packages.',
     benefits: ['Flexible city travel within booked package', 'Driver waits between appointments', 'Standard package rates', 'Air-conditioned cabs'],
@@ -76,7 +77,7 @@ const serviceList = [
     id: 'corporate',
     title: '5. Corporate Transportation',
     href: '/corporate-taxi',
-    image: '/services/corporate.jpg',
+    image: '/services/corporate.webp',
     tag: 'Business & Office Travel',
     description: 'Corporate travel solutions for business clients, visiting personnel, and executive airport transfers with itemized invoices.',
     benefits: ['Professional chauffeurs', 'GST invoices provided upon request', 'Sedan and SUV category options', 'Prompt scheduling support'],
@@ -112,7 +113,7 @@ const serviceList = [
     id: 'bus',
     title: '8. Bus & Minibus Charter',
     href: '/bus-charter',
-    image: '/services/wedding.jpg',
+    image: '/services/wedding.webp',
     tag: 'Group Travel Options',
     description: 'Bus and coach hire assistance for large groups, wedding guest transportation, and group events upon prior reservation.',
     benefits: ['Multiple seating options (21 to 50 seats)', 'Luggage space', 'Commercial permits for intercity travel', 'Advance booking coordination'],
@@ -124,7 +125,7 @@ const serviceList = [
     id: 'tempo',
     title: '9. Tempo Traveller & Group Transport',
     href: '/tempo-traveller',
-    image: '/destinations/manali.jpg',
+    image: '/destinations/manali.webp',
     tag: 'Group Transportation',
     description: 'Force Tempo Travellers with pushback seating and air conditioning for family and group tours heading to Rajasthan, Uttarakhand, or Himachal Pradesh.',
     benefits: ['Comfortable pushback seating', 'Dedicated luggage carrier', 'Air-conditioned interior', 'Suitable for groups of 9 to 20+'],
@@ -464,33 +465,26 @@ export default function ServicesPage() {
       </section>
 
       {/* 3.7 FAQs */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-6">
-        <div className="text-center space-y-2">
-          <span className="text-xs font-bold text-brand-green uppercase tracking-wider">
-            Common Questions
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-brand-blue tracking-tight">
-            Frequently Asked Questions
-          </h2>
-        </div>
 
-        <div className="space-y-3 pt-4">
-          {faqs.map((faq, idx) => (
-            <details
-              key={idx}
-              className="group border border-slate-200 rounded-2xl bg-white p-5 open:bg-slate-50 transition-colors shadow-xs"
-            >
-              <summary className="font-extrabold text-slate-800 cursor-pointer list-none flex justify-between items-center text-sm sm:text-base">
-                <span>{faq.q}</span>
-                <span className="text-brand-blue group-open:rotate-180 transition-transform font-black text-lg">▾</span>
-              </summary>
-              <p className="mt-3 text-xs sm:text-sm text-slate-600 leading-relaxed font-medium border-t border-slate-100 pt-3">
-                {faq.a}
-              </p>
-            </details>
-          ))}
-        </div>
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+        <PageFAQSection
+
+          faqs={faqs.map(f => ({ question: f.q, answer: f.a }))}
+
+          title="Cab Services Frequently Asked Questions"
+
+          subtitle="Transparent guidance on one-way drops, outstation cabs, round trips, and verified chauffeurs."
+
+          twoColumnLayout={true}
+
+          includeSchema={true}
+
+        />
+
       </section>
+
+
 
       {/* 3.6 Final CTA */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

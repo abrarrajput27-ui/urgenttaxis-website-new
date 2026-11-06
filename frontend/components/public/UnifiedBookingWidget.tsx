@@ -29,6 +29,11 @@ export interface UnifiedBookingWidgetProps {
   defaultOrigin?: string;
   defaultDestination?: string;
   defaultDistanceKm?: number;
+  defaultDate?: string;
+  defaultTime?: string;
+  defaultPackageId?: HourlyRentalPackageId;
+  defaultStops?: string[];
+  isDedicatedPage?: boolean;
   routeId?: string;
   compact?: boolean;
   className?: string;
@@ -45,14 +50,14 @@ interface VehicleCardDef {
   pricingCategory: string;
 }
 
-const VEHICLE_CARDS: VehicleCardDef[] = [
+export const VEHICLE_CARDS: VehicleCardDef[] = [
   {
     key: 'sedan',
     name: 'Sedan',
     models: 'Dzire, Etios, Amaze',
     seats: 4,
     bags: 2,
-    image: '/fleet-brand/dzire.png',
+    image: '/fleet-brand/dzire.webp',
     badge: 'Most Popular',
     pricingCategory: 'sedan',
   },
@@ -62,7 +67,7 @@ const VEHICLE_CARDS: VehicleCardDef[] = [
     models: 'Ertiga, Carens, Triber',
     seats: 6,
     bags: 4,
-    image: '/fleet-brand/Ertiga.png',
+    image: '/fleet-brand/Ertiga.webp',
     badge: 'Family Ride',
     pricingCategory: 'suv-muv',
   },
@@ -72,7 +77,7 @@ const VEHICLE_CARDS: VehicleCardDef[] = [
     models: 'Innova Crysta, Hycross',
     seats: 7,
     bags: 5,
-    image: '/fleet-brand/Innova Crysta.png',
+    image: '/fleet-brand/Innova Crysta.webp',
     badge: 'Premium Luxury',
     pricingCategory: 'executive-suv',
   },
@@ -82,7 +87,7 @@ const VEHICLE_CARDS: VehicleCardDef[] = [
     models: 'WagonR, Swift, Celerio',
     seats: 4,
     bags: 1,
-    image: '/fleet-brand/Hatchback.png',
+    image: '/fleet-brand/Hatchback.webp',
     badge: 'Budget Value',
     pricingCategory: 'hatchback',
   },
@@ -136,6 +141,11 @@ export default function UnifiedBookingWidget({
   defaultOrigin = '',
   defaultDestination = '',
   defaultDistanceKm = 0,
+  defaultDate,
+  defaultTime,
+  defaultPackageId,
+  defaultStops,
+  isDedicatedPage = false,
   routeId = '',
   compact: _compact = false,
   className = '',
@@ -148,7 +158,7 @@ export default function UnifiedBookingWidget({
   // STRICT REQUIREMENT: Pickup & drop blank by default
   const [origin, setOrigin] = useState(defaultOrigin || '');
   const [destination, setDestination] = useState(defaultDestination || '');
-  const [stops, setStops] = useState<string[]>([]);
+  const [stops, setStops] = useState<string[]>(defaultStops || []);
   const [activeStopDropdownIndex, setActiveStopDropdownIndex] = useState<number | null>(null);
   const [distanceKm, setDistanceKm] = useState(defaultDistanceKm || 0);
   const [activeRouteId, setActiveRouteId] = useState(routeId || '');
@@ -163,7 +173,7 @@ export default function UnifiedBookingWidget({
 
   // Local Rental Selection (Exactly 5 Packages)
   const [rentalCity, setRentalCity] = useState('Ghaziabad');
-  const [selectedPackageId, setSelectedPackageId] = useState<HourlyRentalPackageId>('8h80km');
+  const [selectedPackageId, setSelectedPackageId] = useState<HourlyRentalPackageId>(defaultPackageId || '8h80km');
 
   // Airport Transfer Selection
   const [airportDirection, setAirportDirection] = useState<'drop' | 'pickup'>('drop');
@@ -172,8 +182,8 @@ export default function UnifiedBookingWidget({
 
   // Dates & Times
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
-  const [pickupDate, setPickupDate] = useState(todayStr);
-  const [pickupTime, setPickupTime] = useState('06:00');
+  const [pickupDate, setPickupDate] = useState(defaultDate || todayStr);
+  const [pickupTime, setPickupTime] = useState(defaultTime || '06:00');
   const [returnDate, setReturnDate] = useState(todayStr);
   const [returnTime, setReturnTime] = useState('20:00');
   const [numberOfDays, setNumberOfDays] = useState(1);
@@ -249,11 +259,15 @@ export default function UnifiedBookingWidget({
     if (defaultDistanceKm && defaultDistanceKm > 0) {
       setDistanceKm(defaultDistanceKm);
     } else if (defaultOrigin && defaultDestination) {
-      matchKnownRoute(defaultOrigin, defaultDestination, []);
+      matchKnownRoute(defaultOrigin, defaultDestination, defaultStops || []);
     }
+    if (defaultDate) setPickupDate(defaultDate);
+    if (defaultTime) setPickupTime(defaultTime);
+    if (defaultPackageId) setSelectedPackageId(defaultPackageId);
+    if (defaultStops && defaultStops.length > 0) setStops(defaultStops);
     if (routeId) setActiveRouteId(routeId);
     if (initialServiceType) setServiceType(initialServiceType);
-  }, [defaultOrigin, defaultDestination, defaultDistanceKm, routeId, initialServiceType, matchKnownRoute]);
+  }, [defaultOrigin, defaultDestination, defaultDistanceKm, defaultDate, defaultTime, defaultPackageId, defaultStops, routeId, initialServiceType, matchKnownRoute]);
 
   // Handle Autocomplete
   const handleOriginChange = (val: string) => {
@@ -715,8 +729,41 @@ export default function UnifiedBookingWidget({
     }
 
     setValidationError('');
-    const el = document.getElementById('cab-selection-panel');
-    el?.scrollIntoView({ behavior: 'smooth' });
+
+    // If already on /cabs page or in dedicated results mode, smooth scroll to cab selection panel
+    if (isDedicatedPage || (typeof window !== 'undefined' && window.location.pathname.startsWith('/cabs'))) {
+      const el = document.getElementById('cab-selection-panel');
+      el?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    // Navigate to dedicated vehicle results page
+    const query = new URLSearchParams({
+      serviceType,
+      pickup: effectiveOrigin,
+      drop: effectiveDestination,
+      date: pickupDate,
+      time: pickupTime,
+      passengers: String(passengerCount),
+    });
+
+    if (distanceKm > 0) query.set('distanceKm', String(distanceKm));
+    if (stops.length > 0) query.set('stops', stops.join('|'));
+    if (serviceType === 'round_trip') {
+      query.set('returnDate', returnDate);
+      query.set('returnTime', returnTime);
+      query.set('days', String(numberOfDays));
+      query.set('returnTo', returnToPickupLocation);
+    } else if (serviceType === 'local_rental') {
+      query.set('packageId', selectedPackageId);
+      query.set('city', rentalCity);
+    } else if (serviceType === 'airport_transfer') {
+      query.set('airport', selectedAirport);
+      query.set('direction', airportDirection);
+      query.set('zone', selectedZone);
+    }
+
+    router.push(`/cabs?${query.toString()}`);
   };
 
   return (
@@ -984,7 +1031,7 @@ export default function UnifiedBookingWidget({
             <div className="space-y-2 pt-1">
               {stops.map((stop, idx) => (
                 <div key={idx} className="relative flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200">
-                  <span className="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md shrink-0">
+                  <span className="text-xs font-bold text-brand-blue bg-blue-50 px-2 py-1 rounded-md shrink-0">
                     Stop {idx + 1}
                   </span>
                   <div className="relative flex-1">
@@ -1035,7 +1082,7 @@ export default function UnifiedBookingWidget({
                     type="button"
                     id="add-stop-button"
                     onClick={handleAddStop}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1e1b4b] hover:text-brand-green py-1 px-2.5 rounded-lg border border-slate-200 hover:border-brand-green bg-white shadow-2xs cursor-pointer transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1e1b4b] hover:text-brand-green py-2 px-3.5 min-h-[40px] rounded-lg border border-slate-200 hover:border-brand-green bg-white shadow-2xs cursor-pointer transition-colors"
                   >
                     <span>＋</span>
                     <span>Add Intermediate Stop</span>
@@ -1053,14 +1100,14 @@ export default function UnifiedBookingWidget({
 
             {/* ROUND-TRIP RETURN TO PICKUP AUTOMATIC SYNC */}
             {serviceType === 'round_trip' && (
-              <div className="p-3 bg-indigo-50/70 border border-indigo-200 rounded-2xl flex items-center justify-between text-xs">
+              <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-2xl flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="text-indigo-700 font-bold">🔁 Return Location:</span>
+                  <span className="text-brand-blue font-bold">🔁 Return Location:</span>
                   <span className="font-semibold text-slate-800">
                     {returnToPickupLocation} (automatically returns to your pickup address)
                   </span>
                 </div>
-                <span className="text-[10px] uppercase font-black text-indigo-700 tracking-wider bg-white px-2 py-0.5 rounded-full border border-indigo-200">
+                <span className="text-[10px] uppercase font-black text-brand-blue tracking-wider bg-white px-2 py-0.5 rounded-full border border-blue-200">
                   Auto Synced
                 </span>
               </div>
@@ -1238,7 +1285,7 @@ export default function UnifiedBookingWidget({
                 <label className="block text-slate-800 font-bold mb-1 text-xs uppercase tracking-wider">
                   Estimated Distance
                 </label>
-                <div className="w-full bg-slate-100 text-slate-800 border border-slate-200 rounded-2xl px-4 py-3 font-mono font-bold text-sm">
+                <div className="w-full bg-slate-100 text-slate-800 border border-slate-200 rounded-2xl px-4 py-3 tabular-nums font-bold text-sm">
                   {distanceKm > 0 ? `${distanceKm} KM` : 'Enter route above'}
                 </div>
               </div>
@@ -1289,12 +1336,12 @@ export default function UnifiedBookingWidget({
             </div>
           </div>
         ) : activeVehicleQuote?.requiresWhatsAppQuote ? (
-          <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm space-y-3 shadow-sm">
-            <div className="flex items-center gap-2 font-bold text-amber-900">
+          <div className="p-5 rounded-2xl bg-blue-50/70 border border-blue-200 text-slate-800 text-xs sm:text-sm space-y-3 shadow-sm">
+            <div className="flex items-center gap-2 font-bold text-brand-blue">
               <span className="text-base">🚗</span>
               <span>Custom Route Corridor: ~{distanceKm > 0 ? `${distanceKm} KM` : 'Intermediate Stops'}</span>
             </div>
-            <p className="text-amber-800/90 leading-relaxed font-medium">
+            <p className="text-slate-600 leading-relaxed font-medium">
               This route contains intermediate stops or unmapped corridors. We provide instant custom quotes with verified commercial cabs and local chauffeurs.
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-3 pt-1">
@@ -1400,10 +1447,10 @@ export default function UnifiedBookingWidget({
                       {isConfirmationOnly ? (
                         <div className="space-y-2">
                           <div className="flex items-baseline justify-between">
-                            <span className="font-bold text-indigo-900 text-sm">Rate on Request</span>
+                            <span className="font-bold text-brand-blue text-sm">Rate on Request</span>
                             <span className="text-[10px] font-bold text-slate-500 uppercase">Dispatch Quote</span>
                           </div>
-                          <div className="p-2.5 bg-indigo-50/70 rounded-xl text-xs text-indigo-900 font-medium">
+                          <div className="p-2.5 bg-blue-50/70 rounded-xl text-xs text-brand-blue font-medium">
                             Base rate for this package confirmed instantly via WhatsApp without surge.
                           </div>
                           <a
@@ -1420,7 +1467,7 @@ export default function UnifiedBookingWidget({
                         <>
                           <div className="flex items-baseline justify-between">
                             <div>
-                              <span className="font-black text-slate-900 font-mono text-xl sm:text-2xl">
+                              <span className="font-black text-slate-900 tabular-nums text-xl sm:text-2xl">
                                 ₹{fare.toLocaleString('en-IN')}
                               </span>
                               {cardAddOnTotal > 0 && (
@@ -1438,18 +1485,18 @@ export default function UnifiedBookingWidget({
                           <div className="bg-slate-50 rounded-xl p-2.5 space-y-1 text-xs border border-slate-200/80">
                             <div className="flex items-center justify-between">
                               <span className="text-emerald-700 font-bold">30% Advance Token:</span>
-                              <span className="font-mono font-black text-emerald-800">₹{token.toLocaleString('en-IN')}</span>
+                              <span className="tabular-nums font-black text-emerald-800">₹{token.toLocaleString('en-IN')}</span>
                             </div>
                             <div className="flex items-center justify-between text-slate-600">
                               <span className="font-medium">70% Driver Balance:</span>
-                              <span className="font-mono font-bold text-slate-800">₹{balance.toLocaleString('en-IN')}</span>
+                              <span className="tabular-nums font-bold text-slate-800">₹{balance.toLocaleString('en-IN')}</span>
                             </div>
                           </div>
 
                           {/* Inclusions summary */}
                           <div className="text-[10px] text-slate-500 font-medium space-y-0.5 pt-0.5">
                             <p className="text-emerald-700 font-bold">✓ Fuel, chauffeur & AC included</p>
-                            <p className="text-amber-700 font-medium">⚠️ Tolls & parking extra at actuals</p>
+                            <p className="text-slate-500 font-medium">ℹ Tolls & parking extra at actuals</p>
                           </div>
 
                           {/* Direct CTA Buttons inside each card */}
@@ -1480,14 +1527,14 @@ export default function UnifiedBookingWidget({
             </div>
 
             {/* Phase 3: Chargeable Vehicle Add-ons Section */}
-            <div className="p-4 sm:p-5 bg-gradient-to-r from-blue-50/50 via-indigo-50/30 to-slate-50 rounded-2xl border border-blue-200/80 space-y-3">
+            <div className="p-4 sm:p-5 bg-gradient-to-r from-blue-50/50 via-blue-50/20 to-slate-50 rounded-2xl border border-blue-200/80 space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <div className="flex items-center gap-2">
                     <h4 className="text-sm font-black text-slate-900 flex items-center gap-1.5">
                       <span>✨</span> Optional Trip Add-ons
                     </h4>
-                    <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-200">
+                    <span className="text-[10px] font-bold bg-brand-green/10 text-brand-green px-2 py-0.5 rounded-full border border-brand-green/20">
                       ₹300 per add-on
                     </span>
                   </div>
@@ -1498,7 +1545,7 @@ export default function UnifiedBookingWidget({
                 {selectedAddOns.length > 0 && (
                   <div className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200 self-start sm:self-auto flex items-center gap-1.5">
                     <span>✓ {selectedAddOns.length} Add-on{selectedAddOns.length > 1 ? 's' : ''} Selected:</span>
-                    <span className="font-mono font-black text-emerald-900">+₹{addOnTotal}</span>
+                    <span className="tabular-nums font-black text-emerald-900">+₹{addOnTotal}</span>
                   </div>
                 )}
               </div>
@@ -1536,7 +1583,7 @@ export default function UnifiedBookingWidget({
                           />
                           <span className="font-bold text-xs text-slate-900 leading-tight">{addon.name}</span>
                         </label>
-                        <span className="font-mono font-black text-xs text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md shrink-0">
+                        <span className="tabular-nums font-black text-xs text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md shrink-0">
                           +₹{addon.price}
                         </span>
                       </div>
@@ -1636,9 +1683,9 @@ export default function UnifiedBookingWidget({
                       </strong>
                     </div>
                     {addOnTotal > 0 && (
-                      <div className="flex justify-between py-1 border-b border-slate-200 text-indigo-900">
+                      <div className="flex justify-between py-1 border-b border-slate-200 text-brand-blue">
                         <span>Selected Add-ons ({selectedAddOns.length}):</span>
-                        <strong className="font-mono font-bold">+₹{addOnTotal}</strong>
+                        <strong className="tabular-nums font-bold">+₹{addOnTotal}</strong>
                       </div>
                     )}
                     <div className="flex justify-between py-1 border-b border-slate-200">
@@ -1668,8 +1715,8 @@ export default function UnifiedBookingWidget({
                         <li>Clean, air-conditioned vehicle</li>
                       </ul>
                     </div>
-                    <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-200 space-y-1.5">
-                      <span className="font-bold text-amber-900 block text-xs">⚠️ Payable at Actuals:</span>
+                    <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+                      <span className="font-bold text-brand-blue block text-xs">⚠️ Payable at Actuals:</span>
                       <ul className="list-disc pl-4 space-y-1 text-slate-700 font-medium">
                         <li>FASTag highway toll plaza deductions</li>
                         <li>Interstate border entry taxes (if crossing state borders)</li>

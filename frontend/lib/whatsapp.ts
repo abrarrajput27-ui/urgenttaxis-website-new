@@ -55,15 +55,20 @@ export function generateWhatsAppLink(
 
   const lines: string[] = [];
 
-  // 1. Warm Greeting
-  lines.push('Hello Urgent Taxis!');
-  lines.push('');
+  // 1. Warm Greeting & Context (avoid duplicate greetings)
+  const custom = params.customMessage?.trim();
+  const alreadyHasGreeting = custom ? /^(hello|hi|hey|namaste|greetings)\b/i.test(custom) : false;
 
-  // 2. Custom Message (if provided)
-  if (params.customMessage) {
-    lines.push(params.customMessage.trim());
+  if (custom) {
+    if (!alreadyHasGreeting) {
+      lines.push('Hello Urgent Taxis!');
+      lines.push('');
+    }
+    lines.push(custom);
     lines.push('');
   } else {
+    lines.push('Hello Urgent Taxis!');
+    lines.push('');
     lines.push('I would like to inquire about booking a taxi.');
     lines.push('');
   }

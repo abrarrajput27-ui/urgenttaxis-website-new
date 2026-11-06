@@ -26,7 +26,7 @@ export default function InvoicePrintToolbar({ bookingReference, documentTitle }:
             &larr; Back to Confirmation
           </Link>
           <span className="text-slate-600 hidden sm:inline">|</span>
-          <span className="font-mono text-slate-300 text-xs sm:text-sm font-bold">{bookingReference}</span>
+          <span className="tabular-nums text-slate-300 text-xs sm:text-sm font-bold">{bookingReference}</span>
         </div>
 
         <div className="flex items-center gap-2">

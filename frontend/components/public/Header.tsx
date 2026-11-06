@@ -113,9 +113,12 @@ export default function PublicHeader() {
                     <div className="absolute top-[30px] left-0 w-56 bg-white shadow-xl rounded-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all flex flex-col py-2 z-50 transform origin-top-left -translate-y-2 group-hover:translate-y-0">
                       <Link href="/services" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">All Services Overview</Link>
                       <Link href="/taxi-service" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">NCR Taxi Service</Link>
-                      <Link href="/airport-transfers" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50 last:border-0">Airport Transfers</Link>
-                      <Link href="/local-rentals" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50 last:border-0">Local Rentals</Link>
-                      <Link href="/corporate-taxi" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50 last:border-0">Corporate Taxi</Link>
+                      <Link href="/airport-transfers" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Airport Transfers</Link>
+                      <Link href="/local-rentals" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Local Rentals</Link>
+                      <Link href="/corporate-taxi" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Corporate Taxi</Link>
+                      <Link href="/tempo-traveller" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Tempo Traveller</Link>
+                      <Link href="/bus-charter" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Bus Charter</Link>
+                      <Link href="/chardham-yatra" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Chardham Yatra</Link>
                       <Link href="/tour-packages" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold">Tour Packages</Link>
                     </div>
                   </>
@@ -195,12 +198,15 @@ export default function PublicHeader() {
                       Services 
                       <span className={`transform transition-transform ${servicesOpen ? 'rotate-180' : ''}`}>▼</span>
                     </button>
-                    <div className={`flex flex-col pl-6 space-y-1 overflow-hidden transition-all duration-300 ${servicesOpen ? 'max-h-60' : 'max-h-0'}`}>
+                    <div className={`flex flex-col pl-6 space-y-1 overflow-hidden transition-all duration-300 ${servicesOpen ? 'max-h-[500px]' : 'max-h-0'}`}>
                       <Link href="/services" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px] font-bold">All Services Overview</Link>
                       <Link href="/taxi-service" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">NCR Taxi Service</Link>
                       <Link href="/airport-transfers" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Airport Transfers</Link>
                       <Link href="/local-rentals" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Local Rentals</Link>
                       <Link href="/corporate-taxi" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Corporate Taxi</Link>
+                      <Link href="/tempo-traveller" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Tempo Traveller</Link>
+                      <Link href="/bus-charter" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Bus Charter</Link>
+                      <Link href="/chardham-yatra" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Chardham Yatra</Link>
                       <Link href="/tour-packages" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Tour Packages</Link>
                     </div>
                   </div>

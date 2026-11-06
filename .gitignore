@@ -25,3 +25,9 @@ test-results/
 frontend/test-results/
 playwright-report/
 frontend/playwright-report/
+
+# Backups and temporary scratch files
+*original_backups/
+scratch_*.json
+frontend/scratch_*.json
+*.zip

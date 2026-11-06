@@ -75,7 +75,7 @@ export default function DestinationConnectingRoutes({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
               <div className="absolute bottom-2 left-2.5 right-2.5 text-white">
-                <span className="text-[10px] uppercase font-bold text-amber-300">
+                <span className="text-[10px] uppercase font-bold text-brand-green">
                   {route.isDirectRoutePage ? 'Verified Route' : 'Instant Cab'}
                 </span>
                 <h3 className="font-black text-xs sm:text-sm text-white drop-shadow-sm truncate">

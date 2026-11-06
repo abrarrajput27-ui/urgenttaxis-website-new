@@ -56,7 +56,7 @@ export default function VehicleImage({
             d="M8 17a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4zM4 11h16M5 11l1.5-4.5A2 2 0 018.4 5h7.2a2 2 0 011.9 1.5L19 11M3 11v6a1 1 0 001 1h1m16-7v6a1 1 0 01-1 1h-1"
           />
         </svg>
-        <span className="text-[11px] font-mono text-slate-500">Urgent Taxis Fleet</span>
+        <span className="text-[11px] tabular-nums text-slate-500">Urgent Taxis Fleet</span>
       </div>
     );
   }

@@ -1,8 +1,9 @@
 import { Phone, MessageSquare } from 'lucide-react';
+import { BUSINESS_CONFIG } from '@/lib/config';
 
 export default function MobileStickyBar() {
-  const callDigits = '917310651940';
-  const whatsappDigits = '918595066033';
+  const callDigits = BUSINESS_CONFIG.phone.primaryRaw.replace(/\D/g, '') || '917310651940';
+  const whatsappDigits = BUSINESS_CONFIG.phone.whatsappRaw || '918595066033';
 
   const whatsappUrl = `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(
     'Hello Urgent Taxis! 👋 I want to book a cab. Please share details and vehicle availability.'
@@ -21,7 +22,7 @@ export default function MobileStickyBar() {
         aria-label="Call Urgent Taxis at 7310651940"
         className="flex items-center gap-1.5 py-2.5 px-3.5 rounded-full bg-[#1e1b4b] hover:bg-[#0f172a] active:scale-95 text-white font-black text-xs shadow-lg shadow-blue-950/30 border border-white/20 transition-all backdrop-blur-xs"
       >
-        <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+        <Phone className="w-3.5 h-3.5 text-brand-green shrink-0" />
         <span className="truncate">Call Now</span>
       </a>
 

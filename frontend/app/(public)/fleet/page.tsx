@@ -60,8 +60,8 @@ const VehicleCard = ({
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-6 mt-auto">
-        <div className="bg-purple-50 rounded-xl p-3 text-center border border-purple-100">
-          <div className="text-[10px] text-purple-600 font-bold uppercase tracking-wider mb-1">Outstation</div>
+        <div className="bg-blue-50 rounded-xl p-3 text-center border border-blue-100">
+          <div className="text-[10px] text-brand-blue font-bold uppercase tracking-wider mb-1">Outstation</div>
           <div className="text-sm font-black text-slate-800">{outstationPrice}</div>
         </div>
         <div className="bg-emerald-50 rounded-xl p-3 text-center border border-emerald-100">
@@ -78,7 +78,13 @@ const VehicleCard = ({
           <span>📞</span> Call Now
         </a>
         <a
-          href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
+          href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+            vehicleCategory: title,
+            vehicleModel: models,
+            capacity: seats,
+            customMessage: `Hello Urgent Taxis! 👋\n\nI want to inquire about booking a *${title}* (${models}).\n• Seating Capacity: ${seats}\n• Outstation Rate: ${outstationPrice}\n• Local Package: ${localPrice}\n\nPlease check availability and confirm booking details.`,
+            pageUrl: 'https://www.urgenttaxis.in/fleet',
+          })}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 border-2 border-brand-green text-brand-green font-bold rounded-full py-2 hover:bg-brand-green hover:text-white transition-colors text-sm"
@@ -92,13 +98,13 @@ const VehicleCard = ({
 
 export default function FleetPage() {
   return (
-    <div className="min-h-screen bg-white pb-20 font-sans">
+    <div className="min-h-screen bg-white pb-20">
       {/* 1. Hero Section */}
       <section className="relative text-white py-32 px-4 text-center overflow-hidden">
         {/* Background Image & Overlay */}
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/fleet-hero-bg.png" 
+            src="/fleet-hero-bg.webp" 
             alt="Fleet Background" 
             fill 
             className="object-cover object-center"
@@ -129,7 +135,7 @@ export default function FleetPage() {
           <h2 className="text-2xl font-black text-brand-blue mb-6 border-b-2 border-brand-blue pb-2 inline-block">Cars & SUVs</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <VehicleCard
-              image="/fleet-brand/Hatchback.png" 
+              image="/fleet-brand/Hatchback.webp" 
               title="Hatchback"
               models="(WagonR, Swift, Celerio)"
               seats="4 Seats"
@@ -140,7 +146,7 @@ export default function FleetPage() {
               localPrice="₹1200"
             />
             <VehicleCard
-              image="/fleet-brand/dzire.png"
+              image="/fleet-brand/dzire.webp"
               title="Sedan"
               models="(Dzire, Etios, Amaze)"
               seats="4 Seats"
@@ -151,7 +157,7 @@ export default function FleetPage() {
               localPrice="₹1500"
             />
             <VehicleCard
-              image="/fleet-brand/Ertiga.png"
+              image="/fleet-brand/Ertiga.webp"
               title="SUV / MPV"
               models="(Ertiga, Triber, Carens)"
               seats="6/7 Seats"
@@ -162,7 +168,7 @@ export default function FleetPage() {
               localPrice="₹2000"
             />
             <VehicleCard
-                image="/fleet-brand/Innova%20Crysta.png"
+                image="/fleet-brand/Innova Crysta.webp"
                 title="Premium SUV"
                 models="(Innova Crysta, Hycross)"
                 seats="6/7 Seats"
@@ -180,7 +186,7 @@ export default function FleetPage() {
           <h2 className="text-2xl font-black text-brand-blue mb-6 border-b-2 border-brand-blue pb-2 inline-block">Tempo Travellers</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <VehicleCard
-              image="/fleet-brand/Tempo Traveller.png"
+              image="/fleet-brand/Tempo Traveller.webp"
               title="12 Seater Traveller"
               models="Force Traveller 1x1"
               seats="12 Seats"
@@ -191,7 +197,7 @@ export default function FleetPage() {
               localPrice="₹3500"
             />
             <VehicleCard
-              image="/fleet-brand/Tempo Traveller.png"
+              image="/fleet-brand/Tempo Traveller.webp"
               title="16 Seater Traveller"
               models="Force Traveller 2x1"
               seats="16 Seats"
@@ -202,7 +208,7 @@ export default function FleetPage() {
               localPrice="₹4500"
             />
             <VehicleCard
-              image="/fleet-brand/Tempo Traveller.png"
+              image="/fleet-brand/Tempo Traveller.webp"
               title="20 Seater Traveller"
               models="Force Traveller 2x1"
               seats="20 Seats"
@@ -213,7 +219,7 @@ export default function FleetPage() {
               localPrice="₹5500"
             />
             <VehicleCard
-              image="/fleet-brand/Tempo Traveller.png"
+              image="/fleet-brand/Tempo Traveller.webp"
               title="26 Seater Traveller"
               models="Force Traveller 2x2"
               seats="26 Seats"
@@ -231,7 +237,7 @@ export default function FleetPage() {
           <h2 className="text-2xl font-black text-brand-blue mb-6 border-b-2 border-brand-blue pb-2 inline-block">Urbania</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <VehicleCard
-              image="/fleet-brand/Urbania.png"
+              image="/fleet-brand/Urbania.webp"
               title="12 Seater Urbania"
               models="Force Urbania Premium"
               seats="12 Seats"
@@ -242,7 +248,7 @@ export default function FleetPage() {
               localPrice="₹5000"
             />
             <VehicleCard
-              image="/fleet-brand/Urbania.png"
+              image="/fleet-brand/Urbania.webp"
               title="16 Seater Urbania"
               models="Force Urbania Premium"
               seats="16 Seats"
@@ -260,7 +266,7 @@ export default function FleetPage() {
           <h2 className="text-2xl font-black text-brand-blue mb-6 border-b-2 border-brand-blue pb-2 inline-block">Luxury Buses</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <VehicleCard
-              image="/fleet-brand/Bus.png"
+              image="/fleet-brand/Bus.webp"
               title="27 Seater Bus"
               models="Luxury AC Bus"
               seats="27 Seats"
@@ -271,7 +277,7 @@ export default function FleetPage() {
               localPrice="₹8000"
             />
             <VehicleCard
-              image="/fleet-brand/volvo bus.png"
+              image="/fleet-brand/volvo bus.webp"
               title="45 Seater Bus"
               models="Luxury AC Bus"
               seats="45 Seats"

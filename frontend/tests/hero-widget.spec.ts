@@ -84,9 +84,9 @@ test.describe('Phase 2: Hero Booking Widget Engine & Quote Resolution', () => {
       pageUrl: 'https://www.urgenttaxis.in',
     });
     const decoded = decodeURIComponent(waUrl);
-    expect(decoded).toContain('https://wa.me/917310651940?text=Hello Urgent Taxis, I want to book a Sedan.');
+    expect(decoded).toContain('https://wa.me/918595066033?text=Hello Urgent Taxis, I want to book a Sedan.');
     expect(decoded).toContain('Trip: One-way, Ghaziabad to Haridwar');
-    expect(decoded).toContain('Estimated fare: Rs 3,499 (toll and parking extra)');
+    expect(decoded).toContain('Estimated fare: ₹3,499 (toll and parking extra)');
     expect(decoded.match(/Hello Urgent Taxis/g)?.length).toBe(1);
   });
 

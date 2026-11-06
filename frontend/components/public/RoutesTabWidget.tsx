@@ -80,7 +80,16 @@ export default function RoutesTabWidget() {
         distance,
         price,
         slug,
-        image: `/destinations/${dest.toLowerCase().replace(/ /g, '-')}.jpg`,
+        image: (() => {
+          let k = dest.toLowerCase().replace(/ /g, '-');
+          if (k === 'haldwani') k = 'nainital';
+          if (k === 'jim-corbett') k = 'ramnagar';
+          if (k === 'vrindavan' || k === 'mathura') k = 'agra';
+          if (k === 'ayodhya' || k === 'kanpur' || k === 'bareilly' || k === 'moradabad') k = 'lucknow';
+          const validWebps = ['agra', 'amritsar', 'chandigarh', 'dehradun', 'haridwar', 'jaipur', 'lucknow', 'manali', 'mussoorie', 'nainital', 'ramnagar', 'rishikesh', 'shimla', 'udaipur'];
+          const target = validWebps.includes(k) ? k : 'nainital';
+          return `/destinations/${target}.webp`;
+        })(),
       };
     });
   }, [activeCity]);
@@ -97,7 +106,7 @@ export default function RoutesTabWidget() {
               setActiveState(state);
               setActiveCity(STATES_DATA[state][0]);
             }}
-            className={`whitespace-nowrap px-3 sm:px-5 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 border-2 cursor-pointer ${
+            className={`whitespace-nowrap px-3.5 sm:px-5 py-2.5 min-h-[44px] rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center transition-all duration-200 border-2 cursor-pointer ${
               activeState === state
                 ? 'bg-[#1e1b4b] border-[#1e1b4b] text-white shadow-md scale-[1.02]'
                 : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
@@ -116,7 +125,7 @@ export default function RoutesTabWidget() {
               key={city}
               type="button"
               onClick={() => setActiveCity(city)}
-              className={`px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border whitespace-nowrap shrink-0 cursor-pointer ${
+              className={`px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[40px] rounded-full text-xs font-bold transition-all duration-200 border whitespace-nowrap shrink-0 cursor-pointer flex items-center justify-center ${
                 activeCity === city
                   ? 'bg-[#059669] border-[#059669] text-white shadow-xs'
                   : 'bg-white border-slate-200 text-slate-700 hover:border-[#059669] hover:text-[#059669]'
@@ -151,7 +160,7 @@ export default function RoutesTabWidget() {
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/destinations/nainital.jpg';
+                      (e.target as HTMLImageElement).src = '/destinations/nainital.webp';
                     }}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   />
@@ -175,7 +184,7 @@ export default function RoutesTabWidget() {
                       </span>
                     </div>
                     <div className="flex items-center text-xs text-slate-600 font-semibold bg-slate-50 p-2 rounded-xl">
-                      <Car className="w-3.5 h-3.5 mr-1.5 text-indigo-900 shrink-0" />
+                      <Car className="w-3.5 h-3.5 mr-1.5 text-brand-blue shrink-0" />
                       <span>Hatchback, Sedan & Innova</span>
                     </div>
                   </div>
@@ -183,7 +192,7 @@ export default function RoutesTabWidget() {
                   <div className="pt-3 border-t border-slate-100 space-y-2 mt-auto">
                     <div className="flex justify-between items-baseline">
                       <span className="text-xs font-bold text-slate-500">Starts at</span>
-                      <span className="text-lg font-black text-[#1e1b4b] font-mono">
+                      <span className="text-lg font-black text-[#1e1b4b] tabular-nums">
                         ₹{route.price.toLocaleString('en-IN')}
                       </span>
                     </div>

@@ -605,10 +605,10 @@ export interface WhatsAppBookingParams {
  * Builds one clean, professional WhatsApp link matching exact specification
  */
 export function buildWhatsAppBookingLink(params: WhatsAppBookingParams): string {
-  const rawPhone = SITE_CONFIG.phoneRaw || '917310651940';
-  const phone = rawPhone.replace(/\D/g, '') || '917310651940';
+  const rawPhone = SITE_CONFIG.whatsappRaw || '918595066033';
+  const phone = rawPhone.replace(/\D/g, '') || '918595066033';
   const fareLine = params.estimatedFare && params.estimatedFare > 0
-    ? `Estimated fare: Rs ${params.estimatedFare.toLocaleString('en-IN')} (toll and parking extra)`
+    ? `Estimated fare: ₹${params.estimatedFare.toLocaleString('en-IN')} (toll and parking extra)`
     : 'Estimated fare: Requesting best available quote';
 
   const dateLine = params.travelDate

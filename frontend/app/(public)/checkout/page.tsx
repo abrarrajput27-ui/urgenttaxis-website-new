@@ -196,7 +196,7 @@ function CheckoutContent() {
                     Select optional preferences for your journey. Fixed at ₹300 per add-on.
                   </p>
                 </div>
-                <span className="text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full border border-amber-200 shrink-0">
+                <span className="text-xs font-bold bg-brand-green/10 text-brand-green px-2.5 py-1 rounded-full border border-brand-green/20 shrink-0">
                   ₹300 each
                 </span>
               </div>
@@ -237,7 +237,7 @@ function CheckoutContent() {
                             <span className="text-xs text-slate-600 block mt-0.5">{addon.shortDescription}</span>
                           </div>
                         </label>
-                        <span className="font-mono font-bold text-xs text-slate-800 bg-slate-100 px-2.5 py-1 rounded-md shrink-0">
+                        <span className="tabular-nums font-bold text-xs text-slate-800 bg-slate-100 px-2.5 py-1 rounded-md shrink-0">
                           +₹{addon.price}
                         </span>
                       </div>
@@ -343,7 +343,7 @@ function CheckoutContent() {
                             <span className="font-semibold text-slate-800">₹{addon.price}</span>
                           </div>
                         ))}
-                        <div className="flex justify-between items-center text-xs font-bold text-indigo-900 pt-1 border-t border-slate-100">
+                        <div className="flex justify-between items-center text-xs font-bold text-brand-blue pt-1 border-t border-slate-100">
                           <span>Total Add-on Charges</span>
                           <span>₹{fareData.addOnTotal || 0}</span>
                         </div>

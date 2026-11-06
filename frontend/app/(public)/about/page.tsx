@@ -91,7 +91,7 @@ export default function AboutUsPage() {
         <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light border border-slate-200 text-white rounded-3xl p-10 text-center space-y-6 shadow-xl relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[url('/hero-pattern.svg')] bg-center"></div>
           <h3 className="text-3xl font-black relative z-10">Need a Quick Cab Quote?</h3>
-          <p className="text-sm text-indigo-100 relative z-10 font-medium">Connect with our 24/7 support desk for custom trip arrangements.</p>
+          <p className="text-sm text-blue-100 relative z-10 font-medium">Connect with our 24/7 support desk for custom trip arrangements.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 relative z-10">
             <a
               href={`tel:${SITE_CONFIG.phoneRaw}`}

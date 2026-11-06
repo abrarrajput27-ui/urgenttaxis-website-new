@@ -113,7 +113,7 @@ export default function BookingPolicyPage() {
 
         {/* Section 4: Driver Night Allowance */}
         <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 space-y-4 shadow-sm">
-          <div className="flex items-center gap-3 text-amber-500">
+          <div className="flex items-center gap-3 text-brand-blue">
             <Clock className="w-6 h-6" />
             <h2 className="text-xl sm:text-2xl font-black text-brand-blue">4. Driver Night Allowance</h2>
           </div>
