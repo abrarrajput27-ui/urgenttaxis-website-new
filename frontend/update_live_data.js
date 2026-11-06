@@ -14,11 +14,11 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const NEW_CATEGORIES = [
-  { name: '12 Seater Traveller', slug: '12-seater-traveller', image_url: '/fleet-brand/Tempo Traveller.png', description: 'Force Traveller 1x1', base_price_per_km: 24, minimum_distance_per_day: 250, seating_capacity: 12, bag_capacity: 10, is_active: true, display_order: 10 },
-  { name: '16 Seater Traveller', slug: '16-seater-traveller', image_url: '/fleet-brand/Tempo Traveller.png', description: 'Force Traveller 2x1', base_price_per_km: 26, minimum_distance_per_day: 250, seating_capacity: 16, bag_capacity: 12, is_active: true, display_order: 11 },
-  { name: '12 Seater Urbania', slug: '12-seater-urbania', image_url: '/fleet-brand/Urbania.png', description: 'Force Urbania Premium', base_price_per_km: 30, minimum_distance_per_day: 250, seating_capacity: 12, bag_capacity: 10, is_active: true, display_order: 12 },
-  { name: '27 Seater Bus', slug: '27-seater-bus', image_url: '/fleet-brand/Bus.png', description: 'Luxury AC Bus', base_price_per_km: 45, minimum_distance_per_day: 250, seating_capacity: 27, bag_capacity: 27, is_active: true, display_order: 13 },
-  { name: '45 Seater Bus', slug: '45-seater-bus', image_url: '/fleet-brand/volvo bus.png', description: 'Luxury Volvo Bus', base_price_per_km: 55, minimum_distance_per_day: 250, seating_capacity: 45, bag_capacity: 45, is_active: true, display_order: 14 },
+  { name: '12 Seater Traveller', slug: '12-seater-traveller', image_url: '/fleet-brand/Tempo Traveller.webp', description: 'Force Traveller 1x1', base_price_per_km: 24, minimum_distance_per_day: 250, seating_capacity: 12, bag_capacity: 10, is_active: true, display_order: 10 },
+  { name: '16 Seater Traveller', slug: '16-seater-traveller', image_url: '/fleet-brand/Tempo Traveller.webp', description: 'Force Traveller 2x1', base_price_per_km: 26, minimum_distance_per_day: 250, seating_capacity: 16, bag_capacity: 12, is_active: true, display_order: 11 },
+  { name: '12 Seater Urbania', slug: '12-seater-urbania', image_url: '/fleet-brand/Urbania.webp', description: 'Force Urbania Premium', base_price_per_km: 30, minimum_distance_per_day: 250, seating_capacity: 12, bag_capacity: 10, is_active: true, display_order: 12 },
+  { name: '27 Seater Bus', slug: '27-seater-bus', image_url: '/fleet-brand/Bus.webp', description: 'Luxury AC Bus', base_price_per_km: 45, minimum_distance_per_day: 250, seating_capacity: 27, bag_capacity: 27, is_active: true, display_order: 13 },
+  { name: '45 Seater Bus', slug: '45-seater-bus', image_url: '/fleet-brand/volvo bus.webp', description: 'Luxury Volvo Bus', base_price_per_km: 55, minimum_distance_per_day: 250, seating_capacity: 45, bag_capacity: 45, is_active: true, display_order: 14 },
 ];
 
 async function updateLiveData() {

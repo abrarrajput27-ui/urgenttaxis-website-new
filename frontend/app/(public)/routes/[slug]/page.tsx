@@ -187,12 +187,16 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
     if (d.includes('haridwar')) return '/destinations/haridwar.webp';
     if (d.includes('rishikesh')) return '/destinations/rishikesh.webp';
     if (d.includes('ramnagar') || d.includes('corbett')) return '/destinations/ramnagar.webp';
-    if (d.includes('nainital')) return '/destinations/nainital.webp';
-    if (d.includes('jaipur')) return '/destinations/jaipur.webp';
-    if (d.includes('shimla')) return '/destinations/shimla.webp';
-    if (d.includes('agra')) return '/destinations/agra.jpg';
-    if (d.includes('chandigarh')) return '/destinations/chandigarh.jpg';
-    return '/destinations/chandigarh.jpg';
+    if (d.includes('nainital') || d.includes('haldwani') || d.includes('kathgodam') || d.includes('bhimtal') || d.includes('sattal') || d.includes('kainchi') || d.includes('mukteshwar') || d.includes('ranikhet') || d.includes('almora') || d.includes('kausani')) return '/destinations/nainital.webp';
+    if (d.includes('jaipur') || d.includes('ajmer') || d.includes('pushkar') || d.includes('jodhpur')) return '/destinations/jaipur.webp';
+    if (d.includes('shimla') || d.includes('kullu') || d.includes('kasol') || d.includes('dharamshala') || d.includes('dalhousie')) return '/destinations/shimla.webp';
+    if (d.includes('manali')) return '/destinations/manali.webp';
+    if (d.includes('agra') || d.includes('mathura') || d.includes('vrindavan') || d.includes('aligarh')) return '/destinations/agra.webp';
+    if (d.includes('lucknow') || d.includes('kanpur') || d.includes('ayodhya') || d.includes('varanasi') || d.includes('prayagraj') || d.includes('gorakhpur') || d.includes('bareilly') || d.includes('moradabad') || d.includes('rampur') || d.includes('rudrapur')) return '/destinations/lucknow.webp';
+    if (d.includes('amritsar') || d.includes('jalandhar') || d.includes('ludhiana')) return '/destinations/amritsar.webp';
+    if (d.includes('udaipur')) return '/destinations/udaipur.webp';
+    if (d.includes('chandigarh') || d.includes('ambala') || d.includes('panipat') || d.includes('karnal') || d.includes('kurukshetra') || d.includes('sonipat') || d.includes('rohtak')) return '/destinations/chandigarh.webp';
+    return '/destinations/chandigarh.webp';
   };
 
   // 1. Curate 5 similar routes from originName
@@ -253,10 +257,10 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
   // Ensure 5 solid connecting options departing from destName
   if (connectingRoutesList.length < 5) {
     const hubFallbacks = [
-      { name: 'Delhi Airport (IGI T3)', dist: Math.round(distance + 20), fare: sedanFareTotal + 400, img: '/destinations/chandigarh.jpg' },
-      { name: 'Noida International Airport', dist: Math.round(distance + 15), fare: sedanFareTotal + 300, img: '/destinations/lucknow.jpg' },
+      { name: 'Delhi Airport (IGI T3)', dist: Math.round(distance + 20), fare: sedanFareTotal + 400, img: '/destinations/chandigarh.webp' },
+      { name: 'Noida International Airport', dist: Math.round(distance + 15), fare: sedanFareTotal + 300, img: '/destinations/lucknow.webp' },
       { name: 'Gurugram Cyber City', dist: Math.round(distance + 35), fare: sedanFareTotal + 500, img: '/destinations/jaipur.webp' },
-      { name: 'Ghaziabad Junction', dist: Math.round(distance - 10), fare: Math.max(2500, sedanFareTotal - 200), img: '/destinations/agra.jpg' },
+      { name: 'Ghaziabad Junction', dist: Math.round(distance - 10), fare: Math.max(2500, sedanFareTotal - 200), img: '/destinations/agra.webp' },
     ];
 
     for (const hub of hubFallbacks) {
@@ -296,7 +300,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       bags: 2,
       ratePerKm: 10,
       totalFare: hatchbackFareTotal,
-      image: '/fleet-brand/Hatchback.png',
+      image: '/fleet-brand/Hatchback.webp',
       checkoutCat: 'hatchback',
     },
     {
@@ -306,7 +310,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       bags: 3,
       ratePerKm: 11,
       totalFare: sedanFareTotal,
-      image: '/fleet-brand/dzire.png',
+      image: '/fleet-brand/dzire.webp',
       checkoutCat: 'sedan',
     },
     {
@@ -316,7 +320,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       bags: 4,
       ratePerKm: 15,
       totalFare: ertigaFareTotal,
-      image: '/fleet-brand/Ertiga.png',
+      image: '/fleet-brand/Ertiga.webp',
       checkoutCat: 'suv-muv',
     },
     {
@@ -326,7 +330,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       bags: 4,
       ratePerKm: 20,
       totalFare: crystaFareTotal,
-      image: '/fleet-brand/Innova Crysta.png',
+      image: '/fleet-brand/Innova Crysta.webp',
       checkoutCat: 'executive-suv',
     },
     {
@@ -336,7 +340,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       bags: 10,
       ratePerKm: 26,
       totalFare: tempoFareTotal,
-      image: '/fleet-brand/Tempo Traveller.png',
+      image: '/fleet-brand/Tempo Traveller.webp',
       checkoutCat: 'tempo12',
     },
   ];
@@ -357,7 +361,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white drop-shadow-md">
-                {originName} to <span className="text-amber-400">{destName}</span> Taxi
+                {originName} to <span className="text-brand-green">{destName}</span> Taxi
               </h1>
 
               {/* Subtitle Pills */}
@@ -382,25 +386,25 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
               {/* Trip Details Strip (Horizontal Icons) */}
               <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 text-xs sm:text-sm text-slate-200 font-semibold">
                 <div className="flex items-center gap-2">
-                  <span className="text-amber-400 text-base">📏</span>
+                  <span className="text-brand-green text-base">📏</span>
                   <span>
                     Distance: <strong className="text-white font-black">{distance} km</strong>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-amber-400 text-base">⏱️</span>
+                  <span className="text-brand-green text-base">⏱️</span>
                   <span>
                     Travel Time: <strong className="text-white font-black">{durationText}</strong>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-amber-400 text-base">🛣️</span>
+                  <span className="text-brand-green text-base">🛣️</span>
                   <span>
                     Best Route: <strong className="text-white font-black">{corridor.highway}</strong>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-amber-400 text-base">🔄</span>
+                  <span className="text-brand-green text-base">🔄</span>
                   <span>
                     Trip Type: <strong className="text-white font-black">One-way • Round Trip</strong>
                   </span>
@@ -412,7 +416,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
             <div className="lg:col-span-5 relative h-52 sm:h-64 lg:h-80 w-full flex items-end justify-center lg:justify-end">
               <div className="relative w-full max-w-lg h-full">
                 <Image
-                  src="/fleet-brand/Hero.png"
+                  src="/fleet-brand/Hero.webp"
                   alt={`${originName} to ${destName} Taxi Cab Fleet`}
                   fill
                   priority
@@ -546,7 +550,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
                     <div className="shrink-0">
                       <Link
                         href={`/checkout?serviceType=one_way&categoryId=${cab.checkoutCat}&routeId=${route.id || ''}&pickup=${encodeURIComponent(originName)}&drop=${encodeURIComponent(destName)}&km=${distance}`}
-                        className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all shadow-xs inline-block"
+                        className="px-3.5 py-1.5 rounded-xl bg-brand-green hover:bg-brand-green-hover text-white font-black text-xs transition-all shadow-xs inline-block"
                       >
                         Book Now
                       </Link>
@@ -634,11 +638,11 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
 
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="space-y-3 max-w-2xl">
-              <span className="text-xs font-black uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
+              <span className="text-xs font-black uppercase tracking-wider text-brand-green bg-brand-green/10 border border-brand-green/20 px-3 py-1 rounded-full">
                 Instant Online Booking
               </span>
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-                Plan Your Next Journey with <span className="text-amber-400">Urgent Taxis</span>
+                Plan Your Next Journey with <span className="text-brand-green">Urgent Taxis</span>
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 font-medium">
                 Comfortable rides. Transparent pricing. Professional service across all major North India corridors.
@@ -647,7 +651,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs font-bold text-slate-200">
                 <div className="flex items-center gap-1.5">
-                  <FaShieldAlt className="text-amber-400" />
+                  <FaShieldAlt className="text-brand-green" />
                   <span>Best Price Guaranteed</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -664,7 +668,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
             <div className="shrink-0 flex flex-col sm:flex-row gap-3">
               <Link
                 href={`/checkout?serviceType=one_way&pickup=${encodeURIComponent(originName)}&drop=${encodeURIComponent(destName)}&km=${distance}`}
-                className="py-3.5 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm text-center shadow-lg transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                className="py-3.5 px-6 rounded-2xl bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm text-center shadow-lg transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>Book Your Ride</span>
                 <FaArrowRight className="w-3.5 h-3.5" />

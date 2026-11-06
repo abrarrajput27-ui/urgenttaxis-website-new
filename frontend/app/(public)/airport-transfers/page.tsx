@@ -11,6 +11,7 @@ import {
 } from '@/lib/data/fallback-data';
 import VehicleImage from '@/components/public/VehicleImage';
 import Link from 'next/link';
+import PageFAQSection from '@/components/public/PageFAQSection';
 
 export const metadata = constructMetadata({
   title: 'Airport Taxi Transfer Service | IGI Airport Delhi Cabs',
@@ -80,18 +81,6 @@ export default async function AirportTransfersPage() {
     },
   ];
 
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: visibleFaqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
-  };
 
   return (
     <div className="pb-16 bg-slate-50 min-h-screen text-slate-900">
@@ -100,10 +89,6 @@ export default async function AirportTransfersPage() {
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
 
       {/* 2. Hero Section */}
       <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
@@ -200,13 +185,13 @@ export default async function AirportTransfersPage() {
           </ul>
         </div>
 
-        <div className="bg-white border border-amber-100 p-8 rounded-3xl space-y-4 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl">⚠️</div>
-          <h3 className="text-xl font-black text-amber-600 relative z-10">Excluded / Payable at Actuals</h3>
+        <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl">ℹ️</div>
+          <h3 className="text-xl font-black text-brand-blue relative z-10">Excluded / Payable at Actuals</h3>
           <ul className="text-sm text-slate-600 space-y-3 font-medium relative z-10">
-            <li className="flex gap-2"><span className="text-amber-500">⚠</span> Airport terminal parking fees</li>
-            <li className="flex gap-2"><span className="text-amber-500">⚠</span> MCD / State toll entry taxes</li>
-            <li className="flex gap-2"><span className="text-amber-500">⚠</span> Extra wait time beyond included complimentary window</li>
+            <li className="flex gap-2"><span className="text-slate-400 font-bold">ℹ</span> Airport terminal parking fees</li>
+            <li className="flex gap-2"><span className="text-slate-400 font-bold">ℹ</span> MCD / State toll entry taxes</li>
+            <li className="flex gap-2"><span className="text-slate-400 font-bold">ℹ</span> Extra wait time beyond included complimentary window</li>
           </ul>
         </div>
       </section>
@@ -249,19 +234,26 @@ export default async function AirportTransfersPage() {
       </section>
 
       {/* 7. Visible FAQs */}
-      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
-        <h2 className="text-3xl font-black text-slate-900 text-center mb-10">
-          Frequently Asked Questions
-        </h2>
-        <div className="space-y-5 text-sm">
-          {visibleFaqs.map((faq, idx) => (
-            <div key={idx} className="bg-white border border-slate-200 p-6 rounded-2xl space-y-2.5 shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="text-base font-black text-brand-blue">{faq.question}</h3>
-              <p className="text-slate-600 leading-relaxed font-medium">{faq.answer}</p>
-            </div>
-          ))}
-        </div>
+
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+
+        <PageFAQSection
+
+          faqs={visibleFaqs}
+
+          title="Airport Taxi Frequently Asked Questions"
+
+          subtitle="Clear answers about flight delay tracking, airport parking, terminal pickups, and transparent fares."
+
+          twoColumnLayout={true}
+
+          includeSchema={true}
+
+        />
+
       </section>
+
+
 
       {/* 8. Final CTA */}
       <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">

@@ -68,12 +68,12 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
     ],
     places: {
       restaurants: [
-        { name: 'Haveli Restaurant', category: 'restaurant', location: 'Hapur, UP', distanceKm: 45, image: '/destinations/chandigarh.jpg' },
-        { name: 'Zaika Family Restaurant', category: 'restaurant', location: 'Moradabad, UP', distanceKm: 110, image: '/destinations/amritsar.jpg' },
-        { name: 'Midway Treat', category: 'restaurant', location: 'Rudrapur, UK', distanceKm: 210, image: '/destinations/lucknow.jpg' },
-        { name: 'Shiva Tourist Dhaba', category: 'restaurant', location: 'Babugarh Bypass, UP', distanceKm: 65, image: '/destinations/chandigarh.jpg' },
-        { name: 'Bikanervala Highway Food Court', category: 'restaurant', location: 'Gajraula, UP', distanceKm: 105, image: '/destinations/agra.jpg' },
-        { name: 'Tadka Punjab Ka Dhaba', category: 'restaurant', location: 'Rampur Bypass, UP', distanceKm: 185, image: '/destinations/amritsar.jpg' },
+        { name: 'Haveli Restaurant', category: 'restaurant', location: 'Hapur, UP', distanceKm: 45, image: '/destinations/chandigarh.webp' },
+        { name: 'Zaika Family Restaurant', category: 'restaurant', location: 'Moradabad, UP', distanceKm: 110, image: '/destinations/amritsar.webp' },
+        { name: 'Midway Treat', category: 'restaurant', location: 'Rudrapur, UK', distanceKm: 210, image: '/destinations/lucknow.webp' },
+        { name: 'Shiva Tourist Dhaba', category: 'restaurant', location: 'Babugarh Bypass, UP', distanceKm: 65, image: '/destinations/chandigarh.webp' },
+        { name: 'Bikanervala Highway Food Court', category: 'restaurant', location: 'Gajraula, UP', distanceKm: 105, image: '/destinations/agra.webp' },
+        { name: 'Tadka Punjab Ka Dhaba', category: 'restaurant', location: 'Rampur Bypass, UP', distanceKm: 185, image: '/destinations/amritsar.webp' },
       ],
       petrolPumps: [
         { name: 'Indian Oil Petrol Pump', category: 'petrol', location: 'Hapur, UP', distanceKm: 52 },
@@ -134,12 +134,12 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
     ],
     places: {
       restaurants: [
-        { name: 'Cheetal Grand', category: 'restaurant', location: 'Khatauli Bypass, UP', distanceKm: 98, image: '/destinations/chandigarh.jpg' },
-        { name: 'Namaste Midway Food Court', category: 'restaurant', location: 'Mansurpur, UP', distanceKm: 112, image: '/destinations/agra.jpg' },
-        { name: 'Pandit Ji Da Dhaba', category: 'restaurant', location: 'Roorkee Highway, UK', distanceKm: 170, image: '/destinations/amritsar.jpg' },
-        { name: 'Haldiram\'s Express Food Plaza', category: 'restaurant', location: 'Meerut Bypass, UP', distanceKm: 58, image: '/destinations/chandigarh.jpg' },
-        { name: 'Bikanerwala Expressway', category: 'restaurant', location: 'Muzaffarnagar Bypass, UP', distanceKm: 126, image: '/destinations/lucknow.jpg' },
-        { name: 'Shiva Dhaba & Tea Point', category: 'restaurant', location: 'Mohand Ghats, UK', distanceKm: 215, image: '/destinations/amritsar.jpg' },
+        { name: 'Cheetal Grand', category: 'restaurant', location: 'Khatauli Bypass, UP', distanceKm: 98, image: '/destinations/chandigarh.webp' },
+        { name: 'Namaste Midway Food Court', category: 'restaurant', location: 'Mansurpur, UP', distanceKm: 112, image: '/destinations/agra.webp' },
+        { name: 'Pandit Ji Da Dhaba', category: 'restaurant', location: 'Roorkee Highway, UK', distanceKm: 170, image: '/destinations/amritsar.webp' },
+        { name: 'Haldiram\'s Express Food Plaza', category: 'restaurant', location: 'Meerut Bypass, UP', distanceKm: 58, image: '/destinations/chandigarh.webp' },
+        { name: 'Bikanerwala Expressway', category: 'restaurant', location: 'Muzaffarnagar Bypass, UP', distanceKm: 126, image: '/destinations/lucknow.webp' },
+        { name: 'Shiva Dhaba & Tea Point', category: 'restaurant', location: 'Mohand Ghats, UK', distanceKm: 215, image: '/destinations/amritsar.webp' },
       ],
       petrolPumps: [
         { name: 'Indian Oil COCO Fuel Station', category: 'petrol', location: 'Khatauli, UP', distanceKm: 99 },
@@ -159,13 +159,13 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
         { name: 'Robber\'s Cave (Guchhupani)', category: 'attraction', location: 'Anarwala, Dehradun', distanceKm: 248, image: '/destinations/dehradun.webp' },
         { name: 'Sahastradhara Natural Spring', category: 'attraction', location: 'Timilimanjri, Dehradun', distanceKm: 252, image: '/destinations/dehradun.webp' },
         { name: 'Mindrolling Buddha Temple', category: 'attraction', location: 'Clement Town, Dehradun', distanceKm: 246, image: '/destinations/haridwar.webp' },
-        { name: 'Forest Research Institute (FRI)', category: 'attraction', location: 'Chakrata Road, Dehradun', distanceKm: 247, image: '/destinations/chandigarh.jpg' },
+        { name: 'Forest Research Institute (FRI)', category: 'attraction', location: 'Chakrata Road, Dehradun', distanceKm: 247, image: '/destinations/chandigarh.webp' },
         { name: 'Tapkeshwar Mahadev Temple', category: 'attraction', location: 'Garhi Cantt, Dehradun', distanceKm: 249, image: '/destinations/haridwar.webp' },
         { name: 'Malsi Deer Park (Zoo)', category: 'attraction', location: 'Mussoorie Road, Dehradun', distanceKm: 254, image: '/destinations/mussoorie.webp' },
       ],
     },
     gallery: [
-      { src: '/destinations/chandigarh.jpg', caption: 'Delhi-Meerut Expressway View', alt: 'Delhi-Meerut Expressway Highway View' },
+      { src: '/destinations/chandigarh.webp', caption: 'Delhi-Meerut Expressway View', alt: 'Delhi-Meerut Expressway Highway View' },
       { src: '/destinations/dehradun.webp', caption: 'Rajaji National Park Foothills', alt: 'Rajaji forest foothills approaching Dehradun' },
       { src: '/destinations/dehradun.webp', caption: 'Dehradun Valley City View', alt: 'Dehradun valley city view' },
       { src: '/destinations/dehradun.webp', caption: 'Robber\'s Cave (Guchhupani)', alt: 'Robbers Cave natural limestone stream in Dehradun' },
@@ -201,10 +201,10 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
     places: {
       restaurants: [
         { name: 'Old Rao Hotel', category: 'restaurant', location: 'Dharuhera, Haryana', distanceKm: 70, image: '/destinations/jaipur.webp' },
-        { name: 'Hotel Highway King', category: 'restaurant', location: 'Shahpura, Rajasthan', distanceKm: 205, image: '/destinations/chandigarh.jpg' },
-        { name: 'Mannat Dhaba', category: 'restaurant', location: 'Neemrana, Rajasthan', distanceKm: 122, image: '/destinations/amritsar.jpg' },
-        { name: 'McDonald\'s & CCD Midway', category: 'restaurant', location: 'Behror, Rajasthan', distanceKm: 138, image: '/destinations/agra.jpg' },
-        { name: 'Haldiram\'s Expressway Plaza', category: 'restaurant', location: 'Kotputli, Rajasthan', distanceKm: 162, image: '/destinations/lucknow.jpg' },
+        { name: 'Hotel Highway King', category: 'restaurant', location: 'Shahpura, Rajasthan', distanceKm: 205, image: '/destinations/chandigarh.webp' },
+        { name: 'Mannat Dhaba', category: 'restaurant', location: 'Neemrana, Rajasthan', distanceKm: 122, image: '/destinations/amritsar.webp' },
+        { name: 'McDonald\'s & CCD Midway', category: 'restaurant', location: 'Behror, Rajasthan', distanceKm: 138, image: '/destinations/agra.webp' },
+        { name: 'Haldiram\'s Expressway Plaza', category: 'restaurant', location: 'Kotputli, Rajasthan', distanceKm: 162, image: '/destinations/lucknow.webp' },
         { name: 'Rawat Mishthan Bhandar', category: 'restaurant', location: 'Station Road, Jaipur', distanceKm: 272, image: '/destinations/jaipur.webp' },
       ],
       petrolPumps: [
@@ -225,7 +225,7 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
         { name: 'Hawa Mahal (Palace of Winds)', category: 'attraction', location: 'Badi Choupad, Jaipur', distanceKm: 272, image: '/destinations/jaipur.webp' },
         { name: 'Amber Fort & Palace', category: 'attraction', location: 'Amer, Jaipur', distanceKm: 260, image: '/destinations/jaipur.webp' },
         { name: 'Jal Mahal (Water Palace)', category: 'attraction', location: 'Amer Road, Jaipur', distanceKm: 265, image: '/destinations/jaipur.webp' },
-        { name: 'City Palace Jaipur', category: 'attraction', location: 'Old City, Jaipur', distanceKm: 271, image: '/destinations/agra.jpg' },
+        { name: 'City Palace Jaipur', category: 'attraction', location: 'Old City, Jaipur', distanceKm: 271, image: '/destinations/agra.webp' },
         { name: 'Nahargarh Fort Viewpoint', category: 'attraction', location: 'Aravalli Hills, Jaipur', distanceKm: 275, image: '/destinations/jaipur.webp' },
         { name: 'Jantar Mantar Observatory', category: 'attraction', location: 'Gangori Bazaar, Jaipur', distanceKm: 271, image: '/destinations/jaipur.webp' },
       ],
@@ -296,11 +296,11 @@ export function getRouteCorridorDetails(
     ],
     places: {
       restaurants: [
-        { name: 'Highway Food Plaza', category: 'restaurant', location: `Midway Near ${originName}`, distanceKm: quarter1, image: '/destinations/chandigarh.jpg' },
-        { name: 'Shiva Dhaba & Family Restaurant', category: 'restaurant', location: 'Midway Corridor', distanceKm: midpoint, image: '/destinations/amritsar.jpg' },
-        { name: 'Bikanervala Highway Court', category: 'restaurant', location: `Approaching ${destName}`, distanceKm: quarter3, image: '/destinations/agra.jpg' },
-        { name: 'Haldiram\'s Express Food Plaza', category: 'restaurant', location: 'Highway Toll Bypass', distanceKm: midpoint + 25, image: '/destinations/lucknow.jpg' },
-        { name: 'Old Rao Highway Dhaba', category: 'restaurant', location: 'National Highway Plaza', distanceKm: quarter1 + 30, image: '/destinations/chandigarh.jpg' },
+        { name: 'Highway Food Plaza', category: 'restaurant', location: `Midway Near ${originName}`, distanceKm: quarter1, image: '/destinations/chandigarh.webp' },
+        { name: 'Shiva Dhaba & Family Restaurant', category: 'restaurant', location: 'Midway Corridor', distanceKm: midpoint, image: '/destinations/amritsar.webp' },
+        { name: 'Bikanervala Highway Court', category: 'restaurant', location: `Approaching ${destName}`, distanceKm: quarter3, image: '/destinations/agra.webp' },
+        { name: 'Haldiram\'s Express Food Plaza', category: 'restaurant', location: 'Highway Toll Bypass', distanceKm: midpoint + 25, image: '/destinations/lucknow.webp' },
+        { name: 'Old Rao Highway Dhaba', category: 'restaurant', location: 'National Highway Plaza', distanceKm: quarter1 + 30, image: '/destinations/chandigarh.webp' },
       ],
       petrolPumps: [
         { name: 'Indian Oil COCO Fuel Station', category: 'petrol', location: 'Highway Km ' + quarter1, distanceKm: quarter1 },
@@ -320,7 +320,7 @@ export function getRouteCorridorDetails(
       ],
     },
     gallery: [
-      { src: '/destinations/chandigarh.jpg', caption: `${originName} Expressway Corridor`, alt: `${originName} Expressway view` },
+      { src: '/destinations/chandigarh.webp', caption: `${originName} Expressway Corridor`, alt: `${originName} Expressway view` },
       { src: '/destinations/jaipur.webp', caption: 'Highway Midway Plaza', alt: 'Highway midway stopover' },
       { src: '/destinations/dehradun.webp', caption: `${destName} Approach Drive`, alt: `Scenic road entering ${destName}` },
       { src: '/destinations/nainital.webp', caption: `${destName} Panorama`, alt: `${destName} panoramic landmark` },

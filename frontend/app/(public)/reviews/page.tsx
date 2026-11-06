@@ -63,7 +63,7 @@ export default function ReviewsPage() {
           </div>
 
           <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center mb-4">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-brand-blue border border-blue-100 flex items-center justify-center mb-4">
               <MessageSquare className="w-6 h-6" />
             </div>
             <h3 className="text-base font-bold text-brand-blue mb-2">Direct Owner Resolution</h3>

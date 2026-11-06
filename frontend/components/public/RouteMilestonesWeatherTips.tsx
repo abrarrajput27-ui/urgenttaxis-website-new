@@ -23,10 +23,10 @@ export default function RouteMilestonesWeatherTips({
 }: RouteMilestonesWeatherTipsProps) {
   const tipIcons = [
     <FaCar key="car" className="w-4 h-4 text-brand-blue shrink-0" />,
-    <FaTshirt key="tshirt" className="w-4 h-4 text-amber-500 shrink-0" />,
+    <FaTshirt key="tshirt" className="w-4 h-4 text-brand-green shrink-0" />,
     <FaMoneyBillWave key="money" className="w-4 h-4 text-brand-green shrink-0" />,
     <FaMapMarkedAlt key="map" className="w-4 h-4 text-brand-blue shrink-0" />,
-    <FaCalendarCheck key="calendar" className="w-4 h-4 text-amber-500 shrink-0" />,
+    <FaCalendarCheck key="calendar" className="w-4 h-4 text-brand-blue shrink-0" />,
   ];
 
   const scrollToMap = (e: React.MouseEvent) => {
@@ -69,7 +69,7 @@ export default function RouteMilestonesWeatherTips({
                       isFirst
                         ? 'bg-emerald-500 border-white ring-4 ring-emerald-100'
                         : isLast
-                        ? 'bg-amber-500 border-white ring-4 ring-amber-100'
+                        ? 'bg-brand-green border-white ring-4 ring-brand-green/20'
                         : 'bg-brand-blue border-white ring-2 ring-blue-100 group-hover:scale-110'
                     }`}
                   />
@@ -129,13 +129,13 @@ export default function RouteMilestonesWeatherTips({
               className="text-xs font-bold text-brand-blue hover:text-brand-green flex items-center gap-1 transition-colors cursor-pointer"
             >
               <span>View Route on Map</span>
-              <span className="text-amber-500 font-black">→</span>
+              <span className="text-brand-green font-black">→</span>
             </a>
           </div>
 
           <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50/80 to-slate-50 rounded-2xl border border-blue-100/70">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-white shadow-xs flex items-center justify-center text-amber-500 border border-slate-100">
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-xs flex items-center justify-center text-brand-green border border-slate-100">
                 <FaCloudSun className="w-7 h-7" />
               </div>
               <div>

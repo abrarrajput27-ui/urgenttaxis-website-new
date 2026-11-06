@@ -20,7 +20,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         <div className="text-center bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-md w-full">
-          <h2 className="text-xl font-bold mb-3 text-amber-700">Too Many Lookup Requests</h2>
+          <h2 className="text-xl font-bold mb-3 text-slate-900">Too Many Lookup Requests</h2>
           <p className="text-slate-600 mb-6 text-sm">
             For security, booking reference lookups from your network are temporarily limited. Please retry in {rateLimitStatus.retryAfterSeconds} seconds.
           </p>
@@ -86,7 +86,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         <div className="text-center bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-md w-full">
           <h2 className="text-xl font-bold mb-3 text-slate-900">Booking Not Found</h2>
-          <p className="text-slate-600 mb-6 text-sm">We couldn't find a booking with the reference <strong className="font-mono text-slate-800">{cleanRef}</strong>.</p>
+          <p className="text-slate-600 mb-6 text-sm">We couldn't find a booking with the reference <strong className="tabular-nums text-slate-800">{cleanRef}</strong>.</p>
           <Link href="/" className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-hover text-white rounded-xl font-bold inline-block">
             Return Home
           </Link>
@@ -140,7 +140,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed': return 'bg-emerald-50 text-emerald-800 border-emerald-200';
-      case 'pending': return 'bg-amber-50 text-amber-800 border-amber-200';
+      case 'pending': return 'bg-slate-100 text-slate-800 border-slate-300';
       case 'cancelled': return 'bg-rose-50 text-rose-800 border-rose-200';
       case 'completed': return 'bg-blue-50 text-blue-800 border-blue-200';
       default: return 'bg-slate-50 text-slate-800 border-slate-200';
@@ -151,7 +151,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
     switch (status) {
       case 'paid': return 'bg-emerald-50 text-emerald-800 border-emerald-200';
       case 'partially_paid': return 'bg-blue-50 text-blue-800 border-blue-200';
-      case 'unpaid': return 'bg-amber-50 text-amber-800 border-amber-200';
+      case 'unpaid': return 'bg-slate-100 text-slate-800 border-slate-300';
       case 'refunded': return 'bg-slate-50 text-slate-800 border-slate-200';
       default: return 'bg-slate-50 text-slate-800 border-slate-200';
     }
@@ -165,9 +165,9 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         
         <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 text-center relative overflow-hidden">
-          <div className={`absolute top-0 left-0 w-full h-2 ${isConfirmed ? 'bg-brand-green' : 'bg-amber-500'}`}></div>
+          <div className={`absolute top-0 left-0 w-full h-2 ${isConfirmed ? 'bg-brand-green' : 'bg-brand-blue'}`}></div>
           
-          <div className={`w-16 h-16 sm:w-20 sm:h-20 ${isConfirmed ? 'bg-green-50 text-brand-green' : 'bg-amber-50 text-amber-600'} rounded-full flex items-center justify-center mx-auto mb-5`}>
+          <div className={`w-16 h-16 sm:w-20 sm:h-20 ${isConfirmed ? 'bg-green-50 text-brand-green' : 'bg-blue-50 text-brand-blue'} rounded-full flex items-center justify-center mx-auto mb-5`}>
             {isConfirmed ? (
               <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -183,14 +183,14 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
             Booking {isConfirmed ? 'Confirmed' : 'Request Received'}
           </h1>
           <p className="text-sm sm:text-base text-slate-600 mb-6">
-            Thank you, <strong className="text-slate-900 font-mono">{maskedName}</strong>! Your booking is currently <strong className="capitalize">{booking.status}</strong>.
+            Thank you, <strong className="text-slate-900 tabular-nums">{maskedName}</strong>! Your booking is currently <strong className="capitalize">{booking.status}</strong>.
           </p>
           
           {/* Key Reference Badges */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
             <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-center">
               <span className="text-[11px] text-slate-500 uppercase font-bold block mb-1">Booking Reference</span>
-              <span className="text-base sm:text-lg font-black text-brand-blue tracking-wider font-mono">{booking.booking_reference}</span>
+              <span className="text-base sm:text-lg font-black text-brand-blue tracking-wider tabular-nums">{booking.booking_reference}</span>
             </div>
             
             <div className={`border rounded-xl px-4 py-3 text-center ${getStatusColor(booking.status)}`}>
@@ -213,15 +213,15 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs sm:text-sm">
               <div>
                 <span className="text-slate-500 block text-[11px] font-semibold uppercase">Customer Name</span>
-                <strong className="text-slate-900 font-mono">{maskedName}</strong>
+                <strong className="text-slate-900 tabular-nums">{maskedName}</strong>
               </div>
               <div>
                 <span className="text-slate-500 block text-[11px] font-semibold uppercase">Contact Phone</span>
-                <strong className="text-slate-900 font-mono">{maskedPhone}</strong>
+                <strong className="text-slate-900 tabular-nums">{maskedPhone}</strong>
               </div>
               <div>
                 <span className="text-slate-500 block text-[11px] font-semibold uppercase">Email</span>
-                <span className="text-slate-700 font-mono">{maskedEmail}</span>
+                <span className="text-slate-700 tabular-nums">{maskedEmail}</span>
               </div>
               <div>
                 <span className="text-slate-500 block text-[11px] font-semibold uppercase">Booking Date</span>
@@ -305,7 +305,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
                         <span className="text-[11px] text-slate-500 italic block mt-0.5">{addon.disclaimer}</span>
                       )}
                     </div>
-                    <span className="text-sm font-bold text-slate-900 shrink-0 font-mono">₹{addon.price.toLocaleString('en-IN')}</span>
+                    <span className="text-sm font-bold text-slate-900 shrink-0 tabular-nums">₹{addon.price.toLocaleString('en-IN')}</span>
                   </div>
                 ))}
               </div>
@@ -360,7 +360,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
 
           {/* KYC Identity Verification Notice */}
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left mb-6 flex gap-3.5 items-start">
-            <svg className={`w-5 h-5 flex-shrink-0 mt-0.5 ${documentsSubmitted ? 'text-green-500' : 'text-amber-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`w-5 h-5 flex-shrink-0 mt-0.5 ${documentsSubmitted ? 'text-brand-green' : 'text-slate-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {documentsSubmitted ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               ) : (
@@ -378,8 +378,8 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
           </div>
           
           {booking.status === 'pending' && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-left mb-6 flex gap-3.5 items-start">
-              <svg className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-left mb-6 flex gap-3.5 items-start">
+              <svg className="w-5 h-5 text-brand-blue flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <div>
@@ -410,7 +410,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
             </Link>
 
             <a 
-              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20have%20submitted%20a%20booking%20request.%0A%F0%9F%93%8B%20*Reference*%3A%20${booking.booking_reference}%0A%0AI%20would%20like%20to%20pay%20the%20*Token%20Amount*%20(Rs.%20${tokenAmount}).%20%F0%9F%92%B0`} 
+              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20have%20submitted%20a%20booking%20request.%0A%F0%9F%93%8B%20*Reference*%3A%20${booking.booking_reference}%0A%0AI%20would%20like%20to%20pay%20the%20*Token%20Amount*%20(%E2%82%B9${tokenAmount}).%20%F0%9F%92%B0`} 
               target="_blank" 
               rel="noopener noreferrer"
               className="px-6 py-3.5 bg-brand-green hover:bg-brand-green-hover text-white font-bold rounded-xl shadow-lg shadow-brand-green/20 transition-all flex items-center justify-center gap-2 text-sm"

@@ -20,7 +20,7 @@ export default function ChardhamYatraPage() {
       </div>
 
       <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20 text-xs font-bold shadow-sm">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
           Sacred Pilgrimage Tours
         </span>
         <h1 className="text-4xl sm:text-5xl font-black text-brand-blue tracking-tight">
@@ -38,10 +38,10 @@ export default function ChardhamYatraPage() {
             The Chardham Yatra requires experienced hill drivers and extremely well-maintained vehicles. We specialize in providing customized travel plans starting from Delhi, Haridwar, or Dehradun.
           </p>
           <ul className="space-y-4 text-sm text-slate-600 font-medium pt-2">
-            <li className="flex gap-3"><span className="text-amber-500">ॐ</span> Do Dham Yatra (Kedarnath & Badrinath)</li>
-            <li className="flex gap-3"><span className="text-amber-500">ॐ</span> Complete Chardham Yatra</li>
-            <li className="flex gap-3"><span className="text-amber-500">ॐ</span> Verified drivers experienced in Himalayan terrain</li>
-            <li className="flex gap-3"><span className="text-amber-500">ॐ</span> Flexible SUV (Innova/Ertiga) and Tempo Traveller options</li>
+            <li className="flex gap-3"><span className="text-brand-green">ॐ</span> Do Dham Yatra (Kedarnath & Badrinath)</li>
+            <li className="flex gap-3"><span className="text-brand-green">ॐ</span> Complete Chardham Yatra</li>
+            <li className="flex gap-3"><span className="text-brand-green">ॐ</span> Verified drivers experienced in Himalayan terrain</li>
+            <li className="flex gap-3"><span className="text-brand-green">ॐ</span> Flexible SUV (Innova/Ertiga) and Tempo Traveller options</li>
           </ul>
         </div>
         
@@ -56,7 +56,7 @@ export default function ChardhamYatraPage() {
               href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%99%8F%0A%0AI%20am%20looking%20to%20book%20a%20cab%20for%20*Chardham%20Yatra*.%20%F0%9F%9A%96`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block bg-amber-500 hover:bg-amber-600 text-slate-900 font-black text-sm px-8 py-4 rounded-xl transition-all shadow-lg"
+              className="inline-block bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm px-8 py-4 rounded-xl transition-all shadow-lg"
             >
               Enquire Yatra Packages
             </a>

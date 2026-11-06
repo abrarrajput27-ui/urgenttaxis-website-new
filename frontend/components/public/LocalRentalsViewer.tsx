@@ -22,7 +22,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'WagonR, Tiago, Celerio',
     seats: 4,
     bags: 1,
-    image: '/fleet-brand/Hatchback.png',
+    image: '/fleet-brand/Hatchback.webp',
     badge: 'Budget Value',
     group: 'cabs',
   },
@@ -32,7 +32,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'Maruti Dzire, Toyota Etios',
     seats: 4,
     bags: 2,
-    image: '/fleet-brand/dzire.png',
+    image: '/fleet-brand/dzire.webp',
     badge: 'Most Popular',
     group: 'cabs',
   },
@@ -42,7 +42,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'Maruti Ertiga, Carens',
     seats: 6,
     bags: 4,
-    image: '/fleet-brand/Ertiga.png',
+    image: '/fleet-brand/Ertiga.webp',
     badge: 'Family Favorite',
     group: 'suvs',
   },
@@ -52,7 +52,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'Toyota Innova Crysta',
     seats: 7,
     bags: 5,
-    image: '/fleet-brand/Innova Crysta.png',
+    image: '/fleet-brand/Innova Crysta.webp',
     badge: 'Premium Luxury',
     group: 'suvs',
   },
@@ -62,7 +62,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'Force Tempo Traveller',
     seats: 12,
     bags: 8,
-    image: '/fleet-brand/Tempo Traveller.png',
+    image: '/fleet-brand/Tempo Traveller.webp',
     badge: 'Small Group',
     group: 'tempo',
   },
@@ -72,7 +72,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'Force Tempo Traveller',
     seats: 16,
     bags: 12,
-    image: '/fleet-brand/Tempo Traveller.png',
+    image: '/fleet-brand/Tempo Traveller.webp',
     badge: 'Touring Group',
     group: 'tempo',
   },
@@ -82,7 +82,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'Force Tempo Traveller',
     seats: 20,
     bags: 15,
-    image: '/fleet-brand/Tempo Traveller.png',
+    image: '/fleet-brand/Tempo Traveller.webp',
     badge: 'Corporate Group',
     group: 'tempo',
   },
@@ -92,7 +92,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'Force Tempo Traveller',
     seats: 26,
     bags: 20,
-    image: '/fleet-brand/Tempo Traveller.png',
+    image: '/fleet-brand/Tempo Traveller.webp',
     badge: 'Large Group',
     group: 'tempo',
   },
@@ -102,7 +102,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'Force Urbania Luxury',
     seats: 12,
     bags: 10,
-    image: '/fleet-brand/Urbania.png',
+    image: '/fleet-brand/Urbania.webp',
     badge: 'VIP Executive',
     group: 'tempo',
   },
@@ -112,7 +112,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'Force Urbania Luxury',
     seats: 16,
     bags: 14,
-    image: '/fleet-brand/Urbania.png',
+    image: '/fleet-brand/Urbania.webp',
     badge: 'VIP Executive',
     group: 'tempo',
   },
@@ -122,7 +122,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'Tata / Eicher Deluxe AC',
     seats: 27,
     bags: 25,
-    image: '/fleet-brand/Bus.png',
+    image: '/fleet-brand/Bus.webp',
     badge: 'Group Event',
     group: 'bus',
   },
@@ -132,7 +132,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
     models: 'BharatBenz / Volvo Luxury',
     seats: 45,
     bags: 45,
-    image: '/fleet-brand/volvo bus.png',
+    image: '/fleet-brand/volvo bus.webp',
     badge: 'Marriage / Tour',
     group: 'bus',
   },
@@ -220,7 +220,7 @@ export default function LocalRentalsViewer() {
           return (
             <div
               key={car.key}
-              className="bg-white border-2 border-slate-200 hover:border-indigo-900/40 rounded-3xl p-6 space-y-4 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+              className="bg-white border-2 border-slate-200 hover:border-brand-blue/40 rounded-3xl p-6 space-y-4 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 {/* Header Badge */}
@@ -257,19 +257,19 @@ export default function LocalRentalsViewer() {
                 <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 space-y-2.5 text-xs">
                   <div className="flex justify-between items-baseline border-b border-slate-200 pb-2">
                     <span className="font-bold text-slate-700">Package Fare ({pkg.hours}H / {pkg.km}KM):</span>
-                    <span className="font-mono text-xl font-black text-slate-900">
+                    <span className="tabular-nums text-xl font-black text-slate-900">
                       ₹{pkg.basePrice.toLocaleString('en-IN')}
                     </span>
                   </div>
 
                   <div className="flex justify-between text-emerald-700 font-bold">
                     <span>30% Advance Token:</span>
-                    <span className="font-mono font-black">₹{tokenAmount.toLocaleString('en-IN')}</span>
+                    <span className="tabular-nums font-black">₹{tokenAmount.toLocaleString('en-IN')}</span>
                   </div>
 
                   <div className="flex justify-between text-slate-600 font-medium">
                     <span>70% Driver Balance:</span>
-                    <span className="font-mono font-bold text-slate-800">₹{balanceAmount.toLocaleString('en-IN')}</span>
+                    <span className="tabular-nums font-bold text-slate-800">₹{balanceAmount.toLocaleString('en-IN')}</span>
                   </div>
 
                   <div className="pt-2 border-t border-dashed border-slate-200 grid grid-cols-2 gap-2 text-[11px] text-slate-600">
@@ -287,7 +287,7 @@ export default function LocalRentalsViewer() {
                 {/* Inclusions text */}
                 <div className="text-[11px] text-slate-500 font-medium space-y-0.5 pt-2">
                   <p className="text-emerald-700 font-bold">✓ Fuel, Chauffeur Allowance & Doorstep Pickup</p>
-                  <p className="text-amber-700 font-medium">⚠️ Tolls, State Border Taxes & Parking at Actuals</p>
+                  <p className="text-slate-500 font-medium">ℹ Tolls, State Border Taxes & Parking at Actuals</p>
                 </div>
               </div>
 

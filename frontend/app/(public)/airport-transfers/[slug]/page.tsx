@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AIRPORT_ROUTES_DATA, AirportRouteData } from '@/lib/data/airport-routes-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PageFAQSection from '@/components/public/PageFAQSection';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
@@ -57,6 +58,55 @@ export async function generateMetadata({ params }: AirportRoutePageProps): Promi
   };
 }
 
+export interface AirportMessageOptions {
+  vehicleName: string;
+  vehicleCategory?: string;
+  origin: string;
+  destination: string;
+  fare?: number;
+  capacity?: string;
+  flightDetails?: string;
+  travelDate?: string;
+  travelTime?: string;
+}
+
+export function buildAirportWhatsAppMessage(opts: AirportMessageOptions): string {
+  const lines: string[] = [];
+  lines.push('Hello Urgent Taxis! 👋');
+  lines.push('');
+  lines.push(`I would like to book a ${opts.vehicleName} for airport transfer from ${opts.origin} to ${opts.destination}.`);
+  if (opts.fare) {
+    lines.push(`• Fixed Fare: ₹${opts.fare.toLocaleString('en-IN')} (toll & parking extra)`);
+  }
+  if (opts.capacity) {
+    lines.push(`• Capacity: ${opts.capacity}`);
+  }
+
+  const hasFlight = Boolean(opts.flightDetails && opts.flightDetails.trim());
+  const hasDateTime = Boolean((opts.travelDate && opts.travelDate.trim()) || (opts.travelTime && opts.travelTime.trim()));
+
+  if (hasFlight) {
+    lines.push(`• Flight / Terminal: ${opts.flightDetails!.trim()}`);
+  }
+  if (hasDateTime) {
+    const dtParts = [opts.travelDate?.trim(), opts.travelTime?.trim()].filter(Boolean);
+    lines.push(`• Travel Date & Time: ${dtParts.join(', ')}`);
+  }
+
+  lines.push('');
+
+  if (!hasFlight && !hasDateTime) {
+    lines.push('Please let me know cab availability. I will provide my flight number, terminal (T1/T2/T3), and pickup time.');
+  } else if (!hasFlight) {
+    lines.push('Please let me know cab availability. I will provide my flight number and terminal (T1/T2/T3).');
+  } else if (!hasDateTime) {
+    lines.push('Please let me know cab availability. I will provide my pickup date and time.');
+  } else {
+    lines.push('Please confirm cab availability and driver assignment.');
+  }
+
+  return lines.join('\n');
+}
 export default async function AirportRoutePage({ params }: AirportRoutePageProps) {
   const { slug } = await params;
   const data: AirportRouteData | undefined = AIRPORT_ROUTES_DATA[slug];
@@ -107,18 +157,6 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
     termsOfService: `${BUSINESS_CONFIG.canonicalDomain}/terms`,
   };
 
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: data.faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
-  };
 
   // Generate Airport-specific FAQs + Common Booking FAQs (Requirement 7)
   const airportSpecificFaqs = getAirportSpecificFAQs(data.destination, data.origin);
@@ -126,9 +164,67 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
   const existingFaqs = data.faqs || [];
   const combinedAirportFaqs = [...airportSpecificFaqs, ...existingFaqs.filter(ef => !airportSpecificFaqs.some(af => af.question.toLowerCase() === ef.question.toLowerCase())), ...commonFaqs];
 
-  const whatsappBaseUrl = `https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
-    `Hello Urgent Taxis, I want to book an airport taxi for route: ${data.origin} to ${data.destination}. Please confirm driver and fare.`
-  )}`;
+  const whatsappBaseUrl = generateWhatsAppLink({
+    tripType: 'Airport Transfer',
+    pickup: data.origin,
+    drop: data.destination,
+    pageUrl: `${BUSINESS_CONFIG.canonicalDomain}/airport-transfers/${data.slug}`,
+    customMessage: [
+      `Hello Urgent Taxis! 👋`,
+      '',
+      `I would like to book an Airport Transfer cab from ${data.origin} to ${data.destination}.`,
+      '',
+      'Please let me know cab availability. I will provide my flight number, terminal (T1/T2/T3), and pickup time.',
+    ].join('\n'),
+  });
+
+  const sedanWhatsAppUrl = generateWhatsAppLink({
+    tripType: 'Airport Transfer',
+    pickup: data.origin,
+    drop: data.destination,
+    vehicleCategory: 'AC Sedan (Dzire / Etios)',
+    totalFare: data.sedanFare,
+    pageUrl: `${BUSINESS_CONFIG.canonicalDomain}/airport-transfers/${data.slug}`,
+    customMessage: buildAirportWhatsAppMessage({
+      vehicleName: 'AC Sedan (Dzire / Etios)',
+      origin: data.origin,
+      destination: data.destination,
+      fare: data.sedanFare,
+      capacity: 'Up to 4 passengers',
+    }),
+  });
+
+  const ertigaWhatsAppUrl = generateWhatsAppLink({
+    tripType: 'Airport Transfer',
+    pickup: data.origin,
+    drop: data.destination,
+    vehicleCategory: 'Maruti Ertiga SUV',
+    totalFare: data.ertigaFare,
+    pageUrl: `${BUSINESS_CONFIG.canonicalDomain}/airport-transfers/${data.slug}`,
+    customMessage: buildAirportWhatsAppMessage({
+      vehicleName: 'Maruti Ertiga',
+      origin: data.origin,
+      destination: data.destination,
+      fare: data.ertigaFare,
+      capacity: 'Up to 6 passengers',
+    }),
+  });
+
+  const crystaWhatsAppUrl = generateWhatsAppLink({
+    tripType: 'Airport Transfer',
+    pickup: data.origin,
+    drop: data.destination,
+    vehicleCategory: 'Toyota Innova Crysta',
+    totalFare: data.crystaFare,
+    pageUrl: `${BUSINESS_CONFIG.canonicalDomain}/airport-transfers/${data.slug}`,
+    customMessage: buildAirportWhatsAppMessage({
+      vehicleName: 'Toyota Innova Crysta',
+      origin: data.origin,
+      destination: data.destination,
+      fare: data.crystaFare,
+      capacity: 'Up to 7 passengers',
+    }),
+  });
 
   const otherAirportRoutes = Object.values(AIRPORT_ROUTES_DATA).filter((r) => r.slug !== data.slug);
 
@@ -137,10 +233,6 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(taxiServiceSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       {/* Breadcrumbs */}
@@ -168,7 +260,7 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
               </div>
               <span className="text-slate-600">•</span>
               <div className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-amber-400" />
+                <Clock className="w-4 h-4 text-emerald-400" />
                 <span>Est. Time: <strong>{data.durationText}</strong> (Peak: {data.peakDurationText})</span>
               </div>
             </div>
@@ -216,14 +308,14 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Shield className="w-5 h-5 text-purple-400 flex-shrink-0" />
+              <Shield className="w-5 h-5 text-brand-green flex-shrink-0" />
               <div>
                 <p className="text-sm font-bold text-brand-blue">Commercial Yellow Plate</p>
                 <p className="text-xs text-slate-500 font-medium">Verified highway chauffeurs</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-5 h-5 text-amber-400 flex-shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
               <div>
                 <p className="text-sm font-bold text-brand-blue">No Cancellation Shock</p>
                 <p className="text-xs text-slate-500 font-medium">Guaranteed vehicle dispatch</p>
@@ -298,9 +390,7 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
                 </ul>
               </div>
               <a
-                href={`https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
-                  `Hello Urgent Taxis, I want to book an AC Sedan for ${data.origin} to ${data.destination} (₹${data.sedanFare}). Please confirm.`
-                )}`}
+                href={sedanWhatsAppUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm text-center transition-colors"
@@ -343,9 +433,7 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
                 </ul>
               </div>
               <a
-                href={`https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
-                  `Hello Urgent Taxis, I want to book an Ertiga SUV for ${data.origin} to ${data.destination} (₹${data.ertigaFare}). Please confirm.`
-                )}`}
+                href={ertigaWhatsAppUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm text-center transition-colors"
@@ -355,10 +443,10 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
             </div>
 
             {/* Innova Crysta Card */}
-            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-purple-500/50 transition-all flex flex-col justify-between shadow-xl">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-brand-blue/50 transition-all flex flex-col justify-between shadow-xl">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-full">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-brand-blue bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full">
                     Premium Travel
                   </span>
                   <span className="text-xs text-slate-600">7 Seater Luxury</span>
@@ -371,26 +459,24 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
                 </div>
                 <ul className="space-y-2 text-xs text-slate-700">
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                    <CheckCircle2 className="w-4 h-4 text-brand-green" />
                     <span>Up to 7 Passengers</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                    <CheckCircle2 className="w-4 h-4 text-brand-green" />
                     <span>4 to 5 Large Luggage Bags</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                    <CheckCircle2 className="w-4 h-4 text-brand-green" />
                     <span>Ultimate Highway Suspension</span>
                   </li>
                 </ul>
               </div>
               <a
-                href={`https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
-                  `Hello Urgent Taxis, I want to book an Innova Crysta for ${data.origin} to ${data.destination} (₹${data.crystaFare}). Please confirm.`
-                )}`}
+                href={crystaWhatsAppUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm text-center transition-colors"
+                className="mt-6 w-full py-3 rounded-xl bg-brand-green hover:bg-brand-green-hover text-white font-bold text-sm text-center transition-colors shadow-md"
               >
                 Book Innova Crysta
               </a>

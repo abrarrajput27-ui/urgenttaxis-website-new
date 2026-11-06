@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { supabaseServer } from '@/lib/supabase/server';
 import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
+import { BUSINESS_CONFIG } from '@/lib/config';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import VehicleImage from '@/components/public/VehicleImage';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
@@ -133,6 +135,19 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
     console.warn('Supabase query failed in DynamicVehicleCategoryPage, using fallback data:', err);
   }
 
+  const fleetInfo = Object.values(BUSINESS_CONFIG.fleet).find(
+    (f) => f.category === resolvedParams.categorySlug || f.name.toLowerCase() === category.name.toLowerCase()
+  );
+  const seatsText = fleetInfo?.seats ? `${fleetInfo.seats} Seats` : (category.max_passengers ? `${category.max_passengers} Seats` : '');
+  const rateText = fleetInfo?.outstationRatePerKm ? `₹${fleetInfo.outstationRatePerKm}/km` : '';
+
+  const categoryWhatsAppUrl = generateWhatsAppLink({
+    vehicleCategory: category.name,
+    capacity: seatsText,
+    pageUrl: `${BUSINESS_CONFIG.canonicalDomain}/fleet/${resolvedParams.categorySlug}`,
+    customMessage: `Hello Urgent Taxis! 👋\n\nI would like to book a *${category.name}* cab. 🚖${seatsText ? `\n• Seating Capacity: ${seatsText}` : ''}${rateText ? `\n• Published Outstation Rate: ${rateText}` : ''}\n\nPlease confirm availability and provide quotation.`,
+  });
+
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Taxi Fleet', href: '/fleet' },
@@ -227,7 +242,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
                       {model.vehicle_variants.map((v: VehicleVariant) => (
                         <div key={v.id} className="flex justify-between items-center py-1">
                           <span>{v.variant_name} <span className="text-slate-400 text-xs">({v.fuel_type})</span></span>
-                          <span className="text-amber-600 font-bold">{v.seating_capacity} Seats</span>
+                          <span className="text-brand-blue font-bold">{v.seating_capacity} Seats</span>
                         </div>
                       ))}
                     </div>
@@ -301,7 +316,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
               <div key={r.id} className="bg-white border border-slate-200 p-6 rounded-2xl space-y-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
                 <div>
                   <h3 className="text-base font-black text-slate-900">{originName} → {destName}</h3>
-                  <span className="text-sm text-amber-600 font-bold block mt-1">Distance: {r.estimated_distance_km} KM</span>
+                  <span className="text-sm text-brand-green font-bold block mt-1">Distance: {r.estimated_distance_km} KM</span>
                 </div>
                 <div className="pt-3 border-t border-slate-100">
                   <Link href={`/routes/${routeSlug}`} className="text-sm font-bold text-brand-blue hover:text-brand-blue-light transition-colors">
@@ -344,7 +359,7 @@ export default async function DynamicVehicleCategoryPage({ params }: DynamicCate
               Call {SITE_CONFIG.phone}
             </a>
             <a
-              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20book%20a%20*${encodeURIComponent(category.name)}*%20cab.%20%F0%9F%9A%96`}
+              href={categoryWhatsAppUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm px-8 py-4 rounded-xl transition-all shadow-lg"

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { BLOG_ARTICLES, BlogArticle } from '@/lib/data/blog-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
+import PageFAQSection from '@/components/public/PageFAQSection';
 import { Calendar, Clock, User, ArrowRight, Phone, MessageSquare, Tag, Bookmark } from 'lucide-react';
 
 interface BlogPageProps {
@@ -100,18 +101,6 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
     keywords: article.tags.join(', '),
   };
 
-  const faqSchema = article.faqs && article.faqs.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: article.faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
-  } : null;
 
   const whatsappShareUrl = `https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
     `Hello Urgent Taxis, I read your article "${article.title}". I would like to enquire about cabs for this route.`
@@ -127,12 +116,6 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
       />
-      {faqSchema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
-      )}
 
       {/* Breadcrumbs */}
       <div className="bg-white border-b border-slate-200">
@@ -231,31 +214,24 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         )}
 
         {/* FAQs */}
+
         {article.faqs && article.faqs.length > 0 && (
-          <section className="my-10 p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
-            <h2 className="text-lg sm:text-xl font-bold text-brand-blue">
-              Frequently Asked Questions
-            </h2>
-            <div className="space-y-3">
-              {article.faqs.map((faq, fIdx) => (
-                <details
-                  key={fIdx}
-                  className="group rounded-xl border border-slate-200 bg-slate-50 p-4 transition-all open:border-slate-300"
-                >
-                  <summary className="flex cursor-pointer items-center justify-between font-semibold text-white text-sm">
-                    <span>{faq.question}</span>
-                    <span className="ml-4 flex-shrink-0 text-slate-600 transition-transform duration-200 group-open:rotate-180">
-                      ▼
-                    </span>
-                  </summary>
-                  <div className="mt-3 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-200 pt-3">
-                    {faq.answer}
-                  </div>
-                </details>
-              ))}
-            </div>
-          </section>
+
+          <PageFAQSection
+
+            faqs={article.faqs}
+
+            twoColumnLayout={true}
+
+            className="my-10"
+
+            includeSchema={true}
+
+          />
+
         )}
+
+
 
         {/* Tags */}
         <div className="pt-6 border-t border-slate-200 flex flex-wrap items-center gap-2 text-xs text-slate-600">

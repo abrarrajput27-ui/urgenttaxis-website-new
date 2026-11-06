@@ -10,14 +10,14 @@ export default function TrustSection() {
       subtitle: "Highway Drivers",
       desc: "Licensed & route-tested",
       icon: <FaUserCheck className="text-white text-xl" />,
-      colorClass: "bg-[#1a419c]",
+      colorClass: "bg-brand-blue",
     },
     {
       title: "Clean",
       subtitle: "Comfortable Cabs",
       desc: "AC sedans & SUVs",
       icon: <FaShieldAlt className="text-white text-xl" />,
-      colorClass: "bg-[#00a859]",
+      colorClass: "bg-brand-green",
     },
     {
       title: "Transparent",
@@ -31,7 +31,7 @@ export default function TrustSection() {
       subtitle: "Customer Support",
       desc: "Always on WhatsApp & Call",
       icon: <FaHeadset className="text-white text-xl" />,
-      colorClass: "bg-[#00a859]",
+      colorClass: "bg-brand-green",
     },
   ];
 

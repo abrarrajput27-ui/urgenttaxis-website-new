@@ -26,7 +26,7 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         <div className="text-center bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-md w-full">
-          <h2 className="text-xl font-bold mb-3 text-amber-700">Too Many Lookup Requests</h2>
+          <h2 className="text-xl font-bold mb-3 text-slate-900">Too Many Lookup Requests</h2>
           <p className="text-slate-600 mb-6 text-sm">
             For security, invoice lookups from your network are temporarily limited. Please retry in {rateLimitStatus.retryAfterSeconds} seconds.
           </p>
@@ -93,7 +93,7 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
         <div className="text-center bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-md w-full">
           <h2 className="text-xl font-bold mb-3 text-slate-900">Invoice Not Found</h2>
           <p className="text-slate-600 mb-6 text-sm">
-            No booking record exists for reference <strong className="font-mono text-slate-800">{cleanRef}</strong>.
+            No booking record exists for reference <strong className="tabular-nums text-slate-800">{cleanRef}</strong>.
           </p>
           <Link href="/" className="px-6 py-3 bg-brand-blue text-white rounded-xl font-bold inline-block">
             Return Home
@@ -176,7 +176,7 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
             <p><strong>Phone / 24x7 Desk:</strong> +91 93117 76363</p>
             <p><strong>Support Email:</strong> info@urgenttaxis.in</p>
             <p><strong>Official Web:</strong> www.urgenttaxis.in</p>
-            <p className="text-[11px] text-slate-400 font-mono">Operations: Ghaziabad • Noida • Delhi NCR</p>
+            <p className="text-[11px] text-slate-400 tabular-nums">Operations: Ghaziabad • Noida • Delhi NCR</p>
           </div>
         </div>
 
@@ -194,14 +194,14 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
           </div>
 
           <div className="text-left sm:text-right text-xs space-y-1 shrink-0">
-            <p><span className="text-slate-500">Invoice No:</span> <strong className="font-mono text-slate-900">{invoiceNumber}</strong></p>
-            <p><span className="text-slate-500">Booking Ref:</span> <strong className="font-mono text-brand-blue">{booking.booking_reference}</strong></p>
+            <p><span className="text-slate-500">Invoice No:</span> <strong className="tabular-nums text-slate-900">{invoiceNumber}</strong></p>
+            <p><span className="text-slate-500">Booking Ref:</span> <strong className="tabular-nums text-brand-blue">{booking.booking_reference}</strong></p>
             <p><span className="text-slate-500">Date Issued:</span> <span className="text-slate-700">{new Date(booking.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span></p>
             <p>
               <span className="text-slate-500">Status: </span>
               <span className={`inline-block font-bold uppercase text-[10px] px-2 py-0.5 rounded ${
                 booking.payment_status === 'paid' ? 'bg-emerald-100 text-emerald-800' :
-                booking.payment_status === 'partially_paid' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'
+                booking.payment_status === 'partially_paid' ? 'bg-blue-100 text-blue-800' : 'bg-slate-100 text-slate-700 border border-slate-200'
               }`}>
                 {booking.payment_status.replace('_', ' ')}
               </span>
@@ -217,7 +217,7 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
               <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Billed To (Customer Details)</h2>
               <span className="text-[10px] font-semibold text-slate-500 bg-slate-200/70 px-2 py-0.5 rounded">Privacy Protected</span>
             </div>
-            <div className="space-y-1.5 font-mono">
+            <div className="space-y-1.5 tabular-nums">
               <p><span className="text-slate-500 block text-[10px] uppercase font-semibold font-sans">Name</span><strong className="text-sm text-slate-900">{maskedName}</strong></p>
               <p><span className="text-slate-500 block text-[10px] uppercase font-semibold font-sans">Contact Phone</span><span className="text-slate-800 font-medium">{maskedPhone}</span></p>
               <p><span className="text-slate-500 block text-[10px] uppercase font-semibold font-sans">Email</span><span className="text-slate-800">{maskedEmail}</span></p>
@@ -289,7 +289,7 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
                   <span className="text-[11px] text-slate-500">Includes commercial cab rental, standard fuel allowance, and professional chauffeur.</span>
                 </td>
                 <td className="py-2.5 px-3 text-center text-slate-500">Mandatory</td>
-                <td className="py-2.5 px-3 text-right font-mono font-semibold">₹{baseVehicleFare.toLocaleString('en-IN')}</td>
+                <td className="py-2.5 px-3 text-right tabular-nums font-semibold">₹{baseVehicleFare.toLocaleString('en-IN')}</td>
               </tr>
 
               {selectedAddOns.map((addon) => (
@@ -301,20 +301,20 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
                     )}
                   </td>
                   <td className="py-2.5 px-3 text-center text-brand-blue font-medium">Add-on</td>
-                  <td className="py-2.5 px-3 text-right font-mono font-semibold">₹{addon.price.toLocaleString('en-IN')}</td>
+                  <td className="py-2.5 px-3 text-right tabular-nums font-semibold">₹{addon.price.toLocaleString('en-IN')}</td>
                 </tr>
               ))}
 
               {selectedAddOns.length > 0 && (
                 <tr className="bg-slate-50 font-semibold text-slate-700 text-xs">
                   <td colSpan={2} className="py-2 px-3 text-right">Total Optional Add-on Charges:</td>
-                  <td className="py-2 px-3 text-right font-mono">₹{addOnTotal.toLocaleString('en-IN')}</td>
+                  <td className="py-2 px-3 text-right tabular-nums">₹{addOnTotal.toLocaleString('en-IN')}</td>
                 </tr>
               )}
 
               <tr className="bg-slate-100 font-bold text-slate-900 text-sm border-t-2 border-slate-300">
                 <td colSpan={2} className="py-3 px-3 text-right">Total Customer Payable:</td>
-                <td className="py-3 px-3 text-right font-mono text-brand-blue text-base font-black">₹{customerPayable.toLocaleString('en-IN')}</td>
+                <td className="py-3 px-3 text-right tabular-nums text-brand-blue text-base font-black">₹{customerPayable.toLocaleString('en-IN')}</td>
               </tr>
             </tbody>
           </table>
@@ -350,7 +350,7 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
                 {successfulPayments.map((p: any, idx: number) => (
                   <div key={p.id || idx} className="flex justify-between text-slate-600">
                     <span>Txn #{p.transaction_reference || 'REF-' + idx} ({p.payment_mode || 'UPI'}) on {new Date(p.created_at).toLocaleDateString('en-IN')}</span>
-                    <strong className="text-emerald-700 font-mono">₹{Number(p.amount).toLocaleString('en-IN')} (Success)</strong>
+                    <strong className="text-emerald-700 tabular-nums">₹{Number(p.amount).toLocaleString('en-IN')} (Success)</strong>
                   </div>
                 ))}
               </div>
@@ -370,9 +370,9 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
                 <li>Professional chauffeur service & driver allowance</li>
               </ul>
             </div>
-            <div className="p-3 bg-amber-50/50 border border-amber-200/60 rounded-lg">
-              <span className="font-bold text-amber-900 block mb-1">✕ Excluded (Charged at Actuals)</span>
-              <ul className="list-disc list-inside space-y-0.5 text-amber-950 text-[11px]">
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+              <span className="font-bold text-slate-900 block mb-1">✕ Excluded (Charged at Actuals)</span>
+              <ul className="list-disc list-inside space-y-0.5 text-slate-600 text-[11px]">
                 <li>Fastag Toll Plaza fees & Expressway surcharges</li>
                 <li>State border transport entry permits (tax at border)</li>
                 <li>Airport terminal parking fees or MCD civic levies</li>

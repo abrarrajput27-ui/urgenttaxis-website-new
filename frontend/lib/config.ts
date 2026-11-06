@@ -156,7 +156,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 150,
         extraKmRate: 10,
       },
-      image: '/fleet-brand/Hatchback.png',
+      image: '/fleet-brand/Hatchback.webp',
     },
     sedan: {
       category: 'sedan',
@@ -174,7 +174,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 180,
         extraKmRate: 11,
       },
-      image: '/fleet-brand/dzire.png',
+      image: '/fleet-brand/dzire.webp',
     },
     suv: {
       category: 'suv-muv',
@@ -192,7 +192,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 220,
         extraKmRate: 15,
       },
-      image: '/fleet-brand/Ertiga.png',
+      image: '/fleet-brand/Ertiga.webp',
     },
     executiveSuv: {
       category: 'executive-suv',
@@ -210,7 +210,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 300,
         extraKmRate: 20,
       },
-      image: '/fleet-brand/Innova%20Crysta.png',
+      image: '/fleet-brand/Innova Crysta.webp',
     },
     tempo12: {
       category: 'tempo-traveller-12',
@@ -228,7 +228,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 350,
         extraKmRate: 24,
       },
-      image: '/fleet-brand/Tempo Traveller.png',
+      image: '/fleet-brand/Tempo Traveller.webp',
     },
     tempo16: {
       category: 'tempo-traveller-16',
@@ -246,7 +246,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 400,
         extraKmRate: 26,
       },
-      image: '/fleet-brand/Tempo Traveller.png',
+      image: '/fleet-brand/Tempo Traveller.webp',
     },
     tempo20: {
       category: 'tempo-traveller-20',
@@ -264,7 +264,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 450,
         extraKmRate: 28,
       },
-      image: '/fleet-brand/Tempo Traveller.png',
+      image: '/fleet-brand/Tempo Traveller.webp',
     },
     tempo26: {
       category: 'tempo-traveller-26',
@@ -282,7 +282,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 500,
         extraKmRate: 32,
       },
-      image: '/fleet-brand/Tempo Traveller.png',
+      image: '/fleet-brand/Tempo Traveller.webp',
     },
     urbania12: {
       category: 'urbania-12',
@@ -300,7 +300,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 450,
         extraKmRate: 30,
       },
-      image: '/fleet-brand/Urbania.png',
+      image: '/fleet-brand/Urbania.webp',
     },
     urbania16: {
       category: 'urbania-16',
@@ -318,7 +318,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 500,
         extraKmRate: 34,
       },
-      image: '/fleet-brand/Urbania.png',
+      image: '/fleet-brand/Urbania.webp',
     },
     bus27: {
       category: 'bus-27',
@@ -336,7 +336,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 700,
         extraKmRate: 45,
       },
-      image: '/fleet-brand/Bus.png',
+      image: '/fleet-brand/Bus.webp',
     },
     bus45: {
       category: 'bus-45',
@@ -354,7 +354,7 @@ export const BUSINESS_CONFIG = {
         extraHourRate: 900,
         extraKmRate: 55,
       },
-      image: '/fleet-brand/volvo bus.png',
+      image: '/fleet-brand/volvo bus.webp',
     },
   } as Record<string, VehicleRateCard>,
 };

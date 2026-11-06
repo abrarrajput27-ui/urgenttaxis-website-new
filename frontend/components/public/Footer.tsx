@@ -10,7 +10,7 @@ export default function PublicFooter() {
   return (
     <>
       {/* 1. Top Call-to-Action Banner */}
-      <div className="w-full bg-white pt-16 sm:pt-24 lg:pt-8 pb-8 sm:pb-12 lg:pb-6 my-6 sm:my-10 relative z-20">
+      <div className="w-full bg-transparent pt-16 sm:pt-24 lg:pt-8 pb-8 sm:pb-12 lg:pb-6 my-6 sm:my-10 relative z-20 overflow-x-clip">
         <div className="w-[98%] lg:w-[94%] xl:max-w-7xl mx-auto relative z-20">
           <div className="bg-[#1a419c] relative rounded-[2rem] text-center px-3 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:py-6 shadow-2xl border border-slate-100 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[auto] lg:min-h-[100px]">
             
@@ -43,7 +43,7 @@ export default function PublicFooter() {
             {/* Overflowing Car Image */}
             <div className="absolute -top-20 sm:-top-24 lg:top-1/2 left-1/2 lg:left-auto lg:right-4 -translate-x-1/2 lg:translate-x-0 lg:-translate-y-1/2 w-[98%] max-w-[340px] sm:max-w-[400px] lg:max-w-[440px] xl:max-w-[500px] z-10 pointer-events-none">
               <Image
-                src="/cta-hero.png"
+                src="/cta-hero.webp"
                 alt="Urgent Taxis Cab"
                 width={700}
                 height={400}
@@ -81,17 +81,17 @@ export default function PublicFooter() {
             {(BUSINESS_CONFIG.socialProfiles.facebook || BUSINESS_CONFIG.socialProfiles.instagram || BUSINESS_CONFIG.socialProfiles.youtube) && (
               <div className="flex items-center gap-3">
                 {BUSINESS_CONFIG.socialProfiles.facebook && (
-                  <a href={BUSINESS_CONFIG.socialProfiles.facebook} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#1877f2] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Facebook">
+                  <a href={BUSINESS_CONFIG.socialProfiles.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-[#1877f2] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Facebook">
                     <FaFacebookF size={14} />
                   </a>
                 )}
                 {BUSINESS_CONFIG.socialProfiles.instagram && (
-                  <a href={BUSINESS_CONFIG.socialProfiles.instagram} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Instagram">
+                  <a href={BUSINESS_CONFIG.socialProfiles.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="Instagram">
                     <FaInstagram size={14} />
                   </a>
                 )}
                 {BUSINESS_CONFIG.socialProfiles.youtube && (
-                  <a href={BUSINESS_CONFIG.socialProfiles.youtube} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-[#ff0000] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="YouTube">
+                  <a href={BUSINESS_CONFIG.socialProfiles.youtube} target="_blank" rel="noopener noreferrer" className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-[#ff0000] flex items-center justify-center text-white hover:opacity-80 transition-opacity" aria-label="YouTube">
                     <FaYoutube size={14} />
                   </a>
                 )}
@@ -124,10 +124,13 @@ export default function PublicFooter() {
               Our services
             </h4>
             <ul className="space-y-3 text-[13px] text-slate-400">
-              <li><Link href="/fleet" prefetch={true} className="hover:text-white transition-colors block">Outstation Cabs</Link></li>
+              <li><Link href="/routes" prefetch={true} className="hover:text-white transition-colors block">Outstation Cabs</Link></li>
+              <li><Link href="/airport-transfers" prefetch={true} className="hover:text-white transition-colors block">Airport Transfers</Link></li>
               <li><Link href="/local-rentals" prefetch={true} className="hover:text-white transition-colors block">Local Rentals</Link></li>
               <li><Link href="/corporate-taxi" prefetch={true} className="hover:text-white transition-colors block">Corporate Taxi</Link></li>
               <li><Link href="/tempo-traveller" prefetch={true} className="hover:text-white transition-colors block">Tempo Traveller</Link></li>
+              <li><Link href="/bus-charter" prefetch={true} className="hover:text-white transition-colors block">Bus Charter</Link></li>
+              <li><Link href="/chardham-yatra" prefetch={true} className="hover:text-white transition-colors block">Chardham Yatra</Link></li>
               <li><Link href="/tour-packages" prefetch={true} className="hover:text-white transition-colors block">Tour Packages</Link></li>
             </ul>
           </div>
@@ -151,26 +154,47 @@ export default function PublicFooter() {
             <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
               Contact Us
             </h4>
-            <div className="space-y-4 text-[13px] text-slate-400">
+            <div className="space-y-3 text-[13px] text-slate-400">
               <div className="flex items-start gap-3">
-                <FaPhoneAlt className="text-slate-400 mt-1 shrink-0" />
+                <FaPhoneAlt className="text-emerald-500 mt-1 shrink-0" />
                 <div>
-                  <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="hover:text-white transition-colors block">
+                  <span className="text-[11px] text-slate-500 block uppercase font-medium">24/7 Helpline</span>
+                  <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="hover:text-white font-semibold transition-colors block">
                     {SITE_CONFIG.phone}
                   </a>
                 </div>
               </div>
               <div className="flex items-start gap-3">
+                <FaWhatsapp className="text-emerald-500 mt-1 shrink-0 text-base" />
+                <div>
+                  <span className="text-[11px] text-slate-500 block uppercase font-medium">WhatsApp Booking</span>
+                  <a
+                    href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI need to book a cab.' })}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white font-semibold transition-colors block"
+                  >
+                    {BUSINESS_CONFIG.phone.whatsapp}
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
                 <FaEnvelope className="text-slate-400 mt-1 shrink-0" />
-                <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="hover:text-white transition-colors block break-all">
-                  {SITE_CONFIG.supportEmail}
-                </a>
+                <div>
+                  <span className="text-[11px] text-slate-500 block uppercase font-medium">Email Desk</span>
+                  <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="hover:text-white transition-colors block break-all">
+                    {SITE_CONFIG.supportEmail}
+                  </a>
+                </div>
               </div>
               <div className="flex items-start gap-3">
                 <FaMapMarkerAlt className="text-slate-400 mt-1 shrink-0 text-base" />
-                <span className="leading-relaxed">
-                  Head Office: {SITE_CONFIG.address}
-                </span>
+                <div>
+                  <span className="text-[11px] text-slate-500 block uppercase font-medium">Head Office</span>
+                  <span className="leading-relaxed text-xs block">
+                    {SITE_CONFIG.address}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -203,7 +227,7 @@ export default function PublicFooter() {
       </div>
 
       {/* 5. Permanent Designer Credit with Smooth Continuous Horizontal Scrolling Animation (Requirement 8) */}
-      <div className="border-t border-white/5 py-3 overflow-hidden w-full max-w-full">
+      <div className="border-t border-white/5 py-3 overflow-hidden w-full max-w-full pb-16 md:pb-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden w-full max-w-full">
           <div className="designer-credit-marquee">
             <div className="footer-designer-credit text-[13px] sm:text-[14px] text-slate-400">

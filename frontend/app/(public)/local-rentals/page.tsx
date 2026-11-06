@@ -2,6 +2,7 @@ import { supabaseServer } from '@/lib/supabase/server';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
+import PageFAQSection from '@/components/public/PageFAQSection';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
 import LocalRentalsViewer from '@/components/public/LocalRentalsViewer';
 import {
@@ -77,18 +78,6 @@ export default async function LocalRentalsPage() {
     },
   ];
 
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: visibleFaqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
-  };
 
   return (
     <div className="pb-16 bg-slate-50 min-h-screen text-slate-900">
@@ -97,10 +86,6 @@ export default async function LocalRentalsPage() {
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
 
       {/* 2. Hero Section */}
       <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
@@ -154,31 +139,38 @@ export default async function LocalRentalsPage() {
           </ul>
         </div>
 
-        <div className="bg-white border border-amber-100 p-8 rounded-3xl space-y-4 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl">⚠️</div>
-          <h3 className="text-xl font-black text-amber-600 relative z-10">Excluded / Payable at Actuals</h3>
+        <div className="bg-white border border-slate-200 p-8 rounded-3xl space-y-4 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl">ℹ️</div>
+          <h3 className="text-xl font-black text-brand-blue relative z-10">Excluded / Payable at Actuals</h3>
           <ul className="text-sm text-slate-600 space-y-3 font-medium relative z-10">
-            <li className="flex gap-2"><span className="text-amber-500">⚠</span> Extra kilometers beyond package threshold (billed per KM)</li>
-            <li className="flex gap-2"><span className="text-amber-500">⚠</span> Extra hours beyond package duration (billed per Hour)</li>
-            <li className="flex gap-2"><span className="text-amber-500">⚠</span> Parking fees and municipal toll taxes</li>
+            <li className="flex gap-2"><span className="text-slate-400 font-bold">ℹ</span> Extra kilometers beyond package threshold (billed per KM)</li>
+            <li className="flex gap-2"><span className="text-slate-400 font-bold">ℹ</span> Extra hours beyond package duration (billed per Hour)</li>
+            <li className="flex gap-2"><span className="text-slate-400 font-bold">ℹ</span> Parking fees and municipal toll taxes</li>
           </ul>
         </div>
       </section>
 
       {/* 6. Visible FAQs */}
-      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-100">
-        <h2 className="text-3xl font-black text-slate-900 text-center mb-10">
-          Frequently Asked Questions
-        </h2>
-        <div className="space-y-5 text-sm">
-          {visibleFaqs.map((faq, idx) => (
-            <div key={idx} className="bg-white border border-slate-200 p-6 rounded-2xl space-y-2.5 shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="text-base font-black text-brand-blue">{faq.question}</h3>
-              <p className="text-slate-600 leading-relaxed font-medium">{faq.answer}</p>
-            </div>
-          ))}
-        </div>
+
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">
+
+        <PageFAQSection
+
+          faqs={visibleFaqs}
+
+          title="Local Rentals Frequently Asked Questions"
+
+          subtitle="Clear answers on 8h/80km packages, extra km rates, night charges, and city travel rules."
+
+          twoColumnLayout={true}
+
+          includeSchema={true}
+
+        />
+
       </section>
+
+
 
       {/* 7. Final CTA */}
       <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">

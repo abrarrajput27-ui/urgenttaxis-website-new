@@ -135,7 +135,7 @@ export default function RouteHeroBookingBar({
             serviceType === 'local_rental' ? 'md:col-span-4' : 'md:col-span-3'
           } bg-slate-50 hover:bg-slate-100/80 p-2.5 rounded-xl border border-slate-200 transition-colors flex items-center gap-2.5`}
         >
-          <FaMapMarkerAlt className="text-amber-500 text-base shrink-0" />
+          <FaMapMarkerAlt className="text-brand-green text-base shrink-0" />
           <div className="flex-1 min-w-0">
             <label htmlFor="drop-input" className="block text-[10px] uppercase font-bold text-slate-400">
               {serviceType === 'local_rental' ? 'City / Area' : 'Drop Location'}
@@ -177,7 +177,7 @@ export default function RouteHeroBookingBar({
         <div className="md:col-span-2">
           <button
             type="submit"
-            className="w-full py-3.5 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer group active:scale-95"
+            className="w-full py-3.5 px-4 bg-brand-green hover:bg-brand-green-hover text-white font-black rounded-xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer group active:scale-95"
           >
             <span>Search Cabs</span>
             <FaSearch className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />

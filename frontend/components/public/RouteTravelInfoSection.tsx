@@ -26,7 +26,7 @@ export default function RouteTravelInfoSection({
         <h2 className="text-xl font-black text-brand-blue flex items-center gap-2">
           <span>🚗</span> Travel Guide & Highway Information ({originName} to {destName})
         </h2>
-        <span className="text-xs bg-amber-50 text-amber-800 font-bold px-3 py-1 rounded-full border border-amber-200">
+        <span className="text-xs bg-slate-100 text-slate-800 font-bold px-3 py-1 rounded-full border border-slate-200">
           Highway Advisory
         </span>
       </div>
@@ -48,8 +48,8 @@ export default function RouteTravelInfoSection({
 
         {/* Best Time to Travel & Weather */}
         <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-          <div className="flex items-center gap-2 text-amber-700 font-bold text-sm">
-            <FaCloudSun className="w-4 h-4 text-amber-500" />
+          <div className="flex items-center gap-2 text-brand-blue font-bold text-sm">
+            <FaCloudSun className="w-4 h-4 text-brand-blue" />
             <h3>Ideal Departure Window</h3>
           </div>
           <p className="text-xs text-slate-600 leading-relaxed font-medium">
@@ -77,11 +77,11 @@ export default function RouteTravelInfoSection({
 
       {/* Hill Driving or Highway Specific Notes */}
       {isHilly ? (
-        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 space-y-2">
-          <h4 className="text-xs font-black text-amber-900 uppercase tracking-wide flex items-center gap-1.5">
-            <FaExclamationTriangle className="text-amber-600" /> Essential Hill Station Travel Guidelines:
+        <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
+          <h4 className="text-xs font-black text-brand-blue uppercase tracking-wide flex items-center gap-1.5">
+            <FaExclamationTriangle className="text-brand-blue" /> Essential Hill Station Travel Guidelines:
           </h4>
-          <ul className="list-disc list-inside text-xs text-amber-800 space-y-1 font-medium ml-1">
+          <ul className="list-disc list-inside text-xs text-slate-700 space-y-1 font-medium ml-1">
             <li>Hills require specialized mountain drivers with hilly terrain commercial licenses.</li>
             <li>Night driving on steep mountain ghats after 8:00 PM is discouraged by state authorities for passenger safety.</li>
             <li>In hilly zones, cab air-conditioning may be paused intermittently on steep inclines to maintain required vehicular pulling torque.</li>

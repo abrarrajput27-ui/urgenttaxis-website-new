@@ -29,7 +29,7 @@ export default function RouteHighlights({
         : 'Smooth multi-lane expressway cruising',
     },
     {
-      icon: <FaStar className="w-5 h-5 text-amber-500" />,
+      icon: <FaStar className="w-5 h-5 text-brand-green" />,
       title: isHilly ? 'Popular Hill Station' : 'Prime Destination',
       description: 'Ideal for family and group trips',
     },

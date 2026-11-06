@@ -112,9 +112,9 @@ test.describe('Phase 1: Master Pricing Engine Unit Tests', () => {
       pageUrl: 'https://www.urgenttaxis.in/routes/ghaziabad-to-haridwar-taxi'
     });
     const decoded = decodeURIComponent(url);
-    expect(decoded.startsWith('https://wa.me/917310651940?text=Hello Urgent Taxis, I want to book a Sedan.')).toBe(true);
+    expect(decoded.startsWith('https://wa.me/918595066033?text=Hello Urgent Taxis, I want to book a Sedan.')).toBe(true);
     expect(decoded).toContain('Trip: One-way, Ghaziabad to Haridwar');
-    expect(decoded).toContain('Estimated fare: Rs 3,499 (toll and parking extra)');
+    expect(decoded).toContain('Estimated fare: ₹3,499 (toll and parking extra)');
     expect(decoded).toContain('Please confirm availability, final fare and driver details.');
     const greetingMatches = decoded.match(/Hello Urgent Taxis/g);
     expect(greetingMatches?.length).toBe(1);
