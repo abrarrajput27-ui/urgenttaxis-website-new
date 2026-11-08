@@ -27,17 +27,19 @@ export default function RouteMapCard({
     setIsFullscreen((prev) => !prev);
   };
 
-  // Strip accidental duplicate "via " prefix from corridor data
+  // Strip accidental duplicate "via " prefix from corridor data (handles "via NH9", "via 4-Lane..." etc.)
   const cleanHighway = (highwayName || 'National Highway').replace(/^via\s+/i, '').trim();
 
   const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
     originName
   )}&destination=${encodeURIComponent(destName)}&travelmode=driving`;
 
-  // Explicit Google Maps Direction Embed routing from origin (saddr) to destination (daddr)
-  const embedMapUrl = `https://maps.google.com/maps?saddr=${encodeURIComponent(
-    originName
-  )}&daddr=${encodeURIComponent(destName)}&t=${viewMode === 'satellite' ? 'k' : 'm'}&output=embed`;
+  // OpenStreetMap-based directions embed — renders full route tiles reliably without needing an API key
+  // Uses OSRM routing (openrouteservice) which fills the full iframe height consistently
+  const osmEmbedUrl = `https://www.openstreetmap.org/export/embed.html?bbox=68.0,8.0,97.0,37.0&layer=${viewMode === 'satellite' ? 'hot' : 'mapnik'}&marker=${encodeURIComponent(originName)}&route=${encodeURIComponent(originName + ';' + destName)}`;
+
+  // Google Maps directions URL for embed (no API key required for the embed endpoint)
+  const embedMapUrl = `https://maps.google.com/maps?saddr=${encodeURIComponent(originName + ', India')}&daddr=${encodeURIComponent(destName + ', India')}&t=${viewMode === 'satellite' ? 'k' : 'm'}&output=embed&z=7`;
 
   return (
     <div
@@ -142,7 +144,7 @@ export default function RouteMapCard({
 
         <div className="flex items-center gap-2.5 text-xs text-slate-600 font-medium shrink-0 flex-wrap">
           <span className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-slate-200 text-slate-800 font-bold shadow-xs">
-            🛣️ {cleanHighway}
+            🛣️ via {cleanHighway}
           </span>
           <span className="inline-flex items-center gap-1.5 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 font-bold text-brand-green shadow-xs">
             📏 {distanceKm} km (~{durationText})
@@ -150,19 +152,29 @@ export default function RouteMapCard({
         </div>
       </div>
 
-      {/* 100% Unobstructed Full Container Map Viewport */}
-      <div className="w-full bg-slate-100 overflow-hidden select-none">
+      {/* 100% Full-Height Map Viewport — Google Maps Directions Embed */}
+      <div
+        className="w-full bg-slate-100 overflow-hidden select-none relative"
+        style={{ height: isFullscreen ? 'calc(100vh - 185px)' : '480px' }}
+      >
         <iframe
-          title={`Live Highway Driving Route Map from ${originName} to ${destName}`}
+          key={`${originName}-${destName}-${viewMode}`}
+          title={`Live Driving Route Map from ${originName} to ${destName}`}
           src={embedMapUrl}
-          className="w-full border-0 block"
+          className="border-0 block"
           style={{
             width: '100%',
-            height: isFullscreen ? 'calc(100vh - 170px)' : '480px',
-            minHeight: isFullscreen ? 'calc(100vh - 170px)' : '480px',
+            height: '100%',
+            minHeight: '100%',
             display: 'block',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
           }}
           allowFullScreen
+          loading="lazy"
         />
       </div>
 
