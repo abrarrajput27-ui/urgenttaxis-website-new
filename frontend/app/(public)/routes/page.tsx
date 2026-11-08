@@ -7,7 +7,6 @@ import verifiedRoutesData from '@/lib/data/verified-routes.json';
 import { resolveOneWayFare } from '@/lib/pricing';
 import { getLocationState } from '@/lib/location-authority';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
-import PublicFareWidget from '@/components/public/PublicFareWidget';
 
 export const metadata = constructMetadata({
   title: 'Outstation Taxi Routes & Intercity Cabs Directory',
@@ -77,26 +76,41 @@ export default async function RoutesDirectoryPage() {
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      {/* Header Banner */}
-      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-4">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20 text-xs font-bold shadow-sm">
-          {verifiedRoutesData.length} Verified Intercity Corridors
-        </span>
-        <h1 className="text-4xl sm:text-5xl font-black text-brand-blue tracking-tight">
-          Outstation Taxi Routes Directory
-        </h1>
-        <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
-          Explore one-way and round-trip outstation cab routes across Delhi NCR, Uttarakhand, Himachal Pradesh, Uttar Pradesh, and Rajasthan with guaranteed transparent per-KM rates.
-        </p>
+      {/* 1. UPGRADED HERO SECTION */}
+      <section className="relative bg-[#0a1128] text-white py-14 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-white/10">
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+        <div className="max-w-5xl mx-auto text-center space-y-4 relative z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
+            <span>{verifiedRoutesData.length} Verified Intercity Corridors</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight drop-shadow-sm">
+            Outstation Taxi <span className="text-brand-green">Routes Directory</span>
+          </h1>
+
+          <p className="text-sm sm:text-base md:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed font-medium">
+            Explore one-way and round-trip outstation cab routes across Delhi NCR, Uttarakhand, Himachal Pradesh, Uttar Pradesh, and Rajasthan with guaranteed transparent per-KM rates.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs sm:text-sm font-semibold text-blue-200">
+            <span className="bg-white/10 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-white/15">
+              🛣️ 500+ Verified Routes
+            </span>
+            <span>•</span>
+            <span className="bg-white/10 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-white/15">
+              🛡️ Verified Yellow-Plate Cabs
+            </span>
+            <span>•</span>
+            <span className="bg-white/10 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-white/15">
+              💰 Zero Return Fare on One-Way
+            </span>
+          </div>
+        </div>
       </section>
 
-      {/* Live Fare Search & Calculator */}
-      <section className="mb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <PublicFareWidget initialServiceType="one_way" />
-      </section>
-
-      {/* Routes Widget (Replaces Grid) */}
-      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white rounded-3xl shadow-sm mb-6">
+      {/* Routes Widget */}
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white rounded-3xl shadow-sm mb-6 mt-6">
         <RoutesTabWidget />
       </section>
 

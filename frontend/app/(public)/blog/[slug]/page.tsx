@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { BLOG_ARTICLES, BlogArticle } from '@/lib/data/blog-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
@@ -43,9 +44,9 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
       tags: article.tags,
       images: [
         {
-          url: `${BUSINESS_CONFIG.canonicalDomain}/logo.jpg`,
-          width: 800,
-          height: 800,
+          url: `${BUSINESS_CONFIG.canonicalDomain}${article.image || '/logo.jpg'}`,
+          width: 1200,
+          height: 630,
           alt: `${article.title} - Urgent Taxis`,
         },
       ],
@@ -157,6 +158,23 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         <p className="text-base sm:text-lg text-slate-700 leading-relaxed font-medium pb-8 border-b border-slate-200 italic">
           &ldquo;{article.excerpt}&rdquo;
         </p>
+
+        {/* Featured Image */}
+        <div className="my-8 relative w-full h-64 sm:h-80 md:h-[420px] rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-100">
+          <Image
+            src={article.image || '/destinations/delhi.webp'}
+            alt={article.imageAlt || article.title}
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 896px"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute bottom-4 left-4 right-4 text-white text-xs sm:text-sm font-semibold drop-shadow-md flex items-center justify-between">
+            <span>📍 {article.imageAlt || article.title}</span>
+            <span className="hidden sm:inline-block bg-white/20 backdrop-blur-xs px-2.5 py-0.5 rounded-full text-xs">Verified Highway Guide</span>
+          </div>
+        </div>
 
         {/* Content Sections */}
         <div className="py-8 space-y-10 text-slate-700 leading-relaxed">

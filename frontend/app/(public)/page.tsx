@@ -10,6 +10,7 @@ import { buildWhatsAppBookingLink } from '@/lib/pricing';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
 import TrustSection from '@/components/public/TrustSection';
 import PageFAQSection from '@/components/public/PageFAQSection';
+import HomepageReviewsSection from '@/components/public/HomepageReviewsSection';
 import {
   FALLBACK_CATEGORIES,
   FALLBACK_LOCATIONS,
@@ -505,6 +506,9 @@ export default async function HomePage() {
       </section>
 
 
+
+      {/* 8.5. GOOGLE VERIFIED CUSTOMER REVIEWS SECTION */}
+      <HomepageReviewsSection />
 
       {/* 9. VISIBLE FAQS SECTION */}
       {/* 9. VISIBLE FAQS SECTION (Migrated to shared PageFAQSection component) */}

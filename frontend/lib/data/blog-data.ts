@@ -13,6 +13,8 @@ export interface BlogArticle {
   modifiedDate: string;
   author: string;
   readingTimeMins: number;
+  image: string;
+  imageAlt: string;
   category: string;
   tags: string[];
   content: {
@@ -44,6 +46,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 7,
+    image: '/destinations/nainital.webp',
+    imageAlt: 'Nainital Lake and Hill Station Panorama',
     category: 'Hill Station Guides',
     tags: ['Nainital', 'Uttarakhand', 'Hill Station', 'Road Trip', 'Delhi Cabs'],
     content: [
@@ -111,6 +115,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 6,
+    image: '/destinations/dehradun.webp',
+    imageAlt: 'Highway Outstation Taxi Journey',
     category: 'Fare Guides',
     tags: ['Outstation Cabs', 'Taxi Pricing', 'One Way Cab', 'Travel Tips'],
     content: [
@@ -166,6 +172,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 6,
+    image: '/destinations/delhi.webp',
+    imageAlt: 'Delhi Airport Terminal 3 IGI Airport Cab Transfer',
     category: 'Airport Guides',
     tags: ['Delhi Airport', 'IGI T3', 'Airport Taxi', 'Ghaziabad Airport Cab'],
     content: [
@@ -220,6 +228,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 7,
+    image: '/destinations/haridwar.webp',
+    imageAlt: 'Haridwar Har Ki Pauri and Ganges River Route',
     category: 'Pilgrimage Guides',
     tags: ['Haridwar', 'Rishikesh', 'Ganga Aarti', 'Ghaziabad Cabs', 'Uttarakhand'],
     content: [
@@ -267,6 +277,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 6,
+    image: '/destinations/agra.webp',
+    imageAlt: 'Taj Mahal Agra Yamuna Expressway Taxi Guide',
     category: 'Heritage Tours',
     tags: ['Agra', 'Taj Mahal', 'Yamuna Expressway', 'Same Day Tour', 'Delhi Cabs'],
     content: [
@@ -318,6 +330,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 7,
+    image: '/destinations/mussoorie.webp',
+    imageAlt: 'Mussoorie Queen of the Hills Mountain Road',
     category: 'Hill Station Guides',
     tags: ['Dehradun', 'Mussoorie', 'Uttarakhand', 'Hill Station', 'Outstation Cab'],
     content: [
@@ -358,6 +372,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 6,
+    image: '/destinations/jaipur.webp',
+    imageAlt: 'Hawa Mahal Jaipur Highway Corridor',
     category: 'Highway Guides',
     tags: ['Jaipur', 'Rajasthan', 'Delhi Mumbai Expressway', 'Outstation Cabs'],
     content: [
@@ -396,6 +412,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 6,
+    image: '/destinations/mathura.webp',
+    imageAlt: 'Prem Mandir Vrindavan and Mathura Pilgrimage',
     category: 'Pilgrimage Guides',
     tags: ['Mathura', 'Vrindavan', 'Banke Bihari', 'Prem Mandir', 'Pilgrimage Cab'],
     content: [
@@ -436,6 +454,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 8,
+    image: '/destinations/shimla.webp',
+    imageAlt: 'Shimla Ridge and Pine Mountain Road Trip',
     category: 'Hill Station Guides',
     tags: ['Shimla', 'Manali', 'Himachal Pradesh', 'Hill Road Trip', 'Innova Crysta'],
     content: [
@@ -469,6 +489,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 6,
+    image: '/destinations/chandigarh.webp',
+    imageAlt: 'Chandigarh Highway Expressway Corridor',
     category: 'City Guides',
     tags: ['Chandigarh', 'NH 44', 'Murthal', 'Outstation Taxi', 'Business Travel'],
     content: [
@@ -501,6 +523,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 7,
+    image: '/destinations/ayodhya.webp',
+    imageAlt: 'Ayodhya Ram Janmabhoomi Mandir Outstation Route',
     category: 'Pilgrimage Guides',
     tags: ['Ayodhya', 'Ram Mandir', 'Expressway', 'Pilgrimage Cabs', 'Uttar Pradesh'],
     content: [
@@ -534,6 +558,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 6,
+    image: '/destinations/kainchi-dham.webp',
+    imageAlt: 'Kainchi Dham Neem Karoli Baba Ashram Mountain Route',
     category: 'Pilgrimage Guides',
     tags: ['Kainchi Dham', 'Neem Karoli Baba', 'Uttarakhand', 'Pilgrimage', 'Haldwani'],
     content: [
@@ -567,6 +593,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 6,
+    image: '/destinations/jim-corbett.webp',
+    imageAlt: 'Jim Corbett National Park Ramnagar Safari Corridor',
     category: 'Wildlife & Adventure',
     tags: ['Jim Corbett', 'Ramnagar', 'Uttarakhand', 'Wildlife Safari', 'Delhi Outstation'],
     content: [
@@ -598,6 +626,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 8,
+    image: '/destinations/kedarnath.webp',
+    imageAlt: 'Kedarnath Temple Himalayan Pilgrimage Highway',
     category: 'Pilgrimage Guides',
     tags: ['Chardham Yatra', 'Kedarnath', 'Badrinath', 'Uttarakhand', 'Hill Cabs'],
     content: [
@@ -631,6 +661,8 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
     modifiedDate: '2026-11-01',
     author: 'Urgent Taxis Editorial Team',
     readingTimeMins: 7,
+    image: '/destinations/food-plaza.webp',
+    imageAlt: 'National Highway Food Plaza and Outstation Travel Guide',
     category: 'Fare Guides',
     tags: ['Outstation Cabs', 'Taxi Rates', 'Driver Allowance', 'FASTag Tolls', 'Travel Guide'],
     content: [
