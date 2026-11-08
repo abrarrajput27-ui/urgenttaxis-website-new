@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { RoutePlaceItem } from '@/lib/data/route-corridor-details';
+import { getDestinationImage } from '@/lib/destination-images';
 import { FaUtensils, FaGasPump, FaChargingStation, FaLandmark, FaMapMarkerAlt, FaExternalLinkAlt, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface RoutePlacesSectionProps {
@@ -173,7 +174,7 @@ export default function RoutePlacesSection({
                 >
                   <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-slate-200">
                     <Image
-                      src={item.image || '/destinations/chandigarh.webp'}
+                      src={item.image || '/fleet-brand/dzire.webp'}
                       alt={item.name}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform"
@@ -340,7 +341,7 @@ export default function RoutePlacesSection({
                 >
                   <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-slate-200">
                     <Image
-                      src={item.image || '/destinations/nainital.webp'}
+                      src={item.image || getDestinationImage(destName)}
                       alt={item.name}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform"

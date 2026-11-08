@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaMapMarkerAlt, FaExchangeAlt, FaCalendarAlt, FaSearch, FaClock } from 'react-icons/fa';
 import { resolveOneWayFare } from '@/lib/pricing';
+import { resolveAccurateRoute } from '@/lib/distance-resolver';
 
 interface RouteHeroBookingBarProps {
   defaultOrigin: string;
@@ -59,17 +60,19 @@ export default function RouteHeroBookingBar({
     e.preventDefault();
 
     // MMT Multi-Step Flow: Search ➔ /cabs (Vehicle Selection) ➔ /checkout ➔ /booking-confirmation
+    const accurate = resolveAccurateRoute(pickup || defaultOrigin, drop || defaultDestination, defaultDistanceKm);
     const query = new URLSearchParams({
       serviceType,
       pickup: pickup || defaultOrigin,
       drop: serviceType === 'local_rental' ? '' : drop || defaultDestination,
       date: journeyDate,
       time: journeyTime,
+      distanceKm: String(accurate.distanceKm),
+      km: String(accurate.distanceKm),
     });
 
-    if (defaultDistanceKm > 0) {
-      query.set('distanceKm', defaultDistanceKm.toString());
-      query.set('km', defaultDistanceKm.toString());
+    if (accurate.durationText) {
+      query.set('durationText', accurate.durationText);
     }
 
     router.push(`/cabs?${query.toString()}`);
@@ -221,28 +224,7 @@ export default function RouteHeroBookingBar({
           </div>
         </div>
 
-        {/* Live Fare Preview Ticker */}
-        {liveQuote && (
-          <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="font-bold text-slate-700">
-                Live Estimates for {pickup} ➔ {drop} ({liveQuote.distanceKm} km):
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="bg-emerald-50 text-brand-green font-bold px-2.5 py-0.5 rounded-full border border-emerald-200">
-                Sedan from ₹{liveQuote.sedanFare.toLocaleString('en-IN')}
-              </span>
-              <span className="bg-blue-50 text-brand-blue font-bold px-2.5 py-0.5 rounded-full border border-blue-200">
-                SUV from ₹{liveQuote.ertigaFare.toLocaleString('en-IN')}
-              </span>
-              <span className="text-[10px] text-slate-500 font-semibold">
-                30% Token • 70% Driver Balance
-              </span>
-            </div>
-          </div>
-        )}
+
       </form>
     </div>
   );

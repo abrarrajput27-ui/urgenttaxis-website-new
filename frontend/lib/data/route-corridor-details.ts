@@ -1,3 +1,4 @@
+import { getDestinationImage } from '../destination-images';
 export interface RouteMilestone {
   town: string;
   km: number;
@@ -91,10 +92,10 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       ],
       attractions: [
         { name: 'Naini Lake', category: 'attraction', location: 'Nainital, Uttarakhand', distanceKm: 300, image: '/destinations/nainital.webp' },
-        { name: 'Naina Devi Temple', category: 'attraction', location: 'Nainital, Uttarakhand', distanceKm: 300, image: '/destinations/haridwar.webp' },
-        { name: 'Snow View Point', category: 'attraction', location: 'Nainital, Uttarakhand', distanceKm: 302, image: '/destinations/mussoorie.webp' },
+        { name: 'Naina Devi Temple', category: 'attraction', location: 'Nainital, Uttarakhand', distanceKm: 300, image: '/destinations/nainital.webp' },
+        { name: 'Snow View Point', category: 'attraction', location: 'Nainital, Uttarakhand', distanceKm: 302, image: '/destinations/nainital.webp' },
         { name: 'Tiffin Top (Dorothy\'s Seat)', category: 'attraction', location: 'Ayapatta Hill, Nainital', distanceKm: 304, image: '/destinations/nainital.webp' },
-        { name: 'Eco Cave Gardens', category: 'attraction', location: 'Sukhatal, Nainital', distanceKm: 301, image: '/destinations/ramnagar.webp' },
+        { name: 'Eco Cave Gardens', category: 'attraction', location: 'Sukhatal, Nainital', distanceKm: 301, image: '/destinations/nainital.webp' },
         { name: 'Bhimtal Lake & Island', category: 'attraction', location: 'Bhimtal, Uttarakhand', distanceKm: 322, image: '/destinations/nainital.webp' },
       ],
     },
@@ -165,7 +166,8 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       ],
     },
     gallery: [
-      { src: '/destinations/chandigarh.webp', caption: 'Delhi-Meerut Expressway View', alt: 'Delhi-Meerut Expressway Highway View' },
+      { src: '/destinations/delhi.webp', caption: 'Delhi Departure Corridor', alt: 'Delhi-Meerut Expressway start' },
+      { src: '/fleet-brand/dzire.webp', caption: 'AC Sedan on NH334', alt: 'Highway sedan to Dehradun' },
       { src: '/destinations/dehradun.webp', caption: 'Rajaji National Park Foothills', alt: 'Rajaji forest foothills approaching Dehradun' },
       { src: '/destinations/dehradun.webp', caption: 'Dehradun Valley City View', alt: 'Dehradun valley city view' },
       { src: '/destinations/dehradun.webp', caption: 'Robber\'s Cave (Guchhupani)', alt: 'Robbers Cave natural limestone stream in Dehradun' },
@@ -225,7 +227,7 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
         { name: 'Hawa Mahal (Palace of Winds)', category: 'attraction', location: 'Badi Choupad, Jaipur', distanceKm: 272, image: '/destinations/jaipur.webp' },
         { name: 'Amber Fort & Palace', category: 'attraction', location: 'Amer, Jaipur', distanceKm: 260, image: '/destinations/jaipur.webp' },
         { name: 'Jal Mahal (Water Palace)', category: 'attraction', location: 'Amer Road, Jaipur', distanceKm: 265, image: '/destinations/jaipur.webp' },
-        { name: 'City Palace Jaipur', category: 'attraction', location: 'Old City, Jaipur', distanceKm: 271, image: '/destinations/agra.webp' },
+        { name: 'City Palace Jaipur', category: 'attraction', location: 'Old City, Jaipur', distanceKm: 271, image: '/destinations/jaipur.webp' },
         { name: 'Nahargarh Fort Viewpoint', category: 'attraction', location: 'Aravalli Hills, Jaipur', distanceKm: 275, image: '/destinations/jaipur.webp' },
         { name: 'Jantar Mantar Observatory', category: 'attraction', location: 'Gangori Bazaar, Jaipur', distanceKm: 271, image: '/destinations/jaipur.webp' },
       ],
@@ -296,11 +298,11 @@ export function getRouteCorridorDetails(
     ],
     places: {
       restaurants: [
-        { name: 'Highway Food Plaza', category: 'restaurant', location: `Midway Near ${originName}`, distanceKm: quarter1, image: '/destinations/chandigarh.webp' },
-        { name: 'Shiva Dhaba & Family Restaurant', category: 'restaurant', location: 'Midway Corridor', distanceKm: midpoint, image: '/destinations/amritsar.webp' },
-        { name: 'Bikanervala Highway Court', category: 'restaurant', location: `Approaching ${destName}`, distanceKm: quarter3, image: '/destinations/agra.webp' },
-        { name: 'Haldiram\'s Express Food Plaza', category: 'restaurant', location: 'Highway Toll Bypass', distanceKm: midpoint + 25, image: '/destinations/lucknow.webp' },
-        { name: 'Old Rao Highway Dhaba', category: 'restaurant', location: 'National Highway Plaza', distanceKm: quarter1 + 30, image: '/destinations/chandigarh.webp' },
+        { name: 'Highway Food Plaza', category: 'restaurant', location: `Midway Near ${originName}`, distanceKm: quarter1, image: '/fleet-brand/dzire.webp' },
+        { name: 'Shiva Dhaba & Family Restaurant', category: 'restaurant', location: 'Midway Corridor', distanceKm: midpoint, image: '/fleet-brand/Ertiga.webp' },
+        { name: 'Bikanervala Highway Court', category: 'restaurant', location: `Approaching ${destName}`, distanceKm: quarter3, image: '/fleet-brand/dzire.webp' },
+        { name: 'Haldiram\'s Express Food Plaza', category: 'restaurant', location: 'Highway Toll Bypass', distanceKm: midpoint + 25, image: '/fleet-brand/Ertiga.webp' },
+        { name: 'Old Rao Highway Dhaba', category: 'restaurant', location: 'National Highway Plaza', distanceKm: quarter1 + 30, image: '/fleet-brand/dzire.webp' },
       ],
       petrolPumps: [
         { name: 'Indian Oil COCO Fuel Station', category: 'petrol', location: 'Highway Km ' + quarter1, distanceKm: quarter1 },
@@ -314,17 +316,17 @@ export function getRouteCorridorDetails(
         { name: 'Green Gas CNG Station', category: 'cng', location: 'City Highway Approach', distanceKm: quarter3 },
       ],
       attractions: [
-        { name: `${destName} Central Landmark`, category: 'attraction', location: `${destName} City Center`, distanceKm: distanceKm, image: '/destinations/nainital.webp' },
-        { name: `${destName} Heritage Viewpoint`, category: 'attraction', location: `${destName} Regional Hills`, distanceKm: distanceKm + 4, image: '/destinations/jaipur.webp' },
-        { name: `${destName} Prominent Temple`, category: 'attraction', location: `${destName} Old Town`, distanceKm: distanceKm + 2, image: '/destinations/haridwar.webp' },
+        { name: `${destName} Central Landmark`, category: 'attraction', location: `${destName} City Center`, distanceKm: distanceKm, image: getDestinationImage(destName) },
+        { name: `${destName} Heritage Viewpoint`, category: 'attraction', location: `${destName} Regional Hills`, distanceKm: distanceKm + 4, image: getDestinationImage(destName) },
+        { name: `${destName} Prominent Temple`, category: 'attraction', location: `${destName} Old Town`, distanceKm: distanceKm + 2, image: getDestinationImage(destName) },
       ],
     },
     gallery: [
-      { src: '/destinations/chandigarh.webp', caption: `${originName} Expressway Corridor`, alt: `${originName} Expressway view` },
-      { src: '/destinations/jaipur.webp', caption: 'Highway Midway Plaza', alt: 'Highway midway stopover' },
-      { src: '/destinations/dehradun.webp', caption: `${destName} Approach Drive`, alt: `Scenic road entering ${destName}` },
-      { src: '/destinations/nainital.webp', caption: `${destName} Panorama`, alt: `${destName} panoramic landmark` },
-      { src: '/destinations/haridwar.webp', caption: `${destName} Sightseeing`, alt: `${destName} sightseeing destination` },
+      { src: getDestinationImage(originName), caption: `${originName} Departure Corridor`, alt: `${originName} expressway view` },
+      { src: '/fleet-brand/dzire.webp', caption: 'Highway AC Sedan on Route', alt: 'AC cab on highway' },
+      { src: '/fleet-brand/Ertiga.webp', caption: `Family SUV for ${destName} Route`, alt: `Spacious SUV for ${destName}` },
+      { src: '/fleet-brand/Innova Crysta.webp', caption: 'Luxury Innova Crysta Travel', alt: 'Innova Crysta travel' },
+      { src: getDestinationImage(destName), caption: `Arrival in ${destName}`, alt: `Arrival in ${destName}` },
     ],
   };
 }

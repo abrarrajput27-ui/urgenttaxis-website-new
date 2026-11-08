@@ -1,4 +1,4 @@
-﻿import { notFound, permanentRedirect } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
@@ -17,6 +17,7 @@ import RouteSimilarRoutes, { SimilarRouteItem } from '@/components/public/RouteS
 import DestinationConnectingRoutes, { ConnectingRouteItem } from '@/components/public/DestinationConnectingRoutes';
 import PageFAQSection from '@/components/public/PageFAQSection';
 import { getRouteSpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
+import { getDestinationImage } from '@/lib/destination-images';
 import { FaRoad, FaArrowRight, FaShieldAlt, FaUserCheck, FaHeadset, FaCheckCircle, FaCar } from 'react-icons/fa';
 
 interface DynamicRoutePageProps {
@@ -180,12 +181,6 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
     { label: `${originName} to ${destName} Taxi` },
   ];
 
-  const getDestinationImage = (dest: string) => {
-    let slug = dest.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    if (slug === 'noida-airport') slug = 'noida-international-airport';
-    if (slug === 'corbett') slug = 'jim-corbett';
-    return `/destinations/${slug}.webp`;
-  };
 
   // 1. Curate 5 similar routes from originName
   const similarRoutesMatches = masterRoutesData
@@ -206,7 +201,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
         { slug: 'delhi-to-dehradun-taxi', originName: 'Delhi', destName: 'Dehradun', distanceKm: 245, startingFare: 3199, image: '/destinations/dehradun.webp' },
         { slug: 'delhi-to-haridwar-taxi', originName: 'Delhi', destName: 'Haridwar', distanceKm: 215, startingFare: 2899, image: '/destinations/haridwar.webp' },
         { slug: 'delhi-to-rishikesh-taxi', originName: 'Delhi', destName: 'Rishikesh', distanceKm: 240, startingFare: 3299, image: '/destinations/rishikesh.webp' },
-        { slug: 'delhi-to-ramnagar-taxi', originName: 'Delhi', destName: 'Jim Corbett', distanceKm: 260, startingFare: 3699, image: '/destinations/ramnagar.webp' },
+        { slug: 'delhi-to-jim-corbett-taxi', originName: 'Delhi', destName: 'Jim Corbett', distanceKm: 260, startingFare: 3699, image: '/destinations/jim-corbett.webp' },
       ];
 
   // 2. Curate connecting routes originating from destName (User's explicit requirement)
@@ -245,10 +240,10 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
   // Ensure 5 solid connecting options departing from destName
   if (connectingRoutesList.length < 5) {
     const hubFallbacks = [
-      { name: 'Delhi Airport (IGI T3)', dist: Math.round(distance + 20), fare: sedanFareTotal + 400, img: '/destinations/chandigarh.webp' },
-      { name: 'Noida International Airport', dist: Math.round(distance + 15), fare: sedanFareTotal + 300, img: '/destinations/lucknow.webp' },
-      { name: 'Gurugram Cyber City', dist: Math.round(distance + 35), fare: sedanFareTotal + 500, img: '/destinations/jaipur.webp' },
-      { name: 'Ghaziabad Junction', dist: Math.round(distance - 10), fare: Math.max(2500, sedanFareTotal - 200), img: '/destinations/agra.webp' },
+      { name: 'Delhi Airport (IGI T3)', dist: Math.round(distance + 20), fare: sedanFareTotal + 400, img: getDestinationImage('delhi-airport') },
+      { name: 'Noida International Airport', dist: Math.round(distance + 15), fare: sedanFareTotal + 300, img: getDestinationImage('noida-international-airport') },
+      { name: 'Gurugram Cyber City', dist: Math.round(distance + 35), fare: sedanFareTotal + 500, img: getDestinationImage('gurugram') },
+      { name: 'Ghaziabad Junction', dist: Math.round(distance - 10), fare: Math.max(2500, sedanFareTotal - 200), img: getDestinationImage('ghaziabad') },
     ];
 
     for (const hub of hubFallbacks) {

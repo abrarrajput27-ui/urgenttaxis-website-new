@@ -28,6 +28,7 @@ import {
   FaCheckCircle,
 } from 'react-icons/fa';
 import { resolveOneWayFare, HOURLY_RENTAL_PACKAGES, HourlyRentalPackageId } from '@/lib/pricing';
+import { resolveAccurateRoute } from '@/lib/distance-resolver';
 
 export type MmtTripType = 'one_way' | 'round_trip' | 'airport_transfer' | 'local_rental';
 
@@ -271,8 +272,11 @@ export default function MmtBookingWidget({
       if (tripType === 'round_trip') {
         params.set('returnDate', returnDate);
       }
-      if (liveQuote?.distanceKm || defaultDistanceKm > 0) {
-        params.set('distanceKm', String(liveQuote?.distanceKm || defaultDistanceKm));
+      const accurate = resolveAccurateRoute(origin.trim(), destination.trim(), defaultDistanceKm);
+      params.set('distanceKm', String(accurate.distanceKm));
+      params.set('km', String(accurate.distanceKm));
+      if (accurate.durationText) {
+        params.set('durationText', accurate.durationText);
       }
     }
 
@@ -778,34 +782,6 @@ export default function MmtBookingWidget({
             </div>
           )}
 
-          {/* ── LIVE FARE PREVIEW TICKER (MMT Style) ── */}
-          {liveQuote && (
-            <div className="p-3 bg-gradient-to-r from-emerald-50 via-blue-50/60 to-emerald-50 rounded-2xl border border-emerald-200/80 flex flex-wrap items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="font-bold text-slate-800">
-                  Instant Fares for {origin} ➔ {destination} ({liveQuote.distanceKm} km):
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                <span className="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-200 font-bold text-slate-900 shadow-2xs">
-                  <span>🚗 Sedan:</span>
-                  <strong className="text-brand-green">₹{liveQuote.sedanFare.toLocaleString('en-IN')}</strong>
-                </span>
-                <span className="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-200 font-bold text-slate-900 shadow-2xs">
-                  <span>🚙 SUV:</span>
-                  <strong className="text-brand-blue">₹{liveQuote.ertigaFare.toLocaleString('en-IN')}</strong>
-                </span>
-                <span className="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-200 font-bold text-slate-900 shadow-2xs hidden sm:inline-flex">
-                  <span>⭐ Crysta:</span>
-                  <strong className="text-brand-blue">₹{liveQuote.crystaFare.toLocaleString('en-IN')}</strong>
-                </span>
-                <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
-                  30% Advance Token
-                </span>
-              </div>
-            </div>
-          )}
 
           {/* ── MMT BIG SEARCH CABS BUTTON ── */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
