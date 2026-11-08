@@ -82,17 +82,26 @@ export async function POST(req: NextRequest) {
     }
 
     const catLower = String(categoryId).toLowerCase();
-    const isSuv = catLower.includes('suv') && !catLower.includes('exec');
-    const isExec = catLower.includes('exec') || catLower.includes('crysta');
     const isHatch = catLower.includes('hatch');
+    const isErtiga = catLower.includes('ertiga');
+    const isSuv = (catLower.includes('suv') || catLower.includes('muv') || isErtiga) && !catLower.includes('exec') && !catLower.includes('crysta');
+    const isInnova = catLower.includes('innova') && !catLower.includes('crysta');
+    const isExec = catLower.includes('exec') || catLower.includes('crysta');
+    const isTempo = catLower.includes('tempo');
+    const isUrbania = catLower.includes('urbania');
+    const isBus = catLower.includes('bus');
 
     if (!rule) {
       if (serviceType === 'one_way') {
-        let baseRate = 13.5;
+        let baseRate = 11;
         let extraKmRate = 11;
-        if (isSuv) { baseRate = 17.5; extraKmRate = 15; }
-        else if (isExec) { baseRate = 26; extraKmRate = 20; }
-        else if (isHatch) { baseRate = 11; extraKmRate = 9; }
+        if (isHatch) { baseRate = 10; extraKmRate = 10; }
+        else if (isErtiga || isSuv) { baseRate = 15; extraKmRate = 15; }
+        else if (isInnova) { baseRate = 18; extraKmRate = 18; }
+        else if (isExec) { baseRate = 20; extraKmRate = 20; }
+        else if (isTempo) { baseRate = 26; extraKmRate = 26; }
+        else if (isUrbania) { baseRate = 32; extraKmRate = 32; }
+        else if (isBus) { baseRate = 48; extraKmRate = 48; }
 
         rule = {
           id: `standard-ow-${categoryId}`,
@@ -112,9 +121,13 @@ export async function POST(req: NextRequest) {
         let perKmRate = 11;
         let minKm = 250;
         let driverAllowance = 400;
-        if (isSuv) { perKmRate = 15; minKm = 250; driverAllowance = 400; }
-        else if (isExec) { perKmRate = 20; minKm = 300; driverAllowance = 500; }
-        else if (isHatch) { perKmRate = 9; minKm = 250; driverAllowance = 300; }
+        if (isHatch) { perKmRate = 10; minKm = 250; driverAllowance = 400; }
+        else if (isErtiga || isSuv) { perKmRate = 15; minKm = 250; driverAllowance = 400; }
+        else if (isInnova) { perKmRate = 18; minKm = 250; driverAllowance = 500; }
+        else if (isExec) { perKmRate = 20; minKm = 250; driverAllowance = 500; }
+        else if (isTempo) { perKmRate = 26; minKm = 250; driverAllowance = 600; }
+        else if (isUrbania) { perKmRate = 32; minKm = 250; driverAllowance = 700; }
+        else if (isBus) { perKmRate = 48; minKm = 250; driverAllowance = 1000; }
 
         rule = {
           id: `standard-rt-${categoryId}`,

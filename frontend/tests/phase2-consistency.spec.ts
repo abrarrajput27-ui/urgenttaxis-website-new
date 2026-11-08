@@ -116,17 +116,19 @@ test.describe('Phase 2 — Global Typography & Brand Color Consistency', () => {
     );
     
     // Check heading
-    await expect(page.locator('h1')).toContainText('Complete Your Booking');
+    await expect(page.locator('h1')).toContainText('Ghaziabad');
 
     // Check brand green on advance payment CTA
-    const advanceBtn = page.locator('button:has-text("Confirm & Request Booking")');
+    const advanceBtn = page.locator('button:has-text("CONFIRM & BOOK RIDE (30% TOKEN)")');
     await expect(advanceBtn).toBeVisible({ timeout: 10000 });
 
     // Numeric token amounts
-    const advanceText = page.locator('text=Booking Token (30%)');
+    const advanceText = page.locator('text=Pay Now (30% Online Token)');
     await expect(advanceText).toBeVisible({ timeout: 10000 });
 
     await page.screenshot({ path: path.join(ARTIFACT_DIR, 'phase2_checkout_brand_palette.png') });
   });
 
 });
+
+
