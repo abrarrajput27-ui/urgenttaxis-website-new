@@ -1,5 +1,5 @@
 import { supabaseServer } from '@/lib/supabase/server';
-import PublicFareWidget from '@/components/public/PublicFareWidget';
+import MmtBookingWidget from '@/components/public/MmtBookingWidget';
 import VehicleImage from '@/components/public/VehicleImage';
 import { constructMetadata, generateLocalBusinessSchema, SITE_CONFIG } from '@/lib/seo';
 import Link from 'next/link';
@@ -122,14 +122,9 @@ export default async function HomePage() {
           </p>
         </div>
 
-        {/* 3. PUBLIC FARE SEARCH WIDGET */}
-        <div className="relative z-10">
-          <PublicFareWidget
-            localPackages={localPackages || []}
-            categories={categories || []}
-            routes={routes || []}
-            locations={locations || []}
-          />
+        {/* 3. MMT STYLE UNIFORM FARE CALCULATOR & BOOKING WIDGET */}
+        <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-4">
+          <MmtBookingWidget />
         </div>
       </section>
 
@@ -189,53 +184,55 @@ export default async function HomePage() {
               { image: "/fleet-brand/Bus.webp", title: "27 Seater Bus", models: "Luxury AC Bus", seats: "27 Seats", bags: "27 Bags", ac: true, music: true, outstationPrice: "₹45/km", localPrice: "₹8000", href: "/bus-charter" },
               { image: "/fleet-brand/volvo bus.webp", title: "45 Seater Bus", models: "Luxury AC Bus", seats: "45 Seats", bags: "45 Bags", ac: true, music: true, outstationPrice: "₹55/km", localPrice: "₹10000", href: "/bus-charter" },
             ].map((v, i) => (
-              <div key={i} className="shrink-0 w-[300px] bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col border border-slate-100 transition-transform hover:-translate-y-1">
-                <div className="bg-slate-50 flex items-center justify-center border-b border-slate-100 overflow-hidden h-40">
+              <div key={i} className="shrink-0 w-[310px] bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col border border-slate-100 transition-transform hover:-translate-y-1">
+                <div className="bg-slate-50 flex items-center justify-center border-b border-slate-100 overflow-hidden h-44 p-2">
                   <Image
                     src={v.image}
                     alt={v.title}
-                    width={260}
+                    width={280}
                     height={160}
-                    className="w-full h-full object-contain mix-blend-multiply"
+                    className="w-full h-full object-contain"
                   />
                 </div>
-                <div className="p-6 flex-1 flex flex-col">
-                  <h3 className="text-xl font-bold text-brand-blue mb-1">{v.title}</h3>
-                  <p className="text-xs text-slate-500 mb-4 h-4">{v.models}</p>
+                <div className="p-5 flex-1 flex flex-col">
+                  <h3 className="text-lg font-bold text-brand-blue mb-0.5">{v.title}</h3>
+                  <p className="text-xs text-slate-500 mb-3 min-h-[1.25rem]">{v.models}</p>
 
-                  <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-xs font-semibold text-slate-700 mb-6">
+                  <div className="grid grid-cols-2 gap-y-2 gap-x-3 text-[11px] font-semibold text-slate-700 mb-4">
                     <div className="flex items-center gap-1.5"><FaUser className="text-brand-green" /> {v.seats}</div>
                     <div className="flex items-center gap-1.5"><FaSuitcase className="text-brand-green" /> {v.bags}</div>
                     <div className="flex items-center gap-1.5"><FaSnowflake className="text-brand-green" /> {v.ac ? 'AC' : 'Non-AC'}</div>
                     <div className="flex items-center gap-1.5"><FaMusic className="text-brand-green" /> {v.music ? 'Music' : 'No Music'}</div>
+                    <div className="flex items-center gap-1.5"><FaMapMarkerAlt className="text-brand-green" /> Local Trips</div>
+                    <div className="flex items-center gap-1.5"><FaRoute className="text-brand-green" /> Outstation</div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 mb-6 mt-auto">
-                    <div className="bg-blue-50 rounded-xl p-3 text-center border border-blue-100">
-                      <div className="text-[10px] text-brand-blue font-bold uppercase tracking-wider mb-1">Outstation</div>
-                      <div className="text-sm font-black text-slate-800">{v.outstationPrice}</div>
+                  <div className="grid grid-cols-2 gap-2 mb-4 mt-auto">
+                    <div className="bg-blue-50 rounded-xl p-2.5 text-center border border-blue-100">
+                      <div className="text-[9px] text-brand-blue font-bold uppercase tracking-wider mb-0.5">Outstation</div>
+                      <div className="text-xs font-black text-slate-800">{v.outstationPrice}</div>
                     </div>
-                    <div className="bg-emerald-50 rounded-xl p-3 text-center border border-emerald-100">
-                      <div className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mb-1">Local Rentals</div>
-                      <div className="text-sm font-black text-slate-800">{v.localPrice}</div>
+                    <div className="bg-emerald-50 rounded-xl p-2.5 text-center border border-emerald-100">
+                      <div className="text-[9px] text-emerald-600 font-bold uppercase tracking-wider mb-0.5">Local Rentals</div>
+                      <div className="text-xs font-black text-slate-800">{v.localPrice}</div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <Link
-                      href={v.href}
-                      className="flex items-center justify-center gap-2 border-2 border-brand-blue text-brand-blue font-bold rounded-full py-2 hover:bg-brand-blue hover:text-white transition-colors text-xs"
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href={`tel:${SITE_CONFIG.phoneRaw}`}
+                      className="flex items-center justify-center gap-1.5 border border-brand-blue text-brand-blue font-bold rounded-xl py-2 hover:bg-brand-blue hover:text-white transition-colors text-xs"
                     >
-                      View Details
-                    </Link>
+                      <span>📞</span> Call Now
+                    </a>
                     <a
                       href={generateWhatsAppLink(SITE_CONFIG.whatsapp, {
                         vehicleModel: v.title,
-                        customMessage: `Hello Urgent Taxis! 👋\n\nI am interested in booking the *${v.title}*.\nPlease share availability and best fare.`
+                        customMessage: `Hello Urgent Taxis! 👋\n\nI am interested in booking the *${v.title}* (${v.models}).\n• Seating: ${v.seats}\n• Outstation Fare: ${v.outstationPrice}\n• Local Package: ${v.localPrice}\n\nPlease share availability.`
                       })}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 border-2 border-brand-green text-brand-green font-bold rounded-full py-2 hover:bg-brand-green hover:text-white transition-colors text-xs"
+                      className="flex items-center justify-center gap-1.5 bg-brand-green hover:bg-brand-green-hover text-white font-bold rounded-xl py-2 transition-colors text-xs shadow-xs"
                     >
                       <span>💬</span> WhatsApp
                     </a>

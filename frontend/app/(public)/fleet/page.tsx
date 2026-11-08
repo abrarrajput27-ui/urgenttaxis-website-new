@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaUser, FaSuitcase, FaSnowflake, FaMusic, FaMapMarkerAlt, FaRoute } from 'react-icons/fa';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
+import DirectBookingComparison from '@/components/public/DirectBookingComparison';
 
 export const metadata = constructMetadata({
   title: 'Our Taxi Fleet & Car Hire Options',
@@ -289,6 +290,9 @@ export default function FleetPage() {
             />
           </div>
         </section>
+
+                {/* Direct Booking Comparison Section */}
+        <DirectBookingComparison />
 
         {/* Important Guidelines */}
         <section className="bg-slate-50 border border-slate-200 rounded-2xl p-8 lg:p-12 text-center max-w-4xl mx-auto">

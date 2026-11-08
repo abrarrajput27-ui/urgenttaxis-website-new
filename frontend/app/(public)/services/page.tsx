@@ -5,7 +5,7 @@ import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PageFAQSection from '@/components/public/PageFAQSection';
-import UnifiedBookingWidget from '@/components/public/UnifiedBookingWidget';
+import DirectBookingComparison from '@/components/public/DirectBookingComparison';
 import {
   FaCar,
   FaPlane,
@@ -178,42 +178,58 @@ export default function ServicesPage() {
         <PublicBreadcrumbs items={breadcrumbItems} />
       </div>
 
-      {/* 3.1 Hero Section */}
-      <section className="bg-brand-blue text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-        <div className="max-w-5xl mx-auto relative z-10 text-center space-y-4">
-          <span className="inline-block px-4 py-1.5 bg-white/20 rounded-full text-xs font-black backdrop-blur-sm border border-white/30 uppercase tracking-wider">
-            Travel Solutions
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight drop-shadow-md">
-            Our Taxi & Car Rental Services
+      {/* 1. UPGRADED HERO SECTION */}
+      <section className="relative bg-[#0a1128] text-white py-14 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-white/10">
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+        <div className="max-w-5xl mx-auto text-center space-y-4 relative z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
+            <span>Comprehensive North India Travel Solutions</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight drop-shadow-sm">
+            Our Taxi &amp; <span className="text-brand-green">Car Rental Services</span>
           </h1>
-          <p className="text-base sm:text-xl text-blue-100 font-medium max-w-3xl mx-auto leading-relaxed">
-            Fast To Your Destination – Your Quick Ride Solution! Outstation cabs, airport transfers, and local hourly rentals in Ghaziabad, Delhi NCR, and across North India.
+
+          <p className="text-sm sm:text-base md:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed font-medium">
+            Fast To Your Destination – Your Quick Ride Solution! Verified outstation cabs, 24/7 IGI airport transfers, flexible local hourly rentals, and group Tempo Travellers across Delhi NCR and North India.
           </p>
 
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs sm:text-sm font-semibold text-blue-200">
+            <span className="bg-white/10 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-white/15">
+              🚗 One-Way &amp; Round-Trip Outstation
+            </span>
+            <span>•</span>
+            <span className="bg-white/10 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-white/15">
+              ✈️ 24/7 IGI Airport Transfers
+            </span>
+            <span>•</span>
+            <span className="bg-white/10 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-white/15">
+              ⏱️ Local Hourly Rentals
+            </span>
+            <span>•</span>
+            <span className="bg-white/10 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-white/15">
+              🚐 Group Tempo Travellers
+            </span>
+          </div>
+
+          <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/routes"
-              className="w-full sm:w-auto px-8 py-4 bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm rounded-xl shadow-lg shadow-brand-green/30 transition-all text-center"
+              className="px-8 py-3.5 bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm rounded-xl shadow-lg transition-transform hover:scale-105 text-center"
             >
-              Browse Routes →
+              Browse 500+ Outstation Routes →
             </Link>
             <a
               href={`tel:${SITE_CONFIG.phoneRaw}`}
-              className="w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold text-sm rounded-xl border border-white/30 backdrop-blur-sm transition-all text-center flex items-center justify-center gap-2"
+              className="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold text-sm rounded-xl border border-white/25 backdrop-blur-xs transition-colors text-center flex items-center justify-center gap-2"
             >
               <FaPhoneAlt className="w-3.5 h-3.5 text-brand-green" />
-              Call: {SITE_CONFIG.phone}
+              Call Helpline: {SITE_CONFIG.phone}
             </a>
           </div>
         </div>
       </section>
-
-      {/* Unified Master Fare Calculator & Booking Form */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
-        <UnifiedBookingWidget initialServiceType="one_way" />
-      </div>
 
       {/* 3.2 Introduction */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -463,6 +479,9 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
+            {/* 3.65 DIRECT BOOKING COMPARISON */}
+      <DirectBookingComparison />
 
       {/* 3.7 FAQs */}
 

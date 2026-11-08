@@ -466,15 +466,16 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
               </div>
             </div>
 
-            {/* Right Hero Image (Transparent Cutout Vehicle cleanly anchored over Scenic Backdrop) */}
+            {/* Right Hero Image (Clean Solid Cutout Vehicle grounded over Scenic Backdrop) */}
             <div className="lg:col-span-5 relative h-56 sm:h-68 lg:h-84 w-full flex items-end justify-center lg:justify-end">
-              <div className="relative w-full max-w-lg h-full">
+              <div className="relative w-full max-w-lg h-full flex items-end justify-center">
+                <div className="absolute bottom-2 inset-x-8 h-8 bg-black/60 blur-xl rounded-full pointer-events-none" />
                 <Image
                   src="/fleet-brand/hero-transparent.webp"
                   alt={`${originName} to ${destName} Taxi Cab Fleet`}
                   fill
                   priority
-                  className="object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.65)]"
+                  className="object-contain object-bottom drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] z-10"
                   sizes="(max-width: 1024px) 100vw, 45vw"
                 />
               </div>
