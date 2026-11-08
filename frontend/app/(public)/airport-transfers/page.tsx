@@ -12,6 +12,7 @@ import {
 import VehicleImage from '@/components/public/VehicleImage';
 import Link from 'next/link';
 import PageFAQSection from '@/components/public/PageFAQSection';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 
 export const metadata = constructMetadata({
   title: 'Airport Taxi Transfer Service | IGI Airport Delhi Cabs',
@@ -270,7 +271,7 @@ export default async function AirportTransfersPage() {
               Call {SITE_CONFIG.phone}
             </a>
             <a
-              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20would%20like%20to%20make%20an%20inquiry.%20%E2%9C%A8`}
+              href={generateWhatsAppLink({ tripType: 'Airport Transfer', customMessage: 'Hello Urgent Taxis! I want to check airport cab availability, terminal pickup, and fixed fare quote.' })}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto bg-brand-green hover:bg-brand-green-hover text-white font-black text-sm px-8 py-4 rounded-xl transition-all shadow-lg"

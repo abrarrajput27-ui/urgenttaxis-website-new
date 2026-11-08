@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
       travelDateTime,
       returnDateTime,
       actualDistanceKm = 0,
+      calculatedBaseFare,
       durationHours = 0,
       numberOfDays = 1,
       numberOfNights = 0,
@@ -246,7 +247,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Phase 3 Add-on Calculation
-    const baseVehicleFare = calcResult.customerPayable;
+    const reqBaseFare = Number(calculatedBaseFare);
+    const baseVehicleFare = (reqBaseFare && reqBaseFare > 0 && Math.abs(reqBaseFare - calcResult.customerPayable) < 2500)
+      ? reqBaseFare
+      : calcResult.customerPayable;
     const finalCustomerPayable = baseVehicleFare + addOnValidation.addOnTotal;
     const finalTokenAmount = calculateAdvanceToken(finalCustomerPayable, 30);
     const finalBalanceAmount = finalCustomerPayable - finalTokenAmount;

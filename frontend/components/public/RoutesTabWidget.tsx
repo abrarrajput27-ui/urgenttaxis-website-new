@@ -288,7 +288,7 @@ export default function RoutesTabWidget() {
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/fleet-brand/dzire.webp';
+                        (e.target as HTMLImageElement).src = '/destinations/delhi.webp';
                       }}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     />

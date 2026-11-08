@@ -138,7 +138,7 @@ export function generateWhatsAppLink(
     lines.push('');
   } else if (!hasTripDetails) {
     lines.push('💰 *DIRECT OPERATOR ADVANTAGES:*');
-    lines.push('• 🏷️ Guaranteed Transparent Matrix (Zero Surge)');
+    lines.push('• 🏷️ Guaranteed Transparent Matrix (Upfront Itemized Pricing)');
     lines.push('• 🛡️ 100% Verified Chauffeurs & Clean Cabs');
     lines.push('• 🟢 Only 30% Token • 70% Balance at Destination');
     lines.push('');

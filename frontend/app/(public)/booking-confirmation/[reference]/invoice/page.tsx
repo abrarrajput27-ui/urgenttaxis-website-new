@@ -230,12 +230,27 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
 
   const invoiceNumber = `INV-${booking.booking_reference}`;
 
-  // SEC-01: Sensitive customer PII masked for public unauthenticated views
-  const maskedName = maskCustomerName(booking.customers?.full_name);
-  const maskedPhone = maskPhoneNumber(booking.customers?.phone);
-  const maskedEmail = maskEmailAddress(booking.customers?.email);
-  const maskedPickup = maskAddress(booking.pickup_address);
-  const maskedDrop = maskAddress(booking.drop_address);
+  // Customer and journey details faithfully preserved for official travel tax invoice
+  const actualName = booking.customers?.full_name || breakdown.customerFullName || 'Valued Passenger';
+  const actualPhone = booking.customers?.phone || breakdown.customerPhone || '—';
+  const actualEmail = booking.customers?.email || breakdown.customerEmail || '—';
+  const actualPickup = booking.pickup_address || breakdown.pickupAddress || '—';
+  const actualDrop = booking.drop_address || breakdown.dropAddress || '—';
+
+  // Driver & Commercial Vehicle Assignment Extraction
+  let assignedDriverName = booking.driver_name || '';
+  let assignedDriverPhone = booking.driver_phone || '';
+  let assignedVehicleNumber = booking.vehicle_number || '';
+  let assignedVehicleModel = booking.vehicle_model || '';
+
+  // Safe check if booking_assignments is populated
+  if (booking.booking_assignments && Array.isArray(booking.booking_assignments) && booking.booking_assignments.length > 0) {
+    const a = booking.booking_assignments[0];
+    if (a?.drivers?.full_name) assignedDriverName = a.drivers.full_name;
+    if (a?.drivers?.phone) assignedDriverPhone = a.drivers.phone;
+    if (a?.actual_fleet?.registration_number) assignedVehicleNumber = a.actual_fleet.registration_number;
+    if (a?.actual_fleet?.model) assignedVehicleModel = a.actual_fleet.model;
+  }
 
   // Parse intermediate stops
   let intermediateStops: string[] = breakdown.intermediateStops || [];
@@ -352,12 +367,12 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
             <div className="flex justify-between items-center mb-1">
               <h2 className="text-[11px] font-black text-slate-700 uppercase tracking-wider">Billed To (Passenger Details)</h2>
-              <span className="text-[10px] font-semibold text-slate-500 bg-slate-200 px-2 py-0.5 rounded">Privacy Protected</span>
+              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-300">Verified Passenger</span>
             </div>
             <div className="space-y-1.5 tabular-nums">
-              <p><span className="text-slate-500 block text-[10px] uppercase font-semibold font-sans">Name</span><strong className="text-sm text-slate-900 font-bold">{maskedName}</strong></p>
-              <p><span className="text-slate-500 block text-[10px] uppercase font-semibold font-sans">Contact Phone</span><span className="text-slate-800 font-semibold">{maskedPhone}</span></p>
-              <p><span className="text-slate-500 block text-[10px] uppercase font-semibold font-sans">Email</span><span className="text-slate-700">{maskedEmail}</span></p>
+              <p><span className="text-slate-500 block text-[10px] uppercase font-semibold font-sans">Name</span><strong className="text-sm text-slate-900 font-bold">{actualName}</strong></p>
+              <p><span className="text-slate-500 block text-[10px] uppercase font-semibold font-sans">Contact Phone</span><span className="text-slate-800 font-semibold">{actualPhone}</span></p>
+              <p><span className="text-slate-500 block text-[10px] uppercase font-semibold font-sans">Email</span><span className="text-slate-700">{actualEmail}</span></p>
             </div>
           </div>
 
@@ -381,12 +396,12 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <span className="text-slate-500 text-[10px] uppercase font-bold block">Pickup Address</span>
-              <p className="text-slate-900 font-semibold mt-0.5">{maskedPickup}</p>
+              <p className="text-slate-900 font-semibold mt-0.5">{actualPickup}</p>
             </div>
             {maskedDrop && (
               <div>
                 <span className="text-slate-500 text-[10px] uppercase font-bold block">Drop Address</span>
-                <p className="text-slate-900 font-semibold mt-0.5">{maskedDrop}</p>
+                <p className="text-slate-900 font-semibold mt-0.5">{actualDrop}</p>
               </div>
             )}
             {intermediateStops.length > 0 && (

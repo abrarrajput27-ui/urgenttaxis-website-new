@@ -127,12 +127,27 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
     documentsSubmitted = Boolean(docs && docs.length > 0);
   }
 
-  // SEC-01: Sensitive customer PII masked for public capability URL protection
-  const maskedName = maskCustomerName(booking.customers?.full_name);
-  const maskedPhone = maskPhoneNumber(booking.customers?.phone);
-  const maskedEmail = maskEmailAddress(booking.customers?.email);
-  const maskedPickup = maskAddress(booking.pickup_address);
-  const maskedDrop = maskAddress(booking.drop_address);
+  // Customer and journey details faithfully preserved for traveler confirmation
+  const actualName = booking.customers?.full_name || breakdown.customerFullName || 'Valued Passenger';
+  const actualPhone = booking.customers?.phone || breakdown.customerPhone || '—';
+  const actualEmail = booking.customers?.email || breakdown.customerEmail || '—';
+  const actualPickup = booking.pickup_address || breakdown.pickupAddress || '—';
+  const actualDrop = booking.drop_address || breakdown.dropAddress || '—';
+
+  // Driver & Vehicle Assignment Data extraction
+  let assignedDriverName = booking.driver_name || '';
+  let assignedDriverPhone = booking.driver_phone || '';
+  let assignedVehicleNumber = booking.vehicle_number || '';
+  let assignedVehicleModel = booking.vehicle_model || '';
+
+  // Safe check if booking_assignments is populated
+  if (booking.booking_assignments && Array.isArray(booking.booking_assignments) && booking.booking_assignments.length > 0) {
+    const a = booking.booking_assignments[0];
+    if (a?.drivers?.full_name) assignedDriverName = a.drivers.full_name;
+    if (a?.drivers?.phone) assignedDriverPhone = a.drivers.phone;
+    if (a?.actual_fleet?.registration_number) assignedVehicleNumber = a.actual_fleet.registration_number;
+    if (a?.actual_fleet?.model) assignedVehicleModel = a.actual_fleet.model;
+  }
 
   // Parse intermediate stops
   let intermediateStops: string[] = breakdown.intermediateStops || [];
@@ -190,7 +205,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
             Booking {isConfirmed ? 'Confirmed' : 'Request Received'}
           </h1>
           <p className="text-sm sm:text-base text-slate-600 mb-6">
-            Thank you, <strong className="text-slate-900 tabular-nums">{maskedName}</strong>! Your booking is currently <strong className="capitalize">{booking.status}</strong>.
+            Thank you, <strong className="text-slate-900 tabular-nums">{actualName}</strong>! Your booking is currently <strong className="capitalize">{booking.status}</strong>.
           </p>
           
           {/* Key Reference Badges */}
@@ -220,15 +235,15 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs sm:text-sm">
               <div>
                 <span className="text-slate-500 block text-[11px] font-semibold uppercase">Customer Name</span>
-                <strong className="text-slate-900 tabular-nums">{maskedName}</strong>
+                <strong className="text-slate-900 tabular-nums">{actualName}</strong>
               </div>
               <div>
                 <span className="text-slate-500 block text-[11px] font-semibold uppercase">Contact Phone</span>
-                <strong className="text-slate-900 tabular-nums">{maskedPhone}</strong>
+                <strong className="text-slate-900 tabular-nums">{actualPhone}</strong>
               </div>
               <div>
                 <span className="text-slate-500 block text-[11px] font-semibold uppercase">Email</span>
-                <span className="text-slate-700 tabular-nums">{maskedEmail}</span>
+                <span className="text-slate-700 tabular-nums">{actualEmail}</span>
               </div>
               <div>
                 <span className="text-slate-500 block text-[11px] font-semibold uppercase">Booking Date</span>
@@ -294,7 +309,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
               <div className="space-y-2 text-xs sm:text-sm">
                 <div>
                   <span className="font-bold text-slate-700 block">Pickup Location:</span>
-                  <p className="text-slate-900 font-medium">{maskedPickup}</p>
+                  <p className="text-slate-900 font-medium">{actualPickup}</p>
                 </div>
                 {intermediateStops.length > 0 && (
                   <div>
@@ -305,7 +320,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
                 {maskedDrop && (
                   <div>
                     <span className="font-bold text-slate-700 block">Drop Location:</span>
-                    <p className="text-slate-900 font-medium">{maskedDrop}</p>
+                    <p className="text-slate-900 font-medium">{actualDrop}</p>
                   </div>
                 )}
               </div>

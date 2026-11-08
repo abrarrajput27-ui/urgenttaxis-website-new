@@ -9,6 +9,7 @@ import PageFAQSection from '@/components/public/PageFAQSection';
 import MmtBookingWidget from '@/components/public/MmtBookingWidget';
 import RouteMapCard from '@/components/public/RouteMapCard';
 import { getCitySpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { Phone, MessageSquare, MapPin, CheckCircle2, Shield, Clock, Compass, Plane, ArrowRight, Car, Users, Briefcase, Sparkles } from 'lucide-react';
 
 interface LocalityPageProps {
@@ -167,9 +168,11 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
   const existingFaqs = data.faqs || [];
   const combinedCityFaqs = [...citySpecificFaqs, ...existingFaqs.filter(ef => !citySpecificFaqs.some(cf => cf.question.toLowerCase() === ef.question.toLowerCase())), ...commonFaqs];
 
-  const whatsappBaseUrl = `https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
-    `Hello Urgent Taxis, I need a taxi pickup in ${data.name}. Please share available cabs and fare details.`
-  )}`;
+  const whatsappBaseUrl = generateWhatsAppLink({
+    pickup: data.name,
+    tripType: 'Locality & Outstation Taxi',
+    customMessage: `I need a taxi pickup in ${data.name}. Please share available cabs, rates, and dispatch timings.`,
+  });
 
   // Find other localities for internal linking
   const otherLocalities = Object.values(LOCALITIES_DATA)
@@ -436,9 +439,17 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
                     </td>
                     <td className="px-4 py-4 sm:px-6 text-right">
                       <a
-                        href={`https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
-                          `Hello Urgent Taxis, I want to book a taxi from ${data.name} to ${route.destination}. Please confirm vehicle availability.`
-                        )}`}
+                        href={generateWhatsAppLink({
+                          pickup: data.name,
+                          drop: route.destination,
+                          distance: route.distanceKm,
+                          baseFare: route.sedanFare,
+                          totalFare: route.sedanFare,
+                          tokenAmount: Math.round(route.sedanFare * 0.30),
+                          balanceAmount: Math.round(route.sedanFare * 0.70),
+                          tripType: 'One-Way Outstation',
+                          customMessage: `Inquiry for ${data.name} to ${route.destination} taxi booking.`,
+                        })}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors"
@@ -534,9 +545,14 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
 
                 <div className="pt-3 border-t border-slate-100 flex items-center gap-2">
                   <a
-                    href={`https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
-                      `Hello Urgent Taxis, I want to book a ${vehicle.name} in ${data.name}. Please confirm availability and rates.`
-                    )}`}
+                    href={generateWhatsAppLink({
+                      pickup: data.name,
+                      vehicleCategory: vehicle.name,
+                      vehicleModel: vehicle.models,
+                      capacity: `${vehicle.seats} Passengers | ${vehicle.bags} Luggage`,
+                      tripType: 'Cab Booking in ' + data.name,
+                      customMessage: `I want to book a ${vehicle.name} (${vehicle.models}) in ${data.name}. Please confirm availability.`,
+                    })}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-brand-green hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors"
