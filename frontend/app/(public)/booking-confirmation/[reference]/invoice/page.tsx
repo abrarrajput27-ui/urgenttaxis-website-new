@@ -7,6 +7,7 @@ import InvoicePrintToolbar from '@/components/public/InvoicePrintToolbar';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import { getClientIp, checkLookupRateLimit, recordFailedLookup } from '@/lib/security/rate-limiter';
 import { maskCustomerName, maskPhoneNumber, maskEmailAddress, maskAddress } from '@/lib/security/masking';
+import { getVehicleProfile } from '@/lib/fleet-mapping';
 
 export const metadata = {
   title: 'Booking Invoice & Quotation | Urgent Taxis',
@@ -211,6 +212,7 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
 
   // Document Classification
   const isPaidOrPartial = booking.payment_status === 'paid' || booking.payment_status === 'partially_paid' || totalPaid > 0;
+  const vehicleProfile = getVehicleProfile(booking.vehicle_categories?.name);
   const documentTitle = isPaidOrPartial ? 'Tax Invoice / Payment Receipt' : 'Proforma Invoice & Booking Quotation';
   const invoiceNumber = `INV-${booking.booking_reference}`;
 
@@ -238,36 +240,34 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
       {/* Main A4 Printable Document Container */}
       <div className="max-w-4xl mx-auto my-6 sm:my-8 print:my-0 p-6 sm:p-10 bg-white border border-slate-200 print:border-none shadow-sm rounded-xl print:rounded-none print:shadow-none">
         
-        {/* Header: Official Branding & Approved Contact Info */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 border-b-2 border-slate-900 gap-6">
-          <div className="flex items-center gap-4">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0">
+        {/* Top Gradient Stripe */}
+        <div className="h-2 w-full bg-gradient-to-r from-brand-blue via-emerald-500 to-brand-green rounded-t-xl -mt-6 sm:-mt-10 -mx-6 sm:-mx-10 mb-6 sm:mb-8 print:hidden"></div>
+
+        {/* Header: Official Brand Logo & Verified Contact Desk */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 border-b-2 border-brand-blue/30 gap-6">
+          <div className="space-y-2">
+            <div className="relative w-52 sm:w-64 h-16 sm:h-20 shrink-0">
               <Image
                 src="/logo.jpg"
                 alt="Urgent Taxis Official Logo"
                 fill
                 priority
-                sizes="80px"
-                className="object-contain"
+                sizes="260px"
+                className="object-contain object-left"
               />
             </div>
-            <div>
-              <span className="text-xl sm:text-2xl font-black text-brand-blue tracking-tight block">URGENT TAXIS</span>
-              <span className="text-[11px] sm:text-xs text-slate-500 font-medium block">
-                Fast To Your Destination – Your Quick Ride Solution!
-              </span>
-              <span className="text-[11px] text-slate-600 block mt-1">
-                Desk: 2nd Floor, Block B, Sector 62, Noida, Uttar Pradesh 201309
-              </span>
+            <div className="text-[11px] text-slate-600 font-medium leading-relaxed">
+              <strong className="text-slate-800 block">Registered Dispatch Desk:</strong>
+              Railway Station Road, Masuri, NH-9 Corridor, Ghaziabad, UP 201015
             </div>
           </div>
 
-          <div className="text-left sm:text-right text-xs text-slate-600 space-y-1">
-            <p><strong>Phone / 24x7 Desk:</strong> +91 7310651940</p>
-            <p><strong>WhatsApp Desk:</strong> +91 8595066033</p>
-            <p><strong>Support Email:</strong> info@urgenttaxis.in</p>
-            <p><strong>Official Web:</strong> www.urgenttaxis.in</p>
-            <p className="text-[11px] text-slate-400 tabular-nums">Operations: Ghaziabad • Noida • Delhi NCR</p>
+          <div className="text-left sm:text-right text-xs text-slate-600 space-y-1 bg-slate-50/80 p-3.5 rounded-xl border border-slate-200/80 shrink-0">
+            <p><strong className="text-slate-800">Phone / 24x7 Helpline:</strong> <span className="tabular-nums font-semibold text-brand-blue">+91 7310651940</span></p>
+            <p><strong className="text-slate-800">WhatsApp Desk:</strong> <span className="tabular-nums font-semibold text-emerald-700">+91 8595066033</span></p>
+            <p><strong className="text-slate-800">Email:</strong> <span className="text-slate-700">info@urgenttaxis.in</span></p>
+            <p><strong className="text-slate-800">Web:</strong> <span className="text-brand-blue font-semibold">www.urgenttaxis.in</span></p>
+            <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider pt-0.5">Govt. Verified Commercial Fleet</p>
           </div>
         </div>
 
@@ -362,6 +362,87 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
           </div>
         </div>
 
+        {/* Selected Vehicle Showcase with Cutout/Image & Commercial Specs */}
+        <div className="my-5 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-900 to-[#0a1128] text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm border border-slate-800">
+          <div className="relative w-40 h-20 sm:w-48 sm:h-24 shrink-0 flex items-center justify-center bg-white/5 rounded-xl p-2 border border-white/10">
+            <Image
+              src={vehicleProfile.image}
+              alt={vehicleProfile.title}
+              width={200}
+              height={100}
+              className="max-h-20 w-auto object-contain drop-shadow"
+            />
+          </div>
+
+          <div className="flex-1 space-y-1 text-center sm:text-left">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                {vehicleProfile.tag}
+              </span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
+                Assigned Vehicle Category
+              </span>
+            </div>
+            <h3 className="text-base sm:text-lg font-black text-white">
+              {vehicleProfile.title}
+            </h3>
+            <p className="text-xs text-slate-300 font-medium">
+              {vehicleProfile.models}
+            </p>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 text-[11px] text-slate-300">
+              <span className="bg-white/10 px-2 py-0.5 rounded">👥 {vehicleProfile.seats}</span>
+              <span className="bg-white/10 px-2 py-0.5 rounded">🧳 {vehicleProfile.bags}</span>
+              <span className="bg-emerald-400/20 text-emerald-300 px-2 py-0.5 rounded">❄️ Dual AC</span>
+              <span className="bg-blue-400/20 text-blue-300 px-2 py-0.5 rounded">🚕 Yellow Plate Permit</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Assured Booking & Network Fleet Partners (Matching User Reference Image) */}
+        <div className="py-4 border-b border-slate-200">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 mb-3">
+            <div>
+              <span className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Assured Multi-Platform Network Fleet Partner
+              </span>
+              <p className="text-[11px] text-slate-500 font-medium">
+                Verified commercial fleet fulfilling direct transfers across premier travel aggregators
+              </p>
+            </div>
+            <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full w-fit">
+              100% Direct Operator Guarantee
+            </span>
+          </div>
+
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            {/* MakeMyTrip */}
+            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/makemytrip.svg" alt="MakeMyTrip" width={90} height={30} className="max-h-7 w-auto object-contain" />
+            </div>
+            {/* Goibibo */}
+            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/goibibo.png" alt="Goibibo" width={90} height={30} className="max-h-7 w-auto object-contain" />
+            </div>
+            {/* EaseMyTrip */}
+            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/easemytrip.svg" alt="EaseMyTrip" width={90} height={30} className="max-h-7 w-auto object-contain" />
+            </div>
+            {/* Savaari */}
+            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/savaari.png" alt="Savaari" width={90} height={30} className="max-h-7 w-auto object-contain" />
+            </div>
+            {/* Justdial */}
+            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/justdial.png" alt="Justdial" width={90} height={30} className="max-h-7 w-auto object-contain" />
+            </div>
+            {/* Tripadvisor */}
+            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/tripadvisor.jpg" alt="Tripadvisor" width={90} height={30} className="max-h-7 w-auto object-contain rounded" />
+            </div>
+          </div>
+        </div>
+
         {/* Itemized Financial Charges Table (Authoritative Fare Snapshot) */}
         <div className="py-6 border-b border-slate-200">
           <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3">Itemized Fare Breakdown</h2>
@@ -376,38 +457,66 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
             <tbody className="divide-y divide-slate-100 text-slate-800">
               <tr>
                 <td className="py-2.5 px-3">
-                  <strong className="block text-slate-900">Base Vehicle Fare</strong>
+                  <strong className="block text-slate-900">Base Vehicle Rental &amp; Fuel</strong>
                   <span className="text-[11px] text-slate-500">Includes commercial cab rental, standard fuel allowance, and professional chauffeur.</span>
                 </td>
-                <td className="py-2.5 px-3 text-center text-slate-500">Mandatory</td>
+                <td className="py-2.5 px-3 text-center text-slate-500 font-medium">Mandatory</td>
                 <td className="py-2.5 px-3 text-right tabular-nums font-semibold">₹{baseVehicleFare.toLocaleString('en-IN')}</td>
               </tr>
 
+              <tr>
+                <td className="py-2.5 px-3">
+                  <strong className="block text-slate-900">FASTag Tolls &amp; Inter-State Passenger Entry Taxes</strong>
+                  <span className="text-[11px] text-slate-500">
+                    {isOneWay ? 'Prepaid and fully included for this one-way journey.' : 'Payable at actuals as incurred along the highway plazas.'}
+                  </span>
+                </td>
+                <td className="py-2.5 px-3 text-center text-emerald-700 font-semibold">{isOneWay ? 'Included' : 'At Actuals'}</td>
+                <td className="py-2.5 px-3 text-right tabular-nums font-semibold text-emerald-700">{isOneWay ? '₹0 Extra' : 'As Incurred'}</td>
+              </tr>
+
+              <tr>
+                <td className="py-2.5 px-3">
+                  <strong className="block text-slate-900">Chauffeur Daily Allowance &amp; Night Halt</strong>
+                  <span className="text-[11px] text-slate-500">Chauffeur daily maintenance &amp; meals allowance included.</span>
+                </td>
+                <td className="py-2.5 px-3 text-center text-emerald-700 font-semibold">Included</td>
+                <td className="py-2.5 px-3 text-right tabular-nums font-semibold text-emerald-700">₹0 Extra</td>
+              </tr>
+
+              <tr>
+                <td className="py-2.5 px-3">
+                  <strong className="block text-slate-900">Goods &amp; Services Tax (GST 5%)</strong>
+                  <span className="text-[11px] text-slate-500">Statutory passenger transport levy under Ministry of Finance.</span>
+                </td>
+                <td className="py-2.5 px-3 text-center text-emerald-700 font-semibold">Included</td>
+                <td className="py-2.5 px-3 text-right tabular-nums font-semibold text-emerald-700">Included</td>
+              </tr>
+
               {selectedAddOns.map((addon) => (
-                <tr key={addon.id} className="bg-slate-50/40">
+                <tr key={addon.id} className="bg-blue-50/30">
                   <td className="py-2.5 px-3">
                     <strong className="block text-slate-900">{addon.name}</strong>
                     {addon.disclaimer && (
                       <span className="text-[11px] text-slate-500 italic">{addon.disclaimer}</span>
                     )}
                   </td>
-                  <td className="py-2.5 px-3 text-center text-brand-blue font-medium">Add-on</td>
-                  <td className="py-2.5 px-3 text-right tabular-nums font-semibold">₹{addon.price.toLocaleString('en-IN')}</td>
+                  <td className="py-2.5 px-3 text-center text-brand-blue font-semibold">Add-on</td>
+                  <td className="py-2.5 px-3 text-right tabular-nums font-semibold text-slate-900">₹{addon.price.toLocaleString('en-IN')}</td>
                 </tr>
               ))}
 
               {selectedAddOns.length > 0 && (
                 <tr className="bg-slate-50 font-semibold text-slate-700 text-xs">
                   <td colSpan={2} className="py-2 px-3 text-right">Total Optional Add-on Charges:</td>
-                  <td className="py-2 px-3 text-right tabular-nums">₹{addOnTotal.toLocaleString('en-IN')}</td>
+                  <td className="py-2 px-3 text-right tabular-nums text-brand-blue">₹{addOnTotal.toLocaleString('en-IN')}</td>
                 </tr>
               )}
 
-              <tr className="bg-slate-100 font-bold text-slate-900 text-sm border-t-2 border-slate-300">
-                <td colSpan={2} className="py-3 px-3 text-right">Total Customer Payable:</td>
-                <td className="py-3 px-3 text-right tabular-nums text-brand-blue text-base font-black">₹{customerPayable.toLocaleString('en-IN')}</td>
-              </tr>
-            </tbody>
+              <tr className="bg-gradient-to-r from-blue-50 to-indigo-50 font-bold text-slate-900 text-sm border-t-2 border-brand-blue/30">
+                <td colSpan={2} className="py-3 px-3 text-right text-base">Total Customer Payable:</td>
+                <td className="py-3 px-3 text-right tabular-nums text-brand-blue text-lg sm:text-xl font-black">₹{customerPayable.toLocaleString('en-IN')}</td>
+              </tr></tbody>
           </table>
         </div>
 

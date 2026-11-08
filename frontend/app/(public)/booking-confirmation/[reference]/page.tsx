@@ -5,7 +5,9 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { SITE_CONFIG } from '@/lib/seo';
 import DocumentUploadForm from '@/components/public/DocumentUploadForm';
 import { getClientIp, checkLookupRateLimit, recordFailedLookup } from '@/lib/security/rate-limiter';
+import Image from 'next/image';
 import { maskCustomerName, maskPhoneNumber, maskEmailAddress, maskAddress } from '@/lib/security/masking';
+import { getVehicleProfile } from '@/lib/fleet-mapping';
 
 export default async function BookingConfirmationPage({ params }: { params: Promise<{ reference: string }> }) {
   const { reference } = await params;
@@ -157,6 +159,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
     }
   };
 
+  const vehicleProfile = getVehicleProfile(booking.vehicle_categories?.name);
   const isConfirmed = booking.status === 'confirmed';
   const isPaid = booking.payment_status === 'paid' || booking.payment_status === 'partially_paid';
 
@@ -238,6 +241,48 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
             </div>
           </div>
 
+          {/* Selected Commercial Vehicle Showcase (Image + Full Specs) */}
+          <div className="bg-gradient-to-br from-slate-900 to-[#0a1128] text-white rounded-2xl p-5 sm:p-6 text-left mb-6 shadow-md border border-slate-800">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
+              <div className="relative w-44 h-24 sm:w-56 sm:h-28 shrink-0 flex items-center justify-center bg-white/5 rounded-xl p-2 border border-white/10">
+                <Image
+                  src={vehicleProfile.image}
+                  alt={vehicleProfile.title}
+                  width={220}
+                  height={110}
+                  className="max-h-24 w-auto object-contain drop-shadow-md"
+                />
+              </div>
+
+              <div className="flex-1 space-y-1.5 text-center sm:text-left">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[11px] font-bold uppercase tracking-wider">
+                  <span>{vehicleProfile.tag}</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">
+                  {vehicleProfile.title}
+                </h3>
+                <p className="text-xs text-slate-300 font-medium">
+                  {vehicleProfile.models}
+                </p>
+
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 text-xs">
+                  <span className="bg-white/10 px-2.5 py-1 rounded-md text-slate-200 font-semibold flex items-center gap-1">
+                    👥 {vehicleProfile.seats}
+                  </span>
+                  <span className="bg-white/10 px-2.5 py-1 rounded-md text-slate-200 font-semibold flex items-center gap-1">
+                    🧳 {vehicleProfile.bags}
+                  </span>
+                  <span className="bg-emerald-400/15 text-emerald-300 px-2.5 py-1 rounded-md font-semibold border border-emerald-400/20">
+                    ❄️ Chilled Dual AC
+                  </span>
+                  <span className="bg-blue-400/15 text-blue-300 px-2.5 py-1 rounded-md font-semibold border border-blue-400/20">
+                    🚕 Yellow Plate All-India
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Journey Specifications Card */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left mb-6">
             <div className="bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200">
@@ -312,47 +357,119 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
             </div>
           )}
 
-          {/* Payment & Financial Breakdown (Immutable Snapshot Authority) */}
-          <div className="bg-brand-blue/5 border border-brand-blue/15 rounded-xl p-5 sm:p-6 text-left mb-6">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-4">Financial Summary</h3>
-            
-            <div className="space-y-2.5 text-sm">
-              <div className="flex justify-between items-center text-slate-600">
-                <span>Base Vehicle Fare</span>
-                <span className="font-semibold text-slate-900">₹{baseVehicleFare.toLocaleString('en-IN')}</span>
+          {/* Payment & Detailed Itemized Fare Breakdown matching Invoice & MMT */}
+          <div className="bg-white border-2 border-brand-blue/20 rounded-2xl p-5 sm:p-6 text-left mb-6 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-3 mb-4 border-b border-slate-200">
+              <div>
+                <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-brand-blue"></span>
+                  Itemized Fare &amp; Payment Breakdown
+                </h3>
+                <p className="text-xs text-slate-500 font-medium">
+                  Guaranteed transparent fare matrix • Zero hidden highway markups
+                </p>
+              </div>
+              <span className="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full w-fit">
+                Direct Operator Fare Guarantee
+              </span>
+            </div>
+
+            <div className="space-y-3 text-xs sm:text-sm">
+              {/* Base Vehicle Fare */}
+              <div className="flex justify-between items-start gap-4">
+                <div>
+                  <span className="font-bold text-slate-900 block">Base Vehicle Rental &amp; Fuel</span>
+                  <span className="text-[11px] text-slate-500">Includes commercial cab hire, standard fuel for complete itinerary, and chauffeur navigation.</span>
+                </div>
+                <span className="font-bold text-slate-900 tabular-nums shrink-0 text-sm">₹{baseVehicleFare.toLocaleString('en-IN')}</span>
               </div>
 
+              {/* Highway Tolls & State Entry Permits */}
+              <div className="flex justify-between items-start gap-4 pt-2 border-t border-slate-100">
+                <div>
+                  <span className="font-bold text-slate-900 block">FASTag Tolls &amp; State Border Permits</span>
+                  <span className="text-[11px] text-slate-500">
+                    {booking.trip_type?.includes('round')
+                      ? 'Payable at actuals as per highway plazas encountered.'
+                      : 'All highway tolls & inter-state passenger vehicle entry permits prepaid and included.'}
+                  </span>
+                </div>
+                <span className="font-bold text-emerald-700 tabular-nums shrink-0 text-xs bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+                  {booking.trip_type?.includes('round') ? 'At Actuals' : 'Included (₹0 Extra)'}
+                </span>
+              </div>
+
+              {/* Driver Allowance */}
+              <div className="flex justify-between items-start gap-4 pt-2 border-t border-slate-100">
+                <div>
+                  <span className="font-bold text-slate-900 block">Chauffeur Daily Allowance &amp; Night Halt</span>
+                  <span className="text-[11px] text-slate-500">Driver food and daily maintenance allowance included.</span>
+                </div>
+                <span className="font-bold text-emerald-700 tabular-nums shrink-0 text-xs bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+                  Included (₹0 Extra)
+                </span>
+              </div>
+
+              {/* GST */}
+              <div className="flex justify-between items-start gap-4 pt-2 border-t border-slate-100">
+                <div>
+                  <span className="font-bold text-slate-900 block">Goods &amp; Services Tax (GST 5%)</span>
+                  <span className="text-[11px] text-slate-500">Statutory passenger transport tax under Ministry of Finance.</span>
+                </div>
+                <span className="font-bold text-emerald-700 tabular-nums shrink-0 text-xs bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+                  Included
+                </span>
+              </div>
+
+              {/* Selected Add-ons */}
               {selectedAddOns.length > 0 && (
-                <div className="flex justify-between items-center text-slate-600">
-                  <span>Vehicle Add-on Charges ({selectedAddOns.length} selected)</span>
-                  <span className="font-semibold text-slate-900">+₹{addOnTotal.toLocaleString('en-IN')}</span>
+                <div className="pt-2 border-t border-slate-100">
+                  <div className="flex justify-between items-center mb-1.5">
+                    <span className="font-bold text-slate-900">Selected Optional Add-ons ({selectedAddOns.length}):</span>
+                    <span className="font-bold text-brand-blue tabular-nums">+₹{addOnTotal.toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="space-y-1.5 pl-2">
+                    {selectedAddOns.map((addon) => (
+                      <div key={addon.id} className="flex justify-between text-xs text-slate-600">
+                        <span>• {addon.name}</span>
+                        <span className="font-medium text-slate-900 tabular-nums">₹{addon.price.toLocaleString('en-IN')}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
-              
-              <div className="h-px w-full bg-brand-blue/15 my-3"></div>
 
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-slate-900 text-base">Total Customer Payable</span>
-                <span className="font-black text-brand-blue text-xl">₹{customerPayable.toLocaleString('en-IN')}</span>
+              {/* Total Customer Payable Card */}
+              <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div>
+                  <span className="text-xs uppercase font-bold text-slate-600 block">Total Customer Payable</span>
+                  <span className="text-[11px] text-slate-500">Transparent final amount • Zero surprise billing</span>
+                </div>
+                <span className="text-2xl sm:text-3xl font-black text-brand-blue tabular-nums">₹{customerPayable.toLocaleString('en-IN')}</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 mt-3 border-t border-brand-blue/15">
-                <div className="bg-white p-3.5 rounded-lg border border-brand-blue/10">
-                  <span className="text-[11px] text-slate-500 uppercase font-bold block">30% Advance Token Required</span>
-                  <span className="text-lg font-black text-brand-blue block">₹{tokenAmount.toLocaleString('en-IN')}</span>
-                  <span className="text-[11px] text-slate-500">Required to confirm cab reservation</span>
+              {/* Split Payment Policy Ledger (30% Token / 70% Balance) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div className="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 text-left">
+                  <span className="text-[10px] text-emerald-800 uppercase font-black block tracking-wider">30% Advance Token Required</span>
+                  <span className="text-xl sm:text-2xl font-black text-emerald-950 block mt-0.5 tabular-nums">₹{tokenAmount.toLocaleString('en-IN')}</span>
+                  <span className="text-[11px] text-emerald-700 font-medium block mt-1">To confirm vehicle &amp; driver assignment</span>
                 </div>
-                <div className="bg-white p-3.5 rounded-lg border border-slate-200">
-                  <span className="text-[11px] text-slate-500 uppercase font-bold block">70% Balance Due Chauffeur</span>
-                  <span className="text-lg font-black text-slate-800 block">₹{trueBalance.toLocaleString('en-IN')}</span>
-                  <span className="text-[11px] text-slate-500">Payable directly at destination</span>
+
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-left">
+                  <span className="text-[10px] text-slate-600 uppercase font-black block tracking-wider">70% Driver Balance Due</span>
+                  <span className="text-xl sm:text-2xl font-black text-slate-900 block mt-0.5 tabular-nums">₹{trueBalance.toLocaleString('en-IN')}</span>
+                  <span className="text-[11px] text-slate-500 font-medium block mt-1">Pay directly at destination via Cash/UPI</span>
                 </div>
               </div>
 
               {payments.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-brand-blue/10 flex justify-between items-center text-xs">
-                  <span className="text-emerald-700 font-semibold">Verified Payments Received:</span>
-                  <span className="font-bold text-emerald-800 text-sm">₹{totalPaid.toLocaleString('en-IN')}</span>
+                <div className="mt-3 pt-3 border-t border-slate-200 flex justify-between items-center text-xs">
+                  <span className="text-emerald-700 font-bold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Verified Advance Token Received:
+                  </span>
+                  <span className="font-black text-emerald-900 text-sm tabular-nums">₹{totalPaid.toLocaleString('en-IN')} (Success)</span>
                 </div>
               )}
             </div>

@@ -99,7 +99,7 @@ export default function RoutesTabWidget() {
   const [activeState, setActiveState] = useState<string>("Uttarakhand");
   const [activeOrigin, setActiveOrigin] = useState<string>("Ghaziabad");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [visibleCount, setVisibleCount] = useState<number>(8);
+  const [visibleCount, setVisibleCount] = useState<number>(24);
 
   // Filter destination list strictly within the active state (Zero cross-state mixing!)
   const stateList = STATE_DESTINATIONS[activeState] || [];
@@ -160,7 +160,7 @@ export default function RoutesTabWidget() {
               onClick={() => {
                 setActiveState(state);
                 setSearchQuery("");
-                setVisibleCount(8);
+                setVisibleCount(24);
               }}
               className={`whitespace-nowrap px-4 py-2.5 min-h-[44px] rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all duration-200 border-2 cursor-pointer ${
                 isActive
@@ -377,20 +377,20 @@ export default function RoutesTabWidget() {
           <div className="mt-6 text-center">
             <button
               type="button"
-              onClick={() => setVisibleCount((prev) => prev + 12)}
-              className="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs sm:text-sm px-6 py-3 rounded-full border border-slate-300 shadow-sm transition-all cursor-pointer"
+              onClick={() => setVisibleCount((prev) => prev + 24)}
+              className="inline-flex items-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold text-xs sm:text-sm px-7 py-3.5 rounded-full shadow-md transition-all cursor-pointer"
             >
-              <span>Explore More {activeState} Destinations ({filteredDestinations.length - visibleCount} more)</span>
-              <ChevronDown className="w-4 h-4 text-slate-500" />
+              <span>Explore More {activeState} Routes &amp; Corridors ({filteredDestinations.length - visibleCount} more)</span>
+              <ChevronDown className="w-4 h-4 text-white" />
             </button>
           </div>
         )}
 
-        {visibleCount > 8 && !hasMore && filteredDestinations.length > 8 && (
+        {visibleCount > 24 && !hasMore && filteredDestinations.length > 24 && (
           <div className="mt-6 text-center">
             <button
               type="button"
-              onClick={() => setVisibleCount(8)}
+              onClick={() => setVisibleCount(24)}
               className="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-600 font-bold text-xs px-4 py-2 rounded-full border border-slate-200 transition-all cursor-pointer"
             >
               <span>Show Less</span>
