@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { FAQItem } from '@/lib/faqs/faq-generator';
-import Script from 'next/script';
 import Link from 'next/link';
 import { FaChevronDown, FaArrowRight, FaQuestionCircle } from 'react-icons/fa';
 
@@ -43,7 +42,7 @@ export default function PageFAQSection({
   return (
     <section className={`bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8 space-y-6 font-sans ${className}`}>
       {includeSchema && (
-        <Script
+        <script
           id={`faq-schema-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

@@ -1,0 +1,138 @@
+filename,path,format,size_kb,dimensions,page_section,current_alt,proposed_alt,type,recommendation,is_hero
+cta-hero.webp,/cta-hero.webp,WEBP,153.2,1645x956,"Footer.tsx, master-consistency.spec.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Cta Hero,Informative,Keep verified asset,Yes
+file.svg,/file.svg,SVG,0.4,N/AxN/A,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis File.Svg,Informative,Appropriate vector,No
+fleet-hero-bg.webp,/fleet-hero-bg.webp,WEBP,323.9,1254x1254,"page.tsx, master-consistency.spec.ts",,,Decorative,Keep verified asset,Yes
+globe.svg,/globe.svg,SVG,1.0,N/AxN/A,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Globe.Svg,Informative,Appropriate vector,No
+hero-pattern.svg,/hero-pattern.svg,SVG,0.2,N/AxN/A,"page.tsx, page.tsx, page.tsx",,,Decorative,Appropriate vector,Yes
+hero-poster.webp,/hero-poster.webp,WEBP,66.5,1280x720,page.tsx,Urgent Taxis fleet / destination asset,Urgent Taxis Hero Poster,Informative,Optimized WebP,Yes
+logo.jpg,/logo.jpg,JPG,108.2,930x294,"layout.tsx, layout.tsx, layout.tsx",Urgent Taxis fleet / destination asset,Urgent Taxis Logo,Informative,Convert to WebP / compress,No
+next.svg,/next.svg,SVG,1.3,N/AxN/A,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Next.Svg,Informative,Appropriate vector,No
+vercel.svg,/vercel.svg,SVG,0.1,N/AxN/A,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Vercel.Svg,Informative,Appropriate vector,No
+window.svg,/window.svg,SVG,0.4,N/AxN/A,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Window.Svg,Informative,Appropriate vector,No
+agra.webp,/destinations/agra.webp,WEBP,14.6,330x217,"page.tsx, route-corridor-details.ts, route-corridor-details.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Agra,Informative,Optimized WebP,No
+ajmer.webp,/destinations/ajmer.webp,WEBP,109.0,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Ajmer,Informative,Optimized WebP,No
+aligarh.webp,/destinations/aligarh.webp,WEBP,30.2,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Aligarh,Informative,Optimized WebP,No
+almora.webp,/destinations/almora.webp,WEBP,79.4,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Almora,Informative,Optimized WebP,No
+ambala.webp,/destinations/ambala.webp,WEBP,78.3,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Ambala,Informative,Optimized WebP,No
+amritsar.webp,/destinations/amritsar.webp,WEBP,13.1,330x135,"route-corridor-details.ts, route-corridor-details.ts, route-corridor-details.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Amritsar,Informative,Optimized WebP,No
+ayodhya.webp,/destinations/ayodhya.webp,WEBP,74.0,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Ayodhya,Informative,Optimized WebP,No
+bahadurgarh.webp,/destinations/bahadurgarh.webp,WEBP,113.4,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Bahadurgarh,Informative,Optimized WebP,No
+bareilly.webp,/destinations/bareilly.webp,WEBP,110.7,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Bareilly,Informative,Optimized WebP,No
+bhimtal.webp,/destinations/bhimtal.webp,WEBP,1043.9,4009x2109,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Bhimtal,Informative,Keep verified asset,No
+chandigarh.webp,/destinations/chandigarh.webp,WEBP,9.6,330x247,"page.tsx, RoutePlacesSection.tsx, route-corridor-details.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Chandigarh,Informative,Optimized WebP,No
+dalhousie.webp,/destinations/dalhousie.webp,WEBP,43.5,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Dalhousie,Informative,Optimized WebP,No
+dehradun.webp,/destinations/dehradun.webp,WEBP,93.9,1920x1080,"page.tsx, route-corridor-details.ts, route-corridor-details.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Dehradun,Informative,Optimized WebP,No
+delhi-airport.webp,/destinations/delhi-airport.webp,WEBP,143.3,1024x1024,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Delhi Airport,Informative,Optimized WebP,No
+delhi.webp,/destinations/delhi.webp,WEBP,15.8,410x305,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Delhi,Informative,Optimized WebP,No
+dharamshala.webp,/destinations/dharamshala.webp,WEBP,87.2,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Dharamshala,Informative,Optimized WebP,No
+faridabad.webp,/destinations/faridabad.webp,WEBP,50.6,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Faridabad,Informative,Optimized WebP,No
+ghaziabad.webp,/destinations/ghaziabad.webp,WEBP,56.1,728x410,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Ghaziabad,Informative,Optimized WebP,No
+gorakhpur.webp,/destinations/gorakhpur.webp,WEBP,59.8,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Gorakhpur,Informative,Optimized WebP,No
+greater-noida.webp,/destinations/greater-noida.webp,WEBP,55.3,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Greater Noida,Informative,Optimized WebP,No
+gurugram.webp,/destinations/gurugram.webp,WEBP,46.7,612x408,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Gurugram,Informative,Optimized WebP,No
+haldwani.webp,/destinations/haldwani.webp,WEBP,183.4,1024x576,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Haldwani,Informative,Keep verified asset,No
+haridwar.webp,/destinations/haridwar.webp,WEBP,2734.3,3840x2880,"page.tsx, page.tsx, route-corridor-details.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Haridwar,Informative,Keep verified asset,No
+jaipur.webp,/destinations/jaipur.webp,WEBP,1235.2,3345x2509,"page.tsx, page.tsx, route-corridor-details.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Jaipur,Informative,Keep verified asset,No
+jalandhar.webp,/destinations/jalandhar.webp,WEBP,62.1,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Jalandhar,Informative,Optimized WebP,No
+jammu.webp,/destinations/jammu.webp,WEBP,97.9,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Jammu,Informative,Optimized WebP,No
+jim-corbett.webp,/destinations/jim-corbett.webp,WEBP,70.3,1080x558,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Jim Corbett,Informative,Optimized WebP,No
+jodhpur.webp,/destinations/jodhpur.webp,WEBP,94.9,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Jodhpur,Informative,Optimized WebP,No
+kainchi-dham.webp,/destinations/kainchi-dham.webp,WEBP,357.1,1899x1424,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Kainchi Dham,Informative,Keep verified asset,No
+kanpur.webp,/destinations/kanpur.webp,WEBP,29.3,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Kanpur,Informative,Optimized WebP,No
+karnal.webp,/destinations/karnal.webp,WEBP,88.0,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Karnal,Informative,Optimized WebP,No
+kasol.webp,/destinations/kasol.webp,WEBP,100.5,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Kasol,Informative,Optimized WebP,No
+kathgodam.webp,/destinations/kathgodam.webp,WEBP,130.3,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Kathgodam,Informative,Optimized WebP,No
+kausani.webp,/destinations/kausani.webp,WEBP,12.2,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Kausani,Informative,Optimized WebP,No
+kurukshetra.webp,/destinations/kurukshetra.webp,WEBP,76.7,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Kurukshetra,Informative,Optimized WebP,No
+lucknow.webp,/destinations/lucknow.webp,WEBP,17.2,330x197,"page.tsx, route-corridor-details.ts, route-corridor-details.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Lucknow,Informative,Optimized WebP,No
+ludhiana.webp,/destinations/ludhiana.webp,WEBP,237.6,1024x768,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Ludhiana,Informative,Keep verified asset,No
+manali.webp,/destinations/manali.webp,WEBP,25.0,330x214,page.tsx,Urgent Taxis fleet / destination asset,Urgent Taxis Manali,Informative,Optimized WebP,No
+mathura.webp,/destinations/mathura.webp,WEBP,90.5,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Mathura,Informative,Optimized WebP,No
+meerut.webp,/destinations/meerut.webp,WEBP,63.9,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Meerut,Informative,Optimized WebP,No
+moradabad.webp,/destinations/moradabad.webp,WEBP,79.5,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Moradabad,Informative,Optimized WebP,No
+mukteshwar.webp,/destinations/mukteshwar.webp,WEBP,52.0,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Mukteshwar,Informative,Optimized WebP,No
+mussoorie.webp,/destinations/mussoorie.webp,WEBP,441.5,1600x1110,"page.tsx, route-corridor-details.ts, route-corridor-details.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Mussoorie,Informative,Keep verified asset,No
+nainital.webp,/destinations/nainital.webp,WEBP,1442.8,3840x2880,"RoutePlacesSection.tsx, RoutesTabWidget.tsx, route-corridor-details.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Nainital,Informative,Keep verified asset,No
+new-delhi.webp,/destinations/new-delhi.webp,WEBP,75.6,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis New Delhi,Informative,Optimized WebP,No
+noida-international-airport.webp,/destinations/noida-international-airport.webp,WEBP,80.1,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Noida International Airport,Informative,Optimized WebP,No
+noida.webp,/destinations/noida.webp,WEBP,46.6,900x330,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Noida,Informative,Optimized WebP,No
+panipat.webp,/destinations/panipat.webp,WEBP,71.6,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Panipat,Informative,Optimized WebP,No
+prayagraj.webp,/destinations/prayagraj.webp,WEBP,58.0,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Prayagraj,Informative,Optimized WebP,No
+pushkar.webp,/destinations/pushkar.webp,WEBP,110.1,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Pushkar,Informative,Optimized WebP,No
+ramnagar.webp,/destinations/ramnagar.webp,WEBP,951.3,3840x2880,"page.tsx, route-corridor-details.ts, route-corridor-details.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Ramnagar,Informative,Keep verified asset,No
+rampur.webp,/destinations/rampur.webp,WEBP,87.9,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Rampur,Informative,Optimized WebP,No
+ranikhet.webp,/destinations/ranikhet.webp,WEBP,443.6,1792x1024,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Ranikhet,Informative,Keep verified asset,No
+rishikesh.webp,/destinations/rishikesh.webp,WEBP,2734.3,3840x2880,"page.tsx, phase1-consistency.spec.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Rishikesh,Informative,Keep verified asset,No
+rohtak.webp,/destinations/rohtak.webp,WEBP,78.5,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Rohtak,Informative,Optimized WebP,No
+rudrapur.webp,/destinations/rudrapur.webp,WEBP,297.7,2560x1440,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Rudrapur,Informative,Keep verified asset,No
+sattal.webp,/destinations/sattal.webp,WEBP,85.7,865x488,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Sattal,Informative,Optimized WebP,No
+shimla.webp,/destinations/shimla.webp,WEBP,1771.9,3840x2555,"master-consistency.spec.ts, phase1-consistency.spec.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Shimla,Informative,Keep verified asset,No
+sonipat.webp,/destinations/sonipat.webp,WEBP,80.1,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Sonipat,Informative,Optimized WebP,No
+srinagar.webp,/destinations/srinagar.webp,WEBP,61.3,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Srinagar,Informative,Optimized WebP,No
+udaipur.webp,/destinations/udaipur.webp,WEBP,22.4,330x220,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Udaipur,Informative,Optimized WebP,No
+varanasi.webp,/destinations/varanasi.webp,WEBP,128.4,850x588,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Varanasi,Informative,Optimized WebP,No
+vrindavan.webp,/destinations/vrindavan.webp,WEBP,113.8,800x600,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Vrindavan,Informative,Optimized WebP,No
+haridwar.jpg,/destinations/original_backups/haridwar.jpg,JPG,3263.5,3840x2880,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Haridwar,Informative,Convert to WebP / compress,No
+jaipur.jpg,/destinations/original_backups/jaipur.jpg,JPG,3288.8,3345x2509,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Jaipur,Informative,Convert to WebP / compress,No
+nainital.jpg,/destinations/original_backups/nainital.jpg,JPG,2085.3,3840x2880,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Nainital,Informative,Convert to WebP / compress,No
+ramnagar.jpeg,/destinations/original_backups/ramnagar.jpeg,JPEG,1646.4,3840x2880,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Ramnagar.Jpeg,Informative,Convert to WebP / compress,No
+rishikesh.jpg,/destinations/original_backups/rishikesh.jpg,JPG,3263.5,3840x2880,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Rishikesh,Informative,Convert to WebP / compress,No
+shimla.jpg,/destinations/original_backups/shimla.jpg,JPG,2416.2,3840x2555,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Shimla,Informative,Convert to WebP / compress,No
+Bus.webp,/fleet-brand/Bus.webp,WEBP,107.1,1536x1024,"update_live_data.js, page.tsx, page.tsx",Urgent Taxis fleet / destination asset,Urgent Taxis Bus,Informative,Optimized WebP,No
+dzire.webp,/fleet-brand/dzire.webp,WEBP,125.8,1642x958,"page.tsx, page.tsx, page.tsx",Urgent Taxis fleet / destination asset,Urgent Taxis Dzire,Informative,Optimized WebP,No
+Ertiga.webp,/fleet-brand/Ertiga.webp,WEBP,136.3,1633x963,"page.tsx, page.tsx, page.tsx",Urgent Taxis fleet / destination asset,Urgent Taxis Ertiga,Informative,Optimized WebP,No
+Etios.webp,/fleet-brand/Etios.webp,WEBP,114.7,1536x1024,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Etios,Informative,Optimized WebP,No
+Hatchback.webp,/fleet-brand/Hatchback.webp,WEBP,118.4,1596x985,"page.tsx, page.tsx, page.tsx",Urgent Taxis fleet / destination asset,Urgent Taxis Hatchback,Informative,Optimized WebP,No
+Hero.webp,/fleet-brand/Hero.webp,WEBP,129.7,1645x956,page.tsx,Urgent Taxis fleet / destination asset,Urgent Taxis Hero,Informative,Optimized WebP,Yes
+Innova Crysta.webp,/fleet-brand/Innova Crysta.webp,WEBP,129.7,1645x956,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Innova Crysta,Informative,Optimized WebP,No
+Innova Hycross.webp,/fleet-brand/Innova Hycross.webp,WEBP,135.3,1639x960,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Innova Hycross,Informative,Optimized WebP,No
+Tempo Traveller.webp,/fleet-brand/Tempo Traveller.webp,WEBP,139.8,1380x1140,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Tempo Traveller,Informative,Optimized WebP,No
+Urbania.webp,/fleet-brand/Urbania.webp,WEBP,107.7,1315x1196,"update_live_data.js, page.tsx, page.tsx",Urgent Taxis fleet / destination asset,Urgent Taxis Urbania,Informative,Optimized WebP,No
+volvo bus.webp,/fleet-brand/volvo bus.webp,WEBP,106.4,1536x1024,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Volvo Bus,Informative,Optimized WebP,No
+cta-hero.png,/original_backups/cta-hero.png,PNG,1365.0,1645x956,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Cta Hero.Png,Informative,Convert to WebP / compress,Yes
+fleet-hero-bg.png,/original_backups/fleet-hero-bg.png,PNG,2719.6,1254x1254,Static public asset,,,Decorative,Convert to WebP / compress,Yes
+agra.jpg,/original_backups/destinations/agra.jpg,JPG,19.7,330x217,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Agra,Informative,Keep verified asset,No
+amritsar.jpg,/original_backups/destinations/amritsar.jpg,JPG,15.5,330x135,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Amritsar,Informative,Keep verified asset,No
+chandigarh.jpg,/original_backups/destinations/chandigarh.jpg,JPG,15.2,330x247,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Chandigarh,Informative,Keep verified asset,No
+dehradun.jpg,/original_backups/destinations/dehradun.jpg,JPG,541.7,1920x1080,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Dehradun,Informative,Convert to WebP / compress,No
+haridwar.jpg,/original_backups/destinations/haridwar.jpg,JPG,3263.5,3840x2880,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Haridwar,Informative,Convert to WebP / compress,No
+jaipur.jpg,/original_backups/destinations/jaipur.jpg,JPG,3288.8,3345x2509,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Jaipur,Informative,Convert to WebP / compress,No
+lucknow.jpg,/original_backups/destinations/lucknow.jpg,JPG,22.1,330x197,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Lucknow,Informative,Keep verified asset,No
+manali.jpg,/original_backups/destinations/manali.jpg,JPG,28.9,330x214,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Manali,Informative,Keep verified asset,No
+mussoorie.jpg,/original_backups/destinations/mussoorie.jpg,JPG,817.4,1600x1110,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Mussoorie,Informative,Convert to WebP / compress,No
+nainital.jpg,/original_backups/destinations/nainital.jpg,JPG,2085.3,3840x2880,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Nainital,Informative,Convert to WebP / compress,No
+ramnagar.jpeg,/original_backups/destinations/ramnagar.jpeg,JPEG,1646.4,3840x2880,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Ramnagar.Jpeg,Informative,Convert to WebP / compress,No
+rishikesh.jpg,/original_backups/destinations/rishikesh.jpg,JPG,3263.5,3840x2880,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Rishikesh,Informative,Convert to WebP / compress,No
+shimla.jpg,/original_backups/destinations/shimla.jpg,JPG,2416.2,3840x2555,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Shimla,Informative,Convert to WebP / compress,No
+udaipur.jpg,/original_backups/destinations/udaipur.jpg,JPG,27.2,330x220,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Udaipur,Informative,Keep verified asset,No
+Bus.png,/original_backups/fleet-brand/Bus.png,PNG,1504.0,1536x1024,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Bus.Png,Informative,Convert to WebP / compress,No
+dzire.png,/original_backups/fleet-brand/dzire.png,PNG,1515.9,1642x958,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Dzire.Png,Informative,Convert to WebP / compress,No
+Ertiga.png,/original_backups/fleet-brand/Ertiga.png,PNG,1572.9,1633x963,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Ertiga.Png,Informative,Convert to WebP / compress,No
+Etios.png,/original_backups/fleet-brand/Etios.png,PNG,1553.3,1536x1024,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Etios.Png,Informative,Convert to WebP / compress,No
+Hatchback.png,/original_backups/fleet-brand/Hatchback.png,PNG,1500.8,1596x985,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Hatchback.Png,Informative,Convert to WebP / compress,No
+Hero.png,/original_backups/fleet-brand/Hero.png,PNG,1510.4,1645x956,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Hero.Png,Informative,Convert to WebP / compress,Yes
+Innova Crysta.png,/original_backups/fleet-brand/Innova Crysta.png,PNG,1510.4,1645x956,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Innova Crysta.Png,Informative,Convert to WebP / compress,No
+Innova Hycross.png,/original_backups/fleet-brand/Innova Hycross.png,PNG,1557.9,1639x960,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Innova Hycross.Png,Informative,Convert to WebP / compress,No
+Tempo Traveller.png,/original_backups/fleet-brand/Tempo Traveller.png,PNG,1654.0,1380x1140,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Tempo Traveller.Png,Informative,Convert to WebP / compress,No
+Urbania.png,/original_backups/fleet-brand/Urbania.png,PNG,1380.8,1315x1196,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Urbania.Png,Informative,Convert to WebP / compress,No
+volvo bus.png,/original_backups/fleet-brand/volvo bus.png,PNG,1461.1,1536x1024,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Volvo Bus.Png,Informative,Convert to WebP / compress,No
+airport.jpg,/original_backups/services/airport.jpg,JPG,51.0,800x500,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Airport,Informative,Keep verified asset,No
+corporate.jpg,/original_backups/services/corporate.jpg,JPG,53.8,800x500,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Corporate,Informative,Keep verified asset,No
+local.jpg,/original_backups/services/local.jpg,JPG,97.2,800x500,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Local,Informative,Convert to WebP / compress,No
+oneway.jpg,/original_backups/services/oneway.jpg,JPG,61.0,800x500,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Oneway,Informative,Keep verified asset,No
+railway.jpg,/original_backups/services/railway.jpg,JPG,55.0,800x500,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Railway,Informative,Keep verified asset,No
+roundtrip.jpg,/original_backups/services/roundtrip.jpg,JPG,64.5,800x500,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Roundtrip,Informative,Keep verified asset,No
+wedding.jpg,/original_backups/services/wedding.jpg,JPG,62.7,800x500,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Wedding,Informative,Keep verified asset,No
+easemytrip.svg,/partners/easemytrip.svg,SVG,9.0,N/AxN/A,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Easemytrip.Svg,Informative,Appropriate vector,No
+goibibo.png,/partners/goibibo.png,PNG,145.2,3840x1164,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Goibibo.Png,Informative,Convert to WebP / compress,No
+justdial.png,/partners/justdial.png,PNG,24.3,960x252,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Justdial.Png,Informative,Keep verified asset,No
+makemytrip.svg,/partners/makemytrip.svg,SVG,5.3,N/AxN/A,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Makemytrip.Svg,Informative,Appropriate vector,No
+savaari.png,/partners/savaari.png,PNG,49.7,2214x798,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Savaari.Png,Informative,Keep verified asset,No
+tripadvisor.jpg,/partners/tripadvisor.jpg,JPG,81.3,3840x2160,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Tripadvisor,Informative,Convert to WebP / compress,No
+airport.webp,/services/airport.webp,WEBP,44.5,800x500,"page.tsx, master-consistency.spec.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Airport,Informative,Optimized WebP,No
+corporate.webp,/services/corporate.webp,WEBP,46.9,800x500,page.tsx,Urgent Taxis fleet / destination asset,Urgent Taxis Corporate,Informative,Optimized WebP,No
+local.webp,/services/local.webp,WEBP,86.0,800x500,"page.tsx, master-consistency.spec.ts",Urgent Taxis fleet / destination asset,Urgent Taxis Local,Informative,Optimized WebP,No
+oneway.webp,/services/oneway.webp,WEBP,56.6,800x500,page.tsx,Urgent Taxis fleet / destination asset,Urgent Taxis Oneway,Informative,Optimized WebP,No
+railway.webp,/services/railway.webp,WEBP,45.6,800x500,Static public asset,Urgent Taxis fleet / destination asset,Urgent Taxis Railway,Informative,Optimized WebP,No
+roundtrip.webp,/services/roundtrip.webp,WEBP,52.4,800x500,page.tsx,Urgent Taxis fleet / destination asset,Urgent Taxis Roundtrip,Informative,Optimized WebP,No
+wedding.webp,/services/wedding.webp,WEBP,58.7,800x500,page.tsx,Urgent Taxis fleet / destination asset,Urgent Taxis Wedding,Informative,Optimized WebP,No

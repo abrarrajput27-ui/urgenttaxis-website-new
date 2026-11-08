@@ -245,29 +245,35 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         </div>
 
         {/* Action Banner */}
-        <div className="my-10 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-blue-900 via-slate-900 to-slate-900 border border-blue-800/50 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="my-10 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#1e1b4b] via-slate-900 to-[#1e1b4b] border border-blue-900/60 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center sm:text-left">
-            <h3 className="text-lg font-bold text-brand-blue">Planning this trip?</h3>
-            <p className="text-xs sm:text-sm text-slate-700">
-              Get an instant fixed quote for your door-to-door outstation cab.
+            <h3 className="text-lg font-black text-white">Planning this trip?</h3>
+            <p className="text-xs sm:text-sm text-slate-300 font-medium">
+              Book a verified AC cab with doorstep pickup from Ghaziabad & Delhi NCR. Transparent per-km rates with 30% advance deposit.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <Link
+              href="/routes"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-[#1e1b4b] hover:bg-slate-100 font-black text-xs transition-colors shadow-sm"
+            >
+              <span>Explore Routes</span>
+            </Link>
             <a
               href={`tel:${BUSINESS_CONFIG.phone.primaryRaw}`}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-black text-xs transition-colors shadow-sm"
             >
               <Phone className="w-4 h-4" />
-              <span>Call Helpline</span>
+              <span>Call Now</span>
             </a>
             <a
               href={whatsappShareUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-black text-xs transition-colors shadow-sm"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>WhatsApp Us</span>
+              <span>WhatsApp</span>
             </a>
           </div>
         </div>

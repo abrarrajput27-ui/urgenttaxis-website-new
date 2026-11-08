@@ -26,6 +26,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/cancellation`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/tempo-traveller`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${baseUrl}/bus-charter`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/corporate-taxi`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/chardham-yatra`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/tour-packages`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/fleet/hatchback`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/fleet/sedan`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/fleet/suv-muv`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/fleet/executive-suv`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
   ];
 
   // 20 Locality pages (/taxi-service/[locality])
