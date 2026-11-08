@@ -5,6 +5,7 @@ import { BLOG_ARTICLES } from '@/lib/data/blog-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import { Clock, ArrowRight, BookOpen, Compass, Calendar } from 'lucide-react';
+import DirectBookingComparison from '@/components/public/DirectBookingComparison';
 
 export const metadata: Metadata = {
   title: 'Travel Blog & Highway Guides | Urgent Taxis',
@@ -154,6 +155,9 @@ export default function BlogListPage() {
           ))}
         </div>
       </section>
+
+      {/* Direct Booking Comparison Section */}
+      <DirectBookingComparison />
     </div>
   );
 }

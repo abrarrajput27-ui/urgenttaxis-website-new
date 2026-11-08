@@ -7,6 +7,7 @@ import verifiedRoutesData from '@/lib/data/verified-routes.json';
 import { resolveOneWayFare } from '@/lib/pricing';
 import { getLocationState } from '@/lib/location-authority';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
+import DirectBookingComparison from '@/components/public/DirectBookingComparison';
 
 export const metadata = constructMetadata({
   title: 'Outstation Taxi Routes & Intercity Cabs Directory',
@@ -178,6 +179,9 @@ export default async function RoutesDirectoryPage() {
           </div>
         </div>
       </section>
+
+      {/* Direct Booking Comparison Section */}
+      <DirectBookingComparison />
     </div>
   );
 }

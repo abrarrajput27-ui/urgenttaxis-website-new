@@ -5,6 +5,7 @@ import { ShieldCheck, CheckCircle2, MessageSquare, HeartHandshake, Phone } from 
 import ReviewsViewer from '@/components/public/ReviewsViewer';
 import { REVIEWS_OVERALL_STATS, CUSTOMER_REVIEWS } from '@/lib/data/reviews-data';
 import { FaGoogle, FaStar } from 'react-icons/fa';
+import DirectBookingComparison from '@/components/public/DirectBookingComparison';
 
 export const metadata = constructMetadata({
   title: 'Customer Reviews & Ratings (4.9★ Google Verified) | Urgent Taxis',
@@ -146,6 +147,9 @@ export default function ReviewsPage() {
           </div>
         </div>
       </section>
+
+      {/* Direct Booking Comparison Section */}
+      <DirectBookingComparison />
     </div>
   );
 }

@@ -106,6 +106,11 @@ export default function DirectBookingComparison() {
                 </p>
               </div>
             </div>
+
+            {/* SEO Overview Description matching screenshot */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50/70 border border-slate-200/60 text-[11px] sm:text-xs text-slate-500 font-normal leading-relaxed">
+              Urgent Taxis provides premier outstation taxi and airport taxi services across major cities. Whether you need a simple cab booking or an online cab booking platform, our taxi service offers reliable chauffeur driven car experiences. We specialize in one way taxi drops, round trip cab packages, and prompt airport transfer. For city tours, book a local cab or hire a spacious tempo traveller for group trips. We also cater to business professionals requiring a corporate cab. Explore popular corridors with our Delhi taxi, Noida taxi, Ghaziabad taxi, Aligarh taxi, Lucknow taxi, Haridwar taxi, Rishikesh taxi, Nainital taxi, Jim Corbett taxi, Dehradun taxi, Agra taxi, and Jaipur taxi routes.
+            </div>
           </div>
 
           {/* Right: Compare Our Fares on Top Platforms Box */}
@@ -190,9 +195,10 @@ export default function DirectBookingComparison() {
               </div>
             </div>
 
-            {/* Platform Disclaimer Note */}
-            <div className="pt-4 border-t border-slate-100 text-[11px] text-slate-500 font-medium leading-relaxed mt-4">
-              <strong>Please Note:</strong> Many travelers discover taxi services through popular travel platforms. Urgent Taxis provides direct, transparent communication and pricing with zero aggregator commission markups.
+            {/* Platform Disclaimer Note matching screenshot */}
+            <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-200/60 text-[11px] text-slate-500 font-normal leading-relaxed mt-4">
+              <strong className="font-bold text-slate-700 block mb-1">Please Note:</strong>
+              Many travelers discover taxi services through popular travel platforms. Urgent Taxis provides direct, transparent communication and pricing with zero aggregator commission markups.
             </div>
           </div>
         </div>

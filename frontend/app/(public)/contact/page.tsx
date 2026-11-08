@@ -4,6 +4,7 @@ import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import ContactInquiryForm from '@/components/public/ContactInquiryForm';
 import { Phone, MessageSquare, Mail, MapPin, Clock, ShieldCheck, Zap, Award } from 'lucide-react';
 import { FaPhoneAlt, FaWhatsapp, FaMapMarkerAlt, FaEnvelope } from 'react-icons/fa';
+import DirectBookingComparison from '@/components/public/DirectBookingComparison';
 
 export const metadata = constructMetadata({
   title: 'Contact Us | Urgent Taxis 24/7 Dispatch Desk & Support',
@@ -301,6 +302,9 @@ export default function ContactUsPage() {
           </div>
         </div>
       </section>
+
+      {/* Direct Booking Comparison Section */}
+      <DirectBookingComparison />
     </div>
   );
 }
