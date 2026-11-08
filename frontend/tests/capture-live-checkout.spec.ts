@@ -13,11 +13,19 @@ test('Capture Live Production MakeMyTrip Checkout Details Page', async ({ page }
     fullPage: false,
   });
 
-  // 2. Mobile Live View
+  // 2. Mobile Live View (390 x 844)
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(liveUrl, { waitUntil: 'networkidle' });
   await page.screenshot({
     path: 'C:/Users/91859/.gemini/antigravity/brain/ee2db13c-89de-473e-b2fe-a4ce06f2a90f/production_checkout_mmt_mobile.png',
+    fullPage: false,
+  });
+
+  // 3. Compact Mobile Live View (375 x 667)
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto(liveUrl, { waitUntil: 'networkidle' });
+  await page.screenshot({
+    path: 'C:/Users/91859/.gemini/antigravity/brain/ee2db13c-89de-473e-b2fe-a4ce06f2a90f/production_checkout_mmt_mobile_375.png',
     fullPage: false,
   });
 });
