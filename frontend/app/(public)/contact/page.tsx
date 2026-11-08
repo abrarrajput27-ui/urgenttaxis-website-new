@@ -127,8 +127,8 @@ export default function ContactUsPage() {
               <Award className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xs sm:text-sm font-black text-slate-900">Zero Surge Rates</h4>
-              <p className="text-[11px] text-slate-500 font-medium">Guaranteed per-KM fare</p>
+              <h4 className="text-xs sm:text-sm font-black text-slate-900">Upfront Fare Quotes</h4>
+              <p className="text-[11px] text-slate-500 font-medium">Transparent per-KM fare clarity</p>
             </div>
           </div>
 

@@ -76,7 +76,7 @@ export const BOOKING_ADDONS: Record<string, BookingAddOn> = {
     name: 'Airport Terminal Entry & Parking Fee',
     price: 270,
     shortDescription: 'Prepaid airport terminal entry slip and dedicated parking bay clearance.',
-    disclaimer: 'Includes airport terminal arrival entry slip and up to 45 mins parking waiting.',
+    disclaimer: 'Includes airport terminal arrival entry slip and standard parking waiting clearance.',
     supportedCategories: ['*'],
     icon: '✈️',
   },

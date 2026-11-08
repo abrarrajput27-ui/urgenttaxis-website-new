@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { SITE_CONFIG } from '@/lib/seo';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
+import { trackPhoneCall, trackWhatsAppClick } from '@/lib/analytics';
 import { FaPhoneAlt, FaWhatsapp, FaFacebook, FaInstagram, FaYoutube, FaEnvelope, FaHeadset, FaHeart } from 'react-icons/fa';
 
 export default function PublicHeader() {
@@ -143,7 +144,7 @@ export default function PublicHeader() {
               <FaPhoneAlt className="w-[12px] h-[12px]" />
             </div>
             <div className="flex flex-col justify-center">
-              <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="text-[17px] font-black tracking-tight text-[#1e1b4b] leading-none hover:text-brand-green transition-colors mb-1">
+              <a href={`tel:${SITE_CONFIG.phoneRaw}`} onClick={() => trackPhoneCall('Header Desktop')} className="text-[17px] font-black tracking-tight text-[#1e1b4b] leading-none hover:text-brand-green transition-colors mb-1">
                 {SITE_CONFIG.phone}
               </a>
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide leading-none">Call us anytime</span>
@@ -152,6 +153,7 @@ export default function PublicHeader() {
 
           <a
             href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
+            onClick={() => trackWhatsAppClick('Header Desktop')}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 bg-[#00a859] hover:bg-[#00904d] text-white font-bold text-[13px] px-3 py-1 rounded-full transition-all shadow-md hover:shadow-lg"
@@ -228,10 +230,11 @@ export default function PublicHeader() {
           </nav>
           
           <div className="pt-4 border-t border-slate-100 flex flex-row gap-3">
-            <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="flex-1 flex items-center justify-center gap-1.5 bg-[#1e1b4b] hover:bg-[#15133c] text-white font-bold text-[14px] py-3 rounded-xl shadow-md transition-colors">
+            <a href={`tel:${SITE_CONFIG.phoneRaw}`} onClick={() => trackPhoneCall('Header Mobile')} className="flex-1 flex items-center justify-center gap-1.5 bg-[#1e1b4b] hover:bg-[#15133c] text-white font-bold text-[14px] py-3 rounded-xl shadow-md transition-colors">
               <FaPhoneAlt className="w-3.5 h-3.5" /> Call Now
             </a>
-            <a href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1.5 bg-[#00a859] text-white font-bold text-[14px] py-3 rounded-xl shadow-md">
+            <a href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨' })}
+            onClick={() => trackWhatsAppClick('Header Desktop')} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1.5 bg-[#00a859] text-white font-bold text-[14px] py-3 rounded-xl shadow-md">
               <FaWhatsapp className="w-4 h-4" /> WhatsApp
             </a>
           </div>

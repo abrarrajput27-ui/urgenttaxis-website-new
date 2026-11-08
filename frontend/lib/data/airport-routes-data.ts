@@ -236,7 +236,7 @@ export const AIRPORT_ROUTES_DATA: Record<string, AirportRouteData> = {
     title: 'Delhi Airport to Ghaziabad Taxi — Pre-Booked IGI Pickup',
     h1: 'Delhi Airport to Ghaziabad Taxi — Pre-Booked Arrival Pickups',
     metaTitle: 'Delhi Airport to Ghaziabad Taxi | IGI T1, T2, T3 Arrival Cabs',
-    metaDescription: 'Pre-book your Delhi Airport to Ghaziabad taxi with flight delay tracking. Fixed fares from ₹1,199. No surge pricing, verified driver waits at arrival pillar.',
+    metaDescription: 'Pre-book your Delhi Airport to Ghaziabad taxi with flight delay tracking. Fares from ₹1,199 quoted upfront before booking, verified driver waits at arrival pillar.',
     origin: 'Indira Gandhi International Airport (IGI)',
     destination: 'Ghaziabad',
     distanceKm: 46,
@@ -310,7 +310,7 @@ export const AIRPORT_ROUTES_DATA: Record<string, AirportRouteData> = {
     crystaFare: 2799,
     expresswayCorridor: 'NH-48 → Dhaula Kuan → AIIMS → Barapullah Flyover → DND Flyway → Noida All Sectors',
     overview: [
-      'Arriving at Delhi IGI Airport and heading to Noida? Urgent Taxis offers pre-booked arrival transfers with zero surge pricing, free flight delay tracking, and doorstep drop-off across all sectors in Noida.',
+      'Arriving at Delhi IGI Airport and heading to Noida? Urgent Taxis offers pre-booked arrival transfers with transparent upfront fares, free flight delay tracking, and doorstep drop-off across all sectors in Noida.',
       'After collecting your luggage, simply connect with your assigned chauffeur who will be waiting at the designated airport pickup zone. Avoid long airport taxi lines and ride in comfort.',
       'Our clean commercial fleet includes sedans (Dzire, Etios) and SUVs (Ertiga, Innova Crysta), accommodating individual business travelers, couples, and large families.',
     ],

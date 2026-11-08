@@ -104,7 +104,7 @@ export default function HomepageReviewsSection() {
                 100% Commercial Yellow-Plate Fleet • Verified Highway Chauffeurs
               </p>
               <p className="text-[11px] text-slate-500 font-medium">
-                Zero surge pricing. Fixed per-KM transparent matrix. 24/7 Masuri Ghaziabad dispatch desk.
+                Transparent upfront pricing. Quoted fares before confirmation. 24/7 Masuri Ghaziabad dispatch desk.
               </p>
             </div>
           </div>

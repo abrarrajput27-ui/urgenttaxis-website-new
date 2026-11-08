@@ -27,6 +27,7 @@ import {
   FaSearch,
   FaCheckCircle,
 } from 'react-icons/fa';
+import { trackFareSearchCompleted } from '@/lib/analytics';
 import { resolveOneWayFare, HOURLY_RENTAL_PACKAGES, HourlyRentalPackageId, calculateLocalRentalFare } from '@/lib/pricing';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
 import { formatLocationWithState, POPULAR_AUTOCOMPLETE_CITIES } from '@/lib/location-authority';
@@ -308,6 +309,15 @@ export default function MmtBookingWidget({
         params.set('durationText', accurate.durationText);
       }
     }
+
+    // Dispatch GA4 conversion event with privacy-approved aggregate parameters
+    const estFare = Math.round((Number(params.get('distanceKm')) || 50) * 11);
+    trackFareSearchCompleted(
+      tripType,
+      origin.trim() || rentalCity || selectedAirport || 'Delhi NCR',
+      destination.trim() || selectedAirport || 'Local',
+      estFare
+    );
 
     // Navigate to /cabs (Step 2: Vehicle selection)
     router.push(`/cabs?${params.toString()}`);

@@ -130,9 +130,9 @@ export default function ReviewsPage() {
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-brand-green border border-emerald-100 flex items-center justify-center mb-4">
               <CheckCircle2 className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-brand-blue mb-2">Zero Surge &amp; Fixed Matrix</h3>
+            <h3 className="text-base font-bold text-brand-blue mb-2">Transparent Upfront Pricing</h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-              Unlike algorithmic cab aggregators, our fares follow a guaranteed per-KM rate matrix. What you are quoted on our website is what you pay.
+              Your fare is shared before booking confirmation. The quoted amount may vary with demand, vehicle availability and trip requirements, with complete billing transparency.
             </p>
           </div>
 

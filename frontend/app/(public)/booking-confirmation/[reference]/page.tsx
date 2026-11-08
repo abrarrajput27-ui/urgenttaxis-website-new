@@ -8,6 +8,7 @@ import { getClientIp, checkLookupRateLimit, recordFailedLookup } from '@/lib/sec
 import Image from 'next/image';
 import { maskCustomerName, maskPhoneNumber, maskEmailAddress, maskAddress } from '@/lib/security/masking';
 import { getVehicleProfile } from '@/lib/fleet-mapping';
+import BookingTracker from '@/components/public/BookingTracker';
 
 export default async function BookingConfirmationPage({ params }: { params: Promise<{ reference: string }> }) {
   const { reference } = await params;
@@ -185,6 +186,15 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
   return (
     <div className="min-h-screen bg-slate-50 pt-28 pb-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        {/* GA4 Conversion Tracker (Local sessionStorage deduplication, zero PII, zero reference ID sent to GA4) */}
+        <BookingTracker
+          reference={cleanRef}
+          vehicleCategory={vehicleProfile.name}
+          estimatedFareInr={customerPayable}
+          tripType={booking.trip_type || 'outstation'}
+          originCity={breakdown.pickupCity || 'Delhi NCR'}
+          destinationCity={breakdown.dropCity || 'Outstation'}
+        />
         
         <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 text-center relative overflow-hidden">
           <div className={`absolute top-0 left-0 w-full h-2 ${isConfirmed ? 'bg-brand-green' : 'bg-brand-blue'}`}></div>

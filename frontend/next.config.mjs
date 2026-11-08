@@ -5,14 +5,53 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 31536000,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
   async headers() {
     return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'query',
+            key: 'wpg_token',
+          },
+        ],
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
+      {
+        source: '/checkout',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
+      {
+        source: '/checkout/:path*',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
+      {
+        source: '/booking-confirmation/:path*',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
+      {
+        source: '/cabs',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, follow' },
+        ],
+      },
+      {
+        source: '/cabs/:path*',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, follow' },
+        ],
+      },
       {
         source: '/:path*',
         has: [

@@ -42,7 +42,7 @@ const FAQ_CATEGORIES = [
     faqs: [
       {
         q: 'How does doorstep pickup work for Delhi IGI Airport?',
-        a: 'Our chauffeur arrives at your Ghaziabad, Noida, or Delhi NCR address 15 minutes before your scheduled pickup time. We factor in expressway traffic to ensure you reach Terminal 1, 2, or 3 with plenty of time before check-in.',
+        a: 'Our chauffeur coordinates with you and arrives promptly at your Ghaziabad, Noida, or Delhi NCR address for your scheduled pickup time. We factor in expressway traffic to ensure you reach Terminal 1, 2, or 3 with plenty of time before check-in.',
       },
       {
         q: 'What if my flight arrives late at Delhi Airport?',

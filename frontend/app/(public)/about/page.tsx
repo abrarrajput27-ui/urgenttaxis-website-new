@@ -71,11 +71,11 @@ export default function AboutUsPage() {
             </div>
 
             <h2 className="text-2xl sm:text-3xl font-black text-brand-blue tracking-tight">
-              Pioneering Zero Surge &amp; Direct Driver Accountability
+              Transparent Upfront Pricing &amp; Direct Driver Accountability
             </h2>
 
             <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-medium">
-              Founded with the objective to eliminate middleman commissions, hidden toll markups, and unpredictable algorithmic surge pricing, <strong>Urgent Taxis</strong> has grown into the preferred outstation travel partner for thousands of families, solo professionals, and spiritual pilgrims.
+              Founded with the objective to eliminate middleman commissions, hidden toll markups, and unexpected surge shocks through transparent upfront pricing, <strong>Urgent Taxis</strong> has grown into the preferred outstation travel partner for thousands of families, solo professionals, and spiritual pilgrims.
             </p>
 
             <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-medium">

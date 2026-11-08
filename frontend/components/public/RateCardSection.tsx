@@ -296,7 +296,7 @@ export default function RateCardSection({ id = 'rate-card', className = '' }: Ra
                 </p>
               </div>
               <span className="text-xs font-bold text-brand-blue bg-blue-100 px-3 py-1 rounded-full">
-                Zero Surge Guarantee
+                Transparent Per-KM Matrix
               </span>
             </div>
 
@@ -351,7 +351,7 @@ export default function RateCardSection({ id = 'rate-card', className = '' }: Ra
                 </p>
               </div>
               <span className="text-xs font-bold text-purple-800 bg-purple-100 px-3 py-1 rounded-full">
-                Fixed Corridors • No Surge
+                Dedicated Airport Corridors
               </span>
             </div>
 

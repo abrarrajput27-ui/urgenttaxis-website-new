@@ -10,13 +10,13 @@ export default function DirectBookingComparison() {
   const comparisonRows = [
     {
       feature: 'Pricing Model',
-      urgentTaxis: 'Guaranteed Transparent Per-KM Matrix (Zero Surge)',
+      urgentTaxis: 'Upfront Quoted Fares & Clear Itemized Breakdown',
       others: 'Algorithmic Dynamic Surge Pricing (Up to 1.5x–2x)',
       urgentWins: true,
     },
     {
       feature: 'Advance Payment',
-      urgentTaxis: 'Only 30% Advance Token (Balance on Destination)',
+      urgentTaxis: '30% Advance Payment (Remaining 70% on Arrival)',
       others: '100% Full Upfront Prepayment Mandatory',
       urgentWins: true,
     },

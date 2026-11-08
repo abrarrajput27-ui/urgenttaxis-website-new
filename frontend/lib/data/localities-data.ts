@@ -146,7 +146,7 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
     ],
     overviewParagraphs: [
       'Welcome to the official local operational headquarters of Urgent Taxis in Masuri, Ghaziabad. Located at Shop No. 09, S. R. Complex on Railway Station Road (PIN 201302), our registered dispatch center manages fleet movements, emergency transfers, and planned outstation journeys across the National Capital Region.',
-      'Masuri occupies a strategic logistics junction in eastern Ghaziabad, situated right beside the intersection of the Delhi-Meerut Expressway (NH-9) and the Eastern Peripheral Expressway (EPE). This prime positioning allows our drivers to reach pickups in Dasna, Pilkhuwa, Hapur, Modinagar, and Govindpuram in under 15 minutes, while providing bypass access to Haryana, Punjab, and Rajasthan without entering congested Delhi city limits.',
+      'Masuri occupies a strategic logistics junction in eastern Ghaziabad, situated right beside the intersection of the Delhi-Meerut Expressway (NH-9) and the Eastern Peripheral Expressway (EPE). This prime positioning allows our drivers to rapidly reach pickups across Dasna, Pilkhuwa, Hapur, Modinagar, and Govindpuram, while providing bypass access to Haryana, Punjab, and Rajasthan without entering congested Delhi city limits.',
       'Whether you are an area resident planning a religious pilgrimage to Haridwar or Kainchi Dham, a family heading to IGI Airport Terminal 3, or a corporate client requiring long-term transport solutions, our Masuri dispatch desk guarantees prompt vehicle placement and personal service from our on-site team.',
     ],
     airportTransferGuide: {
@@ -209,7 +209,7 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
     ],
     overviewParagraphs: [
       'Indirapuram is one of the most vibrant, densely populated residential hubs in Ghaziabad. At Urgent Taxis, we provide dedicated 24/7 cab services tailored to residents of Ahinsa Khand, Vaibhav Khand, Niti Khand, Nyay Khand, Gyan Khand, and Shipra Sun City. With instant connectivity to NH-9 and the Noida Sector 62 electronic border, our cabs offer the fastest way to travel to Delhi Airport, Gurgaon, and outstation destinations.',
-      'Finding a clean, reliable taxi in Indirapuram without surge pricing or sudden driver cancellations can be challenging. Urgent Taxis solves this by maintaining pre-assigned vehicles with guaranteed booking confirmations. Whether you have an early morning 4:00 AM flight from Terminal 3 or a family weekend road trip to Mussoorie, our driver reaches your apartment gate 15 minutes before the scheduled time.',
+      'Finding a clean, reliable taxi in Indirapuram with transparent upfront pricing and reliable driver dispatch is simple with Urgent Taxis. Urgent Taxis solves this by maintaining pre-assigned vehicles with guaranteed booking confirmations. Whether you have an early morning 4:00 AM flight from Terminal 3 or a family weekend road trip to Mussoorie, our driver reaches your apartment gate promptly for your scheduled time.',
       'Our Indirapuram fleet includes immaculately maintained Dzire sedans, spacious Ertiga MPVs with ample luggage space for shopping trips, and luxury Toyota Innova Crystas. All cars are equipped with working AC, speed-governed safety features, and courteous chauffeurs who assist with your luggage.',
     ],
     airportTransferGuide: {
@@ -271,7 +271,7 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
     ],
     overviewParagraphs: [
       'Bordering East Delhi and the Anand Vihar transit hub, Vaishali is a premier residential sector in Ghaziabad. Urgent Taxis provides round-the-clock taxi and cab booking services for all sectors from Sector 1 through Sector 9. Whether you need an outstation taxi to Uttarakhand or a prompt transfer to Delhi Airport, our drivers are stationed locally for fast response times.',
-      'Our Vaishali customers appreciate our transparent booking process and polite highway drivers. We regularly handle transfers from leading residential complexes such as Mahagun Mosaic, Express Greens, Rishabh Cloud 9, and Supertech Icon. When you book with Urgent Taxis, you receive upfront pricing with no surge pricing shocks during peak rain or festival seasons.',
+      'Our Vaishali customers appreciate our transparent booking process and polite highway drivers. We regularly handle transfers from leading residential complexes such as Mahagun Mosaic, Express Greens, Rishabh Cloud 9, and Supertech Icon. When you book with Urgent Taxis, your fare is quoted before booking confirmation with complete pricing clarity.',
       'Planning a weekend trip to Agra, Mathura, Haridwar, or Jim Corbett? Our cars are fully vetted for long highway drives, equipped with comfortable seating, clean air conditioning, and child-safe seatbelts. We provide one-way drops as well as multi-day round-trip packages with clear driver allowance and kilometer tracking.',
     ],
     airportTransferGuide: {
@@ -486,7 +486,7 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
     ],
     overviewParagraphs: [
       'Kaushambi is the western gateway of Ghaziabad, located immediately adjacent to Delhi’s Anand Vihar transport terminal. Urgent Taxis provides rapid-response cabs for business travelers staying at hotels like Radisson Blu, patients visiting Yashoda Hospital, and residents of complexes like Kamadgiri, Nanda Devi, and Nilgiri Apartments.',
-      'Our strategic proximity to Delhi means our vehicles can pick you up within 10 to 15 minutes of booking. Whether you require a swift drop to New Delhi Railway Station (NDLS), a direct transfer to IGI Terminal 3, or an outstation trip to Agra via the Yamuna Expressway, we offer fixed transparent rates with no cancellation penalties.',
+      'Our strategic dispatch from Masuri along the NH-9 corridor ensures prompt pickup across Ghaziabad and NCR. Whether you require a swift drop to New Delhi Railway Station (NDLS), a direct transfer to IGI Terminal 3, or an outstation trip to Agra via the Yamuna Expressway, we offer fixed transparent rates with no cancellation penalties.',
     ],
     airportTransferGuide: {
       distanceToT3Km: 33,

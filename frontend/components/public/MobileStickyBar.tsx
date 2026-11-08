@@ -1,6 +1,9 @@
+'use client';
+
 import { Phone, MessageSquare } from 'lucide-react';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
+import { trackPhoneCall, trackWhatsAppClick } from '@/lib/analytics';
 
 export default function MobileStickyBar() {
   const callDigits = BUSINESS_CONFIG.phone.primaryRaw.replace(/\D/g, '') || '917310651940';
@@ -16,6 +19,7 @@ export default function MobileStickyBar() {
       <a
         id="mobile-call-button"
         href={`tel:+${callDigits}`}
+        onClick={() => trackPhoneCall('Mobile Sticky Bar')}
         aria-label="Call Urgent Taxis at 7310651940"
         className="flex items-center gap-1.5 py-2.5 px-3.5 rounded-full bg-[#1e1b4b] hover:bg-[#0f172a] active:scale-95 text-white font-black text-xs shadow-lg shadow-blue-950/30 border border-white/20 transition-all backdrop-blur-xs"
       >
@@ -28,6 +32,7 @@ export default function MobileStickyBar() {
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackWhatsAppClick('Mobile Sticky Bar')}
         aria-label="Chat on WhatsApp at 8595066033"
         className="flex items-center gap-1.5 py-2.5 px-3.5 rounded-full bg-[#059669] hover:bg-[#047857] active:scale-95 text-white font-black text-xs shadow-lg shadow-emerald-950/30 border border-white/20 transition-all backdrop-blur-xs"
       >

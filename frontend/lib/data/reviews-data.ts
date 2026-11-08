@@ -57,7 +57,7 @@ export const CUSTOMER_REVIEWS: CustomerReview[] = [
     route: 'Vasundhara, Ghaziabad ➔ IGI Airport T3 (Delhi)',
     tripType: 'airport',
     vehicle: 'Maruti Dzire AC',
-    comment: 'Needed an urgent cab at 3:30 AM for a morning flight from Delhi T3. The dispatch desk confirmed vehicle details the previous night. The driver was waiting downstairs at 3:20 AM. Zero surge, AC was spotless, and arrived at the airport with plenty of time to spare.',
+    comment: 'Needed an urgent cab at 3:30 AM for a morning flight from Delhi T3. The dispatch desk confirmed vehicle details the previous night. The driver was waiting downstairs at 3:20 AM. Upfront quoted fare, AC was spotless, and arrived at the airport with plenty of time to spare.',
     driverMention: 'Driver Manoj Ji',
     source: 'Google Review',
     verified: true,

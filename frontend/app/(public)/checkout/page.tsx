@@ -304,6 +304,16 @@ function CheckoutContent() {
 
       const data = await response.json();
       if (data.success && data.bookingReference) {
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem(`ga4_tracked_${data.bookingReference}`, 'true');
+        }
+        trackBookingCompleted(
+          vehicle.name,
+          calculatedFare.baseFare,
+          serviceType,
+          routeData.origin || 'Delhi NCR',
+          routeData.destination || 'Outstation'
+        );
         router.push(`/booking-confirmation/${data.bookingReference}`);
       } else {
         // Direct WhatsApp fallback if database network has hiccups

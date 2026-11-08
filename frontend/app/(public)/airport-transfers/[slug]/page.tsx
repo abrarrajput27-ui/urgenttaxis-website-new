@@ -354,7 +354,7 @@ export default async function AirportRoutePage({ params }: AirportRoutePageProps
               Fixed Airport Taxi Fares — {data.origin} to {data.destination}
             </h2>
             <p className="mt-2 text-sm text-slate-600">
-              Clear, upfront pricing with zero surge charges. Toll and parking charged at actuals.
+              Your fare is shared before booking confirmation. The quoted amount may vary with demand, vehicle availability and trip requirements. Toll and parking charged at actuals.
             </p>
           </div>
 
