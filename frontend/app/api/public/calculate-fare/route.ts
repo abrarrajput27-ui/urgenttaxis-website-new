@@ -223,59 +223,56 @@ export async function POST(request: NextRequest) {
     } else if (serviceType === 'local_rental') {
       let pkg = (localPackages || []).find((p) => p.id === packageId && p.category_id === categoryId);
       if (!pkg) {
-        // Authoritative fallback from BUSINESS_CONFIG for verified local packages
+        // Authoritative fallback from BUSINESS_CONFIG for all 5 verified local packages
         const pkgKey = String(packageId || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-        const is8h = pkgKey.includes('8h') || pkgKey.includes('80') || Number(durationHours) === 8;
-        const is12h = pkgKey.includes('12h') || pkgKey.includes('120') || Number(durationHours) === 12;
         const is4h = pkgKey.includes('4h') || pkgKey.includes('40') || Number(durationHours) === 4;
         const is6h = pkgKey.includes('6h') || pkgKey.includes('60') || Number(durationHours) === 6;
         const is10h = pkgKey.includes('10h') || pkgKey.includes('100') || Number(durationHours) === 10;
+        const is12h = pkgKey.includes('12h') || pkgKey.includes('120') || Number(durationHours) === 12;
 
-        if (is4h || is6h || is10h) {
-          return NextResponse.json({
-            success: true,
-            isFareOnRequest: true,
-            message: 'Rate confirmation required for this rental package. Please confirm live dispatch rates on WhatsApp.',
-          } as PublicQuotationDTO);
-        }
+        let hours = 8;
+        let km = 80;
+        let name = '8 Hours / 80 KM';
+        let price = isExec ? 2500 : isSuv ? 2000 : isHatch ? 1200 : 1500;
+        const extraHr = isExec ? 300 : isSuv ? 220 : isHatch ? 150 : 180;
+        const extraKm = isExec ? 20 : isSuv ? 15 : isHatch ? 10 : 11;
 
-        if (is8h) {
-          const price = isExec ? 2500 : isSuv ? 2000 : isHatch ? 1200 : 1500;
-          const extraHr = isExec ? 300 : isSuv ? 220 : isHatch ? 150 : 180;
-          const extraKm = isExec ? 20 : isSuv ? 15 : isHatch ? 10 : 11;
-          pkg = {
-            id: `pkg-8hr80km-${categoryId}`,
-            category_id: categoryId,
-            package_name: '8 Hours / 80 KM',
-            included_hours: 8,
-            included_km: 80,
-            package_price: price,
-            extra_hour_rate: extraHr,
-            extra_km_rate: extraKm,
-            default_included_charges: ['Fuel', 'Driver Allowance'],
-            default_excluded_charges: ['Toll Tax', 'Parking'],
-            is_active: true,
-            created_at: new Date().toISOString(),
-          };
+        if (is4h) {
+          hours = 4;
+          km = 40;
+          name = '4 Hours / 40 KM';
+          price = isExec ? 1650 : isSuv ? 1350 : isHatch ? 850 : 1050;
+        } else if (is6h) {
+          hours = 6;
+          km = 60;
+          name = '6 Hours / 60 KM';
+          price = isExec ? 2100 : isSuv ? 1680 : isHatch ? 1050 : 1299;
+        } else if (is10h) {
+          hours = 10;
+          km = 100;
+          name = '10 Hours / 100 KM';
+          price = isExec ? 3500 : isSuv ? 2740 : isHatch ? 1700 : 2080;
         } else if (is12h) {
-          const price = isExec ? 4500 : isSuv ? 3480 : isHatch ? 2200 : 2660;
-          const extraHr = isExec ? 300 : isSuv ? 220 : isHatch ? 150 : 180;
-          const extraKm = isExec ? 20 : isSuv ? 15 : isHatch ? 10 : 11;
-          pkg = {
-            id: `pkg-12hr120km-${categoryId}`,
-            category_id: categoryId,
-            package_name: '12 Hours / 120 KM',
-            included_hours: 12,
-            included_km: 120,
-            package_price: price,
-            extra_hour_rate: extraHr,
-            extra_km_rate: extraKm,
-            default_included_charges: ['Fuel', 'Driver Allowance'],
-            default_excluded_charges: ['Toll Tax', 'Parking'],
-            is_active: true,
-            created_at: new Date().toISOString(),
-          };
+          hours = 12;
+          km = 120;
+          name = '12 Hours / 120 KM';
+          price = isExec ? 4500 : isSuv ? 3480 : isHatch ? 2200 : 2660;
         }
+
+        pkg = {
+          id: `pkg-${hours}hr${km}km-${categoryId}`,
+          category_id: categoryId,
+          package_name: name,
+          included_hours: hours,
+          included_km: km,
+          package_price: price,
+          extra_hour_rate: extraHr,
+          extra_km_rate: extraKm,
+          default_included_charges: ['Fuel', 'Driver Allowance'],
+          default_excluded_charges: ['Toll Tax', 'Parking'],
+          is_active: true,
+          created_at: new Date().toISOString(),
+        };
       }
 
       if (!pkg) {

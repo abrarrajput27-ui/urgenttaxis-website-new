@@ -119,6 +119,96 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
   const totalPaid = successfulPayments.reduce((sum: number, p: any) => sum + Number(p.amount), 0);
   const remainingBalance = Math.max(0, customerPayable - totalPaid);
 
+  // Dynamic trip-type detection
+  const rawTripType = String(booking.trip_type || booking.service_type || 'one_way').toLowerCase();
+  const isOneWay = rawTripType.includes('one_way') || rawTripType.includes('one-way') || rawTripType === 'one way';
+  const isRoundTrip = rawTripType.includes('round_trip') || rawTripType.includes('round-trip') || rawTripType === 'round trip';
+  const isRental = rawTripType.includes('rental') || rawTripType.includes('local');
+  const isAirport = rawTripType.includes('airport');
+
+  // Dynamic Inclusions & Exclusions based on trip type
+  const tripInclusions = isOneWay
+    ? [
+        'Commercial AC vehicle hire with verified professional chauffeur',
+        'Fuel expenses for the complete booked itinerary',
+        'All National & State Highway FASTag Toll Taxes Included',
+        'Inter-State border passenger transport entry permits Included',
+        'Driver daily allowance and GST (5%) Included',
+      ]
+    : isRoundTrip
+    ? [
+        'Commercial AC vehicle hire with verified professional chauffeur',
+        'Minimum 250 km/day daily travel quota',
+        'Driver daily allowance for all journey days Included',
+        'GST (5%) included in vehicle rental',
+      ]
+    : isRental
+    ? [
+        'Full city package hours and kilometers included',
+        'Unlimited local city stops within package limits',
+        'Chauffeur allowance & fuel charges included',
+        'GST (5%) included in rental package',
+      ]
+    : [
+        'Direct airport terminal pickup or drop with chauffeur',
+        'Dedicated airport terminal arrival entry slip & toll clearance',
+        '60 minutes complimentary flight arrival waiting time',
+        'GST (5%) & driver allowance included',
+      ];
+
+  const tripExclusions = isOneWay
+    ? [
+        'Airport / Railway station parking charges (payable at actuals if incurred)',
+        'Extra kilometers beyond booked drop destination charged as per vehicle rate',
+        'Waiting charges beyond scheduled highway halts (₹150/hr after first 30 mins)',
+        'Multiple off-corridor detour stops outside direct highway route',
+      ]
+    : isRoundTrip
+    ? [
+        'FASTag Highway Toll Taxes & State Border Permits paid directly at actuals',
+        'Airport / Hotel / Monument parking tickets payable at actuals',
+        'Kilometers driven beyond daily minimum quota charged as per vehicle rate',
+        'Driver night allowance (₹300/night if travel spans between 10 PM and 6 AM)',
+      ]
+    : isRental
+    ? [
+        'Extra distance beyond package limit charged as per vehicle rate',
+        'Extra hours beyond package duration charged at ₹150 - ₹300/hour',
+        'Parking tickets and toll plaza fees payable at actuals',
+      ]
+    : [
+        'Terminal parking charges beyond complimentary 60 minutes paid at actuals',
+        'Extra local stops or route extensions outside booked corridor',
+      ];
+
+  // Dynamic Terms & Conditions based on trip type
+  const tripTerms = isOneWay
+    ? [
+        { title: 'Doorstep Pickup & Direct Drop', desc: 'Chauffeur will arrive at the scheduled pickup address. The quoted fare covers direct transport to your drop location with reasonable highway refreshment halts.' },
+        { title: 'Tolls & State Permits Covered', desc: 'All standard electronic highway toll taxes and inter-state passenger vehicle entry permits for this one-way journey are prepaid and included.' },
+        { title: '100% Refundable Token', desc: 'Advance token payment is 100% refundable if cancellation is requested at least 24 hours prior to scheduled departure.' },
+        { title: 'Hill Route AC Protocol', desc: 'Air conditioning may be switched off temporarily on steep mountain gradients to ensure engine power and maximum road safety.' },
+      ]
+    : isRoundTrip
+    ? [
+        { title: 'Kilometer Calculation & Minimum Quota', desc: 'Outstation round-trip charges are based on a minimum daily average of 250 km. Garage to garage / origin return distance applies.' },
+        { title: 'Tolls & State Taxes at Actuals', desc: 'FASTag toll charges, state border entry taxes, and parking fees must be paid directly by the passenger at actuals as incurred.' },
+        { title: 'Night Driving Allowance', desc: 'A driver night allowance of ₹300 per night applies if the journey spans between 10:00 PM and 06:00 AM.' },
+        { title: '100% Refundable Token', desc: 'Advance token is fully refundable if booking cancellation is notified 24 hours before pickup time.' },
+      ]
+    : isRental
+    ? [
+        { title: 'Package Hours & Kilometers', desc: 'Local hourly rental starts from the scheduled reporting time and initial odometer reading at pickup.' },
+        { title: 'Extra Usage Billing', desc: 'Kilometers and hours consumed beyond package limits will be billed at standard extra-km and extra-hour rates upon trip completion.' },
+        { title: 'Toll & Parking Fees', desc: 'Any parking plaza fees or municipal entry fees incurred during local city travel are payable at actuals by the passenger.' },
+        { title: '100% Refundable Token', desc: 'Cancellation requested 24 hours prior to reporting time receives a 100% advance token refund.' },
+      ]
+    : [
+        { title: 'Flight Delay & Waiting Policy', desc: 'Urgent Taxis monitors live flight touchdown timings. We provide up to 60 minutes of complimentary waiting after flight landing.' },
+        { title: 'Terminal Entry Slip Included', desc: 'Official airport terminal arrival lane entry permit is prepaid and included in your transfer quote.' },
+        { title: '100% Refundable Token', desc: 'Token is 100% refundable if cancelled at least 24 hours before scheduled airport transfer.' },
+      ];
+
   // Document Classification
   const isPaidOrPartial = booking.payment_status === 'paid' || booking.payment_status === 'partially_paid' || totalPaid > 0;
   const documentTitle = isPaidOrPartial ? 'Tax Invoice / Payment Receipt' : 'Proforma Invoice & Booking Quotation';
@@ -173,7 +263,8 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
           </div>
 
           <div className="text-left sm:text-right text-xs text-slate-600 space-y-1">
-            <p><strong>Phone / 24x7 Desk:</strong> +91 93117 76363</p>
+            <p><strong>Phone / 24x7 Desk:</strong> +91 7310651940</p>
+            <p><strong>WhatsApp Desk:</strong> +91 8595066033</p>
             <p><strong>Support Email:</strong> info@urgenttaxis.in</p>
             <p><strong>Official Web:</strong> www.urgenttaxis.in</p>
             <p className="text-[11px] text-slate-400 tabular-nums">Operations: Ghaziabad • Noida • Delhi NCR</p>
@@ -358,49 +449,68 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
           )}
         </div>
 
-        {/* Mandatory Exclusions & Inclusions */}
+        {/* Trip-Type Specific Inclusions & Exclusions */}
         <div className="py-6 border-b border-slate-200 text-xs">
-          <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2.5">Inclusions & Commercial Exclusions</h2>
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              Trip Inclusions &amp; Commercial Exclusions
+            </h2>
+            <span className="text-[10px] font-bold text-brand-blue bg-blue-50 px-2 py-0.5 rounded border border-blue-200 capitalize">
+              {rawTripType.replace('_', ' ')} Policy
+            </span>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-3 bg-emerald-50/50 border border-emerald-200/60 rounded-lg">
-              <span className="font-bold text-emerald-900 block mb-1">✓ Included in Base Fare</span>
-              <ul className="list-disc list-inside space-y-0.5 text-emerald-950 text-[11px]">
-                <li>Commercial vehicle hire with clean interior</li>
-                <li>Fuel expenses for the booked itinerary</li>
-                <li>Professional chauffeur service & driver allowance</li>
+            <div className="p-3.5 bg-emerald-50/60 border border-emerald-200/80 rounded-xl space-y-1.5">
+              <span className="font-bold text-emerald-900 flex items-center gap-1.5 text-xs">
+                <span>✓</span> Included in Your Fare
+              </span>
+              <ul className="space-y-1 text-emerald-950 text-[11px] pl-1">
+                {tripInclusions.map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-emerald-600 font-bold">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
-              <span className="font-bold text-slate-900 block mb-1">✕ Excluded (Charged at Actuals)</span>
-              <ul className="list-disc list-inside space-y-0.5 text-slate-600 text-[11px]">
-                <li>Fastag Toll Plaza fees & Expressway surcharges</li>
-                <li>State border transport entry permits (tax at border)</li>
-                <li>Airport terminal parking fees or MCD civic levies</li>
+            <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+              <span className="font-bold text-slate-900 flex items-center gap-1.5 text-xs">
+                <span>✕</span> Excluded (Payable at Actuals)
+              </span>
+              <ul className="space-y-1 text-slate-600 text-[11px] pl-1">
+                {tripExclusions.map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-slate-400 font-bold">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Operating Terms & Owner Disclaimers */}
-        <div className="pt-6 text-[11px] text-slate-500 space-y-2">
-          <p>
-            <strong>Cancellation & Refund Policy:</strong> Advance tokens are 100% refundable if cancellation is requested at least 6 hours prior to the scheduled departure time via WhatsApp or phone desk.
-          </p>
-          <p>
-            <strong>Vehicle Preference & Add-on Disclaimer:</strong> New Vehicle Preference guarantees a 2022–2024 model year vehicle or clean commercial equivalent. Chauffeur language preferences are assigned subject to dispatch corridor availability.
-          </p>
-          <p>
-            <strong>Hill Travel Protocol:</strong> Air conditioning may be switched off temporarily on steep mountain gradients to ensure optimal engine power and road safety.
-          </p>
-          <p className="text-[10px] text-slate-400 italic">
-            * Note: Urgent Taxis operates as a commercial transport dispatch service. Official GSTIN and registered corporate tax invoices are issued upon verified business request.
+        {/* Operating Terms & Conditions (Trip-Type Specific) */}
+        <div className="pt-6 border-b border-slate-200 pb-6 text-xs text-slate-600">
+          <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3">
+            Terms &amp; Conditions ({rawTripType.replace('_', ' ').toUpperCase()} RIDE)
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
+            {tripTerms.map((t, idx) => (
+              <div key={idx} className="p-3 bg-slate-50 border border-slate-200/70 rounded-xl">
+                <strong className="text-slate-900 block font-bold mb-0.5">{t.title}</strong>
+                <span className="text-slate-600 leading-relaxed block">{t.desc}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] text-slate-400 italic mt-3">
+            * Note: Urgent Taxis operates under official Motor Vehicles Act guidelines. Tax invoice with GSTIN is issued upon verified business request.
           </p>
         </div>
 
         {/* Document Footer */}
         <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2">
           <span>This is a computer-generated travel document. No physical signature required.</span>
-          <span className="font-semibold text-slate-700">Urgent Taxis Desk: +91 93117 76363</span>
+          <span className="font-semibold text-slate-700">Urgent Taxis Desk: +91 7310651940 | WhatsApp: +91 8595066033</span>
         </div>
 
       </div>

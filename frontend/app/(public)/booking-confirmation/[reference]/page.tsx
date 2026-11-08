@@ -410,7 +410,32 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
             </Link>
 
             <a 
-              href={`${SITE_CONFIG.whatsapp}?text=Hello%20Urgent%20Taxis!%20%F0%9F%91%8B%0A%0AI%20have%20submitted%20a%20booking%20request.%0A%F0%9F%93%8B%20*Reference*%3A%20${booking.booking_reference}%0A%0AI%20would%20like%20to%20pay%20the%20*Token%20Amount*%20(%E2%82%B9${tokenAmount}).%20%F0%9F%92%B0`} 
+              href={`https://wa.me/${SITE_CONFIG.whatsappRaw || '918595066033'}?text=${encodeURIComponent([
+                '🚖 *URGENT TAXIS — BOOKING CONFIRMATION & TOKEN PAYMENT*',
+                '━━━━━━━━━━━━━━━━━━━━',
+                '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
+                '',
+                '📋 *CONFIRMED BOOKING DETAILS*',
+                `• 🔖 *Booking Ref:* *${booking.booking_reference}*`,
+                `• 🚗 *Service:* ${booking.trip_type.replace('_', ' ').toUpperCase()}`,
+                `• 🚘 *Vehicle:* ${booking.vehicle_categories?.name || 'Commercial AC Cab'}`,
+                `• 📍 *Pickup:* ${booking.pickup_address}`,
+                booking.drop_address ? `• 🏁 *Drop:* ${booking.drop_address}` : '',
+                `• 📅 *Date:* ${new Date(booking.pickup_datetime).toLocaleString('en-IN')}`,
+                '',
+                '💰 *PAYMENT BREAKDOWN*',
+                `• 💳 *Total Fare:* *₹${customerPayable.toLocaleString('en-IN')}*`,
+                `• 🟢 *30% Advance Token:* *₹${tokenAmount.toLocaleString('en-IN')}* (To Pay Now)`,
+                `• ⚪ *70% Driver Balance:* *₹${trueBalance.toLocaleString('en-IN')}* (At Pickup)`,
+                '',
+                '🧾 *DIGITAL INVOICE & RECEIPT:*',
+                `https://www.urgenttaxis.in/booking-confirmation/${booking.booking_reference}/invoice`,
+                '',
+                '📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad',
+                '💬 *WhatsApp Desk:* +91 8595066033',
+                '',
+                'Please share UPI payment details / QR code to dispatch cab! ✨'
+              ].filter(Boolean).join('\n'))}`} 
               target="_blank" 
               rel="noopener noreferrer"
               className="px-6 py-3.5 bg-brand-green hover:bg-brand-green-hover text-white font-bold rounded-xl shadow-lg shadow-brand-green/20 transition-all flex items-center justify-center gap-2 text-sm"

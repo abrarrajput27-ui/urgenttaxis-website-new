@@ -51,10 +51,7 @@ export type VehicleFilterKey =
   | 'ertiga'
   | 'suv-muv'
   | 'innova'
-  | 'executive-suv'
-  | 'tempo'
-  | 'urbania'
-  | 'bus';
+  | 'executive-suv';
 
 interface VehicleCardData {
   key: string;
@@ -502,45 +499,6 @@ export default function CabsClient() {
         crystaFare,
         '₹20/km'
       ),
-      buildCard(
-        'tempo',
-        'tempo',
-        'Tempo Traveller',
-        'Force Traveller (12 / 16 / 20 / 26 Seater)',
-        '12-26 Seats',
-        '12-20 Bags',
-        '/fleet-brand/Tempo Traveller.webp',
-        'GROUP TRAVEL',
-        'bg-violet-700',
-        tempoFare,
-        '₹26/km'
-      ),
-      buildCard(
-        'urbania',
-        'urbania',
-        'Force Urbania',
-        'Force Urbania Luxury (12 / 16 Seater)',
-        '12-16 Seats',
-        '14 Bags',
-        '/fleet-brand/Urbania.webp',
-        'VIP EXECUTIVE',
-        'bg-purple-900',
-        urbaniaFare,
-        '₹32/km'
-      ),
-      buildCard(
-        'bus',
-        'bus',
-        'Luxury Bus / Coach',
-        '27 Seater Minibus / 45 Seater Volvo Coach',
-        '27-45 Seats',
-        '45 Bags',
-        '/fleet-brand/volvo bus.webp',
-        'LARGE GROUP',
-        'bg-rose-700',
-        busFare,
-        '₹48/km'
-      ),
     ];
   }, [routeData, serviceType, pickup, drop, initialPackageId]);
 
@@ -552,19 +510,35 @@ export default function CabsClient() {
 
   // Build WhatsApp booking link
   const getWhatsAppLink = (v: VehicleCardData) => {
-    const text = encodeURIComponent(
-      `Hello Urgent Taxis! I want to book a cab:\n\n` +
-      `🚗 Vehicle: ${v.name} (${v.models})\n` +
-      `📍 Service: ${serviceType === 'one_way' ? 'One-Way Outstation' : serviceType === 'round_trip' ? 'Round-Trip' : serviceType === 'local_rental' ? 'Local Rental' : 'Airport Transfer'}\n` +
-      `📍 Pickup: ${pickup}\n` +
-      `📍 Drop: ${drop}\n` +
-      `📅 Date: ${formattedDate} at ${formattedTime}\n` +
-      `🛣️ Approx Distance: ${routeData.distanceKm} km (~${routeData.durationText})\n` +
-      `💰 Total Fare: ₹${v.totalFare.toLocaleString('en-IN')}\n` +
-      `💳 30% Token: ₹${v.tokenAmount.toLocaleString('en-IN')}\n\n` +
-      `Please confirm driver availability!`
-    );
-    return `https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${text}`;
+    const serviceTitle = serviceType === 'one_way' ? 'One-Way Outstation Cab' : serviceType === 'round_trip' ? 'Round-Trip Cab' : serviceType === 'local_rental' ? 'Hourly Local Rental' : 'Airport Cab Transfer';
+    const lines = [
+      '🚖 *URGENT TAXIS — VEHICLE SELECTION INQUIRY*',
+      '━━━━━━━━━━━━━━━━━━━━',
+      '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
+      '',
+      '📋 *TRIP DETAILS*',
+      `• 🚗 *Service:* ${serviceTitle}`,
+      `• 📍 *Pickup:* ${pickup}`,
+      `• 🏁 *Drop:* ${drop}`,
+      `• 🛣️ *Distance:* ~${routeData.distanceKm} km (${routeData.durationText})`,
+      `• 📅 *Date:* ${formattedDate} at ${formattedTime}`,
+      '',
+      '🚘 *VEHICLE SELECTED*',
+      `• 🚗 *Vehicle:* *${v.name}*`,
+      `• 💺 *Models:* ${v.models}`,
+      `• 👥 *Capacity:* ${v.seats} • ${v.bags}`,
+      '',
+      '💰 *FARE & PAYMENT BREAKDOWN*',
+      `• 💳 *Total Fare:* *₹${v.totalFare.toLocaleString('en-IN')}*`,
+      `• 🟢 *30% Advance Token:* *₹${v.tokenAmount.toLocaleString('en-IN')}* (To Confirm)`,
+      `• ⚪ *70% Driver Balance:* *₹${v.balanceAmount.toLocaleString('en-IN')}* (At Pickup)`,
+      '',
+      '📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad',
+      '💬 *WhatsApp Desk:* +91 8595066033',
+      '',
+      'Please confirm driver availability and reservation! ✨',
+    ];
+    return `https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${encodeURIComponent(lines.join('\n'))}`;
   };
 
   // Build Checkout link leading directly to Step 3
@@ -873,39 +847,7 @@ export default function CabsClient() {
             >
               ✨ Innova Crysta
             </button>
-            <button
-              type="button"
-              onClick={() => setSelectedFilter('tempo')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap ${
-                selectedFilter === 'tempo'
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold'
-              }`}
-            >
-              🚐 Tempo Traveller
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedFilter('urbania')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap ${
-                selectedFilter === 'urbania'
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold'
-              }`}
-            >
-              👑 Force Urbania
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedFilter('bus')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap ${
-                selectedFilter === 'bus'
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold'
-              }`}
-            >
-              🚌 Luxury Bus
-            </button>
+
           </div>
 
           <div className="text-xs text-slate-500 font-bold hidden xl:flex items-center gap-1.5">

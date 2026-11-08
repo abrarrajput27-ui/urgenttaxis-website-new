@@ -93,14 +93,15 @@ test.describe('Phase 1: Master Pricing Engine Unit Tests', () => {
     expect(q!.startsAt).toBe(q!.sedanFare);
   });
 
-  test('Unmapped Route: Never returns "Price on request"', () => {
+  test('Universal Address Fare: Calculates dynamic distance-based fare for unmapped route', () => {
     const q = resolveOneWayFare('UnmappedCityA', 'UnmappedCityB', 180);
     expect(q).not.toBeNull();
-    expect(q!.requiresWhatsAppQuote).toBe(true);
-    expect(q!.sedanFare).toBe(0);
+    expect(q!.requiresWhatsAppQuote).toBe(false);
+    expect(q!.sedanFare).toBeGreaterThan(0);
+    expect(q!.distanceKm).toBe(180);
   });
 
-  test('WhatsApp Link Generation: Clean formatting without duplicate greeting', () => {
+  test('WhatsApp Link Generation: Bold, stylish, sectioned formatting with emojis', () => {
     const url = buildWhatsAppBookingLink({
       serviceType: 'One-way',
       vehicleName: 'Sedan',
@@ -112,11 +113,12 @@ test.describe('Phase 1: Master Pricing Engine Unit Tests', () => {
       pageUrl: 'https://www.urgenttaxis.in/routes/ghaziabad-to-haridwar-taxi'
     });
     const decoded = decodeURIComponent(url);
-    expect(decoded.startsWith('https://wa.me/918595066033?text=Hello Urgent Taxis, I want to book a Sedan.')).toBe(true);
-    expect(decoded).toContain('Trip: One-way, Ghaziabad to Haridwar');
-    expect(decoded).toContain('Estimated fare: ₹3,499 (toll and parking extra)');
-    expect(decoded).toContain('Please confirm availability, final fare and driver details.');
-    const greetingMatches = decoded.match(/Hello Urgent Taxis/g);
-    expect(greetingMatches?.length).toBe(1);
+    expect(decoded.startsWith('https://wa.me/918595066033?text=')).toBe(true);
+    expect(decoded).toContain('URGENT TAXIS');
+    expect(decoded).toContain('TRIP DETAILS');
+    expect(decoded).toContain('Ghaziabad');
+    expect(decoded).toContain('Haridwar');
+    expect(decoded).toContain('₹3,499');
+    expect(decoded).toContain('+91 7310651940');
   });
 });

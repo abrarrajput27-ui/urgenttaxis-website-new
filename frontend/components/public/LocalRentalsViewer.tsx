@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { LOCAL_RENTAL_CONFIG, calculateAdvanceToken, buildWhatsAppBookingLink } from '@/lib/pricing';
+import { LOCAL_RENTAL_CONFIG, calculateAdvanceToken, buildWhatsAppBookingLink, HourlyRentalPackageId, HOURLY_RENTAL_PACKAGES } from '@/lib/pricing';
 
 interface FleetCardInfo {
   key: string;
@@ -139,7 +139,7 @@ const FLEET_CLASSES: FleetCardInfo[] = [
 ];
 
 export default function LocalRentalsViewer() {
-  const [selectedPackage, setSelectedPackage] = useState<'8h80km' | '12h120km'>('8h80km');
+  const [selectedPackage, setSelectedPackage] = useState<HourlyRentalPackageId>('8h80km');
   const [activeGroup, setActiveGroup] = useState<'all' | 'cabs' | 'suvs' | 'tempo' | 'bus'>('all');
 
   const filteredFleet = FLEET_CLASSES.filter(
@@ -149,30 +149,25 @@ export default function LocalRentalsViewer() {
   return (
     <div className="space-y-8 font-sans">
       {/* 1. PACKAGE DURATION SELECTOR TABS */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-        <div className="bg-slate-200/80 p-1.5 rounded-2xl flex max-w-md w-full border border-slate-300/80">
-          <button
-            type="button"
-            onClick={() => setSelectedPackage('8h80km')}
-            className={`flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
-              selectedPackage === '8h80km'
-                ? 'bg-[#1e1b4b] text-white shadow-md'
-                : 'text-slate-700 hover:text-slate-900'
-            }`}
-          >
-            ⏱️ 8 Hours / 80 KM (Full Day)
-          </button>
-          <button
-            type="button"
-            onClick={() => setSelectedPackage('12h120km')}
-            className={`flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
-              selectedPackage === '12h120km'
-                ? 'bg-[#1e1b4b] text-white shadow-md'
-                : 'text-slate-700 hover:text-slate-900'
-            }`}
-          >
-            🌙 12 Hours / 120 KM (Extended)
-          </button>
+      <div className="flex items-center justify-center">
+        <div className="bg-slate-200/80 p-1.5 rounded-2xl flex flex-wrap gap-1.5 max-w-2xl w-full border border-slate-300/80 justify-center">
+          {HOURLY_RENTAL_PACKAGES.map((pkg) => {
+            const isSelected = selectedPackage === pkg.id;
+            return (
+              <button
+                key={pkg.id}
+                type="button"
+                onClick={() => setSelectedPackage(pkg.id)}
+                className={`py-2 px-3.5 rounded-xl font-bold text-xs sm:text-xs transition-all cursor-pointer ${
+                  isSelected
+                    ? 'bg-[#1e1b4b] text-white shadow-md'
+                    : 'text-slate-700 hover:text-slate-900 hover:bg-white/60'
+                }`}
+              >
+                ⏱️ {pkg.name}
+              </button>
+            );
+          })}
         </div>
       </div>
 

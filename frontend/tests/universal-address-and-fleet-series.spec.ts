@@ -65,21 +65,18 @@ test.describe('Universal Address, Strict State Isolation & MakeMyTrip Fleet Seri
     const distElement = page.locator('text=Highway').first();
     await expect(distElement).toBeVisible();
 
-    // Verify all 9 vehicle categories appear in the exact series
+    // Verify 6 vehicle categories appear up to Innova Crysta
     const vehicleCards = page.locator('#cab-selection-panel > div');
     const count = await vehicleCards.count();
-    expect(count).toBeGreaterThanOrEqual(9);
+    expect(count).toBe(6);
 
-    // Verify Series: Hatchback -> Sedan -> Maruti Ertiga -> SUV / MUV -> Toyota Innova -> Innova Crysta -> Tempo Traveller -> Force Urbania -> Luxury Bus
+    // Verify Series: Hatchback -> Sedan -> Maruti Ertiga -> SUV / MUV -> Toyota Innova -> Innova Crysta
     await expect(vehicleCards.nth(0)).toContainText('Hatchback');
     await expect(vehicleCards.nth(1)).toContainText('Sedan');
     await expect(vehicleCards.nth(2)).toContainText('Maruti Ertiga');
     await expect(vehicleCards.nth(3)).toContainText('SUV / MUV');
     await expect(vehicleCards.nth(4)).toContainText('Toyota Innova');
     await expect(vehicleCards.nth(5)).toContainText('Innova Crysta');
-    await expect(vehicleCards.nth(6)).toContainText('Tempo Traveller');
-    await expect(vehicleCards.nth(7)).toContainText('Force Urbania');
-    await expect(vehicleCards.nth(8)).toContainText('Luxury Bus');
   });
 
   test('3. MakeMyTrip Style Inclusions & Exclusions on /cabs', async ({ page }) => {
@@ -113,15 +110,15 @@ test.describe('Universal Address, Strict State Isolation & MakeMyTrip Fleet Seri
       waitUntil: 'domcontentloaded',
     });
 
-    // Click Tempo Traveller filter
-    await page.locator('button:has-text("Tempo Traveller")').click();
+    // Click Innova Crysta filter
+    await page.locator('button:has-text("Innova Crysta")').first().click();
     const visibleCards = page.locator('#cab-selection-panel > div');
     await expect(visibleCards).toHaveCount(1);
-    await expect(visibleCards.first()).toContainText('Tempo Traveller');
+    await expect(visibleCards.first()).toContainText('Innova Crysta');
 
     // Click All Vehicles
     await page.locator('button:has-text("All Vehicles")').click();
-    await expect(page.locator('#cab-selection-panel > div')).toHaveCount(9);
+    await expect(page.locator('#cab-selection-panel > div')).toHaveCount(6);
   });
 
   test('5. Permanent Designer Credit is intact', async ({ page }) => {

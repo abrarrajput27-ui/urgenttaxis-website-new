@@ -27,14 +27,14 @@ test.describe('Live Production Verification (https://www.urgenttaxis.in)', () =>
     // Check heading
     await expect(page.locator('h1').first()).toContainText('Masuri, Ghaziabad to Mall Road, Nainital');
 
-    // Check 9 vehicle categories rendered
+    // Check 6 vehicle categories rendered up to Innova Crysta
     const cabPanel = page.locator('#cab-selection-panel');
     await expect(cabPanel).toBeVisible({ timeout: 15000 });
 
     const cards = cabPanel.locator('> div');
     const count = await cards.count();
     console.log('Live vehicle cards count:', count);
-    expect(count).toBeGreaterThanOrEqual(9);
+    expect(count).toBe(6);
 
     // Check Inclusions and Exclusions
     const firstCard = cards.first();

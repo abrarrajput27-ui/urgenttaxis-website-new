@@ -1,23 +1,35 @@
 /**
- * URGENT TAXIS — CHARGEABLE VEHICLE ADD-ONS (PHASE 3)
+ * URGENT TAXIS — CHARGEABLE VEHICLE ADD-ONS (PHASE 3 & MAKE MY TRIP PARITY)
  * Single Source of Truth for owner-approved vehicle add-ons.
  * 
  * Commercial Rules:
- * 1. Fixed price: Exactly ₹300 per selected add-on.
- * 2. All 3 selected = ₹900.
- * 3. Never trust client-supplied prices; server always computes from this config.
- * 4. Preferences are subject to operational availability upon fleet dispatch.
- * 5. Rooftop Luggage Carrier is strictly permitted ONLY on eligible SUV/MUV and Innova Crysta categories.
+ * 1. Specific add-on pricing:
+ *    - New Vehicle Preference: ₹300
+ *    - English-Speaking Driver: ₹300
+ *    - Rooftop Luggage Carrier: ₹300 (Available across ALL vehicles)
+ *    - Pet Friendly Cab: ₹1,000
+ *    - Airport Terminal Entry & Parking Fee: ₹270
+ * 2. Never trust client-supplied prices; server always computes from this config.
+ * 3. Preferences are subject to operational availability upon fleet dispatch.
+ * 4. Rooftop Luggage Carrier is available across all vehicles as requested.
  */
 
+export type BookingAddOnId =
+  | 'new_vehicle'
+  | 'english_driver'
+  | 'rooftop_carrier'
+  | 'pet_friendly'
+  | 'airport_entry_toll';
+
 export interface BookingAddOn {
-  id: 'new_vehicle' | 'english_driver' | 'rooftop_carrier';
+  id: BookingAddOnId | string;
   name: string;
   price: number;
   shortDescription: string;
   disclaimer: string;
   supportedCategories: string[]; // vehicle category IDs / slugs; ['*'] means all
   ineligibleMessage?: string;
+  icon?: string;
 }
 
 export const ADDON_PRICE_PER_ITEM = 300;
@@ -26,46 +38,47 @@ export const BOOKING_ADDONS: Record<string, BookingAddOn> = {
   new_vehicle: {
     id: 'new_vehicle',
     name: 'New Vehicle Preference',
-    price: ADDON_PRICE_PER_ITEM,
+    price: 300,
     shortDescription: 'Request a newer model vehicle, preferably model year 2023 or newer.',
     disclaimer: 'Preference requested. Subject to fleet operational availability at dispatch.',
-    supportedCategories: [
-      'hatchback',
-      'sedan',
-      'suv-muv',
-      'suv_mpv',
-      'suv',
-      'executive-suv',
-      'innova',
-      'innova_crysta',
-      'tempo12',
-      'tempo16',
-    ],
+    supportedCategories: ['*'],
+    icon: '🚗',
   },
   english_driver: {
     id: 'english_driver',
     name: 'English-Speaking Driver',
-    price: ADDON_PRICE_PER_ITEM,
+    price: 300,
     shortDescription: 'Request an English-speaking chauffeur for clear communication.',
     disclaimer: 'Preference requested. Subject to driver assignment and operational availability.',
     supportedCategories: ['*'],
+    icon: '🗣️',
   },
   rooftop_carrier: {
     id: 'rooftop_carrier',
     name: 'Rooftop Luggage Carrier',
-    price: ADDON_PRICE_PER_ITEM,
-    shortDescription: 'Request an overhead rooftop luggage rack for additional group baggage.',
-    disclaimer: 'Preference requested. Subject to operational carrier mounting and vehicle eligibility.',
-    // Strictly eligible ONLY for SUV/MUV (Ertiga/Carens) and Executive SUV (Innova Crysta)
-    supportedCategories: [
-      'suv-muv',
-      'suv_mpv',
-      'suv',
-      'executive-suv',
-      'innova',
-      'innova_crysta',
-    ],
-    ineligibleMessage: 'Safe intercity mounting available only on SUV/MUV & Innova Crysta. Not permitted on Sedans or Hatchbacks.',
+    price: 300,
+    shortDescription: 'Request an overhead rooftop luggage carrier rack for additional baggage.',
+    disclaimer: 'Preference requested. Subject to carrier mounting and road clearance.',
+    supportedCategories: ['*'],
+    icon: '🧳',
+  },
+  pet_friendly: {
+    id: 'pet_friendly',
+    name: 'Pet Friendly Cab',
+    price: 1000,
+    shortDescription: 'Travel stress-free with pets; includes seat protective cover & deep sanitization.',
+    disclaimer: 'Pets allowed with prior intimation. Driver carries pet-friendly protective mats.',
+    supportedCategories: ['*'],
+    icon: '🐾',
+  },
+  airport_entry_toll: {
+    id: 'airport_entry_toll',
+    name: 'Airport Terminal Entry & Parking Fee',
+    price: 270,
+    shortDescription: 'Prepaid airport terminal entry slip and dedicated parking bay clearance.',
+    disclaimer: 'Includes airport terminal arrival entry slip and up to 45 mins parking waiting.',
+    supportedCategories: ['*'],
+    icon: '✈️',
   },
 };
 
@@ -115,7 +128,7 @@ export function validateAndComputeAddOns(
     if (!id) continue;
 
     if (seen.has(id)) {
-      // Deduplicate silently or flag
+      // Deduplicate silently
       continue;
     }
     seen.add(id);
@@ -137,7 +150,7 @@ export function validateAndComputeAddOns(
     validAddOns.push(definition);
   }
 
-  const addOnTotal = validAddOns.length * ADDON_PRICE_PER_ITEM;
+  const addOnTotal = validAddOns.reduce((sum, item) => sum + (item.price || 0), 0);
 
   return {
     validAddOns,

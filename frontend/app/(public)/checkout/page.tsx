@@ -153,8 +153,7 @@ function CheckoutContent() {
       if (vehicle.name === 'Sedan') {
         base = routeData.sedanFare || Math.max(1600, Math.round(dist * 11));
       } else if (vehicle.name === 'Hatchback') {
-        const sFare = routeData.sedanFare || Math.max(1600, Math.round(dist * 11));
-        base = Math.max(1300, Math.round(sFare * 0.88));
+        base = routeData.sedanFare ? Math.round(routeData.sedanFare * 0.88) : Math.max(1300, Math.round(dist * 10));
       } else if (vehicle.name === 'Maruti Ertiga' || vehicle.name === 'SUV / MUV') {
         base = routeData.ertigaFare || Math.max(2200, Math.round(dist * 15));
       } else if (vehicle.name === 'Innova Crysta') {
@@ -180,9 +179,10 @@ function CheckoutContent() {
       base = vehicle.name === 'Sedan' ? 1599 : vehicle.name === 'Hatchback' ? 1399 : 2199;
     }
 
-    // Add-ons total
-    const validAddOns = selectedAddOns.filter((id) => isAddOnSupported(id as any, categoryId));
-    const addOnTotal = validAddOns.length * 300;
+    // Add-ons total & list
+    const validAddOnIds = selectedAddOns.filter((id) => isAddOnSupported(id as any, categoryId));
+    const selectedAddOnsList = validAddOnIds.map((id) => BOOKING_ADDONS[id]).filter(Boolean);
+    const addOnTotal = selectedAddOnsList.reduce((sum, item) => sum + (item.price || 300), 0);
     const grandTotal = base + addOnTotal;
 
     const token = calculateAdvanceToken(grandTotal);
@@ -191,6 +191,7 @@ function CheckoutContent() {
     return {
       baseFare: base,
       addOnTotal,
+      selectedAddOnsList,
       grandTotal,
       tokenAmount: token,
       balanceAmount: balance,
@@ -308,18 +309,41 @@ function CheckoutContent() {
 
   // WhatsApp quick booking link
   const whatsappBookingUrl = useMemo(() => {
-    const text = encodeURIComponent(
-      `Hello Urgent Taxis! 👋\nI am on the Trip & Passenger Details page and want to confirm my booking:\n\n` +
-      `🚗 Vehicle: *${vehicle.name}* (${vehicle.models})\n` +
-      `📍 Service: ${serviceType === 'one_way' ? 'One-Way Outstation' : serviceType === 'round_trip' ? 'Round-Trip' : 'Cab Rental'}\n` +
-      `📍 Route: ${pickupCity} ➔ ${dropCity}\n` +
-      `🛣️ Distance: ~${routeData.distanceKm} km (${routeData.durationText})\n` +
-      `📅 Travel Date: ${formattedDate} at ${formattedTime}\n` +
-      `💰 Total Fare: ₹${calculatedFare.grandTotal.toLocaleString('en-IN')}\n` +
-      `💳 30% Advance Token: ₹${calculatedFare.tokenAmount.toLocaleString('en-IN')}\n\n` +
-      `Please confirm driver assignment!`
-    );
-    return `https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${text}`;
+    const serviceTitle = serviceType === 'one_way' ? 'One-Way Outstation' : serviceType === 'round_trip' ? 'Round-Trip' : serviceType === 'local_rental' ? 'Hourly Rental' : 'Airport Transfer';
+    const lines = [
+      '🚖 *URGENT TAXIS — CHECKOUT BOOKING INQUIRY*',
+      '━━━━━━━━━━━━━━━━━━━━',
+      '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
+      '',
+      '📋 *TRIP DETAILS*',
+      `• 🚗 *Service:* ${serviceTitle}`,
+      `• 📍 *Pickup:* ${pickupCity}`,
+      `• 🏁 *Drop:* ${dropCity}`,
+      `• 🛣️ *Distance:* ~${routeData.distanceKm} km (${routeData.durationText})`,
+      `• 📅 *Date:* ${formattedDate} at ${formattedTime}`,
+      '',
+      '🚘 *VEHICLE SELECTED*',
+      `• 🚗 *Vehicle:* *${vehicle.name}* (${vehicle.models})`,
+      `• 👥 *Capacity:* ${vehicle.seats} • ${vehicle.bags}`,
+      '',
+      '💰 *FARE & PAYMENT BREAKDOWN*',
+      `• 💵 *Base Cab Rental:* ₹${calculatedFare.baseFare.toLocaleString('en-IN')}`,
+      `• 🛣️ *Tolls & Permits:* ${serviceType === 'one_way' ? 'Included' : 'At Actuals'}`,
+      `• 👨‍✈️ *Chauffeur & Fuel:* Included`,
+      `• 🛡️ *GST (5%):* Included`,
+      calculatedFare.selectedAddOnsList?.length ? `• ➕ *Add-ons (${calculatedFare.selectedAddOnsList.length}):* +₹${calculatedFare.addOnTotal.toLocaleString('en-IN')}` : '',
+      '────────────────────',
+      `• 💳 *TOTAL FARE:* *₹${calculatedFare.grandTotal.toLocaleString('en-IN')}*`,
+      `• 🟢 *30% Advance Token:* *₹${calculatedFare.tokenAmount.toLocaleString('en-IN')}* (To Confirm)`,
+      `• ⚪ *70% Driver Balance:* *₹${calculatedFare.balanceAmount.toLocaleString('en-IN')}* (At Pickup)`,
+      '',
+      '📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad',
+      '💬 *WhatsApp Desk:* +91 8595066033',
+      '',
+      'Please confirm cab assignment & booking! ✨',
+    ].filter(Boolean);
+
+    return `https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${encodeURIComponent(lines.join('\n'))}`;
   }, [vehicle, serviceType, pickupCity, dropCity, routeData, formattedDate, formattedTime, calculatedFare]);
 
   return (
@@ -709,11 +733,11 @@ function CheckoutContent() {
                     <span>✨</span> Optional Trip Add-ons
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Custom preferences for your journey (Fixed at ₹300 per add-on).
+                    Custom travel preferences & verified add-on services.
                   </p>
                 </div>
                 <span className="text-xs font-bold bg-brand-green/10 text-brand-green px-2.5 py-1 rounded-full border border-brand-green/20 shrink-0">
-                  ₹300 each
+                  Transparent Rates
                 </span>
               </div>
 
@@ -822,32 +846,71 @@ function CheckoutContent() {
                 </div>
               </div>
 
-              {/* Price Line Items */}
-              <div className="space-y-2 text-xs">
+              {/* Price Line Items (MakeMyTrip Style Dynamic Breakdown) */}
+              <div className="space-y-2.5 text-xs">
+                {/* Base Fare */}
                 <div className="flex justify-between items-center text-slate-700">
-                  <span>Base Cab Rental ({routeData.distanceKm} km)</span>
-                  <span className="font-bold">₹{calculatedFare.baseFare.toLocaleString('en-IN')}</span>
+                  <span className="font-medium">
+                    {serviceType === 'local_rental'
+                      ? 'Base Hourly Package'
+                      : serviceType === 'airport_transfer'
+                      ? 'Airport Transfer Base'
+                      : `Base Cab Rental (${routeData.distanceKm} km)`}
+                  </span>
+                  <span className="font-bold text-slate-900">₹{calculatedFare.baseFare.toLocaleString('en-IN')}</span>
                 </div>
 
+                {/* Tolls & State Tax (MMT One-Way vs Round-Trip Policy) */}
                 <div className="flex justify-between items-center text-slate-700">
-                  <span>Highway Toll Taxes &amp; State Permits</span>
-                  <span className="font-bold text-emerald-600">Included</span>
+                  <span className="font-medium">Highway Tolls &amp; State Border Taxes</span>
+                  {serviceType === 'one_way' ? (
+                    <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[11px]">
+                      ✓ Included
+                    </span>
+                  ) : serviceType === 'round_trip' ? (
+                    <span className="font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded text-[11px]">
+                      Payable At Actuals
+                    </span>
+                  ) : (
+                    <span className="font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded text-[11px]">
+                      At Actuals
+                    </span>
+                  )}
                 </div>
 
+                {/* Driver Allowance & Fuel */}
                 <div className="flex justify-between items-center text-slate-700">
-                  <span>Chauffeur Allowance &amp; Fuel</span>
-                  <span className="font-bold text-emerald-600">Included</span>
+                  <span className="font-medium">Chauffeur Allowance &amp; Fuel</span>
+                  <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[11px]">
+                    ✓ Included
+                  </span>
                 </div>
 
+                {/* GST */}
                 <div className="flex justify-between items-center text-slate-700">
-                  <span>GST (5%) &amp; Service Charges</span>
-                  <span className="font-bold text-emerald-600">Included</span>
+                  <span className="font-medium">GST (5%) &amp; Road Taxes</span>
+                  <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[11px]">
+                    ✓ Included
+                  </span>
                 </div>
 
-                {calculatedFare.addOnTotal > 0 && (
-                  <div className="flex justify-between items-center text-slate-700 pt-1 border-t border-slate-100">
-                    <span>Trip Add-ons ({selectedAddOns.length})</span>
-                    <span className="font-bold text-brand-blue">+₹{calculatedFare.addOnTotal}</span>
+                {/* Itemized Selected Add-ons (MMT Dynamic Line Items) */}
+                {calculatedFare.selectedAddOnsList && calculatedFare.selectedAddOnsList.length > 0 && (
+                  <div className="pt-2.5 border-t border-slate-100 space-y-1.5">
+                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
+                      Added Services ({calculatedFare.selectedAddOnsList.length})
+                    </span>
+                    {calculatedFare.selectedAddOnsList.map((addon) => (
+                      <div key={addon.id} className="flex justify-between items-center text-slate-800 text-xs">
+                        <span className="flex items-center gap-1.5 font-medium truncate pr-2">
+                          <span>{addon.icon || '✨'}</span>
+                          <span className="truncate">{addon.name}</span>
+                        </span>
+                        <span className="font-bold text-brand-blue tabular-nums shrink-0">
+                          +₹{addon.price.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>

@@ -1,6 +1,11 @@
 import { BUSINESS_CONFIG } from './config';
 
 export interface WhatsAppMessageParams {
+  bookingReference?: string;
+  invoiceUrl?: string;
+  customerName?: string;
+  passengerCount?: number;
+
   pickup?: string;
   drop?: string;
   tripType?: 'One Way' | 'Round Trip' | 'Airport Transfer' | 'Local Rental' | 'Corporate' | 'Tempo Traveller' | 'Bus' | 'Tour Package' | string;
@@ -22,6 +27,7 @@ export interface WhatsAppMessageParams {
   nightCharges?: number;
   platformFee?: number;
   gst?: number;
+  addOnTotal?: number;
   totalFare?: number;
   tokenAmount?: number;
   balanceAmount?: number;
@@ -34,14 +40,15 @@ export interface WhatsAppMessageParams {
 }
 
 /**
- * Generates a clean, polite, human-readable WhatsApp inquiry message.
- * Formatted without markdown links, divider lines, or confusing header markers.
+ * Generates an authoritative, bold, sectioned, emoji-rich WhatsApp message.
+ * Formatted with clear dividers, bold headers, full trip details,
+ * itemized fare breakdown, and attached digital invoice / receipt link.
  */
 export function generateWhatsAppLink(
   phoneOrParams: string | WhatsAppMessageParams,
   maybeParams?: WhatsAppMessageParams
 ): string {
-  let targetPhone = BUSINESS_CONFIG.phone.whatsappRaw;
+  let targetPhone = BUSINESS_CONFIG.phone.whatsappRaw || '918595066033';
   let params: WhatsAppMessageParams = {};
 
   if (typeof phoneOrParams === 'string') {
@@ -53,76 +60,84 @@ export function generateWhatsAppLink(
     params = phoneOrParams;
   }
 
-  const lines: string[] = [];
+  const lines: string[] = [
+    '🚖 *URGENT TAXIS — TRIP QUOTATION & BOOKING*',
+    '━━━━━━━━━━━━━━━━━━━━',
+    '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
+    '',
+  ];
 
-  // 1. Warm Greeting & Context (avoid duplicate greetings)
-  const custom = params.customMessage?.trim();
-  const alreadyHasGreeting = custom ? /^(hello|hi|hey|namaste|greetings)\b/i.test(custom) : false;
-
-  if (custom) {
-    if (!alreadyHasGreeting) {
-      lines.push('Hello Urgent Taxis!');
-      lines.push('');
-    }
-    lines.push(custom);
-    lines.push('');
-  } else {
-    lines.push('Hello Urgent Taxis!');
-    lines.push('');
-    lines.push('I would like to inquire about booking a taxi.');
+  // Custom Message / Note (if any)
+  if (params.customMessage?.trim()) {
+    lines.push(`💬 *Customer Note:* ${params.customMessage.trim()}`);
     lines.push('');
   }
 
-  // 3. Trip & Route Details
-  const tripDetails: string[] = [];
-  if (params.tripType) tripDetails.push(`• Service: ${params.tripType}`);
+  // Booking Reference (if available)
+  if (params.bookingReference) {
+    lines.push(`🔖 *Booking Reference:* *${params.bookingReference}*`);
+    lines.push('');
+  }
+
+  // Trip & Route Details
+  lines.push('📋 *TRIP & ROUTE DETAILS*');
+  if (params.tripType) lines.push(`• 🚗 *Service:* ${params.tripType}`);
   if (params.pickup && params.drop) {
-    tripDetails.push(`• Route: ${params.pickup} to ${params.drop}`);
+    lines.push(`• 📍 *Pickup:* ${params.pickup}`);
+    lines.push(`• 🏁 *Drop:* ${params.drop}`);
   } else if (params.pickup) {
-    tripDetails.push(`• Pickup Location: ${params.pickup}`);
+    lines.push(`• 📍 *Pickup Location:* ${params.pickup}`);
   } else if (params.drop) {
-    tripDetails.push(`• Drop Location: ${params.drop}`);
+    lines.push(`• 🏁 *Drop Location:* ${params.drop}`);
   }
-  if (params.journeyDate) tripDetails.push(`• Travel Date: ${params.journeyDate}`);
-  if (params.pickupTime) tripDetails.push(`• Pickup Time: ${params.pickupTime}`);
-  if (params.distance) tripDetails.push(`• Distance: ~${params.distance} km`);
-
-  if (tripDetails.length > 0) {
-    lines.push('Trip Details:');
-    tripDetails.forEach((detail) => lines.push(detail));
-    lines.push('');
-  }
-
-  // 4. Vehicle Selection
-  const vehicleDetails: string[] = [];
-  if (params.vehicleCategory) vehicleDetails.push(`• Vehicle: ${params.vehicleCategory}`);
-  if (params.vehicleModel) vehicleDetails.push(`• Preferred Car: ${params.vehicleModel}`);
-
-  if (vehicleDetails.length > 0) {
-    lines.push('Vehicle Details:');
-    vehicleDetails.forEach((detail) => lines.push(detail));
-    lines.push('');
-  }
-
-  // 5. Estimated Fare (if available)
-  if (params.totalFare || params.baseFare) {
-    lines.push('Quotation:');
-    if (params.baseFare) lines.push(`• Base Fare: ₹${params.baseFare.toLocaleString('en-IN')}`);
-    if (params.estimatedToll) lines.push(`• Est. Toll: ₹${params.estimatedToll.toLocaleString('en-IN')}`);
-    if (params.estimatedStateTax) lines.push(`• Est. State Tax: ₹${params.estimatedStateTax.toLocaleString('en-IN')}`);
-    if (params.totalFare) lines.push(`• Estimated Total: ₹${params.totalFare.toLocaleString('en-IN')}`);
-    if (params.tokenAmount) lines.push(`• Advance to Confirm (30%): ₹${params.tokenAmount.toLocaleString('en-IN')}`);
-    if (params.balanceAmount) lines.push(`• Remaining Balance (70%): ₹${params.balanceAmount.toLocaleString('en-IN')}`);
-    lines.push('');
-  }
-
-  // 6. Page Context URL (https)
-  const websiteUrl = params.pageUrl || BUSINESS_CONFIG.canonicalDomain;
-  lines.push(`Reference Page: ${websiteUrl}`);
+  if (params.distance) lines.push(`• 🛣️ *Distance:* ~${params.distance} km`);
+  if (params.journeyDate) lines.push(`• 📅 *Travel Date:* ${params.journeyDate}`);
+  if (params.pickupTime) lines.push(`• ⏰ *Pickup Time:* ${params.pickupTime}`);
+  if (params.customerName) lines.push(`• 👤 *Passenger:* ${params.customerName}`);
+  if (params.passengerCount) lines.push(`• 👥 *Passengers:* ${params.passengerCount} Persons`);
   lines.push('');
 
-  // 7. Clear Call to Action as required
-  lines.push('Please confirm availability, final fare and driver details.');
+  // Assigned Vehicle Details
+  if (params.vehicleCategory || params.vehicleModel) {
+    lines.push('🚘 *ASSIGNED VEHICLE*');
+    if (params.vehicleCategory) lines.push(`• 🚗 *Category:* *${params.vehicleCategory}*`);
+    if (params.vehicleModel) lines.push(`• 💺 *Models:* ${params.vehicleModel}`);
+    if (params.capacity) lines.push(`• 👥 *Capacity:* ${params.capacity}`);
+    if (params.luggageCapacity) lines.push(`• 🧳 *Luggage:* ${params.luggageCapacity}`);
+    lines.push('');
+  }
+
+  // Fare & Payment Breakdown
+  if (params.totalFare || params.baseFare) {
+    lines.push('💰 *FARE & PAYMENT BREAKDOWN*');
+    if (params.baseFare) lines.push(`• 💵 *Base Cab Rental:* ₹${params.baseFare.toLocaleString('en-IN')}`);
+    if (params.estimatedToll) lines.push(`• 🛣️ *Highway Tolls:* ₹${params.estimatedToll.toLocaleString('en-IN')}`);
+    if (params.estimatedStateTax) lines.push(`• 🏛️ *State Border Tax:* ₹${params.estimatedStateTax.toLocaleString('en-IN')}`);
+    if (params.addOnTotal && params.addOnTotal > 0) lines.push(`• ➕ *Selected Add-ons:* +₹${params.addOnTotal.toLocaleString('en-IN')}`);
+    lines.push('────────────────────');
+    if (params.totalFare) lines.push(`• 💳 *TOTAL FARE:* *₹${params.totalFare.toLocaleString('en-IN')}*`);
+    if (params.tokenAmount) lines.push(`• 🟢 *30% Advance Token:* *₹${params.tokenAmount.toLocaleString('en-IN')}* (To Confirm)`);
+    if (params.balanceAmount) lines.push(`• ⚪ *70% Driver Balance:* *₹${params.balanceAmount.toLocaleString('en-IN')}* (At Pickup)`);
+    lines.push('');
+  }
+
+  // Attached Digital Invoice Link
+  if (params.invoiceUrl) {
+    lines.push('🧾 *DIGITAL INVOICE & RECEIPT:*');
+    lines.push(params.invoiceUrl);
+    lines.push('');
+  } else if (params.bookingReference) {
+    lines.push('🧾 *DIGITAL INVOICE & RECEIPT:*');
+    lines.push(`https://www.urgenttaxis.in/booking-confirmation/${params.bookingReference}/invoice`);
+    lines.push('');
+  }
+
+  // Official Helpline & Context
+  lines.push('📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad');
+  lines.push('💬 *WhatsApp Desk:* +91 8595066033');
+  lines.push(`🌐 *Website:* ${params.pageUrl || 'https://www.urgenttaxis.in'}`);
+  lines.push('');
+  lines.push('Please confirm driver assignment & booking details! ✨');
 
   const text = lines.join('\n');
   return `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`;

@@ -27,7 +27,7 @@ import {
   FaSearch,
   FaCheckCircle,
 } from 'react-icons/fa';
-import { resolveOneWayFare, HOURLY_RENTAL_PACKAGES, HourlyRentalPackageId } from '@/lib/pricing';
+import { resolveOneWayFare, HOURLY_RENTAL_PACKAGES, HourlyRentalPackageId, calculateLocalRentalFare } from '@/lib/pricing';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
 
 export type MmtTripType = 'one_way' | 'round_trip' | 'airport_transfer' | 'local_rental';
@@ -736,26 +736,47 @@ export default function MmtBookingWidget({
 
               <div className="md:col-span-5">
                 <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                  Select Rental Package
+                  Select Rental Package &amp; Instant Fare
                 </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {HOURLY_RENTAL_PACKAGES.slice(0, 4).map((pkg) => (
-                    <button
-                      key={pkg.id}
-                      type="button"
-                      onClick={() => setRentalPackageId(pkg.id)}
-                      className={`p-2 rounded-xl text-left border transition-all cursor-pointer ${
-                        rentalPackageId === pkg.id
-                          ? 'border-brand-blue bg-blue-50 text-brand-blue font-bold shadow-xs'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                      }`}
-                    >
-                      <span className="text-xs font-black block">{pkg.name}</span>
-                      <span className="text-[10px] text-slate-500 font-medium">
-                        {pkg.hasApprovedRate ? 'Instant Fare' : 'On Request'}
-                      </span>
-                    </button>
-                  ))}
+                <div className="relative mb-2">
+                  <select
+                    value={rentalPackageId}
+                    onChange={(e) => setRentalPackageId(e.target.value as HourlyRentalPackageId)}
+                    className="w-full bg-white text-slate-900 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-brand-blue cursor-pointer"
+                  >
+                    {HOURLY_RENTAL_PACKAGES.map((pkg) => {
+                      const quote = calculateLocalRentalFare(pkg.id, 'sedan');
+                      return (
+                        <option key={pkg.id} value={pkg.id}>
+                          {pkg.name} — ₹{quote.basePrice.toLocaleString('en-IN')} (Online Fare)
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                {/* Visual Quick Select Chips */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                  {HOURLY_RENTAL_PACKAGES.map((pkg) => {
+                    const quote = calculateLocalRentalFare(pkg.id, 'sedan');
+                    const isSelected = rentalPackageId === pkg.id;
+                    return (
+                      <button
+                        key={pkg.id}
+                        type="button"
+                        onClick={() => setRentalPackageId(pkg.id)}
+                        className={`p-1.5 sm:p-2 rounded-xl text-left border transition-all cursor-pointer ${
+                          isSelected
+                            ? 'border-brand-blue bg-blue-50 text-brand-blue font-bold shadow-xs ring-1 ring-brand-blue/30'
+                            : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span className="text-[11px] font-black block leading-tight">{pkg.name}</span>
+                        <span className="text-[10px] text-emerald-600 font-black block mt-0.5">
+                          ₹{quote.basePrice.toLocaleString('en-IN')}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

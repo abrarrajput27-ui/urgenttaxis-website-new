@@ -78,62 +78,104 @@ export interface LocalRentalPackageConfig {
   extraHourRate: number;
 }
 
-export const LOCAL_RENTAL_CONFIG: Record<string, Record<'8h80km' | '12h120km', LocalRentalPackageConfig>> = {
+export const LOCAL_RENTAL_CONFIG: Record<string, Record<HourlyRentalPackageId, LocalRentalPackageConfig>> = {
   hatchback: {
+    '4h40km': { hours: 4, km: 40, basePrice: 850, extraKmRate: 10, extraHourRate: 150 },
+    '6h60km': { hours: 6, km: 60, basePrice: 1050, extraKmRate: 10, extraHourRate: 150 },
     '8h80km': { hours: 8, km: 80, basePrice: 1200, extraKmRate: 10, extraHourRate: 150 },
-    '12h120km': { hours: 12, km: 120, basePrice: 2200, extraKmRate: 10, extraHourRate: 150 }, // 1200 + 40*10 + 4*150 = 2200
+    '10h100km': { hours: 10, km: 100, basePrice: 1700, extraKmRate: 10, extraHourRate: 150 },
+    '12h120km': { hours: 12, km: 120, basePrice: 2200, extraKmRate: 10, extraHourRate: 150 },
   },
   sedan: {
+    '4h40km': { hours: 4, km: 40, basePrice: 1050, extraKmRate: 11, extraHourRate: 180 },
+    '6h60km': { hours: 6, km: 60, basePrice: 1299, extraKmRate: 11, extraHourRate: 180 },
     '8h80km': { hours: 8, km: 80, basePrice: 1500, extraKmRate: 11, extraHourRate: 180 },
-    '12h120km': { hours: 12, km: 120, basePrice: 2660, extraKmRate: 11, extraHourRate: 180 }, // 1500 + 40*11 + 4*180 = 2660
+    '10h100km': { hours: 10, km: 100, basePrice: 2080, extraKmRate: 11, extraHourRate: 180 },
+    '12h120km': { hours: 12, km: 120, basePrice: 2660, extraKmRate: 11, extraHourRate: 180 },
   },
   'suv-muv': {
+    '4h40km': { hours: 4, km: 40, basePrice: 1350, extraKmRate: 15, extraHourRate: 220 },
+    '6h60km': { hours: 6, km: 60, basePrice: 1680, extraKmRate: 15, extraHourRate: 220 },
     '8h80km': { hours: 8, km: 80, basePrice: 2000, extraKmRate: 15, extraHourRate: 220 },
-    '12h120km': { hours: 12, km: 120, basePrice: 3480, extraKmRate: 15, extraHourRate: 220 }, // 2000 + 40*15 + 4*220 = 3480
+    '10h100km': { hours: 10, km: 100, basePrice: 2740, extraKmRate: 15, extraHourRate: 220 },
+    '12h120km': { hours: 12, km: 120, basePrice: 3480, extraKmRate: 15, extraHourRate: 220 },
   },
   suv_mpv: {
+    '4h40km': { hours: 4, km: 40, basePrice: 1350, extraKmRate: 15, extraHourRate: 220 },
+    '6h60km': { hours: 6, km: 60, basePrice: 1680, extraKmRate: 15, extraHourRate: 220 },
     '8h80km': { hours: 8, km: 80, basePrice: 2000, extraKmRate: 15, extraHourRate: 220 },
+    '10h100km': { hours: 10, km: 100, basePrice: 2740, extraKmRate: 15, extraHourRate: 220 },
     '12h120km': { hours: 12, km: 120, basePrice: 3480, extraKmRate: 15, extraHourRate: 220 },
   },
   'executive-suv': {
+    '4h40km': { hours: 4, km: 40, basePrice: 1650, extraKmRate: 20, extraHourRate: 300 },
+    '6h60km': { hours: 6, km: 60, basePrice: 2100, extraKmRate: 20, extraHourRate: 300 },
     '8h80km': { hours: 8, km: 80, basePrice: 2500, extraKmRate: 20, extraHourRate: 300 },
-    '12h120km': { hours: 12, km: 120, basePrice: 4500, extraKmRate: 20, extraHourRate: 300 }, // 2500 + 40*20 + 4*300 = 4500
+    '10h100km': { hours: 10, km: 100, basePrice: 3500, extraKmRate: 20, extraHourRate: 300 },
+    '12h120km': { hours: 12, km: 120, basePrice: 4500, extraKmRate: 20, extraHourRate: 300 },
   },
   innova: {
+    '4h40km': { hours: 4, km: 40, basePrice: 1650, extraKmRate: 20, extraHourRate: 300 },
+    '6h60km': { hours: 6, km: 60, basePrice: 2100, extraKmRate: 20, extraHourRate: 300 },
     '8h80km': { hours: 8, km: 80, basePrice: 2500, extraKmRate: 20, extraHourRate: 300 },
+    '10h100km': { hours: 10, km: 100, basePrice: 3500, extraKmRate: 20, extraHourRate: 300 },
     '12h120km': { hours: 12, km: 120, basePrice: 4500, extraKmRate: 20, extraHourRate: 300 },
   },
   tempo12: {
+    '4h40km': { hours: 4, km: 40, basePrice: 2400, extraKmRate: 24, extraHourRate: 350 },
+    '6h60km': { hours: 6, km: 60, basePrice: 2950, extraKmRate: 24, extraHourRate: 350 },
     '8h80km': { hours: 8, km: 80, basePrice: 3500, extraKmRate: 24, extraHourRate: 350 },
-    '12h120km': { hours: 12, km: 120, basePrice: 5860, extraKmRate: 24, extraHourRate: 350 }, // 3500 + 40*24 + 4*350 = 5860
+    '10h100km': { hours: 10, km: 100, basePrice: 4680, extraKmRate: 24, extraHourRate: 350 },
+    '12h120km': { hours: 12, km: 120, basePrice: 5860, extraKmRate: 24, extraHourRate: 350 },
   },
   tempo16: {
+    '4h40km': { hours: 4, km: 40, basePrice: 3100, extraKmRate: 26, extraHourRate: 400 },
+    '6h60km': { hours: 6, km: 60, basePrice: 3800, extraKmRate: 26, extraHourRate: 400 },
     '8h80km': { hours: 8, km: 80, basePrice: 4500, extraKmRate: 26, extraHourRate: 400 },
-    '12h120km': { hours: 12, km: 120, basePrice: 7140, extraKmRate: 26, extraHourRate: 400 }, // 4500 + 40*26 + 4*400 = 7140
+    '10h100km': { hours: 10, km: 100, basePrice: 5820, extraKmRate: 26, extraHourRate: 400 },
+    '12h120km': { hours: 12, km: 120, basePrice: 7140, extraKmRate: 26, extraHourRate: 400 },
   },
   tempo20: {
+    '4h40km': { hours: 4, km: 40, basePrice: 3800, extraKmRate: 28, extraHourRate: 450 },
+    '6h60km': { hours: 6, km: 60, basePrice: 4650, extraKmRate: 28, extraHourRate: 450 },
     '8h80km': { hours: 8, km: 80, basePrice: 5500, extraKmRate: 28, extraHourRate: 450 },
-    '12h120km': { hours: 12, km: 120, basePrice: 8420, extraKmRate: 28, extraHourRate: 450 }, // 5500 + 40*28 + 4*450 = 8420
+    '10h100km': { hours: 10, km: 100, basePrice: 6960, extraKmRate: 28, extraHourRate: 450 },
+    '12h120km': { hours: 12, km: 120, basePrice: 8420, extraKmRate: 28, extraHourRate: 450 },
   },
   tempo26: {
+    '4h40km': { hours: 4, km: 40, basePrice: 4500, extraKmRate: 32, extraHourRate: 500 },
+    '6h60km': { hours: 6, km: 60, basePrice: 5500, extraKmRate: 32, extraHourRate: 500 },
     '8h80km': { hours: 8, km: 80, basePrice: 6500, extraKmRate: 32, extraHourRate: 500 },
-    '12h120km': { hours: 12, km: 120, basePrice: 9780, extraKmRate: 32, extraHourRate: 500 }, // 6500 + 40*32 + 4*500 = 9780
+    '10h100km': { hours: 10, km: 100, basePrice: 8140, extraKmRate: 32, extraHourRate: 500 },
+    '12h120km': { hours: 12, km: 120, basePrice: 9780, extraKmRate: 32, extraHourRate: 500 },
   },
   urbania12: {
+    '4h40km': { hours: 4, km: 40, basePrice: 3500, extraKmRate: 30, extraHourRate: 400 },
+    '6h60km': { hours: 6, km: 60, basePrice: 4250, extraKmRate: 30, extraHourRate: 400 },
     '8h80km': { hours: 8, km: 80, basePrice: 5000, extraKmRate: 30, extraHourRate: 400 },
-    '12h120km': { hours: 12, km: 120, basePrice: 7800, extraKmRate: 30, extraHourRate: 400 }, // 5000 + 40*30 + 4*400 = 7800
+    '10h100km': { hours: 10, km: 100, basePrice: 6400, extraKmRate: 30, extraHourRate: 400 },
+    '12h120km': { hours: 12, km: 120, basePrice: 7800, extraKmRate: 30, extraHourRate: 400 },
   },
   urbania16: {
+    '4h40km': { hours: 4, km: 40, basePrice: 4200, extraKmRate: 34, extraHourRate: 450 },
+    '6h60km': { hours: 6, km: 60, basePrice: 5100, extraKmRate: 34, extraHourRate: 450 },
     '8h80km': { hours: 8, km: 80, basePrice: 6000, extraKmRate: 34, extraHourRate: 450 },
-    '12h120km': { hours: 12, km: 120, basePrice: 9160, extraKmRate: 34, extraHourRate: 450 }, // 6000 + 40*34 + 4*450 = 9160
+    '10h100km': { hours: 10, km: 100, basePrice: 7580, extraKmRate: 34, extraHourRate: 450 },
+    '12h120km': { hours: 12, km: 120, basePrice: 9160, extraKmRate: 34, extraHourRate: 450 },
   },
   bus27: {
+    '4h40km': { hours: 4, km: 40, basePrice: 5500, extraKmRate: 45, extraHourRate: 600 },
+    '6h60km': { hours: 6, km: 60, basePrice: 6750, extraKmRate: 45, extraHourRate: 600 },
     '8h80km': { hours: 8, km: 80, basePrice: 8000, extraKmRate: 45, extraHourRate: 600 },
-    '12h120km': { hours: 12, km: 120, basePrice: 12200, extraKmRate: 45, extraHourRate: 600 }, // 8000 + 40*45 + 4*600 = 12200
+    '10h100km': { hours: 10, km: 100, basePrice: 10100, extraKmRate: 45, extraHourRate: 600 },
+    '12h120km': { hours: 12, km: 120, basePrice: 12200, extraKmRate: 45, extraHourRate: 600 },
   },
   bus45: {
+    '4h40km': { hours: 4, km: 40, basePrice: 7000, extraKmRate: 55, extraHourRate: 800 },
+    '6h60km': { hours: 6, km: 60, basePrice: 8500, extraKmRate: 55, extraHourRate: 800 },
     '8h80km': { hours: 8, km: 80, basePrice: 10000, extraKmRate: 55, extraHourRate: 800 },
-    '12h120km': { hours: 12, km: 120, basePrice: 15400, extraKmRate: 55, extraHourRate: 800 }, // 10000 + 40*55 + 4*800 = 15400
+    '10h100km': { hours: 10, km: 100, basePrice: 12700, extraKmRate: 55, extraHourRate: 800 },
+    '12h120km': { hours: 12, km: 120, basePrice: 15400, extraKmRate: 55, extraHourRate: 800 },
   },
 };
 
@@ -518,10 +560,10 @@ export function calculateRoundTripFare(
 export type HourlyRentalPackageId = '4h40km' | '6h60km' | '8h80km' | '10h100km' | '12h120km';
 
 export const HOURLY_RENTAL_PACKAGES = [
-  { id: '4h40km' as const, name: '4 Hours / 40 KM', hours: 4, km: 40, hasApprovedRate: false },
-  { id: '6h60km' as const, name: '6 Hours / 60 KM', hours: 6, km: 60, hasApprovedRate: false },
+  { id: '4h40km' as const, name: '4 Hours / 40 KM', hours: 4, km: 40, hasApprovedRate: true },
+  { id: '6h60km' as const, name: '6 Hours / 60 KM', hours: 6, km: 60, hasApprovedRate: true },
   { id: '8h80km' as const, name: '8 Hours / 80 KM', hours: 8, km: 80, hasApprovedRate: true },
-  { id: '10h100km' as const, name: '10 Hours / 100 KM', hours: 10, km: 100, hasApprovedRate: false },
+  { id: '10h100km' as const, name: '10 Hours / 100 KM', hours: 10, km: 100, hasApprovedRate: true },
   { id: '12h120km' as const, name: '12 Hours / 120 KM', hours: 12, km: 120, hasApprovedRate: true },
 ] as const;
 
@@ -611,24 +653,43 @@ export interface WhatsAppBookingParams {
 export function buildWhatsAppBookingLink(params: WhatsAppBookingParams): string {
   const rawPhone = SITE_CONFIG.whatsappRaw || '918595066033';
   const phone = rawPhone.replace(/\D/g, '') || '918595066033';
-  const fareLine = params.estimatedFare && params.estimatedFare > 0
-    ? `Estimated fare: ₹${params.estimatedFare.toLocaleString('en-IN')} (toll and parking extra)`
-    : 'Estimated fare: Requesting best available quote';
 
-  const dateLine = params.travelDate
-    ? `Date: ${params.travelDate}${params.travelTime ? `, ${params.travelTime}` : ''}`
-    : 'Date: Flexible / Immediate';
-
-  const pageLine = params.pageUrl ? `Page: ${params.pageUrl}` : `Page: https://www.urgenttaxis.in`;
+  const token = params.estimatedFare && params.estimatedFare > 0
+    ? calculateAdvanceToken(params.estimatedFare)
+    : 0;
+  const balance = params.estimatedFare && params.estimatedFare > 0
+    ? params.estimatedFare - token
+    : 0;
 
   const lines = [
-    `Hello Urgent Taxis, I want to book a ${params.vehicleName}.`,
-    `Trip: ${params.serviceType}, ${params.origin} to ${params.destination}`,
-    dateLine,
-    fareLine,
-    pageLine,
-    params.customNote ? `Note: ${params.customNote}` : '',
-    'Please confirm availability, final fare and driver details.',
+    '🚖 *URGENT TAXIS — CAB BOOKING INQUIRY*',
+    '━━━━━━━━━━━━━━━━━━━━',
+    '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
+    '',
+    '📋 *TRIP DETAILS*',
+    `• 🚗 *Service:* ${params.serviceType}`,
+    `• 📍 *Pickup:* ${params.origin}`,
+    `• 🏁 *Drop:* ${params.destination}`,
+    params.travelDate ? `• 📅 *Date:* ${params.travelDate}${params.travelTime ? ` at ${params.travelTime}` : ''}` : '• 📅 *Date:* Immediate / Flexible',
+    '',
+    '🚘 *VEHICLE SELECTION*',
+    `• 🚗 *Vehicle:* *${params.vehicleName}*`,
+    '',
+    '💰 *FARE & PAYMENT BREAKDOWN*',
+    params.estimatedFare && params.estimatedFare > 0
+      ? [
+          `• 💳 *Estimated Total Fare:* *₹${params.estimatedFare.toLocaleString('en-IN')}*`,
+          `• 🟢 *30% Advance Token:* *₹${token.toLocaleString('en-IN')}* (To Confirm)`,
+          `• ⚪ *70% Driver Balance:* *₹${balance.toLocaleString('en-IN')}* (At Pickup)`,
+        ].join('\n')
+      : '• 💳 *Fare:* Instant online estimate requested',
+    '',
+    params.customNote ? `📝 *Note:* ${params.customNote}\n` : '',
+    `🌐 *Website:* ${params.pageUrl || 'https://www.urgenttaxis.in'}`,
+    '📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad',
+    '💬 *WhatsApp Desk:* +91 8595066033',
+    '',
+    'Please confirm cab availability & driver assignment! ✨',
   ].filter(Boolean);
 
   const message = lines.join('\n');
