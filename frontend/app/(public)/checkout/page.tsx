@@ -102,10 +102,29 @@ function CheckoutContent() {
     return VEHICLE_INFO['sedan'];
   }, [categoryId]);
 
-  // Accurate Highway Distance & Travel Duration
+  // Effective Doorstep Pickup & Drop Address Resolution (Dynamic Real-time Recalculation)
+  const effectivePickup = useMemo(() => {
+    const detail = pickupAddressDetail.trim();
+    if (!detail) return pickupCity;
+    const cleanCity = pickupCity.split(',')[0].trim();
+    return detail.toLowerCase().includes(cleanCity.toLowerCase())
+      ? detail
+      : `${detail}, ${pickupCity}`;
+  }, [pickupAddressDetail, pickupCity]);
+
+  const effectiveDrop = useMemo(() => {
+    const detail = dropAddressDetail.trim();
+    if (!detail) return dropCity;
+    const cleanCity = dropCity.split(',')[0].trim();
+    return detail.toLowerCase().includes(cleanCity.toLowerCase())
+      ? detail
+      : `${detail}, ${dropCity}`;
+  }, [dropAddressDetail, dropCity]);
+
+  // Accurate Highway Distance & Travel Duration (Auto updates when specific address is entered)
   const routeData = useMemo(() => {
-    return resolveAccurateRoute(pickupCity, dropCity, initialKm);
-  }, [pickupCity, dropCity, initialKm]);
+    return resolveAccurateRoute(effectivePickup, effectiveDrop, initialKm);
+  }, [effectivePickup, effectiveDrop, initialKm]);
 
   // Formatted Date & Time (Accurate string representation without timezone skew)
   const formattedDate = useMemo(() => {
@@ -188,8 +207,14 @@ function CheckoutContent() {
     const token = calculateAdvanceToken(grandTotal);
     const balance = Math.max(0, grandTotal - token);
 
+    // Exact GST (5%) itemized calculation
+    const gstAmount = Math.round((base * 0.05) / 1.05);
+    const taxableBaseFare = base - gstAmount;
+
     return {
       baseFare: base,
+      taxableBaseFare,
+      gstAmount,
       addOnTotal,
       selectedAddOnsList,
       grandTotal,
@@ -585,8 +610,9 @@ function CheckoutContent() {
                     placeholder="Enter House/Flat No., Society/Building, Landmark, Colony"
                     className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-slate-900 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all"
                   />
-                  <span className="text-[11px] text-slate-400 block mt-1">
-                    City: {pickupCity}
+                  <span className="text-[11px] text-slate-500 block mt-1 flex items-center justify-between">
+                    <span>City: {pickupCity}</span>
+                    <span className="text-emerald-600 font-semibold text-[10px]">✓ Live Distance Tracking Active</span>
                   </span>
                 </div>
 
@@ -848,31 +874,48 @@ function CheckoutContent() {
 
               {/* Price Line Items (MakeMyTrip Style Dynamic Breakdown) */}
               <div className="space-y-2.5 text-xs">
-                {/* Base Fare */}
+                {/* Dynamic Distance Badge for Doorstep Addresses */}
+                <div className="p-2.5 bg-blue-50/70 border border-blue-200/80 rounded-xl flex items-center justify-between text-xs mb-1">
+                  <div>
+                    <span className="font-bold text-slate-900 block">
+                      {serviceType === 'round_trip' ? 'Round-Trip Distance' : 'Doorstep Highway Distance'}
+                    </span>
+                    <span className="text-[10px] text-slate-500">
+                      {pickupAddressDetail || dropAddressDetail ? 'Auto-calculated for your exact address' : 'Standard city center corridor'}
+                    </span>
+                  </div>
+                  <span className="font-black text-brand-blue tabular-nums bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs">
+                    {serviceType === 'round_trip' ? `${Math.max(routeData.distanceKm * 2, 250)} km` : `${routeData.distanceKm} km`}
+                  </span>
+                </div>
+
+                {/* Base Taxable Vehicle Fare */}
                 <div className="flex justify-between items-center text-slate-700">
                   <span className="font-medium">
                     {serviceType === 'local_rental'
-                      ? 'Base Hourly Package'
+                      ? 'Taxable Hourly Package'
                       : serviceType === 'airport_transfer'
-                      ? 'Airport Transfer Base'
-                      : `Base Cab Rental (${routeData.distanceKm} km)`}
+                      ? 'Taxable Airport Transfer Base'
+                      : `Taxable Base Vehicle Hire (${serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, 250) : routeData.distanceKm} km)`}
                   </span>
-                  <span className="font-bold text-slate-900">₹{calculatedFare.baseFare.toLocaleString('en-IN')}</span>
+                  <span className="font-bold text-slate-900 tabular-nums">
+                    ₹{calculatedFare.taxableBaseFare.toLocaleString('en-IN')}
+                  </span>
                 </div>
 
                 {/* Tolls & State Tax (MMT One-Way vs Round-Trip Policy) */}
                 <div className="flex justify-between items-center text-slate-700">
                   <span className="font-medium">Highway Tolls &amp; State Border Taxes</span>
                   {serviceType === 'one_way' ? (
-                    <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[11px]">
-                      ✓ Included
+                    <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[11px] border border-emerald-200/60">
+                      ✓ Included (₹0 Extra)
                     </span>
                   ) : serviceType === 'round_trip' ? (
-                    <span className="font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded text-[11px]">
-                      Payable At Actuals
+                    <span className="font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded text-[11px] border border-amber-200">
+                      Payable At Toll Plazas
                     </span>
                   ) : (
-                    <span className="font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded text-[11px]">
+                    <span className="font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded text-[11px]">
                       At Actuals
                     </span>
                   )}
@@ -880,17 +923,20 @@ function CheckoutContent() {
 
                 {/* Driver Allowance & Fuel */}
                 <div className="flex justify-between items-center text-slate-700">
-                  <span className="font-medium">Chauffeur Allowance &amp; Fuel</span>
-                  <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[11px]">
-                    ✓ Included
+                  <span className="font-medium">Chauffeur Daily Allowance &amp; Fuel</span>
+                  <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[11px] border border-emerald-200/60">
+                    ✓ Included (₹0 Extra)
                   </span>
                 </div>
 
-                {/* GST */}
-                <div className="flex justify-between items-center text-slate-700">
-                  <span className="font-medium">GST (5%) &amp; Road Taxes</span>
-                  <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[11px]">
-                    ✓ Included
+                {/* Explicit Goods & Services Tax (GST 5%) Itemization */}
+                <div className="flex justify-between items-center text-slate-700 pt-1">
+                  <div>
+                    <span className="font-bold text-slate-900 block">Goods &amp; Services Tax (GST 5%)</span>
+                    <span className="text-[10px] text-slate-400">Statutory transport levy (CGST + SGST)</span>
+                  </div>
+                  <span className="font-black text-emerald-800 tabular-nums bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200/70 text-xs">
+                    ₹{calculatedFare.gstAmount.toLocaleString('en-IN')}
                   </span>
                 </div>
 

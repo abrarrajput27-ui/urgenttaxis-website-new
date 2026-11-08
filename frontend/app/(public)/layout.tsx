@@ -18,10 +18,14 @@ export default function PublicLayout({
 }) {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-brand-green selection:text-white">
-      <PublicHeader />
-      <main className="flex-1">{children}</main>
-      <PublicFooter />
-      <MobileStickyBar />
+      <div className="print:hidden">
+        <PublicHeader />
+      </div>
+      <main className="flex-1 print:p-0 print:m-0">{children}</main>
+      <div className="print:hidden">
+        <PublicFooter />
+        <MobileStickyBar />
+      </div>
     </div>
   );
 }

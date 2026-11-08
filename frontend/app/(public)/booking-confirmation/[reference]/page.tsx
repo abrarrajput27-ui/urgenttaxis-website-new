@@ -103,10 +103,14 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
   const breakdown = snapshot.breakdown_json || {};
   const selectedAddOns: Array<{ id: string; name: string; price: number; disclaimer?: string }> = breakdown.addOns || [];
   const addOnTotal = breakdown.addOnTotal ?? (selectedAddOns.length * 300);
-  const baseVehicleFare = breakdown.baseVehicleFare ?? (snapshot.customer_payable ? Math.max(0, snapshot.customer_payable - addOnTotal) : 0);
   const customerPayable = snapshot.customer_payable || 0;
+  const baseVehicleFare = breakdown.baseVehicleFare ?? (customerPayable ? Math.max(0, customerPayable - addOnTotal) : 0);
   const tokenAmount = snapshot.token_amount || 0;
   const balanceAmount = snapshot.balance_amount || 0;
+
+  // Exact GST (5%) itemized calculation
+  const gstAmount = Math.round((baseVehicleFare * 0.05) / 1.05);
+  const taxableBaseFare = baseVehicleFare - gstAmount;
 
   // Payments Ledger Calculation
   const payments = booking.payments?.filter((p: any) => p.status === 'success') || [];
@@ -378,10 +382,10 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
               {/* Base Vehicle Fare */}
               <div className="flex justify-between items-start gap-4">
                 <div>
-                  <span className="font-bold text-slate-900 block">Base Vehicle Rental &amp; Fuel</span>
+                  <span className="font-bold text-slate-900 block">Taxable Base Vehicle Hire &amp; Fuel</span>
                   <span className="text-[11px] text-slate-500">Includes commercial cab hire, standard fuel for complete itinerary, and chauffeur navigation.</span>
                 </div>
-                <span className="font-bold text-slate-900 tabular-nums shrink-0 text-sm">₹{baseVehicleFare.toLocaleString('en-IN')}</span>
+                <span className="font-bold text-slate-900 tabular-nums shrink-0 text-sm">₹{taxableBaseFare.toLocaleString('en-IN')}</span>
               </div>
 
               {/* Highway Tolls & State Entry Permits */}
@@ -413,11 +417,11 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
               {/* GST */}
               <div className="flex justify-between items-start gap-4 pt-2 border-t border-slate-100">
                 <div>
-                  <span className="font-bold text-slate-900 block">Goods &amp; Services Tax (GST 5%)</span>
-                  <span className="text-[11px] text-slate-500">Statutory passenger transport tax under Ministry of Finance.</span>
+                  <span className="font-bold text-slate-900 block">Goods &amp; Services Tax (GST 5% - Statutory Transport Levy)</span>
+                  <span className="text-[11px] text-slate-500">Statutory passenger road transport tax (CGST 2.5% + SGST 2.5%).</span>
                 </div>
-                <span className="font-bold text-emerald-700 tabular-nums shrink-0 text-xs bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
-                  Included
+                <span className="font-bold text-emerald-800 tabular-nums shrink-0 text-xs bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+                  ₹{gstAmount.toLocaleString('en-IN')} (Included)
                 </span>
               </div>
 

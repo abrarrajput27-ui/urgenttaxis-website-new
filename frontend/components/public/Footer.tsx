@@ -55,7 +55,11 @@ export default function PublicFooter() {
         </div>
       </div>
 
-      <footer className="bg-[#0b101e] text-slate-300 font-sans text-sm mt-0">
+      <footer className="relative bg-[#0a1128] text-slate-300 font-sans text-sm mt-0 overflow-hidden border-t border-white/10 print:hidden">
+        {/* Authentic Dotted Pattern matching Route Pages Hero Section */}
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+        
+        <div className="relative z-10">
         {/* 2. Main Footer Content Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b border-white/10">
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
@@ -237,6 +241,7 @@ export default function PublicFooter() {
           </div>
         </div>
       </div>
+        </div>
     </footer>
     </>
   );

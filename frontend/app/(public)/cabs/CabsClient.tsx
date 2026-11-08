@@ -575,7 +575,7 @@ export default function CabsClient() {
       destination: drop,
       date: journeyDate,
       time: journeyTime,
-      km: String(routeData.distanceKm),
+      km: String(serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, 250) : routeData.distanceKm),
     });
     return `/checkout?${p.toString()}`;
   };
@@ -656,8 +656,12 @@ export default function CabsClient() {
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-semibold text-slate-300 pt-1">
                 <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-lg">
                   <FaRoad className="text-emerald-400" />
-                  <span className="text-white font-bold">{routeData.distanceKm} km</span>
-                  <span className="text-slate-400 text-[11px]">Highway</span>
+                  <span className="text-white font-bold">
+                    {serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, 250) : routeData.distanceKm} km
+                  </span>
+                  <span className="text-slate-400 text-[11px]">
+                    {serviceType === 'round_trip' ? 'Round-Trip' : 'Highway'}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-lg">
                   <FaClock className="text-emerald-400" />

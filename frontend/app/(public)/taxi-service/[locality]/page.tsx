@@ -6,7 +6,8 @@ import { LOCALITIES_DATA, LocalityData } from '@/lib/data/localities-data';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PageFAQSection from '@/components/public/PageFAQSection';
-import PublicFareWidget from '@/components/public/PublicFareWidget';
+import MmtBookingWidget from '@/components/public/MmtBookingWidget';
+import RouteMapCard from '@/components/public/RouteMapCard';
 import { getCitySpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
 import { Phone, MessageSquare, MapPin, CheckCircle2, Shield, Clock, Compass, Plane, ArrowRight, Car, Users, Briefcase, Sparkles } from 'lucide-react';
 
@@ -380,9 +381,9 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
               Choose your destination city, check live transparent per-km rates, and confirm with official 30% advance token.
             </p>
           </div>
-          <PublicFareWidget
-            initialServiceType="one_way"
+          <MmtBookingWidget
             defaultOrigin={data.name}
+            routeMode={true}
           />
         </section>
 
@@ -451,6 +452,17 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
               </tbody>
             </table>
           </div>
+        </section>
+
+        {/* Live Locality GPS Highway Coverage & Route Map */}
+        <section id="locality-map" className="scroll-mt-20">
+          <RouteMapCard
+            originName={data.name}
+            destName={airportRoute ? airportRoute.destination : 'Delhi IGI Airport'}
+            distanceKm={airportRoute ? airportRoute.distanceKm : 45}
+            durationText={airportRoute ? airportRoute.durationText : '1 hr 15 mins'}
+            highwayName={data.expressways?.[0] || 'National Highway'}
+          />
         </section>
 
         {/* Available Fleet Categories in Locality */}

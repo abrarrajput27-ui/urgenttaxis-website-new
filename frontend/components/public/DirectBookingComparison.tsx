@@ -187,6 +187,11 @@ export default function DirectBookingComparison() {
                 <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
                   <Image src="/partners/justdial.png" alt="Justdial Taxis" width={95} height={32} className="max-h-7 w-auto object-contain" />
                 </div>
+
+                {/* Tripadvisor */}
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/tripadvisor.jpg" alt="Tripadvisor Cabs" width={95} height={32} className="max-h-7 w-auto object-contain" />
+                </div>
               </div>
             </div>
 
