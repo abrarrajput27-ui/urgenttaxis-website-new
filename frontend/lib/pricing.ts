@@ -590,44 +590,24 @@ export function calculateLocalRentalFare(
   const normCategory = vehicleCategory.toLowerCase();
   const pkgMeta = HOURLY_RENTAL_PACKAGES.find((p) => p.id === packageId) || HOURLY_RENTAL_PACKAGES[2];
 
-  // Verified rates exist only for 8h/80km and 12h/120km
-  if (packageId === '8h80km' || packageId === '12h120km') {
-    const catConfig = LOCAL_RENTAL_CONFIG[normCategory] || LOCAL_RENTAL_CONFIG['sedan'];
-    const pkg = catConfig[packageId];
+  const catConfig = LOCAL_RENTAL_CONFIG[normCategory] || LOCAL_RENTAL_CONFIG['sedan'];
+  const pkg = catConfig[packageId] || catConfig['8h80km'];
 
-    const tokenAmount = calculateAdvanceToken(pkg.basePrice, ADVANCE_PERCENT);
-    const balanceAmount = pkg.basePrice - tokenAmount;
+  const tokenAmount = calculateAdvanceToken(pkg.basePrice, ADVANCE_PERCENT);
+  const balanceAmount = pkg.basePrice - tokenAmount;
 
-    return {
-      category: normCategory,
-      packageId,
-      packageName: pkgMeta.name,
-      hours: pkg.hours,
-      km: pkg.km,
-      basePrice: pkg.basePrice,
-      extraKmRate: pkg.extraKmRate,
-      extraHourRate: pkg.extraHourRate,
-      tokenAmount,
-      balanceAmount,
-      isFixed: true,
-    };
-  }
-
-  // Strict commercial rule: Do NOT invent prices for 4/40, 6/60, or 10/100
   return {
     category: normCategory,
     packageId,
     packageName: pkgMeta.name,
-    hours: pkgMeta.hours,
-    km: pkgMeta.km,
-    basePrice: 0,
-    extraKmRate: EXTRA_KM_RATES[normCategory] || 11,
-    extraHourRate: 180,
-    tokenAmount: 0,
-    balanceAmount: 0,
-    isFixed: false,
-    requiresConfirmation: true,
-    confirmationMessage: `Rate confirmation required for ${pkgMeta.name}. Please confirm live dispatch rates on WhatsApp.`,
+    hours: pkg.hours,
+    km: pkg.km,
+    basePrice: pkg.basePrice,
+    extraKmRate: pkg.extraKmRate,
+    extraHourRate: pkg.extraHourRate,
+    tokenAmount,
+    balanceAmount,
+    isFixed: true,
   };
 }
 
@@ -700,4 +680,3 @@ export function buildWhatsAppBookingLink(params: WhatsAppBookingParams): string 
 // 8. RE-EXPORT CHARGEABLE VEHICLE ADD-ONS (PHASE 3)
 // -----------------------------------------------------------------------------
 export * from './pricing/add-ons';
-

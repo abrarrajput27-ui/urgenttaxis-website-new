@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { FaCheckCircle, FaTimesCircle, FaShieldAlt, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
 import { SITE_CONFIG } from '@/lib/seo';
 import { BUSINESS_CONFIG } from '@/lib/config';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 
 export default function DirectBookingComparison() {
   const comparisonRows = [
@@ -125,72 +126,66 @@ export default function DirectBookingComparison() {
                 </p>
               </div>
 
-              {/* 6 Logos Grid (2 rows x 3 cols) */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {/* Expanded Competitor & Platform Logos Grid (3-4 cols) */}
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
                 {/* MakeMyTrip */}
-                <div className="h-16 rounded-2xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
-                  <Image
-                    src="/partners/makemytrip.svg"
-                    alt="MakeMyTrip Cabs"
-                    width={110}
-                    height={38}
-                    className="max-h-8 w-auto object-contain"
-                  />
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/makemytrip.svg" alt="MakeMyTrip Cabs" width={95} height={32} className="max-h-7 w-auto object-contain" />
                 </div>
 
                 {/* Goibibo */}
-                <div className="h-16 rounded-2xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
-                  <Image
-                    src="/partners/goibibo.png"
-                    alt="Goibibo Cabs"
-                    width={110}
-                    height={38}
-                    className="max-h-8 w-auto object-contain"
-                  />
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/goibibo.png" alt="Goibibo Cabs" width={95} height={32} className="max-h-7 w-auto object-contain" />
                 </div>
 
                 {/* EaseMyTrip */}
-                <div className="h-16 rounded-2xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
-                  <Image
-                    src="/partners/easemytrip.svg"
-                    alt="EaseMyTrip Cabs"
-                    width={110}
-                    height={38}
-                    className="max-h-8 w-auto object-contain"
-                  />
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/easemytrip.svg" alt="EaseMyTrip Cabs" width={95} height={32} className="max-h-7 w-auto object-contain" />
                 </div>
 
                 {/* Savaari */}
-                <div className="h-16 rounded-2xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
-                  <Image
-                    src="/partners/savaari.png"
-                    alt="Savaari Car Rentals"
-                    width={110}
-                    height={38}
-                    className="max-h-8 w-auto object-contain"
-                  />
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/savaari.png" alt="Savaari Car Rentals" width={95} height={32} className="max-h-7 w-auto object-contain" />
+                </div>
+
+                {/* Ola */}
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/ola.svg" alt="Ola Cabs" width={95} height={32} className="max-h-7 w-auto object-contain" />
+                </div>
+
+                {/* Uber */}
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/uber.svg" alt="Uber Intercity" width={95} height={32} className="max-h-7 w-auto object-contain" />
+                </div>
+
+                {/* Gozo */}
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/gozo.svg" alt="Gozo Cabs" width={95} height={32} className="max-h-7 w-auto object-contain" />
+                </div>
+
+                {/* Rapido */}
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/rapido.svg" alt="Rapido Cabs" width={95} height={32} className="max-h-7 w-auto object-contain rounded" />
+                </div>
+
+                {/* Meru */}
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/meru.svg" alt="Meru Cabs" width={95} height={32} className="max-h-7 w-auto object-contain" />
+                </div>
+
+                {/* Mega Cabs */}
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/megacabs.svg" alt="Mega Cabs" width={95} height={32} className="max-h-7 w-auto object-contain" />
+                </div>
+
+                {/* Booking.com */}
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/booking.svg" alt="Booking.com Taxi" width={95} height={32} className="max-h-7 w-auto object-contain rounded" />
                 </div>
 
                 {/* Justdial */}
-                <div className="h-16 rounded-2xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
-                  <Image
-                    src="/partners/justdial.png"
-                    alt="Justdial Taxis"
-                    width={110}
-                    height={38}
-                    className="max-h-8 w-auto object-contain"
-                  />
-                </div>
-
-                {/* Tripadvisor */}
-                <div className="h-16 rounded-2xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
-                  <Image
-                    src="/partners/tripadvisor.jpg"
-                    alt="Tripadvisor Cabs"
-                    width={110}
-                    height={38}
-                    className="max-h-8 w-auto object-contain rounded"
-                  />
+                <div className="h-13 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white hover:border-brand-blue/50 transition-all shadow-2xs">
+                  <Image src="/partners/justdial.png" alt="Justdial Taxis" width={95} height={32} className="max-h-7 w-auto object-contain" />
                 </div>
               </div>
             </div>
@@ -228,7 +223,7 @@ export default function DirectBookingComparison() {
                     Urgent Taxis (Direct Operator)
                   </th>
                   <th className="py-3.5 px-4 sm:px-6 w-1/3 text-slate-500">
-                    Other Online Aggregators
+                    Aggregators & App Cabs (Ola, Uber, MMT, Gozo)
                   </th>
                 </tr>
               </thead>
@@ -267,7 +262,7 @@ export default function DirectBookingComparison() {
                 <span>Call {SITE_CONFIG.phone}</span>
               </a>
               <a
-                href={`https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent('Hello Urgent Taxis! 👋 I want to book a cab directly.')}`}
+                href={generateWhatsAppLink()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2 rounded-xl bg-brand-green hover:bg-brand-green-hover text-white font-bold text-xs shadow-xs transition-colors flex items-center gap-1.5"

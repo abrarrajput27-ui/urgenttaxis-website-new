@@ -1,5 +1,6 @@
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { BUSINESS_CONFIG } from '@/lib/config';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import ContactInquiryForm from '@/components/public/ContactInquiryForm';
 import { Phone, MessageSquare, Mail, MapPin, Clock, ShieldCheck, Zap, Award } from 'lucide-react';
@@ -82,7 +83,7 @@ export default function ContactUsPage() {
             </a>
             <span>•</span>
             <a
-              href={`https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent('Hello Urgent Taxis! 👋 I would like to make an inquiry.')}`}
+              href={generateWhatsAppLink()}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-brand-green/20 hover:bg-brand-green/30 backdrop-blur-xs px-4 py-2 rounded-full border border-brand-green/40 flex items-center gap-2 transition-colors text-emerald-300"
@@ -183,7 +184,7 @@ export default function ContactUsPage() {
               <div>
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-0.5">WhatsApp Booking Desk</p>
                 <a
-                  href={`https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent('Hello Urgent Taxis! 👋 I would like to make an inquiry about booking a taxi.')}`}
+                  href={generateWhatsAppLink()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-lg sm:text-xl font-black text-brand-green hover:text-brand-green-hover transition-colors block"

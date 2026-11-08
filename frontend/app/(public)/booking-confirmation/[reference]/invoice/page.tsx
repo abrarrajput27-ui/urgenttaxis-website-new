@@ -417,28 +417,52 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
 
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {/* MakeMyTrip */}
-            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
-              <Image src="/partners/makemytrip.svg" alt="MakeMyTrip" width={90} height={30} className="max-h-7 w-auto object-contain" />
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/makemytrip.svg" alt="MakeMyTrip" width={80} height={26} className="max-h-6 w-auto object-contain" />
             </div>
             {/* Goibibo */}
-            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
-              <Image src="/partners/goibibo.png" alt="Goibibo" width={90} height={30} className="max-h-7 w-auto object-contain" />
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/goibibo.png" alt="Goibibo" width={80} height={26} className="max-h-6 w-auto object-contain" />
             </div>
             {/* EaseMyTrip */}
-            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
-              <Image src="/partners/easemytrip.svg" alt="EaseMyTrip" width={90} height={30} className="max-h-7 w-auto object-contain" />
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/easemytrip.svg" alt="EaseMyTrip" width={80} height={26} className="max-h-6 w-auto object-contain" />
             </div>
             {/* Savaari */}
-            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
-              <Image src="/partners/savaari.png" alt="Savaari" width={90} height={30} className="max-h-7 w-auto object-contain" />
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/savaari.png" alt="Savaari" width={80} height={26} className="max-h-6 w-auto object-contain" />
+            </div>
+            {/* Ola */}
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/ola.svg" alt="Ola" width={80} height={26} className="max-h-6 w-auto object-contain" />
+            </div>
+            {/* Uber */}
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/uber.svg" alt="Uber" width={80} height={26} className="max-h-6 w-auto object-contain" />
+            </div>
+            {/* Gozo */}
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/gozo.svg" alt="Gozo" width={80} height={26} className="max-h-6 w-auto object-contain" />
+            </div>
+            {/* Rapido */}
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/rapido.svg" alt="Rapido" width={80} height={26} className="max-h-6 w-auto object-contain rounded" />
+            </div>
+            {/* Meru */}
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/meru.svg" alt="Meru" width={80} height={26} className="max-h-6 w-auto object-contain" />
+            </div>
+            {/* Mega Cabs */}
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/megacabs.svg" alt="Mega Cabs" width={80} height={26} className="max-h-6 w-auto object-contain" />
+            </div>
+            {/* Booking.com */}
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/booking.svg" alt="Booking.com" width={80} height={26} className="max-h-6 w-auto object-contain rounded" />
             </div>
             {/* Justdial */}
-            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
-              <Image src="/partners/justdial.png" alt="Justdial" width={90} height={30} className="max-h-7 w-auto object-contain" />
-            </div>
-            {/* Tripadvisor */}
-            <div className="h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
-              <Image src="/partners/tripadvisor.jpg" alt="Tripadvisor" width={90} height={30} className="max-h-7 w-auto object-contain rounded" />
+            <div className="h-11 rounded-lg bg-slate-50 border border-slate-200/80 p-1.5 flex items-center justify-center hover:bg-white transition-colors shadow-2xs">
+              <Image src="/partners/justdial.png" alt="Justdial" width={80} height={26} className="max-h-6 w-auto object-contain" />
             </div>
           </div>
         </div>

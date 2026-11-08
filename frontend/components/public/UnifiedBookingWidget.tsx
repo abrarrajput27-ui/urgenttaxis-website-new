@@ -183,8 +183,23 @@ export default function UnifiedBookingWidget({
 
   // Dates & Times
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
+
+  // Compute minimum booking time (current time + 45 mins buffer to prevent past/expired bookings)
+  const getMinTimeForToday = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 45);
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    return `${hh}:${mm}`;
+  };
+
   const [pickupDate, setPickupDate] = useState(defaultDate || todayStr);
-  const [pickupTime, setPickupTime] = useState(defaultTime || '06:00');
+  const minTimeForToday = useMemo(() => getMinTimeForToday(), [pickupDate]);
+  const [pickupTime, setPickupTime] = useState(() => {
+    if (defaultTime) return defaultTime;
+    const minT = getMinTimeForToday();
+    return '09:00' > minT ? '09:00' : minT;
+  });
   const [returnDate, setReturnDate] = useState(todayStr);
   const [returnTime, setReturnTime] = useState('20:00');
   const [numberOfDays, setNumberOfDays] = useState(1);
@@ -336,11 +351,17 @@ export default function UnifiedBookingWidget({
     matchKnownRoute(origin, destination, updated);
   };
 
-  // Date handlers
+  // Date & Time handlers
   const handlePickupDateChange = (val: string) => {
-    if (val < todayStr) return;
+    if (val < todayStr) val = todayStr;
     setPickupDate(val);
     setValidationError('');
+    if (val === todayStr) {
+      const minT = getMinTimeForToday();
+      if (pickupTime < minT) {
+        setPickupTime(minT);
+      }
+    }
     if (returnDate < val) {
       setReturnDate(val);
       setNumberOfDays(1);
@@ -349,6 +370,19 @@ export default function UnifiedBookingWidget({
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
       setNumberOfDays(Math.max(1, diffDays));
     }
+  };
+
+  const handlePickupTimeChange = (val: string) => {
+    if (pickupDate === todayStr) {
+      const minT = getMinTimeForToday();
+      if (val < minT) {
+        setValidationError(`Selected pickup time has already passed. Earliest pickup is ${minT}.`);
+        setPickupTime(minT);
+        return;
+      }
+    }
+    setValidationError('');
+    setPickupTime(val);
   };
 
   const handleReturnDateChange = (val: string) => {
@@ -637,6 +671,19 @@ export default function UnifiedBookingWidget({
   // Submit Handler -> Navigate to Checkout
   const handleProceedToCheckout = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (pickupDate < todayStr) {
+      setValidationError('Departure date cannot be in the past.');
+      return;
+    }
+
+    if (pickupDate === todayStr) {
+      const minT = getMinTimeForToday();
+      if (pickupTime < minT) {
+        setValidationError(`Selected pickup time has already passed. Earliest dispatch is ${minT}.`);
+        return;
+      }
+    }
 
     if (!hasRequiredLocations) {
       setValidationError('Please enter both pickup and destination to view live fares and book.');
@@ -1247,8 +1294,9 @@ export default function UnifiedBookingWidget({
             <input
               id="pickup-time"
               type="time"
+              min={pickupDate === todayStr ? minTimeForToday : undefined}
               value={pickupTime}
-              onChange={(e) => setPickupTime(e.target.value)}
+              onChange={(e) => handlePickupTimeChange(e.target.value)}
               className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl px-4 py-3 font-semibold text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#1e1b4b] focus:bg-white transition-all"
             />
           </div>

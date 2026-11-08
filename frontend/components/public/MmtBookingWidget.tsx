@@ -109,6 +109,16 @@ export default function MmtBookingWidget({
 
   // ── Dates & Times State ──
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
+
+  // Compute minimum booking time (current time + 45 mins buffer to prevent past/expired bookings)
+  const getMinTimeForToday = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 45);
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    return `${hh}:${mm}`;
+  };
+
   const defaultReturnStr = useMemo(() => {
     const d = new Date();
     d.setDate(d.getDate() + 2);
@@ -117,7 +127,40 @@ export default function MmtBookingWidget({
 
   const [pickupDate, setPickupDate] = useState(todayStr);
   const [returnDate, setReturnDate] = useState(defaultReturnStr);
-  const [pickupTime, setPickupTime] = useState('09:00');
+  const [pickupTime, setPickupTime] = useState(() => {
+    const minT = getMinTimeForToday();
+    return '09:00' > minT ? '09:00' : minT;
+  });
+
+  const minTimeForToday = useMemo(() => getMinTimeForToday(), [pickupDate]);
+
+  const handleDateChange = (newDate: string) => {
+    if (newDate < todayStr) newDate = todayStr;
+    setPickupDate(newDate);
+    if (newDate > returnDate) {
+      setReturnDate(newDate);
+    }
+    if (newDate === todayStr) {
+      const minT = getMinTimeForToday();
+      if (pickupTime < minT) {
+        setPickupTime(minT);
+      }
+    }
+    setErrorMsg('');
+  };
+
+  const handleTimeChange = (newTime: string) => {
+    if (pickupDate === todayStr) {
+      const minT = getMinTimeForToday();
+      if (newTime < minT) {
+        setErrorMsg(`Selected pickup time has already passed. Earliest pickup is ${formatMmtTime(minT)}.`);
+        setPickupTime(minT);
+        return;
+      }
+    }
+    setErrorMsg('');
+    setPickupTime(newTime);
+  };
 
   // Hidden date input refs to trigger native calendar with custom MMT UI
   const pickupDateInputRef = useRef<HTMLInputElement>(null);
@@ -215,6 +258,19 @@ export default function MmtBookingWidget({
       }
     }
 
+    if (pickupDate < todayStr) {
+      setErrorMsg('Departure date cannot be in the past.');
+      return;
+    }
+
+    if (pickupDate === todayStr) {
+      const minT = getMinTimeForToday();
+      if (pickupTime < minT) {
+        setErrorMsg(`Selected pickup time has already passed. Earliest dispatch is ${formatMmtTime(minT)}.`);
+        return;
+      }
+    }
+
     if (tripType === 'round_trip' && returnDate < pickupDate) {
       setErrorMsg('Return date cannot be earlier than departure date.');
       return;
@@ -273,38 +329,66 @@ export default function MmtBookingWidget({
   const pickupDateFormatted = formatMmtDate(pickupDate);
   const returnDateFormatted = formatMmtDate(returnDate);
 
-  // Tabs list
-  const tabs: { key: MmtTripType; label: string; icon: string }[] = [
-    { key: 'one_way', label: 'OUTSTATION ONE-WAY', icon: '🚗' },
-    { key: 'round_trip', label: 'OUTSTATION ROUND-TRIP', icon: '🔁' },
-    { key: 'airport_transfer', label: 'AIRPORT CABS', icon: '✈️' },
-    { key: 'local_rental', label: 'HOURLY RENTALS', icon: '⏱️' },
+  // Primary Categories for Mobile & Desktop
+  const isOutstation = tripType === 'one_way' || tripType === 'round_trip';
+
+  const primaryCategories = [
+    {
+      id: 'outstation',
+      label: 'Outstation',
+      desktopLabel: 'OUTSTATION CABS',
+      icon: '🚗',
+      active: isOutstation,
+      select: () => {
+        if (!isOutstation) setTripType('one_way');
+        setErrorMsg('');
+      },
+    },
+    {
+      id: 'airport',
+      label: 'Airport',
+      desktopLabel: 'AIRPORT CABS',
+      icon: '✈️',
+      active: tripType === 'airport_transfer',
+      select: () => {
+        setTripType('airport_transfer');
+        setErrorMsg('');
+      },
+    },
+    {
+      id: 'rentals',
+      label: 'Rentals',
+      desktopLabel: 'HOURLY RENTALS',
+      icon: '⏱️',
+      active: tripType === 'local_rental',
+      select: () => {
+        setTripType('local_rental');
+        setErrorMsg('');
+      },
+    },
   ];
 
   return (
     <div ref={containerRef} className={`w-full max-w-5xl mx-auto font-sans relative ${className}`}>
-      {/* ── MMT TABS HEADER ── */}
-      <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 overflow-x-auto scrollbar-hide select-none -mb-1 relative z-20">
-        {tabs.map((tab) => {
-          const isActive = tripType === tab.key;
+      {/* ── MMT TABS HEADER (Mobile 3-Column Grid / Desktop Flex Row) ── */}
+      <div className="grid grid-cols-3 sm:flex sm:items-center gap-1 sm:gap-2 px-1 sm:px-4 select-none -mb-1 relative z-20">
+        {primaryCategories.map((cat) => {
           return (
             <button
-              key={tab.key}
+              key={cat.id}
               type="button"
-              onClick={() => {
-                setTripType(tab.key);
-                setErrorMsg('');
-              }}
-              className={`flex items-center gap-2 px-4 sm:px-5 py-3 rounded-t-2xl font-black text-xs tracking-wider transition-all cursor-pointer whitespace-nowrap shadow-xs ${
-                isActive
+              onClick={cat.select}
+              className={`flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-6 py-2.5 sm:py-3 rounded-t-xl sm:rounded-t-2xl font-black text-[11px] sm:text-xs tracking-wider transition-all cursor-pointer whitespace-nowrap shadow-xs ${
+                cat.active
                   ? 'bg-white text-brand-blue border-t-2 border-x-2 border-brand-green/80 shadow-md font-black -translate-y-0.5'
                   : routeMode
                   ? 'bg-white/20 hover:bg-white/30 text-white backdrop-blur-xs font-bold'
                   : 'bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-bold'
               }`}
             >
-              <span className="text-sm">{tab.icon}</span>
-              <span>{tab.label}</span>
+              <span className="text-xs sm:text-sm">{cat.icon}</span>
+              <span className="hidden sm:inline">{cat.desktopLabel}</span>
+              <span className="inline sm:hidden">{cat.label}</span>
             </button>
           );
         })}
@@ -321,6 +405,36 @@ export default function MmtBookingWidget({
         )}
 
         <form onSubmit={handleSearchCabs} className="space-y-4">
+          {/* ── OUTSTATION SUB-TABS (One-Way vs Round-Trip) ── */}
+          {isOutstation && (
+            <div className="flex items-center gap-1.5 bg-slate-100/90 p-1 rounded-xl w-fit border border-slate-200">
+              <button
+                type="button"
+                onClick={() => { setTripType('one_way'); setErrorMsg(''); }}
+                className={`px-3.5 sm:px-4 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                  tripType === 'one_way'
+                    ? 'bg-brand-blue text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                }`}
+              >
+                <span>➔</span>
+                <span>One-Way</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => { setTripType('round_trip'); setErrorMsg(''); }}
+                className={`px-3.5 sm:px-4 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                  tripType === 'round_trip'
+                    ? 'bg-brand-blue text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                }`}
+              >
+                <span>⇄</span>
+                <span>Round-Trip</span>
+              </button>
+            </div>
+          )}
+
           {/* ── SEGMENTED INPUT ROW (MMT Style) ── */}
           {tripType === 'one_way' || tripType === 'round_trip' ? (
             <div className="grid grid-cols-1 md:grid-cols-12 rounded-2xl border border-slate-200 bg-slate-50/70 hover:border-slate-300 divide-y md:divide-y-0 md:divide-x divide-slate-200 shadow-xs relative">
@@ -532,7 +646,7 @@ export default function MmtBookingWidget({
                   type="date"
                   min={todayStr}
                   value={pickupDate}
-                  onChange={(e) => setPickupDate(e.target.value)}
+                  onChange={(e) => handleDateChange(e.target.value)}
                   className="sr-only"
                   aria-label="Departure Date"
                 />
@@ -601,8 +715,9 @@ export default function MmtBookingWidget({
                 <input
                   ref={pickupTimeInputRef}
                   type="time"
+                  min={pickupDate === todayStr ? minTimeForToday : undefined}
                   value={pickupTime}
-                  onChange={(e) => setPickupTime(e.target.value)}
+                  onChange={(e) => handleTimeChange(e.target.value)}
                   className="sr-only"
                   aria-label="Pickup Time"
                 />
@@ -684,13 +799,13 @@ export default function MmtBookingWidget({
                     type="date"
                     min={todayStr}
                     value={pickupDate}
-                    onChange={(e) => setPickupDate(e.target.value)}
+                    onChange={(e) => handleDateChange(e.target.value)}
                     className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-900"
                   />
                   <input
                     type="time"
                     value={pickupTime}
-                    onChange={(e) => setPickupTime(e.target.value)}
+                    onChange={(e) => handleTimeChange(e.target.value)}
                     className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-900"
                   />
                 </div>
@@ -772,13 +887,13 @@ export default function MmtBookingWidget({
                     type="date"
                     min={todayStr}
                     value={pickupDate}
-                    onChange={(e) => setPickupDate(e.target.value)}
+                    onChange={(e) => handleDateChange(e.target.value)}
                     className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-900"
                   />
                   <input
                     type="time"
                     value={pickupTime}
-                    onChange={(e) => setPickupTime(e.target.value)}
+                    onChange={(e) => handleTimeChange(e.target.value)}
                     className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-900"
                   />
                 </div>

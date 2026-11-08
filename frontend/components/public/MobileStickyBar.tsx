@@ -1,13 +1,10 @@
 import { Phone, MessageSquare } from 'lucide-react';
 import { BUSINESS_CONFIG } from '@/lib/config';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 
 export default function MobileStickyBar() {
   const callDigits = BUSINESS_CONFIG.phone.primaryRaw.replace(/\D/g, '') || '917310651940';
-  const whatsappDigits = BUSINESS_CONFIG.phone.whatsappRaw || '918595066033';
-
-  const whatsappUrl = `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(
-    'Hello Urgent Taxis! 👋 I want to book a cab. Please share details and vehicle availability.'
-  )}`;
+  const whatsappUrl = generateWhatsAppLink();
 
   return (
     <aside

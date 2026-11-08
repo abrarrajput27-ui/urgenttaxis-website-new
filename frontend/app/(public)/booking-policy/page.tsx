@@ -1,6 +1,7 @@
 import { constructMetadata } from '@/lib/seo';
 import { BUSINESS_CONFIG } from '@/lib/config';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
+import RateCardSection from '@/components/public/RateCardSection';
 import { ShieldCheck, CheckCircle2, Clock, HelpCircle, FileText, Phone, MessageSquare, CreditCard } from 'lucide-react';
 
 export const metadata = constructMetadata({
@@ -57,6 +58,11 @@ export default function BookingPolicyPage() {
               <strong>Minimum Billing for Round Trips:</strong> For round-trip outstation bookings, a standard industry minimum of <strong>{BUSINESS_CONFIG.policies.roundTripMinKmPerDay} km per calendar day</strong> applies (300 km/day for Innova Crysta). If actual distance exceeds this baseline, additional kilometers are charged at the vehicle category’s standard per-km rate.
             </p>
           </div>
+        </div>
+
+        {/* Official 2026 Rate Card Matrix */}
+        <div className="rounded-3xl bg-white border border-slate-200 overflow-hidden shadow-sm">
+          <RateCardSection id="rate-card" className="py-6 sm:py-8 px-2 sm:px-6" />
         </div>
 
         {/* Section 2: Advance Payment Policy (30% / 70%) */}

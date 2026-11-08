@@ -5,6 +5,7 @@ import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PageFAQSection from '@/components/public/PageFAQSection';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
 import LocalRentalsViewer from '@/components/public/LocalRentalsViewer';
+import RateCardSection from '@/components/public/RateCardSection';
 import {
   FALLBACK_CATEGORIES,
   FALLBACK_LOCATIONS,
@@ -111,6 +112,9 @@ export default async function LocalRentalsPage() {
 
         <LocalRentalsViewer />
       </section>
+
+      {/* 3B. Official 2026 Rate Card Matrix Table */}
+      <RateCardSection id="rate-card" className="border-t border-slate-200/80" />
 
       {/* 4. Fare Calculator Widget */}
       <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-100">

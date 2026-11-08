@@ -127,14 +127,26 @@ export default function CabsClient() {
     }
   }, [initialPickup, initialDrop, initialDate, initialTime, initialServiceType]);
 
+  const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
+
+  // Compute minimum booking time (current time + 45 mins buffer to prevent past/expired bookings)
+  const getMinTimeForToday = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 45);
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    return `${hh}:${mm}`;
+  };
+
+  const minTimeForToday = useMemo(() => getMinTimeForToday(), [editDate]);
+
   // Set default date if blank
   useEffect(() => {
     if (!journeyDate) {
-      const today = new Date().toISOString().split('T')[0];
-      setJourneyDate(today);
-      setEditDate(today);
+      setJourneyDate(todayStr);
+      setEditDate(todayStr);
     }
-  }, [journeyDate]);
+  }, [journeyDate, todayStr]);
 
   // Calculate Accurate Highway Distance & Driving Duration for ANY address or location
   const routeData = useMemo(() => {
@@ -202,6 +214,17 @@ export default function CabsClient() {
   // Handle Modify Form Submit
   const handleModifySubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (editDate < todayStr) {
+      alert('Departure date cannot be in the past.');
+      return;
+    }
+    if (editDate === todayStr) {
+      const minT = getMinTimeForToday();
+      if (editTime < minT) {
+        alert(`Selected pickup time has already passed. Earliest pickup is ${minT}.`);
+        return;
+      }
+    }
     setPickup(editPickup);
     setDrop(editDrop);
     setJourneyDate(editDate);
@@ -722,8 +745,16 @@ export default function CabsClient() {
                   </label>
                   <input
                     type="date"
+                    min={todayStr}
                     value={editDate}
-                    onChange={(e) => setEditDate(e.target.value)}
+                    onChange={(e) => {
+                      const newD = e.target.value;
+                      setEditDate(newD);
+                      if (newD === todayStr) {
+                        const minT = getMinTimeForToday();
+                        if (editTime < minT) setEditTime(minT);
+                      }
+                    }}
                     className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
                     required
                   />
@@ -736,8 +767,20 @@ export default function CabsClient() {
                   </label>
                   <input
                     type="time"
+                    min={editDate === todayStr ? minTimeForToday : undefined}
                     value={editTime}
-                    onChange={(e) => setEditTime(e.target.value)}
+                    onChange={(e) => {
+                      const newT = e.target.value;
+                      if (editDate === todayStr) {
+                        const minT = getMinTimeForToday();
+                        if (newT < minT) {
+                          alert(`Selected pickup time has already passed. Earliest pickup is ${minT}.`);
+                          setEditTime(minT);
+                          return;
+                        }
+                      }
+                      setEditTime(newT);
+                    }}
                     className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
                     required
                   />
