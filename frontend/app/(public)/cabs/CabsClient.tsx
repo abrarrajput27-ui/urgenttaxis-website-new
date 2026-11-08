@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -45,6 +45,29 @@ export default function CabsClient() {
             <span>/</span>
             <span className="text-emerald-400 font-semibold">Available Cabs</span>
           </nav>
+
+          {/* MMT Style 4-Step Booking Progress Tracker */}
+          <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto py-2 text-xs font-bold border-b border-white/10 scrollbar-hide">
+            <div className="flex items-center gap-1.5 text-emerald-400 shrink-0">
+              <span className="w-5 h-5 rounded-full bg-emerald-500/30 border border-emerald-400 flex items-center justify-center text-[11px]">✓</span>
+              <span>1. Search Route</span>
+            </div>
+            <span className="text-white/30 shrink-0">➔</span>
+            <div className="flex items-center gap-1.5 text-white bg-white/10 px-3 py-1 rounded-full border border-emerald-400 shrink-0">
+              <span className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[11px]">2</span>
+              <span>2. Select Vehicle</span>
+            </div>
+            <span className="text-white/30 shrink-0">➔</span>
+            <div className="flex items-center gap-1.5 text-slate-400 shrink-0">
+              <span className="w-5 h-5 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[11px]">3</span>
+              <span>3. Trip Details</span>
+            </div>
+            <span className="text-white/30 shrink-0">➔</span>
+            <div className="flex items-center gap-1.5 text-slate-400 shrink-0">
+              <span className="w-5 h-5 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[11px]">4</span>
+              <span>4. Confirmed</span>
+            </div>
+          </div>
 
           {/* Heading */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pt-2">

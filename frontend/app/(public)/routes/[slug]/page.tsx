@@ -1,4 +1,4 @@
-import { notFound, permanentRedirect } from 'next/navigation';
+﻿import { notFound, permanentRedirect } from 'next/navigation';
 import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
@@ -9,7 +9,7 @@ import verifiedRoutesData from '@/lib/data/verified-routes.json';
 import { getRouteCorridorDetails } from '@/lib/data/route-corridor-details';
 import RouteMapCard from '@/components/public/RouteMapCard';
 import RouteHighlights from '@/components/public/RouteHighlights';
-import RouteHeroBookingBar from '@/components/public/RouteHeroBookingBar';
+import MmtBookingWidget from '@/components/public/MmtBookingWidget';
 import RoutePlacesSection from '@/components/public/RoutePlacesSection';
 import RouteMilestonesWeatherTips from '@/components/public/RouteMilestonesWeatherTips';
 import RouteGallerySection from '@/components/public/RouteGallerySection';
@@ -415,12 +415,13 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
             </div>
           </div>
 
-          {/* Embedded Hero Booking Bar */}
+          {/* Embedded Hero Booking Bar — MMT Style Fare Calculator */}
           <div className="pt-2">
-            <RouteHeroBookingBar
+            <MmtBookingWidget
               defaultOrigin={originName}
               defaultDestination={destName}
               defaultDistanceKm={distance}
+              routeMode={true}
             />
           </div>
         </div>

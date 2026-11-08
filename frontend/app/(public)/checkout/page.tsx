@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -135,7 +135,30 @@ function CheckoutContent() {
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-24">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <h1 className="text-3xl font-black text-slate-900 mb-8">Complete Your Booking</h1>
+        {/* MMT Style 4-Step Booking Progress Tracker */}
+        <div className="mb-6 bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/90 shadow-xs flex items-center gap-2 sm:gap-4 overflow-x-auto text-xs font-bold scrollbar-hide">
+          <div className="flex items-center gap-1.5 text-emerald-600 shrink-0">
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[11px]">✓</span>
+            <span>1. Search Route</span>
+          </div>
+          <span className="text-slate-300 shrink-0">➔</span>
+          <div className="flex items-center gap-1.5 text-emerald-600 shrink-0">
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[11px]">✓</span>
+            <span>2. Select Vehicle</span>
+          </div>
+          <span className="text-slate-300 shrink-0">➔</span>
+          <div className="flex items-center gap-1.5 text-brand-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200 shrink-0">
+            <span className="w-5 h-5 rounded-full bg-brand-blue text-white flex items-center justify-center text-[11px]">3</span>
+            <span>3. Trip & Passenger Details</span>
+          </div>
+          <span className="text-slate-300 shrink-0">➔</span>
+          <div className="flex items-center gap-1.5 text-slate-400 shrink-0">
+            <span className="w-5 h-5 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[11px]">4</span>
+            <span>4. Confirmation</span>
+          </div>
+        </div>
+
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-6">Complete Your Booking</h1>
         
         {error && (
           <div className="bg-red-50 text-red-600 p-4 rounded-xl mb-8 font-medium border border-red-100">
