@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FaExpand, FaCompress, FaExternalLinkAlt, FaRoute, FaCompass, FaMapMarkerAlt, FaDirections } from 'react-icons/fa';
+import { FaExpand, FaCompress, FaExternalLinkAlt, FaRoute, FaDirections } from 'react-icons/fa';
 
 interface RouteMapCardProps {
   originName: string;
@@ -27,6 +27,9 @@ export default function RouteMapCard({
     setIsFullscreen((prev) => !prev);
   };
 
+  // Strip accidental duplicate "via " prefix from corridor data
+  const cleanHighway = (highwayName || 'National Highway').replace(/^via\s+/i, '').trim();
+
   const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
     originName
   )}&destination=${encodeURIComponent(destName)}&travelmode=driving`;
@@ -40,7 +43,7 @@ export default function RouteMapCard({
     <div
       id="route-map"
       className={`bg-white rounded-3xl shadow-sm border border-slate-200/90 overflow-hidden flex flex-col font-sans transition-all duration-300 scroll-mt-24 w-full ${
-        isFullscreen ? 'fixed inset-4 z-50 shadow-2xl md:inset-10' : ''
+        isFullscreen ? 'fixed inset-3 z-50 shadow-2xl md:inset-8 bg-white' : ''
       } ${className}`}
     >
       {/* Card Header matching Urgent Taxis Brand Theme */}
@@ -50,7 +53,7 @@ export default function RouteMapCard({
             <FaRoute className="w-5 h-5 text-brand-blue" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <h2 className="text-lg sm:text-xl font-black text-brand-blue tracking-tight leading-tight">
                 Route Map
               </h2>
@@ -65,7 +68,7 @@ export default function RouteMapCard({
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
           {/* Map / Satellite Toggle */}
           <div className="flex bg-slate-100 p-0.5 rounded-xl border border-slate-200 text-xs font-bold">
             <button
@@ -101,11 +104,24 @@ export default function RouteMapCard({
           >
             {isFullscreen ? <FaCompress className="w-4 h-4" /> : <FaExpand className="w-4 h-4" />}
           </button>
+
+          {/* Get Directions CTA Button */}
+          <a
+            href={googleMapsDirectionsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-brand-green hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95 shrink-0"
+          >
+            <FaDirections className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Get Directions</span>
+            <span className="sm:hidden">Navigate</span>
+            <FaExternalLinkAlt className="w-2 h-2 ml-0.5 opacity-80" />
+          </a>
         </div>
       </div>
 
       {/* Direction & Location Indication Bar */}
-      <div className="px-4 sm:px-6 py-3 bg-slate-50 border-b border-slate-200/80 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="px-4 sm:px-6 py-2.5 bg-slate-50 border-b border-slate-200/80 flex flex-wrap items-center justify-between gap-2.5 text-xs">
         <div className="flex items-center gap-2 min-w-0 flex-wrap">
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-900 font-bold shadow-xs">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-100 shrink-0"></span>
@@ -113,7 +129,7 @@ export default function RouteMapCard({
             <span className="text-brand-blue">{originName}</span>
           </div>
 
-          <div className="flex items-center gap-1 text-slate-400 font-bold px-1">
+          <div className="flex items-center gap-1 text-slate-400 font-bold px-0.5">
             <span>➔</span>
           </div>
 
@@ -124,9 +140,9 @@ export default function RouteMapCard({
           </div>
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-slate-600 font-medium shrink-0">
+        <div className="flex items-center gap-2.5 text-xs text-slate-600 font-medium shrink-0 flex-wrap">
           <span className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-slate-200 text-slate-800 font-bold shadow-xs">
-            🛣️ {highwayName}
+            🛣️ {cleanHighway}
           </span>
           <span className="inline-flex items-center gap-1.5 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 font-bold text-brand-green shadow-xs">
             📏 {distanceKm} km (~{durationText})
@@ -134,41 +150,20 @@ export default function RouteMapCard({
         </div>
       </div>
 
-      {/* Full Container Map Viewport */}
-      <div className="relative w-full h-[450px] sm:h-[500px] lg:h-[540px] bg-slate-100 overflow-hidden select-none">
+      {/* 100% Unobstructed Full Container Map Viewport */}
+      <div className="w-full bg-slate-100 overflow-hidden select-none">
         <iframe
           title={`Live Highway Driving Route Map from ${originName} to ${destName}`}
           src={embedMapUrl}
-          className="w-full h-full border-0 absolute inset-0"
-          loading="lazy"
+          className="w-full border-0 block"
+          style={{
+            width: '100%',
+            height: isFullscreen ? 'calc(100vh - 170px)' : '480px',
+            minHeight: isFullscreen ? 'calc(100vh - 170px)' : '480px',
+            display: 'block',
+          }}
           allowFullScreen
         />
-
-        {/* Floating Origin Location Marker Indicator (Top Left) */}
-        <div className="absolute top-4 left-4 bg-white/95 text-slate-900 text-xs font-bold px-3.5 py-2 rounded-xl shadow-md border border-slate-200 flex items-center gap-2 pointer-events-none backdrop-blur-xs">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>From: <strong className="text-brand-blue">{originName}</strong></span>
-        </div>
-
-        {/* Live Navigation CTA Button (Top Right) */}
-        <a
-          href={googleMapsDirectionsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="absolute top-4 right-4 bg-brand-green hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg transition-all flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95"
-        >
-          <FaDirections className="w-4 h-4" />
-          <span>Get Directions</span>
-          <FaExternalLinkAlt className="w-2.5 h-2.5 ml-0.5 opacity-80" />
-        </a>
-
-        {/* Floating Destination Location Marker Indicator (Bottom Left) */}
-        <div className="absolute bottom-4 left-4 bg-[#1e1b4b] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg border border-blue-900/40 flex items-center gap-2.5 pointer-events-none backdrop-blur-xs">
-          <span className="text-sm">📍</span>
-          <span>To: <strong>{destName}</strong></span>
-          <span className="text-blue-300 font-normal">|</span>
-          <span className="text-brand-green font-black">{distanceKm} km</span>
-        </div>
       </div>
 
       {/* Card Footer with Corridor Summary & Turn-by-Turn Navigation */}
@@ -176,7 +171,7 @@ export default function RouteMapCard({
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse shrink-0" />
           <span className="text-xs font-bold text-slate-800">
-            Driving Route: {originName} ➔ {destName} via {highwayName} ({distanceKm} km)
+            Driving Route: {originName} ➔ {destName} via {cleanHighway} ({distanceKm} km)
           </span>
         </div>
         <a
