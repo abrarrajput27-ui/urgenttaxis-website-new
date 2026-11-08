@@ -303,7 +303,7 @@ export default function RoutesTabWidget() {
                         <span className="block text-[11px] font-medium text-slate-300">
                           {route.origin} to
                         </span>
-                        {route.destination}
+                        {route.destination}, <span className="text-emerald-300 font-bold">{activeState}</span>
                       </h3>
                     </div>
                   </div>
@@ -354,6 +354,15 @@ export default function RoutesTabWidget() {
                         >
                           <span>💬</span> WhatsApp
                         </a>
+                      </div>
+                      <div className="text-center pt-1">
+                        <Link
+                          href={`/routes/${route.slug}`}
+                          className="text-[11px] font-bold text-brand-blue hover:text-brand-green transition-colors inline-flex items-center gap-1"
+                        >
+                          <span>Explore Route, Hotels &amp; Stops</span>
+                          <span>→</span>
+                        </Link>
                       </div>
                     </div>
                   </div>

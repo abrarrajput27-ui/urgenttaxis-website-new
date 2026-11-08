@@ -29,6 +29,7 @@ import {
 } from 'react-icons/fa';
 import { resolveOneWayFare, HOURLY_RENTAL_PACKAGES, HourlyRentalPackageId, calculateLocalRentalFare } from '@/lib/pricing';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
+import { formatLocationWithState, POPULAR_AUTOCOMPLETE_CITIES } from '@/lib/location-authority';
 
 export type MmtTripType = 'one_way' | 'round_trip' | 'airport_transfer' | 'local_rental';
 
@@ -41,34 +42,6 @@ export interface MmtBookingWidgetProps {
   className?: string;
 }
 
-// ─── Popular Autocomplete Cities ─────────────────────────────────────────────
-const POPULAR_CITIES = [
-  { name: 'Delhi', state: 'Delhi NCR, India' },
-  { name: 'Ghaziabad', state: 'Uttar Pradesh, India' },
-  { name: 'Noida', state: 'Uttar Pradesh, India' },
-  { name: 'Greater Noida', state: 'Uttar Pradesh, India' },
-  { name: 'Gurugram', state: 'Haryana, India' },
-  { name: 'Faridabad', state: 'Haryana, India' },
-  { name: 'Meerut', state: 'Uttar Pradesh, India' },
-  { name: 'Hapur', state: 'Uttar Pradesh, India' },
-  { name: 'Agra', state: 'Uttar Pradesh, India' },
-  { name: 'Mathura', state: 'Uttar Pradesh, India' },
-  { name: 'Vrindavan', state: 'Uttar Pradesh, India' },
-  { name: 'Haridwar', state: 'Uttarakhand, India' },
-  { name: 'Rishikesh', state: 'Uttarakhand, India' },
-  { name: 'Dehradun', state: 'Uttarakhand, India' },
-  { name: 'Mussoorie', state: 'Uttarakhand, India' },
-  { name: 'Haldwani', state: 'Uttarakhand, India' },
-  { name: 'Nainital', state: 'Uttarakhand, India' },
-  { name: 'Jim Corbett', state: 'Uttarakhand, India' },
-  { name: 'Chandigarh', state: 'Punjab / Haryana, India' },
-  { name: 'Shimla', state: 'Himachal Pradesh, India' },
-  { name: 'Manali', state: 'Himachal Pradesh, India' },
-  { name: 'Jaipur', state: 'Rajasthan, India' },
-  { name: 'Lucknow', state: 'Uttar Pradesh, India' },
-  { name: 'Ayodhya', state: 'Uttar Pradesh, India' },
-  { name: 'Bareilly', state: 'Uttar Pradesh, India' },
-];
 
 const AIRPORT_LIST = [
   { name: 'Delhi Airport (IGI T3)', code: 'DEL', subtitle: 'Indira Gandhi International Airport, New Delhi' },
@@ -287,14 +260,14 @@ export default function MmtBookingWidget({
   // Filter cities for autocomplete
   const filteredOriginCities = useMemo(() => {
     const q = origin.trim().toLowerCase();
-    if (!q) return POPULAR_CITIES;
-    return POPULAR_CITIES.filter((c) => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
+    if (!q) return POPULAR_AUTOCOMPLETE_CITIES;
+    return POPULAR_AUTOCOMPLETE_CITIES.filter((c) => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
   }, [origin]);
 
   const filteredDestCities = useMemo(() => {
     const q = destination.trim().toLowerCase();
-    if (!q) return POPULAR_CITIES;
-    return POPULAR_CITIES.filter((c) => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
+    if (!q) return POPULAR_AUTOCOMPLETE_CITIES;
+    return POPULAR_AUTOCOMPLETE_CITIES.filter((c) => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
   }, [destination]);
 
   const pickupDateFormatted = formatMmtDate(pickupDate);
@@ -385,7 +358,7 @@ export default function MmtBookingWidget({
                     readOnly
                   />
                   <span className="text-xs text-slate-500 font-medium truncate block mt-0.5">
-                    {origin ? `${origin}, India` : 'Click to select city'}
+                    {origin ? formatLocationWithState(origin) : 'Click to select city'}
                   </span>
                 </div>
 
@@ -410,10 +383,15 @@ export default function MmtBookingWidget({
                           className="w-full text-left py-2 px-2.5 rounded-lg hover:bg-blue-50/80 flex items-center justify-between group transition-colors cursor-pointer"
                         >
                           <div>
-                            <span className="text-xs font-bold text-slate-900 group-hover:text-brand-blue block">
-                              {city.name}
-                            </span>
-                            <span className="text-[10px] text-slate-400 block">{city.state}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold text-slate-900 group-hover:text-brand-blue block">
+                                {city.name}
+                              </span>
+                              <span className="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.5 rounded font-bold">
+                                {city.state}
+                              </span>
+                            </div>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">{city.name}, {city.state}</span>
                           </div>
                           <span className="text-[10px] text-brand-green font-bold opacity-0 group-hover:opacity-100">
                             Select ➔
@@ -477,7 +455,7 @@ export default function MmtBookingWidget({
                     readOnly
                   />
                   <span className="text-xs text-slate-500 font-medium truncate block mt-0.5">
-                    {destination ? `${destination}, India` : 'Click to select destination'}
+                    {destination ? formatLocationWithState(destination) : 'Click to select destination'}
                   </span>
                 </div>
 
@@ -502,10 +480,15 @@ export default function MmtBookingWidget({
                           className="w-full text-left py-2 px-2.5 rounded-lg hover:bg-blue-50/80 flex items-center justify-between group transition-colors cursor-pointer"
                         >
                           <div>
-                            <span className="text-xs font-bold text-slate-900 group-hover:text-brand-blue block">
-                              {city.name}
-                            </span>
-                            <span className="text-[10px] text-slate-400 block">{city.state}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold text-slate-900 group-hover:text-brand-blue block">
+                                {city.name}
+                              </span>
+                              <span className="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.5 rounded font-bold">
+                                {city.state}
+                              </span>
+                            </div>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">{city.name}, {city.state}</span>
                           </div>
                           <span className="text-[10px] text-brand-green font-bold opacity-0 group-hover:opacity-100">
                             Select ➔

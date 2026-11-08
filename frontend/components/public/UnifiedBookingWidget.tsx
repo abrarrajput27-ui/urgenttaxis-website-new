@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { getLocationState, POPULAR_AUTOCOMPLETE_CITIES } from '@/lib/location-authority';
 import { SITE_CONFIG } from '@/lib/seo';
 import masterRoutesData from '@/lib/data/processed-master-routes.json';
 import {
@@ -275,7 +276,7 @@ export default function UnifiedBookingWidget({
     setOrigin(val);
     setValidationError('');
     if (val.trim().length > 0) {
-      const filtered = TOP_CITIES.filter((c) => c.toLowerCase().includes(val.toLowerCase()));
+      const filtered = TOP_CITIES.filter((c) => c.toLowerCase().includes(val.toLowerCase()) || getLocationState(c).toLowerCase().includes(val.toLowerCase()));
       setOriginSuggestions(filtered);
       setShowOriginDropdown(filtered.length > 0);
     } else {

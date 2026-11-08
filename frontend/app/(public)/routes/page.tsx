@@ -5,6 +5,7 @@ import Link from 'next/link';
 import masterRoutesData from '@/lib/data/processed-master-routes.json';
 import verifiedRoutesData from '@/lib/data/verified-routes.json';
 import { resolveOneWayFare } from '@/lib/pricing';
+import { getLocationState } from '@/lib/location-authority';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
 
@@ -144,10 +145,18 @@ export default async function RoutesDirectoryPage() {
                 href={`/routes/${route.slug}`}
                 className="p-3 rounded-xl border border-slate-200 hover:border-brand-blue bg-slate-50 hover:bg-blue-50/50 transition-all group flex flex-col justify-between"
               >
-                <span className="font-bold text-slate-800 group-hover:text-brand-blue text-xs sm:text-sm">
-                  {route.name}
-                </span>
-                <span className="text-[11px] font-semibold text-brand-green mt-1">
+                <div>
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded">
+                      {getLocationState(route.dest)}
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-medium">Verified</span>
+                  </div>
+                  <span className="font-bold text-slate-800 group-hover:text-brand-blue text-xs sm:text-sm block">
+                    {route.name}
+                  </span>
+                </div>
+                <span className="text-[11px] font-semibold text-brand-green mt-2 block">
                   Starting {route.fare}
                 </span>
               </Link>

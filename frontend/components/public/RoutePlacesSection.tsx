@@ -174,7 +174,7 @@ export default function RoutePlacesSection({
                 >
                   <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-slate-200">
                     <Image
-                      src={item.image || '/fleet-brand/dzire.webp'}
+                      src={item.image || '/destinations/food-plaza.webp'}
                       alt={item.name}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform"

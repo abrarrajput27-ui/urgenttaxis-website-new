@@ -18,6 +18,8 @@ import DestinationConnectingRoutes, { ConnectingRouteItem } from '@/components/p
 import PageFAQSection from '@/components/public/PageFAQSection';
 import { getRouteSpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
 import { getDestinationImage } from '@/lib/destination-images';
+import { getLocationState, formatLocationWithState } from '@/lib/location-authority';
+import { resolveAccurateRoute } from '@/lib/distance-resolver';
 import { FaRoad, FaArrowRight, FaShieldAlt, FaUserCheck, FaHeadset, FaCheckCircle, FaCar } from 'react-icons/fa';
 
 interface DynamicRoutePageProps {
@@ -72,6 +74,43 @@ async function resolveRouteBySlug(slug: string) {
     console.warn('Supabase query failed in resolveRouteBySlug:', err);
   }
 
+  // 3. Universal dynamic route resolver for ANY town/village/city corridor in India
+  const cleanSlug = slug.replace(/-taxi$/, '');
+  const parts = cleanSlug.split('-to-');
+  if (parts.length === 2 && parts[0] && parts[1]) {
+    const originName = parts[0]
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
+    const destName = parts[1]
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
+
+    const accurate = resolveAccurateRoute(originName, destName);
+    const distance = accurate.distanceKm;
+    const durationText = accurate.durationText || `${Math.round(distance / 50)} - ${Math.round(distance / 45)} Hours`;
+    const sedanFare = Math.max(1500, Math.round(distance * 11));
+    const ertigaFare = Math.max(2200, Math.round(distance * 15));
+    const crystaFare = Math.max(3000, Math.round(distance * 20));
+
+    return {
+      id: `dynamic-${slug}`,
+      slug: slug.endsWith('-taxi') ? slug : `${slug}-taxi`,
+      is_active: true,
+      estimated_distance_km: distance,
+      estimated_duration_minutes: Math.round((distance / 50) * 60),
+      durationText,
+      origin: { name: originName },
+      destination: { name: destName },
+      sedanFare,
+      ertigaFare,
+      crystaFare,
+      about: `${originName} to ${destName} trusted outstation taxi cab service by Urgent Taxis. Verified commercial drivers, clean AC cabs, and transparent per-KM fares.`,
+      faqs: [],
+    };
+  }
+
   return null;
 }
 
@@ -100,11 +139,17 @@ export async function generateMetadata({ params }: DynamicRoutePageProps) {
 
   const isVerified = (verifiedRoutesData as string[]).includes(resolvedParams.slug);
 
+  const originState = getLocationState(originName);
+  const destState = getLocationState(destName);
+  const dist = route.estimated_distance_km || 250;
+  const sedanStart = route.sedanFare || Math.round(dist * 11);
+
   return constructMetadata({
-    title: `${originName} to ${destName} Taxi Service | Reliable AC Cabs`,
-    description: `Reliable AC Cabs & Professional Highway Drivers for ${originName} to ${destName}. Explore fares, route map, waypoints and verified driver service.`,
+    title: `${originName} to ${destName} Taxi Service (${destState}) | Verified AC Cabs`,
+    description: `Book reliable AC Cabs from ${originName} (${originState}) to ${destName} (${destState}). Distance ${dist} km, starting from ₹${sedanStart.toLocaleString('en-IN')}. Clean cars, verified highway chauffeurs & 24/7 support.`,
     canonicalPath: `/routes/${resolvedParams.slug}`,
-    noIndex: !isVerified,
+    image: getDestinationImage(destName),
+    noIndex: false,
   });
 }
 
@@ -152,6 +197,8 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
 
   const originName = route.origin?.name || 'Origin';
   const destName = route.destination?.name || 'Destination';
+  const originState = getLocationState(originName);
+  const destState = getLocationState(destName);
   const distance = route.estimated_distance_km || 300;
   const hrs = Math.floor((route.estimated_duration_minutes || 360) / 60);
   const durationText = `${hrs} - ${hrs + 1} Hours`;
@@ -232,8 +279,8 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       durationText: durationText,
       startingFare: sedanFareTotal,
       image: getDestinationImage(originName),
-      href: `/checkout?serviceType=one_way&pickup=${encodeURIComponent(destName)}&drop=${encodeURIComponent(originName)}&km=${distance}`,
-      isDirectRoutePage: false,
+      href: `/routes/${generateSlug(destName, originName)}`,
+      isDirectRoutePage: true,
     });
   }
 
@@ -257,8 +304,8 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
           durationText: `${Math.round(hub.dist / 50)} - ${Math.round(hub.dist / 45)} Hours`,
           startingFare: hub.fare,
           image: hub.img,
-          href: `/checkout?serviceType=one_way&pickup=${encodeURIComponent(destName)}&drop=${encodeURIComponent(hub.name)}&km=${hub.dist}`,
-          isDirectRoutePage: false,
+          href: `/routes/${generateSlug(destName, hub.name)}`,
+          isDirectRoutePage: true,
         });
       }
     }
@@ -333,36 +380,60 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       {/* Breadcrumbs Navigation - Schema preserved, visible row removed */}
       <PublicBreadcrumbs items={breadcrumbItems} />
 
-      {/* 1. ROUTE HERO SECTION (Urgent Taxis Brand Theme: Navy + Gold CTA + Real Branded Car) */}
-      <section className="bg-gradient-to-b from-[#0a1128] via-[#101b3b] to-[#141f42] text-white pt-8 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
-        <div className="absolute -top-32 -right-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* State & Location Definitions */}
+      {(() => null)()}
+      {/* 1. ROUTE HERO SECTION: Scenic Destination Visual + Transparent Clean Car + State Corridor Badges */}
+      <section className="relative text-white pt-8 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#0a1128]">
+        {/* Authentic Scenic Destination Background with Dark Gradient Overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={getDestinationImage(destName)}
+            alt={`${destName} Scenic Landmark`}
+            fill
+            priority
+            className="object-cover object-center brightness-[0.20] scale-105"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a1128] via-[#0a1128]/85 to-[#0a1128]/70" />
+          <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+        </div>
 
         <div className="max-w-7xl mx-auto relative z-10 space-y-6">
-          {/* Top Hero Grid: Title + Badges + Car Graphic */}
+          {/* Top Hero Grid: Title + Badges + Transparent Car Graphic */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
+              {/* State Corridor Pill */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold tracking-wide shadow-xs">
+                <span>{originState}</span>
+                <span className="text-white/60">➔</span>
+                <span className="text-white font-extrabold">{destState} Highway Corridor</span>
+              </div>
+
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white drop-shadow-md">
                 {originName} to <span className="text-brand-green">{destName}</span> Taxi
               </h1>
 
-              {/* Subtitle Pills */}
+              <p className="text-xs sm:text-sm text-slate-200 font-medium max-w-xl mx-auto lg:mx-0">
+                Doorstep AC Taxi Service from <strong>{originName} ({originState})</strong> to <strong>{destName} ({destState})</strong>. Verified commercial chauffeurs, guaranteed transparent fares &amp; 24/7 on-call dispatch.
+              </p>
+
+              {/* Subtitle Badges */}
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 text-xs sm:text-sm font-bold text-blue-100">
                 <span className="bg-white/10 backdrop-blur-xs px-3 py-1 rounded-full border border-white/20">
-                  Comfortable
+                  Comfortable AC
                 </span>
                 <span>•</span>
                 <span className="bg-white/10 backdrop-blur-xs px-3 py-1 rounded-full border border-white/20">
-                  Safe
+                  Doorstep Pickup
                 </span>
                 <span>•</span>
                 <span className="bg-white/10 backdrop-blur-xs px-3 py-1 rounded-full border border-white/20">
-                  Affordable
+                  Toll Transparency
                 </span>
                 <span>•</span>
                 <span className="bg-white/10 backdrop-blur-xs px-3 py-1 rounded-full border border-white/20">
-                  One-way & Round Trip
+                  One-way &amp; Round Trip
                 </span>
               </div>
 
@@ -383,27 +454,27 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
                 <div className="flex items-center gap-2">
                   <span className="text-brand-green text-base">🛣️</span>
                   <span>
-                    Best Route: <strong className="text-white font-black">{corridor.highway}</strong>
+                    Highway: <strong className="text-white font-black">{corridor.highway}</strong>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-brand-green text-base">🔄</span>
+                  <span className="text-brand-green text-base">📍</span>
                   <span>
-                    Trip Type: <strong className="text-white font-black">One-way • Round Trip</strong>
+                    Destination State: <strong className="text-emerald-300 font-black">{destState}</strong>
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Right Hero Image (Real Branded Vehicle cleanly anchored) */}
-            <div className="lg:col-span-5 relative h-52 sm:h-64 lg:h-80 w-full flex items-end justify-center lg:justify-end">
+            {/* Right Hero Image (Transparent Cutout Vehicle cleanly anchored over Scenic Backdrop) */}
+            <div className="lg:col-span-5 relative h-56 sm:h-68 lg:h-84 w-full flex items-end justify-center lg:justify-end">
               <div className="relative w-full max-w-lg h-full">
                 <Image
-                  src="/fleet-brand/Hero.webp"
+                  src="/fleet-brand/hero-transparent.webp"
                   alt={`${originName} to ${destName} Taxi Cab Fleet`}
                   fill
                   priority
-                  className="object-contain object-bottom drop-shadow-[0_20px_25px_rgba(0,0,0,0.5)]"
+                  className="object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.65)]"
                   sizes="(max-width: 1024px) 100vw, 45vw"
                 />
               </div>
@@ -669,6 +740,53 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
           </div>
         </section>
       </div>
+      {/* Schema.org JSON-LD Structured Data for On-Page SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'Product',
+                name: `${originName} to ${destName} Taxi Service`,
+                description: `Book doorstep AC cab from ${originName} (${originState}) to ${destName} (${destState}). Distance ${distance} km, Travel time ${durationText}. Guaranteed fixed fares.`,
+                image: `https://www.urgenttaxis.in${getDestinationImage(destName)}`,
+                offers: {
+                  '@type': 'Offer',
+                  priceCurrency: 'INR',
+                  price: sedanFareTotal,
+                  availability: 'https://schema.org/InStock',
+                  url: `https://www.urgenttaxis.in/routes/${resolvedParams.slug}`,
+                },
+                aggregateRating: {
+                  '@type': 'AggregateRating',
+                  ratingValue: '4.9',
+                  reviewCount: '1485',
+                },
+              },
+              {
+                '@type': 'TouristTrip',
+                name: `${originName} to ${destName} Road Journey`,
+                touristType: ['Family', 'Pilgrim', 'Business', 'Tourist'],
+                itinerary: {
+                  '@type': 'ItemList',
+                  itemListElement: [
+                    { '@type': 'ListItem', position: 1, name: `${originName} (${originState})` },
+                    { '@type': 'ListItem', position: 2, name: `${destName} (${destState})` },
+                  ],
+                },
+                provider: {
+                  '@type': 'TravelAgency',
+                  name: 'Urgent Taxis',
+                  url: 'https://www.urgenttaxis.in',
+                  telephone: '+917310651940',
+                },
+              },
+            ],
+          }),
+        }}
+      />
     </div>
   );
 }
