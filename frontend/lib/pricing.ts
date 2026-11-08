@@ -16,6 +16,7 @@
 import masterRoutesData from './data/processed-master-routes.json';
 import { AIRPORT_ROUTES_DATA } from './data/airport-routes-data';
 import { SITE_CONFIG } from './seo';
+import { resolveAccurateRoute } from './distance-resolver';
 
 // -----------------------------------------------------------------------------
 // 1. RATE CONSTANTS (Owner Confirmed Values)
@@ -236,26 +237,29 @@ export function resolveOneWayFare(
     };
   }
 
-  // 2. Unmapped route with known distance: Provide transparent distance/time + WhatsApp quote flag
-  if (knownDistanceKm && knownDistanceKm > 0) {
-    const estHours = Math.max(1, Math.round(knownDistanceKm / 50));
-    return {
-      slug: generateRouteSlug(origin, destination),
-      originName: origin,
-      destName: destination,
-      distanceKm: knownDistanceKm,
-      durationText: `~${estHours} hrs ${Math.round((knownDistanceKm % 50) * 1.2)} mins`,
-      sedanFare: 0,
-      ertigaFare: 0,
-      crystaFare: 0,
-      startsAt: 0,
-      estimatedToll: Math.round(knownDistanceKm * 1.6),
-      isFixed: false,
-      requiresWhatsAppQuote: true,
-    };
-  }
+  // 2. Universal Dynamic Calculation for all addresses, cities & unmapped locations
+  const accurate = resolveAccurateRoute(origin, destination, knownDistanceKm || 0);
+  const distanceKm = accurate.distanceKm;
+  const sedanFare = accurate.sedanFare || Math.max(1600, Math.round(distanceKm * 11));
+  const ertigaFare = accurate.ertigaFare || Math.max(2200, Math.round(distanceKm * 15));
+  const crystaFare = accurate.crystaFare || Math.max(3400, Math.round(distanceKm * 20));
+  const startsAt = Math.min(sedanFare, ertigaFare, crystaFare);
+  const estimatedToll = Math.round(distanceKm * 1.6);
 
-  return null;
+  return {
+    slug: generateRouteSlug(origin, destination),
+    originName: origin,
+    destName: destination,
+    distanceKm,
+    durationText: accurate.durationText,
+    sedanFare,
+    ertigaFare,
+    crystaFare,
+    startsAt,
+    estimatedToll,
+    isFixed: true,
+    requiresWhatsAppQuote: false,
+  };
 }
 
 export interface MultiStopFareQuote {
