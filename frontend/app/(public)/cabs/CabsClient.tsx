@@ -81,8 +81,10 @@ export default function CabsClient() {
 
   // Read URL query params (accepts arbitrary addresses, locations, pincodes)
   const initialServiceType = (searchParams.get('serviceType') as BookingServiceType) || 'one_way';
-  const initialPickup = searchParams.get('pickup') || searchParams.get('origin') || 'Ghaziabad, Uttar Pradesh';
-  const initialDrop = searchParams.get('drop') || searchParams.get('destination') || 'Nainital, Uttarakhand';
+  const initialPickup = searchParams.get('pickup') || searchParams.get('origin') || searchParams.get('city') || 'Ghaziabad, Uttar Pradesh';
+  const initialDrop = initialServiceType === 'local_rental'
+    ? ''
+    : (searchParams.get('drop') || searchParams.get('destination') || 'Nainital, Uttarakhand');
   const initialDate = searchParams.get('date') || searchParams.get('pickupDate') || '';
   const initialTime = searchParams.get('time') || searchParams.get('pickupTime') || '09:00';
   const initialReturnDate = searchParams.get('returnDate') || searchParams.get('return_date') || '';
@@ -101,6 +103,7 @@ export default function CabsClient() {
   const [journeyDate, setJourneyDate] = useState(initialDate);
   const [journeyTime, setJourneyTime] = useState(initialTime);
   const [returnDate, setReturnDate] = useState(initialReturnDate);
+  const [packageId, setPackageId] = useState<HourlyRentalPackageId>(initialPackageId);
   const [isModifyOpen, setIsModifyOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<VehicleFilterKey>('all');
   const [activeTabMap, setActiveTabMap] = useState<Record<string, 'inclusions' | 'exclusions'>>({});
@@ -113,6 +116,7 @@ export default function CabsClient() {
   const [editTime, setEditTime] = useState(initialTime);
   const [editReturnDate, setEditReturnDate] = useState(initialReturnDate);
   const [editServiceType, setEditServiceType] = useState<BookingServiceType>(initialServiceType);
+  const [editPackageId, setEditPackageId] = useState<HourlyRentalPackageId>(initialPackageId);
 
   // Sync when searchParams change
   useEffect(() => {
@@ -120,7 +124,10 @@ export default function CabsClient() {
       setPickup(initialPickup);
       setEditPickup(initialPickup);
     }
-    if (initialDrop) {
+    if (initialServiceType === 'local_rental') {
+      setDrop('');
+      setEditDrop('');
+    } else if (initialDrop) {
       setDrop(initialDrop);
       setEditDrop(initialDrop);
     }
@@ -136,6 +143,10 @@ export default function CabsClient() {
       setReturnDate(initialReturnDate);
       setEditReturnDate(initialReturnDate);
     }
+    if (initialPackageId) {
+      setPackageId(initialPackageId);
+      setEditPackageId(initialPackageId);
+    }
     if (initialServiceType) {
       setServiceType(initialServiceType);
       setEditServiceType(initialServiceType);
@@ -143,7 +154,7 @@ export default function CabsClient() {
     if (rawStops) {
       setStops(rawStops.split('|').map((s) => s.trim()).filter(Boolean));
     }
-  }, [initialPickup, initialDrop, initialDate, initialTime, initialReturnDate, initialServiceType, rawStops]);
+  }, [initialPickup, initialDrop, initialDate, initialTime, initialReturnDate, initialPackageId, initialServiceType, rawStops]);
 
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
 
@@ -169,10 +180,10 @@ export default function CabsClient() {
   // Calculate Accurate Highway Distance & Driving Duration for ANY address or location
   const routeData = useMemo(() => {
     if (serviceType === 'local_rental') {
-      const pkg = LOCAL_RENTAL_CONFIG.sedan[initialPackageId] || LOCAL_RENTAL_CONFIG.sedan['8h80km'];
+      const pkg = LOCAL_RENTAL_CONFIG.sedan[packageId] || LOCAL_RENTAL_CONFIG.sedan['8h80km'];
       return {
         origin: pickup,
-        destination: `${pkg.hours} Hrs / ${pkg.km} KM Local City Package`,
+        destination: `${pkg.hours} Hours / ${pkg.km} KM Local City Package`,
         distanceKm: pkg.km,
         durationMinutes: pkg.hours * 60,
         durationText: `${pkg.hours} Hours Package`,
@@ -197,7 +208,7 @@ export default function CabsClient() {
     }
 
     return resolveAccurateRoute(pickup, drop, initialDistanceKm);
-  }, [pickup, drop, serviceType, initialDistanceKm, initialPackageId]);
+  }, [pickup, drop, serviceType, initialDistanceKm, packageId]);
 
   // Format readable display date (e.g. "Sun, 8 Nov 2026")
   const formattedDate = useMemo(() => {
@@ -238,19 +249,27 @@ export default function CabsClient() {
       alert('Return date cannot be earlier than departure date.');
       return;
     }
+
+    const nextDrop = editServiceType === 'local_rental' ? '' : editDrop;
     setPickup(editPickup);
-    setDrop(editDrop);
+    setDrop(nextDrop);
     setJourneyDate(editDate);
     setJourneyTime(editTime);
     setReturnDate(editReturnDate);
     setServiceType(editServiceType);
+    setPackageId(editPackageId);
     setIsModifyOpen(false);
 
     // Update URL shallowly
     const p = new URLSearchParams();
     p.set('serviceType', editServiceType);
     p.set('pickup', editPickup);
-    p.set('drop', editDrop);
+    if (editServiceType === 'local_rental') {
+      p.set('packageId', editPackageId);
+      p.set('city', editPickup);
+    } else {
+      p.set('drop', nextDrop);
+    }
     p.set('date', editDate);
     p.set('time', editTime);
     if (editServiceType === 'round_trip' && editReturnDate) {
@@ -282,50 +301,59 @@ export default function CabsClient() {
       if (routeData.sedanFare && routeData.sedanFare > 0) {
         sedanFare = routeData.sedanFare;
         ertigaFare = routeData.ertigaFare || Math.round(sedanFare * 1.35);
-        crystaFare = routeData.crystaFare || Math.round(sedanFare * 2.1);
+        crystaFare = routeData.crystaFare || Math.round(sedanFare * 2.05);
         hatchbackFare = Math.round(sedanFare * 0.88);
+        innovaFare = Math.round(sedanFare * 1.6);
+        tempoFare = Math.round(sedanFare * 2.5);
+        urbaniaFare = Math.round(sedanFare * 3.3);
+        busFare = Math.round(sedanFare * 4.8);
       } else {
-        sedanFare = Math.max(1600, Math.round(dist * 12));
-        ertigaFare = Math.max(2200, Math.round(dist * 15));
-        crystaFare = Math.max(3400, Math.round(dist * 22));
-        hatchbackFare = Math.max(1300, Math.round(dist * 11));
+        // Unmapped outstation corridor fallback calibrated to commercial market standards
+        sedanFare = Math.max(1800, Math.round(dist * 14.5));
+        hatchbackFare = Math.max(1500, Math.round(dist * 12.5));
+        ertigaFare = Math.max(2600, Math.round(dist * 18.5));
+        innovaFare = Math.max(3400, Math.round(dist * 21.0));
+        crystaFare = Math.max(4200, Math.round(dist * 25.0));
+        tempoFare = Math.max(5800, Math.round(dist * 29.0));
+        urbaniaFare = Math.max(7800, Math.round(dist * 36.0));
+        busFare = Math.max(11500, Math.round(dist * 52.0));
       }
       suvMuvFare = ertigaFare;
-      innovaFare = Math.max(2800, Math.round(dist * 19));
-      tempoFare = Math.max(4500, Math.round(dist * 26));
-      urbaniaFare = Math.max(6000, Math.round(dist * 32));
-      busFare = Math.max(9000, Math.round(dist * 48));
     } else if (serviceType === 'round_trip') {
+      const rtHatch = calculateRoundTripFare(dist, tripDays, 'hatchback');
       const rtSedan = calculateRoundTripFare(dist, tripDays, 'sedan');
       const rtErtiga = calculateRoundTripFare(dist, tripDays, 'suv-muv');
+      const rtInnova = calculateRoundTripFare(dist, tripDays, 'innova');
       const rtCrysta = calculateRoundTripFare(dist, tripDays, 'executive-suv');
-      const rtHatch = calculateRoundTripFare(dist, tripDays, 'hatchback');
+      const rtTempo = calculateRoundTripFare(dist, tripDays, 'tempo16');
+      const rtUrbania = calculateRoundTripFare(dist, tripDays, 'urbania12');
+      const rtBus = calculateRoundTripFare(dist, tripDays, 'bus27');
 
+      hatchbackFare = rtHatch.totalFare;
       sedanFare = rtSedan.totalFare;
       ertigaFare = rtErtiga.totalFare;
       suvMuvFare = rtErtiga.totalFare;
+      innovaFare = rtInnova.totalFare;
       crystaFare = rtCrysta.totalFare;
-      hatchbackFare = rtHatch.totalFare;
-      innovaFare = Math.round(sedanFare * 1.6);
-      tempoFare = Math.round(sedanFare * 2.3);
-      urbaniaFare = Math.round(sedanFare * 2.9);
-      busFare = Math.round(sedanFare * 4.3);
+      tempoFare = rtTempo.totalFare;
+      urbaniaFare = rtUrbania.totalFare;
+      busFare = rtBus.totalFare;
     } else if (serviceType === 'local_rental') {
-      const pkg = initialPackageId;
+      const pkg = packageId;
+      const lHatch = calculateLocalRentalFare(pkg, 'hatchback');
       const lSedan = calculateLocalRentalFare(pkg, 'sedan');
       const lErtiga = calculateLocalRentalFare(pkg, 'suv-muv');
       const lCrysta = calculateLocalRentalFare(pkg, 'executive-suv');
-      const lHatch = calculateLocalRentalFare(pkg, 'hatchback');
 
+      hatchbackFare = lHatch.basePrice;
       sedanFare = lSedan.basePrice;
       ertigaFare = lErtiga.basePrice;
       suvMuvFare = lErtiga.basePrice;
       crystaFare = lCrysta.basePrice;
-      hatchbackFare = lHatch.basePrice;
-      innovaFare = Math.round(lSedan.basePrice * 1.5);
-      tempoFare = Math.round(lSedan.basePrice * 2.3);
-      urbaniaFare = Math.round(lSedan.basePrice * 3.3);
-      busFare = Math.round(lSedan.basePrice * 5.3);
+      innovaFare = Math.round(lSedan.basePrice * 1.6);
+      tempoFare = Math.round(lSedan.basePrice * 2.5);
+      urbaniaFare = Math.round(lSedan.basePrice * 3.4);
+      busFare = Math.round(lSedan.basePrice * 5.2);
     } else if (serviceType === 'airport_transfer') {
       const air = resolveAirportFare('Delhi IGI Airport (T1, T2, T3)', pickup || 'Ghaziabad');
       if (air) {
@@ -340,10 +368,10 @@ export default function CabsClient() {
         hatchbackFare = 1399;
       }
       suvMuvFare = ertigaFare;
-      innovaFare = 2799;
-      tempoFare = 4499;
-      urbaniaFare = 5999;
-      busFare = 8999;
+      innovaFare = Math.round(sedanFare * 1.55);
+      tempoFare = Math.round(sedanFare * 2.4);
+      urbaniaFare = Math.round(sedanFare * 3.2);
+      busFare = Math.round(sedanFare * 4.8);
     }
 
     // Helper: Dynamic MakeMyTrip Inclusions according to trip type
@@ -540,7 +568,7 @@ export default function CabsClient() {
         '₹22/km'
       ),
     ];
-  }, [routeData, serviceType, pickup, drop, initialPackageId]);
+  }, [routeData, serviceType, pickup, drop, packageId, tripDays]);
 
   // Filter vehicles by category tab
   const filteredVehicles = useMemo(() => {
@@ -550,17 +578,18 @@ export default function CabsClient() {
 
   // Build WhatsApp booking link (Unified Strict Urgent Taxis Format)
   const getWhatsAppLink = (v: VehicleCardData) => {
+    const isRental = serviceType === 'local_rental';
     const serviceTitle =
       serviceType === 'one_way'
         ? 'One-way'
         : serviceType === 'round_trip'
         ? 'Round-trip'
-        : serviceType === 'local_rental'
+        : isRental
         ? 'Local Rental'
         : 'Airport Transfer';
     const pageUrl = `https://www.urgenttaxis.in/cabs?${new URLSearchParams({
       pickup,
-      drop,
+      ...(isRental ? { packageId } : { drop }),
       serviceType,
       ...(stops.length > 0 ? { stops: stops.join('|') } : {}),
       ...(serviceType === 'round_trip' && returnDate ? { returnDate } : {}),
@@ -573,13 +602,14 @@ export default function CabsClient() {
     return generateWhatsAppLink({
       tripType: serviceTitle,
       pickup,
-      drop,
+      drop: isRental ? undefined : drop,
+      destination: isRental ? routeData.destination : undefined,
       stops: stops.length > 0 ? stops : undefined,
       journeyDate: formattedDate,
       pickupTime: formattedTime,
       returnDate: serviceType === 'round_trip' ? formattedReturnDate : undefined,
       durationDays: serviceType === 'round_trip' ? tripDays : undefined,
-      distance: tripDistance,
+      distance: isRental ? `${routeData.distanceKm} KM (Package Limit)` : tripDistance,
       vehicleCategory: v.name,
       vehicleModel: v.models,
       capacity: `${v.seats} • ${v.bags}`,
@@ -592,17 +622,25 @@ export default function CabsClient() {
 
   // Build Checkout link leading directly to Step 3
   const getCheckoutLink = (v: VehicleCardData) => {
+    const isRental = serviceType === 'local_rental';
     const p = new URLSearchParams({
       serviceType,
       categoryId: v.key,
       pickup,
-      drop,
       origin: pickup,
-      destination: drop,
       date: journeyDate,
       time: journeyTime,
+      fare: String(v.totalFare),
+      estimatedFare: String(v.totalFare),
       km: String(serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm),
     });
+    if (isRental) {
+      p.set('packageId', packageId);
+      p.set('city', pickup);
+    } else {
+      p.set('drop', drop);
+      p.set('destination', drop);
+    }
     if (stops.length > 0) {
       p.set('stops', stops.join('|'));
     }
@@ -684,9 +722,18 @@ export default function CabsClient() {
 
               {/* Origin ➔ Destination */}
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight flex items-center gap-2 flex-wrap">
-                <span>{pickup && drop ? `${pickup} to ${drop} Cabs` : 'Available Cabs'}</span>
+                {serviceType === 'local_rental' ? (
+                  <span>{pickup} Hourly Cab Rentals</span>
+                ) : (
+                  <span>{pickup && drop ? `${pickup} to ${drop} Cabs` : 'Available Cabs'}</span>
+                )}
               </h1>
-              {stops.length > 0 && (
+              {serviceType === 'local_rental' && (
+                <p className="text-xs sm:text-sm text-emerald-300 font-bold">
+                  Package: {routeData.destination || '8 Hours / 80 KM Local City Package'}
+                </p>
+              )}
+              {stops.length > 0 && serviceType !== 'local_rental' && (
                 <div className="flex items-center gap-1.5 text-xs text-amber-300 font-semibold bg-amber-950/40 border border-amber-500/30 px-3 py-1 rounded-lg w-fit">
                   <span>🚩 Via Stops:</span>
                   <span className="font-bold text-white">{stops.join(' ➔ ')}</span>
@@ -701,13 +748,15 @@ export default function CabsClient() {
                     {serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm} km
                   </span>
                   <span className="text-slate-400 text-[11px]">
-                    {serviceType === 'round_trip' ? 'Round-Trip Total' : 'Highway'}
+                    {serviceType === 'round_trip' ? 'Round-Trip Total' : serviceType === 'local_rental' ? 'Package Limit' : 'Highway'}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-lg">
                   <FaClock className="text-emerald-400" />
                   <span className="text-white font-bold">~{routeData.durationText}</span>
-                  <span className="text-slate-400 text-[11px]">Duration</span>
+                  <span className="text-slate-400 text-[11px]">
+                    {serviceType === 'local_rental' ? 'Usage Window' : 'Duration'}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-lg">
                   <FaCalendarAlt className="text-emerald-400" />
@@ -759,105 +808,226 @@ export default function CabsClient() {
                 <span className="text-[11px] text-slate-500">Universal distance &amp; fare calculated for any address</span>
               </div>
 
-              <div className={`grid grid-cols-1 sm:grid-cols-2 ${editServiceType === 'round_trip' ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-3`}>
-                {/* Pickup City */}
-                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                    Pickup Location / Address
-                  </label>
-                  <input
-                    type="text"
-                    value={editPickup}
-                    onChange={(e) => setEditPickup(e.target.value)}
-                    placeholder="Enter pickup address or city"
-                    className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1"
-                    required
-                  />
-                </div>
+              {/* Trip Type Selector Pills (MakeMyTrip Style) */}
+              <div className="flex flex-wrap items-center gap-2 pb-2 border-b border-slate-100">
+                {[
+                  { id: 'one_way', label: 'One-Way Outstation', icon: '➔' },
+                  { id: 'round_trip', label: 'Round-Trip Outstation', icon: '⇄' },
+                  { id: 'local_rental', label: 'Hourly Local Rental', icon: '⏱️' },
+                  { id: 'airport_transfer', label: 'Airport Transfer', icon: '✈️' },
+                ].map((tab) => {
+                  const isCurrent = editServiceType === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => {
+                        const newType = tab.id as BookingServiceType;
+                        setEditServiceType(newType);
+                        if (newType === 'local_rental') {
+                          setEditDrop('');
+                        } else if (!editDrop) {
+                          setEditDrop('Nainital, Uttarakhand');
+                        }
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                        isCurrent
+                          ? 'bg-[#1a419c] text-white shadow-xs ring-2 ring-[#1a419c]/20'
+                          : 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold'
+                      }`}
+                    >
+                      <span>{tab.icon}</span>
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
 
-                {/* Drop City */}
-                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                    Drop Destination / Address
-                  </label>
-                  <input
-                    type="text"
-                    value={editDrop}
-                    onChange={(e) => setEditDrop(e.target.value)}
-                    placeholder="Enter drop address or city"
-                    className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1"
-                    required
-                  />
-                </div>
-
-                {/* Departure Date */}
-                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                    Departure Date
-                  </label>
-                  <input
-                    type="date"
-                    min={todayStr}
-                    value={editDate}
-                    onChange={(e) => {
-                      const newD = e.target.value;
-                      setEditDate(newD);
-                      if (editReturnDate && editReturnDate < newD) {
-                        setEditReturnDate(newD);
-                      }
-                      if (newD === todayStr) {
-                        const minT = getMinTimeForToday();
-                        if (editTime < minT) setEditTime(minT);
-                      }
-                    }}
-                    className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
-                    required
-                  />
-                </div>
-
-                {/* Return Date (Round-Trip Only) */}
-                {editServiceType === 'round_trip' && (
+              {/* Dynamic Form Fields based on Trip Type */}
+              {editServiceType === 'local_rental' ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {/* City for Rental */}
                   <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
                     <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                      Return Date
+                      City for Rental
+                    </label>
+                    <input
+                      type="text"
+                      value={editPickup}
+                      onChange={(e) => setEditPickup(e.target.value)}
+                      placeholder="Enter city (e.g. Ghaziabad, Delhi, Noida)"
+                      className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1"
+                      required
+                    />
+                  </div>
+
+                  {/* Select Rental Package */}
+                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Select Rental Package
+                    </label>
+                    <select
+                      value={editPackageId}
+                      onChange={(e) => setEditPackageId(e.target.value as HourlyRentalPackageId)}
+                      className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
+                    >
+                      {HOURLY_RENTAL_PACKAGES.map((pkg) => (
+                        <option key={pkg.id} value={pkg.id}>
+                          {pkg.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Departure Date */}
+                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Pickup Date
                     </label>
                     <input
                       type="date"
-                      min={editDate || todayStr}
-                      value={editReturnDate}
-                      onChange={(e) => setEditReturnDate(e.target.value)}
+                      min={todayStr}
+                      value={editDate}
+                      onChange={(e) => {
+                        const newD = e.target.value;
+                        setEditDate(newD);
+                        if (newD === todayStr) {
+                          const minT = getMinTimeForToday();
+                          if (editTime < minT) setEditTime(minT);
+                        }
+                      }}
                       className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
                       required
                     />
                   </div>
-                )}
 
-                {/* Time */}
-                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                    Pickup Time
-                  </label>
-                  <input
-                    type="time"
-                    min={editDate === todayStr ? minTimeForToday : undefined}
-                    value={editTime}
-                    onChange={(e) => {
-                      const newT = e.target.value;
-                      if (editDate === todayStr) {
-                        const minT = getMinTimeForToday();
-                        if (newT < minT) {
-                          alert(`Selected pickup time has already passed. Earliest pickup is ${minT}.`);
-                          setEditTime(minT);
-                          return;
+                  {/* Time */}
+                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Pickup Time
+                    </label>
+                    <input
+                      type="time"
+                      min={editDate === todayStr ? minTimeForToday : undefined}
+                      value={editTime}
+                      onChange={(e) => {
+                        const newT = e.target.value;
+                        if (editDate === todayStr) {
+                          const minT = getMinTimeForToday();
+                          if (newT < minT) {
+                            alert(`Selected pickup time has already passed. Earliest pickup is ${minT}.`);
+                            setEditTime(minT);
+                            return;
+                          }
                         }
-                      }
-                      setEditTime(newT);
-                    }}
-                    className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
-                    required
-                  />
+                        setEditTime(newT);
+                      }}
+                      className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className={`grid grid-cols-1 sm:grid-cols-2 ${editServiceType === 'round_trip' ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-3`}>
+                  {/* Pickup City */}
+                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Pickup Location / Address
+                    </label>
+                    <input
+                      type="text"
+                      value={editPickup}
+                      onChange={(e) => setEditPickup(e.target.value)}
+                      placeholder="Enter pickup address or city"
+                      className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1"
+                      required
+                    />
+                  </div>
+
+                  {/* Drop City */}
+                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Drop Destination / Address
+                    </label>
+                    <input
+                      type="text"
+                      value={editDrop}
+                      onChange={(e) => setEditDrop(e.target.value)}
+                      placeholder="Enter drop address or city"
+                      className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1"
+                      required
+                    />
+                  </div>
+
+                  {/* Departure Date */}
+                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Departure Date
+                    </label>
+                    <input
+                      type="date"
+                      min={todayStr}
+                      value={editDate}
+                      onChange={(e) => {
+                        const newD = e.target.value;
+                        setEditDate(newD);
+                        if (editReturnDate && editReturnDate < newD) {
+                          setEditReturnDate(newD);
+                        }
+                        if (newD === todayStr) {
+                          const minT = getMinTimeForToday();
+                          if (editTime < minT) setEditTime(minT);
+                        }
+                      }}
+                      className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
+                      required
+                    />
+                  </div>
+
+                  {/* Return Date (Round-Trip Only) */}
+                  {editServiceType === 'round_trip' && (
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                        Return Date
+                      </label>
+                      <input
+                        type="date"
+                        min={editDate || todayStr}
+                        value={editReturnDate}
+                        onChange={(e) => setEditReturnDate(e.target.value)}
+                        className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
+                        required
+                      />
+                    </div>
+                  )}
+
+                  {/* Time */}
+                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Pickup Time
+                    </label>
+                    <input
+                      type="time"
+                      min={editDate === todayStr ? minTimeForToday : undefined}
+                      value={editTime}
+                      onChange={(e) => {
+                        const newT = e.target.value;
+                        if (editDate === todayStr) {
+                          const minT = getMinTimeForToday();
+                          if (newT < minT) {
+                            alert(`Selected pickup time has already passed. Earliest pickup is ${minT}.`);
+                            setEditTime(minT);
+                            return;
+                          }
+                        }
+                        setEditTime(newT);
+                      }}
+                      className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-center justify-end gap-3 pt-2">
                 <button
@@ -1060,10 +1230,10 @@ export default function CabsClient() {
                 </div>
 
                 {/* Col 2: MakeMyTrip Authentic Inclusions & Exclusions */}
-                <div className="flex-1 p-5 sm:p-6 flex flex-col justify-between space-y-4">
+                <div className="flex-1 min-w-0 p-4 sm:p-6 flex flex-col justify-between space-y-4">
                   <div>
                     {/* MakeMyTrip Inclusions vs Exclusions Toggle Buttons */}
-                    <div className="flex items-center gap-2 border-b border-slate-200 pb-2 mb-3">
+                    <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2 mb-3">
                       <button
                         type="button"
                         onClick={() =>
@@ -1124,10 +1294,12 @@ export default function CabsClient() {
 
                   {/* Route Highlights Footer */}
                   <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex flex-wrap items-center justify-between gap-2 text-xs">
-                    <div className="flex items-center gap-2 text-slate-600 font-bold">
+                    <div className="flex items-center gap-2 text-slate-600 font-bold min-w-0 flex-1">
                       <FaRoad className="text-brand-green shrink-0" />
                       <span className="truncate">
-                        Route: {pickup} ➔ {drop} ({routeData.distanceKm} km)
+                        {serviceType === 'local_rental'
+                          ? `Local Rental in ${pickup} (${routeData.distanceKm} KM / ${routeData.durationText})`
+                          : `Route: ${pickup} ➔ ${drop} (${routeData.distanceKm} km)`}
                       </span>
                     </div>
                     <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full shrink-0">
@@ -1137,7 +1309,7 @@ export default function CabsClient() {
                 </div>
 
                 {/* Col 3: Pricing Breakdown & CTAs (MakeMyTrip Style) */}
-                <div className="lg:w-80 p-5 sm:p-6 bg-gradient-to-br from-emerald-50/40 via-white to-blue-50/30 border-t lg:border-t-0 lg:border-l border-slate-200 flex flex-col justify-between space-y-4">
+                <div className="lg:w-80 p-4 sm:p-6 bg-gradient-to-br from-emerald-50/40 via-white to-blue-50/30 border-t lg:border-t-0 lg:border-l border-slate-200 flex flex-col justify-between space-y-4 shrink-0">
                   <div>
                     <div className="flex items-baseline justify-between">
                       <span className="text-[11px] font-bold uppercase text-slate-500 tracking-wider">

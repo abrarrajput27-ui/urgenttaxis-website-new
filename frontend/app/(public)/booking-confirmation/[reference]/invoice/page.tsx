@@ -399,10 +399,16 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
               <span className="text-slate-500 text-[10px] uppercase font-bold block">Pickup Address</span>
               <p className="text-slate-900 font-semibold mt-0.5">{actualPickup}</p>
             </div>
-            {maskedDrop && (
+            {actualDrop && actualDrop !== '—' && !isRental && (
               <div>
                 <span className="text-slate-500 text-[10px] uppercase font-bold block">Drop Address</span>
                 <p className="text-slate-900 font-semibold mt-0.5">{actualDrop}</p>
+              </div>
+            )}
+            {isRental && (
+              <div>
+                <span className="text-slate-500 text-[10px] uppercase font-bold block">Usage Scope</span>
+                <p className="text-emerald-700 font-semibold mt-0.5">Local City Travel in {actualPickup.split(',')[0].trim()} ({breakdown.packageName || 'Hourly Package'})</p>
               </div>
             )}
             {intermediateStops.length > 0 && (

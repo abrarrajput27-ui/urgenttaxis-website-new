@@ -1197,12 +1197,20 @@ export default function UnifiedBookingWidget({
                 onChange={(e) => setRentalCity(e.target.value)}
                 className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl px-4 py-3 font-semibold text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#1e1b4b] focus:bg-white transition-all cursor-pointer"
               >
-                <option value="Ghaziabad">Ghaziabad & Delhi NCR</option>
-                <option value="Noida">Noida & Greater Noida</option>
-                <option value="Delhi">Delhi & New Delhi</option>
-                <option value="Gurugram">Gurugram (Gurgaon)</option>
+                <option value="Ghaziabad">Ghaziabad</option>
+                <option value="Masuri">Masuri</option>
+                <option value="Noida">Noida</option>
+                <option value="Greater Noida">Greater Noida</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Gurugram">Gurugram</option>
                 <option value="Faridabad">Faridabad</option>
                 <option value="Meerut">Meerut</option>
+                <option value="Lucknow">Lucknow</option>
+                <option value="Dehradun">Dehradun</option>
+                <option value="Haridwar">Haridwar</option>
+                <option value="Rishikesh">Rishikesh</option>
+                <option value="Agra">Agra</option>
+                <option value="Jaipur">Jaipur</option>
               </select>
             </div>
 

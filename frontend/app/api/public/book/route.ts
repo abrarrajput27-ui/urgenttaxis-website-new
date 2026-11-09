@@ -407,7 +407,7 @@ export async function POST(req: NextRequest) {
       category_id: resolvedCategoryUuid,
       trip_type: serviceType,
       pickup_address: pickupAddress,
-      drop_address: dropAddress,
+      drop_address: serviceType === 'local_rental' ? null : (dropAddress || null),
       pickup_datetime: travelDateTime,
       return_datetime: returnDateTime || null,
       passenger_count: numericPassengerCount,

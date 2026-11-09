@@ -135,6 +135,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
   const actualEmail = booking.customers?.email || breakdown.customerEmail || '—';
   const actualPickup = booking.pickup_address || breakdown.pickupAddress || '—';
   const actualDrop = booking.drop_address || breakdown.dropAddress || '—';
+  const isRental = String(booking.trip_type || '').includes('rental') || String(booking.trip_type || '').includes('local');
 
   // Driver & Vehicle Assignment Data extraction
   let assignedDriverName = booking.driver_name || '';
@@ -328,7 +329,12 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
                     <p className="text-brand-blue font-medium">{intermediateStops.join(' ➔ ')}</p>
                   </div>
                 )}
-                {actualDrop && actualDrop !== '—' && (
+                {isRental ? (
+                  <div>
+                    <span className="font-bold text-slate-700 block">Service Scope:</span>
+                    <p className="text-emerald-700 font-medium">Local City Usage in {actualPickup.split(',')[0].trim()} ({breakdown.packageName || 'Hourly Package'})</p>
+                  </div>
+                ) : actualDrop && actualDrop !== '—' && (
                   <div>
                     <span className="font-bold text-slate-700 block">Drop Location:</span>
                     <p className="text-slate-900 font-medium">{actualDrop}</p>

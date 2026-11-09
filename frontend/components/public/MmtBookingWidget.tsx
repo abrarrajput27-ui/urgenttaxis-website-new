@@ -58,11 +58,12 @@ const AIRPORT_LIST = [
 ];
 
 const AIRPORT_ZONES = [
-  'Ghaziabad & Masuri',
-  'Noida (All Sectors)',
-  'Greater Noida & Pari Chowk',
-  'Delhi (Central / South / North)',
-  'Gurugram (Cyber City / Sohna)',
+  'Ghaziabad',
+  'Masuri',
+  'Noida',
+  'Greater Noida',
+  'Delhi',
+  'Gurugram',
   'Faridabad',
   'Meerut',
 ];
@@ -185,7 +186,7 @@ export default function MmtBookingWidget({
   // ── Airport Transfer State ──
   const [airportDirection, setAirportDirection] = useState<'drop' | 'pickup'>('drop');
   const [selectedAirport, setSelectedAirport] = useState(AIRPORT_LIST[0].name);
-  const [selectedAirportZone, setSelectedAirportZone] = useState('Ghaziabad & Masuri');
+  const [selectedAirportZone, setSelectedAirportZone] = useState('Ghaziabad');
 
   // ── Validation Error ──
   const [errorMsg, setErrorMsg] = useState('');
@@ -331,10 +332,12 @@ export default function MmtBookingWidget({
     params.set('time', pickupTime);
 
     if (tripType === 'local_rental') {
-      const city = origin.trim() || rentalCity;
+      const city = (rentalCity || origin).trim() || 'Ghaziabad';
       params.set('pickup', city);
       params.set('city', city);
       params.set('packageId', rentalPackageId);
+      params.delete('drop');
+      params.delete('destination');
     } else if (tripType === 'airport_transfer') {
       const effectiveDrop = airportDirection === 'drop' ? selectedAirport : selectedAirportZone;
       const effectivePickup = airportDirection === 'drop' ? selectedAirportZone : selectedAirport;
@@ -965,12 +968,20 @@ export default function MmtBookingWidget({
                   onChange={(e) => setRentalCity(e.target.value)}
                   className="w-full bg-white text-slate-900 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-brand-blue cursor-pointer"
                 >
-                  <option value="Ghaziabad">Ghaziabad & Masuri</option>
-                  <option value="Noida">Noida & Greater Noida</option>
-                  <option value="Delhi">Delhi & New Delhi</option>
-                  <option value="Gurugram">Gurugram (Gurgaon)</option>
+                  <option value="Ghaziabad">Ghaziabad</option>
+                  <option value="Masuri">Masuri</option>
+                  <option value="Noida">Noida</option>
+                  <option value="Greater Noida">Greater Noida</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Gurugram">Gurugram</option>
                   <option value="Faridabad">Faridabad</option>
                   <option value="Meerut">Meerut</option>
+                  <option value="Lucknow">Lucknow</option>
+                  <option value="Dehradun">Dehradun</option>
+                  <option value="Haridwar">Haridwar</option>
+                  <option value="Rishikesh">Rishikesh</option>
+                  <option value="Agra">Agra</option>
+                  <option value="Jaipur">Jaipur</option>
                 </select>
               </div>
 

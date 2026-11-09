@@ -37,7 +37,7 @@ import { SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { BOOKING_ADDONS, isAddOnSupported } from '@/lib/pricing/add-ons';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
-import { calculateAdvanceToken, isGroupVehicleCategory } from '@/lib/pricing';
+import { calculateAdvanceToken, isGroupVehicleCategory, calculateLocalRentalFare, LOCAL_RENTAL_CONFIG, HourlyRentalPackageId } from '@/lib/pricing';
 import { trackBookingCompleted } from '@/lib/analytics';
 import { formatTime12Hour, formatDateReadable, calculateRoundTripDays } from '@/lib/date-utils';
 
@@ -62,8 +62,12 @@ function CheckoutContent() {
   const serviceType = searchParams.get('serviceType') || 'one_way';
   const categoryId = searchParams.get('categoryId') || 'sedan';
   const routeId = searchParams.get('routeId') || '';
-  const pickupCity = searchParams.get('pickup') || searchParams.get('origin') || 'Ghaziabad, Uttar Pradesh';
-  const dropCity = searchParams.get('drop') || searchParams.get('destination') || 'Nainital, Uttarakhand';
+  const isRental = serviceType === 'local_rental';
+  const pickupCity = searchParams.get('pickup') || searchParams.get('origin') || searchParams.get('city') || 'Ghaziabad, Uttar Pradesh';
+  const rawDrop = searchParams.get('drop') || searchParams.get('destination') || '';
+  const dropCity = isRental ? '' : (rawDrop || 'Nainital, Uttarakhand');
+  const packageId = (searchParams.get('packageId') as HourlyRentalPackageId) || '8h80km';
+  const passedFare = Number(searchParams.get('fare') || searchParams.get('estimatedFare') || 0);
   const rawDate = searchParams.get('date') || searchParams.get('pickupDate') || '';
   const rawTime = searchParams.get('time') || searchParams.get('pickupTime') || '09:00';
   const rawReturnDate = searchParams.get('returnDate') || searchParams.get('return_date') || '';
@@ -122,18 +126,31 @@ function CheckoutContent() {
   }, [pickupAddressDetail, pickupCity]);
 
   const effectiveDrop = useMemo(() => {
+    if (isRental) return '';
     const detail = dropAddressDetail.trim();
     if (!detail) return dropCity;
     const cleanCity = dropCity.split(',')[0].trim();
     return detail.toLowerCase().includes(cleanCity.toLowerCase())
       ? detail
       : `${detail}, ${dropCity}`;
-  }, [dropAddressDetail, dropCity]);
+  }, [dropAddressDetail, dropCity, isRental]);
 
   // Accurate Highway Distance & Travel Duration (Auto updates when specific address is entered)
   const routeData = useMemo(() => {
+    if (isRental) {
+      const pkg = LOCAL_RENTAL_CONFIG.sedan[packageId] || LOCAL_RENTAL_CONFIG.sedan['8h80km'];
+      return {
+        origin: effectivePickup,
+        destination: `${pkg.hours} Hours / ${pkg.km} KM Local City Package`,
+        distanceKm: pkg.km,
+        durationMinutes: pkg.hours * 60,
+        durationText: `${pkg.hours} Hours Package`,
+        isHillRoute: false,
+        isFromMasterData: true,
+      };
+    }
     return resolveAccurateRoute(effectivePickup, effectiveDrop, initialKm);
-  }, [effectivePickup, effectiveDrop, initialKm]);
+  }, [effectivePickup, effectiveDrop, initialKm, isRental, packageId]);
 
   // Formatted Date & Time (Accurate string representation without timezone skew)
   const formattedDate = useMemo(() => {
@@ -160,25 +177,27 @@ function CheckoutContent() {
     const dist = routeData.distanceKm;
     let base = 0;
 
-    if (serviceType === 'one_way') {
+    if (passedFare > 0) {
+      base = passedFare;
+    } else if (serviceType === 'one_way') {
       if (vehicle.name === 'Sedan') {
-        base = routeData.sedanFare || Math.max(1600, Math.round(dist * 12));
+        base = routeData.sedanFare || Math.max(1800, Math.round(dist * 14.5));
       } else if (vehicle.name === 'Hatchback') {
-        base = routeData.sedanFare ? Math.round(routeData.sedanFare * 0.88) : Math.max(1300, Math.round(dist * 11));
+        base = routeData.sedanFare ? Math.round(routeData.sedanFare * 0.88) : Math.max(1500, Math.round(dist * 12.5));
       } else if (vehicle.name === 'Maruti Ertiga' || vehicle.name === 'SUV / MUV') {
-        base = routeData.ertigaFare || Math.max(2200, Math.round(dist * 15));
+        base = routeData.ertigaFare || Math.max(2600, Math.round(dist * 18.5));
       } else if (vehicle.name === 'Innova Crysta') {
-        base = routeData.crystaFare || Math.max(3400, Math.round(dist * 22));
+        base = routeData.crystaFare || Math.max(4200, Math.round(dist * 25.0));
       } else if (vehicle.name === 'Toyota Innova') {
-        base = Math.max(2800, Math.round(dist * 19));
+        base = Math.max(3400, Math.round(dist * 21.0));
       } else if (vehicle.name === 'Tempo Traveller') {
-        base = Math.max(4500, Math.round(dist * 26));
+        base = Math.max(5800, Math.round(dist * 29.0));
       } else if (vehicle.name === 'Force Urbania') {
-        base = Math.max(6000, Math.round(dist * 32));
+        base = Math.max(7800, Math.round(dist * 36.0));
       } else if (vehicle.name.includes('Bus')) {
-        base = Math.max(9000, Math.round(dist * 48));
+        base = Math.max(11500, Math.round(dist * 52.0));
       } else {
-        base = Math.max(1600, Math.round(dist * 11));
+        base = Math.max(1800, Math.round(dist * 14.5));
       }
     } else if (serviceType === 'round_trip') {
       const minDailyKm = 250;
@@ -186,8 +205,11 @@ function CheckoutContent() {
       const driverDaily = vehicle.name.includes('Bus') ? 1000 : vehicle.name.includes('Tempo') ? 600 : vehicle.name.includes('Urbania') ? 700 : 400;
       const totalDriver = driverDaily * tripDays;
       base = Math.round(billableKm * vehicle.baseRate + totalDriver);
+    } else if (serviceType === 'local_rental') {
+      const rentalQuote = calculateLocalRentalFare(packageId, categoryId);
+      base = rentalQuote.basePrice;
     } else {
-      // Local or Airport default
+      // Airport default
       base = vehicle.name === 'Sedan' ? 1599 : vehicle.name === 'Hatchback' ? 1399 : 2199;
     }
 
@@ -269,7 +291,9 @@ function CheckoutContent() {
     const fullPickup = pickupAddressDetail.trim()
       ? `${pickupAddressDetail.trim()}, ${pickupCity}`
       : pickupCity;
-    const fullDrop = dropAddressDetail.trim()
+    const fullDrop = isRental
+      ? ''
+      : dropAddressDetail.trim()
       ? `${dropAddressDetail.trim()}, ${dropCity}`
       : dropCity;
 
@@ -284,6 +308,7 @@ function CheckoutContent() {
           serviceType,
           categoryId,
           routeId,
+          packageId: isRental ? packageId : undefined,
           pickupAddress: fullPickup,
           dropAddress: fullDrop,
           travelDateTime,
@@ -323,15 +348,16 @@ function CheckoutContent() {
       } else {
         // Authoritative WhatsApp fallback with complete detailed itinerary
         const fallbackWaUrl = generateWhatsAppLink({
-          tripType: serviceType === 'round_trip' ? 'Round-trip' : 'One-way',
+          tripType: isRental ? 'Local Rental' : serviceType === 'round_trip' ? 'Round-trip' : 'One-way',
           pickup: fullPickup,
-          drop: fullDrop,
+          drop: isRental ? undefined : fullDrop,
+          destination: isRental ? routeData.destination : undefined,
           stops: stops.length > 0 ? stops : undefined,
           journeyDate: formattedDate,
           pickupTime: formattedTime,
           returnDate: serviceType === 'round_trip' ? formattedReturnDate : undefined,
           durationDays: serviceType === 'round_trip' ? tripDays : undefined,
-          distance: serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
+          distance: isRental ? `${routeData.distanceKm} KM (Package Limit)` : serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
           customerName: `${customerTitle} ${customerFullName.trim()}`,
           customerPhone: customerPhone.trim(),
           passengerCount,
@@ -348,15 +374,16 @@ function CheckoutContent() {
       setError('Connection interrupted. Connecting to dispatch desk via WhatsApp...');
       setTimeout(() => {
         const fallbackWaUrl = generateWhatsAppLink({
-          tripType: serviceType === 'round_trip' ? 'Round-trip' : 'One-way',
+          tripType: isRental ? 'Local Rental' : serviceType === 'round_trip' ? 'Round-trip' : 'One-way',
           pickup: fullPickup,
-          drop: fullDrop,
+          drop: isRental ? undefined : fullDrop,
+          destination: isRental ? routeData.destination : undefined,
           stops: stops.length > 0 ? stops : undefined,
           journeyDate: formattedDate,
           pickupTime: formattedTime,
           returnDate: serviceType === 'round_trip' ? formattedReturnDate : undefined,
           durationDays: serviceType === 'round_trip' ? tripDays : undefined,
-          distance: serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
+          distance: isRental ? `${routeData.distanceKm} KM (Package Limit)` : serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
           customerName: `${customerTitle} ${customerFullName.trim()}`,
           customerPhone: customerPhone.trim(),
           passengerCount,
@@ -545,16 +572,35 @@ function CheckoutContent() {
             <div className="space-y-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="px-2.5 py-0.5 bg-brand-green text-white rounded-full text-[10px] font-black uppercase tracking-wider">
-                  {isGroupVehicle ? 'Group Fleet Enquiry' : serviceType === 'one_way' ? 'One-Way Outstation' : serviceType === 'round_trip' ? 'Round-Trip' : 'Cab Booking'}
+                  {isGroupVehicle
+                    ? 'Group Fleet Enquiry'
+                    : serviceType === 'one_way'
+                    ? 'One-Way Outstation'
+                    : serviceType === 'round_trip'
+                    ? 'Round-Trip'
+                    : isRental
+                    ? 'Hourly Rental'
+                    : 'Cab Booking'}
                 </span>
                 <span className="text-xs text-slate-300 font-semibold">
                   {isGroupVehicle ? 'Customized Quotation & Manual Dispatch' : 'Step 3 of 4: Enter Passenger &amp; Pickup Address'}
                 </span>
               </div>
               <h1 className="text-base sm:text-2xl font-black text-white tracking-tight leading-snug flex items-center gap-2 flex-wrap break-words">
-                <span>{pickupCity}</span>
-                <span className="text-emerald-400">➔</span>
-                <span>{dropCity}</span>
+                {isRental ? (
+                  <>
+                    <span>{pickupCity} Hourly Rental</span>
+                    <span className="text-xs sm:text-sm text-emerald-300 font-bold block sm:inline">
+                      ({routeData.destination})
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span>{pickupCity}</span>
+                    <span className="text-emerald-400">➔</span>
+                    <span>{dropCity}</span>
+                  </>
+                )}
               </h1>
             </div>
 
@@ -563,6 +609,7 @@ function CheckoutContent() {
               <div className="bg-white/10 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl flex items-center gap-1.5">
                 <FaRoad className="text-emerald-400 w-3 h-3" />
                 <span className="text-white font-bold text-xs">{routeData.distanceKm} km</span>
+                {isRental && <span className="text-slate-400 text-[10px]">Limit</span>}
               </div>
               <div className="bg-white/10 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl flex items-center gap-1.5">
                 <FaClock className="text-emerald-400 w-3 h-3" />
@@ -782,26 +829,38 @@ function CheckoutContent() {
                   </span>
                 </div>
 
-                {/* Drop Address */}
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                  <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
-                    <label className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
-                      <span>Drop Address / Hotel / Landmark in {dropCity}</span>
-                    </label>
-                    <span className="text-[10px] sm:text-[11px] text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200 shrink-0">Direct Drop</span>
+                {/* Drop Address (Hidden for Local Hourly Rentals) */}
+                {isRental ? (
+                  <div className="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200">
+                    <div className="flex items-center gap-2 text-xs font-bold text-emerald-900">
+                      <FaCheckCircle className="text-emerald-600 w-4 h-4 shrink-0" />
+                      <span>Local City Hourly Rental Package</span>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1">
+                      This cab is reserved for local city usage in <strong>{pickupCity}</strong> ({routeData.destination}). Your chauffeur will report directly at your doorstep pickup address and remain at your disposal throughout the package duration.
+                    </p>
                   </div>
-                  <input
-                    type="text"
-                    value={dropAddressDetail}
-                    onChange={(e) => setDropAddressDetail(e.target.value)}
-                    placeholder="Enter Destination Hotel, Resort, Mall Road or Street Landmark"
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-slate-900 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all"
-                  />
-                  <span className="text-[11px] text-slate-400 block mt-1">
-                    City: {dropCity}
-                  </span>
-                </div>
+                ) : (
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
+                      <label className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+                        <span>Drop Address / Hotel / Landmark in {dropCity}</span>
+                      </label>
+                      <span className="text-[10px] sm:text-[11px] text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200 shrink-0">Direct Drop</span>
+                    </div>
+                    <input
+                      type="text"
+                      value={dropAddressDetail}
+                      onChange={(e) => setDropAddressDetail(e.target.value)}
+                      placeholder="Enter Destination Hotel, Resort, Mall Road or Street Landmark"
+                      className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-slate-900 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all"
+                    />
+                    <span className="text-[11px] text-slate-400 block mt-1">
+                      City: {dropCity}
+                    </span>
+                  </div>
+                )}
 
                 {/* Via Intermediate Stops Corridor (if any stops selected) */}
                 {stops.length > 0 && (
@@ -1065,10 +1124,14 @@ function CheckoutContent() {
               {/* Trip Details Checklist */}
               <div className="space-y-2.5 text-xs text-slate-600 pb-4 border-b border-slate-100">
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold text-slate-500">Route Distance:</span>
+                  <span className="font-semibold text-slate-500">
+                    {isRental ? 'Package Quota:' : 'Route Distance:'}
+                  </span>
                   <strong className="text-slate-900">
                     {serviceType === 'round_trip'
                       ? `${Math.max(routeData.distanceKm * 2, tripDays * 250)} km Total (Round-Trip)`
+                      : isRental
+                      ? `${routeData.distanceKm} km (${routeData.durationText})`
                       : `${routeData.distanceKm} km Highway`}
                   </strong>
                 </div>
