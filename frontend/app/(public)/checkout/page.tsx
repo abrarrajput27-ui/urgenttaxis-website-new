@@ -427,8 +427,10 @@ function CheckoutContent() {
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-28 sm:pb-20 font-sans">
       
       {/* ── 1. MMT TRIP HEADER BANNER (FLUSH WITH STICKY NAVBAR - ZERO GAP) ── */}
-      <section className="bg-gradient-to-b from-[#1e1b4b] via-[#161b33] to-[#0f172a] text-white pt-3 sm:pt-4 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8 shadow-md">
-        <div className="max-w-7xl mx-auto space-y-3">
+      <section className="relative overflow-hidden bg-[#0a1128] text-white pt-3 sm:pt-4 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8 shadow-md border-b border-white/10">
+        {/* Authentic Dotted Pattern matching Footer & Master Theme */}
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+        <div className="relative z-10 max-w-7xl mx-auto space-y-3">
           
           {/* Breadcrumb Navigation */}
           <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-400 flex-wrap">

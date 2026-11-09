@@ -111,8 +111,10 @@ export default function FleetPage() {
             className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-slate-900/80"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-slate-900/50"></div>
+          <div className="absolute inset-0 bg-[#0a1128]/85"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a1128] via-transparent to-[#0a1128]/50"></div>
+          {/* Authentic Dotted Pattern matching Footer & Master Theme */}
+          <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
         </div>
 
         <div className="max-w-3xl mx-auto space-y-4 relative z-10">

@@ -12,7 +12,9 @@ export default function PublicFooter() {
       {/* 1. Top Call-to-Action Banner */}
       <div className="w-full bg-transparent pt-16 sm:pt-24 lg:pt-8 pb-8 sm:pb-12 lg:pb-6 my-6 sm:my-10 relative z-20 overflow-x-clip">
         <div className="w-[98%] lg:w-[94%] xl:max-w-7xl mx-auto relative z-20">
-          <div className="bg-[#1a419c] relative rounded-[2rem] text-center px-3 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:py-6 shadow-2xl border border-slate-100 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[auto] lg:min-h-[100px]">
+          <div className="bg-[#0a1128] relative rounded-[2rem] text-center px-3 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:py-6 shadow-2xl border border-white/10 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[auto] lg:min-h-[100px] overflow-hidden">
+            {/* Authentic Dotted Pattern matching Footer & Master Theme */}
+            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none rounded-[2rem]" />
             
             <div className="relative z-20 space-y-1 lg:space-y-2 mt-2 lg:mt-0 lg:w-[65%] flex flex-col items-center justify-center">
               <h3 className="text-white text-[22px] sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-center">
@@ -25,7 +27,7 @@ export default function PublicFooter() {
               <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-2 lg:mt-3 pb-6 lg:pb-0 w-full">
                 <a
                   href={`tel:${SITE_CONFIG.phoneRaw}`}
-                  className="bg-white hover:bg-slate-50 text-[#1a419c] font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-none sm:flex-none"
+                  className="bg-white hover:bg-slate-50 text-[#0a1128] font-black text-[12px] sm:text-sm px-4 sm:px-6 py-2.5 lg:py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 flex-none sm:flex-none"
                 >
                   <FaPhoneAlt /> Call Now
                 </a>

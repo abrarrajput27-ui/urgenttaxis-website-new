@@ -258,8 +258,9 @@ export default async function AirportTransfersPage() {
 
       {/* 8. Final CTA */}
       <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-slate-100">
-        <div className="bg-gradient-to-r from-brand-blue to-brand-blue-light border border-slate-800 rounded-3xl p-10 space-y-8 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 opacity-20 bg-[url('/hero-pattern.svg')] bg-center"></div>
+        <div className="bg-[#0a1128] border border-white/10 rounded-3xl p-10 space-y-8 shadow-2xl relative overflow-hidden">
+          {/* Authentic Dotted Pattern matching Footer & Master Theme */}
+          <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none rounded-3xl" />
           <h2 className="text-3xl sm:text-4xl font-black text-white relative z-10">
             Need an Airport Pick Up or Drop Cab?
           </h2>

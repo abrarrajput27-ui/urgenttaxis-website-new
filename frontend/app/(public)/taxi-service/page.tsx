@@ -99,8 +99,10 @@ export default function TaxiServiceHubPage() {
       </div>
 
       {/* Hero Header */}
-      <section className="relative overflow-hidden bg-brand-blue text-white pt-10 pb-16 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-[#0a1128] text-white pt-10 pb-16 border-b border-white/10">
+        {/* Authentic Dotted Pattern matching Footer & Master Theme */}
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs sm:text-sm font-medium mb-4">
               <MapPin className="w-4 h-4 text-blue-400" />

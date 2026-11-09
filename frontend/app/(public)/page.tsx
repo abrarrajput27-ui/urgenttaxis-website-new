@@ -106,6 +106,8 @@ export default async function HomePage() {
         </video>
         {/* Dark overlay for contrast */}
         <div className="absolute inset-0 bg-[#0a1128]/75 z-0"></div>
+        {/* Authentic Dotted Pattern matching Footer & Master Theme */}
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none z-0" />
 
         <div className="max-w-5xl mx-auto text-center space-y-3 mb-6 relative z-10">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white border border-white/20 text-xs font-bold tracking-wide shadow-sm">

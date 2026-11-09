@@ -95,11 +95,24 @@ const ORIGIN_CHIPS = [
   "Delhi Airport"
 ];
 
-export default function RoutesTabWidget() {
-  const [activeState, setActiveState] = useState<string>("Uttarakhand");
-  const [activeOrigin, setActiveOrigin] = useState<string>("Ghaziabad");
+interface RoutesTabWidgetProps {
+  initialOrigin?: string;
+  initialActiveState?: string;
+}
+
+export default function RoutesTabWidget({ initialOrigin, initialActiveState }: RoutesTabWidgetProps = {}) {
+  const [activeState, setActiveState] = useState<string>(initialActiveState || "Uttarakhand");
+  const [activeOrigin, setActiveOrigin] = useState<string>(initialOrigin || "Ghaziabad");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [visibleCount, setVisibleCount] = useState<number>(24);
+
+  // Dynamic origin chips ensuring initialOrigin is prominent
+  const availableChips = useMemo(() => {
+    if (initialOrigin && !ORIGIN_CHIPS.some((chip) => chip.toLowerCase() === initialOrigin.toLowerCase())) {
+      return [initialOrigin, ...ORIGIN_CHIPS];
+    }
+    return ORIGIN_CHIPS;
+  }, [initialOrigin]);
 
   // Filter destination list strictly within the active state (Zero cross-state mixing!)
   const stateList = STATE_DESTINATIONS[activeState] || [];
@@ -192,7 +205,7 @@ export default function RoutesTabWidget() {
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider shrink-0 flex items-center gap-1">
               <Compass className="w-3.5 h-3.5 text-brand-green" /> From:
             </span>
-            {ORIGIN_CHIPS.map((chip) => {
+            {availableChips.map((chip) => {
               const isSelected = activeOrigin === chip;
               return (
                 <button

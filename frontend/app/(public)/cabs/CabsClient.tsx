@@ -599,8 +599,10 @@ export default function CabsClient() {
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-16 font-sans">
       
       {/* ── 1. MMT TRIP SUMMARY HEADER BAR ── */}
-      <section className="bg-gradient-to-b from-[#1e1b4b] via-[#161b33] to-[#0f172a] text-white pt-6 pb-12 px-4 sm:px-6 lg:px-8 shadow-xl">
-        <div className="max-w-7xl mx-auto space-y-4">
+      <section className="relative overflow-hidden bg-[#0a1128] text-white pt-6 pb-12 px-4 sm:px-6 lg:px-8 shadow-xl border-b border-white/10">
+        {/* Authentic Dotted Pattern matching Footer & Master Theme */}
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+        <div className="relative z-10 max-w-7xl mx-auto space-y-4">
           
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-slate-400">
