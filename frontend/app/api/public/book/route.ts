@@ -401,13 +401,19 @@ export async function POST(req: NextRequest) {
     const instructionParts = [specialInstructions?.trim(), stopDetails, addOnDetails].filter(Boolean);
     const finalInstructions = instructionParts.length > 0 ? instructionParts.join(' | ') : null;
 
+    // Map serviceType to valid database trip_type_enum ('one_way', 'round_trip', 'local', 'airport')
+    const dbTripType =
+      serviceType === 'local_rental' || serviceType === 'local' ? 'local' :
+      serviceType === 'airport_transfer' || serviceType === 'airport' ? 'airport' :
+      serviceType === 'round_trip' ? 'round_trip' : 'one_way';
+
     const { data: booking, error: bookingError } = await adminClient.from('bookings').insert({
       booking_reference: bookingReference,
       customer_id: customerId,
       category_id: resolvedCategoryUuid,
-      trip_type: serviceType,
+      trip_type: dbTripType,
       pickup_address: pickupAddress,
-      drop_address: serviceType === 'local_rental' ? null : (dropAddress || null),
+      drop_address: (serviceType === 'local_rental' || serviceType === 'local') ? null : (dropAddress || null),
       pickup_datetime: travelDateTime,
       return_datetime: returnDateTime || null,
       passenger_count: numericPassengerCount,

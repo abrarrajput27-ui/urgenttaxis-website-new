@@ -381,7 +381,7 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
             <h2 className="text-[11px] font-black text-slate-700 uppercase tracking-wider mb-1">Journey &amp; Vehicle Specifications</h2>
             <div className="space-y-1.5">
-              <p><span className="text-slate-500 block text-[10px] uppercase font-semibold">Service Type</span><strong className="capitalize text-brand-blue font-bold text-sm">{booking.trip_type.replace('_', ' ')} Service</strong></p>
+              <p><span className="text-slate-500 block text-[10px] uppercase font-semibold">Service Type</span><strong className="capitalize text-brand-blue font-bold text-sm">{booking.trip_type === 'local' ? 'Local Hourly Rental' : booking.trip_type === 'airport' ? 'Airport Transfer' : booking.trip_type.replace('_', ' ')} Service</strong></p>
               <p><span className="text-slate-500 block text-[10px] uppercase font-semibold">Assigned Category</span><strong className="text-slate-900 font-bold">{booking.vehicle_categories?.name || 'Commercial Sedan / SUV'}</strong></p>
               <div className="flex gap-4">
                 <p><span className="text-slate-500 block text-[10px] uppercase font-semibold">Passengers</span><span className="text-slate-800 font-semibold">{booking.passenger_count || 1} Persons</span></p>

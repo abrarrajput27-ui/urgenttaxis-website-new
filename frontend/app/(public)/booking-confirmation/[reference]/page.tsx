@@ -263,7 +263,9 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
               </div>
               <div>
                 <span className="text-slate-500 block text-[11px] font-semibold uppercase">Service Category</span>
-                <strong className="text-slate-900 capitalize">{booking.trip_type.replace('_', ' ')}</strong>
+                <strong className="text-slate-900 capitalize">
+                  {booking.trip_type === 'local' ? 'Hourly Local Rental' : booking.trip_type === 'airport' ? 'Airport Transfer' : booking.trip_type.replace('_', ' ')}
+                </strong>
               </div>
               <div>
                 <span className="text-slate-500 block text-[11px] font-semibold uppercase">Assigned Vehicle</span>
@@ -593,7 +595,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
                 '',
                 '📋 *CONFIRMED BOOKING DETAILS*',
                 `• 🔖 *Booking Ref:* *${booking.booking_reference}*`,
-                `• 🚗 *Service:* ${booking.trip_type.replace('_', ' ').toUpperCase()}`,
+                `• 🚗 *Service:* ${booking.trip_type === 'local' ? 'Local Rental' : booking.trip_type === 'airport' ? 'Airport Transfer' : booking.trip_type.replace('_', ' ').toUpperCase()}`,
                 `• 🚘 *Vehicle:* ${booking.vehicle_categories?.name || 'Commercial AC Cab'}`,
                 `• 📍 *Pickup:* ${booking.pickup_address}`,
                 booking.drop_address ? `• 🏁 *Drop:* ${booking.drop_address}` : '',
