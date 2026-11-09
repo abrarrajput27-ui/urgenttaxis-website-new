@@ -34,6 +34,7 @@ import {
   FaChevronRight,
 } from 'react-icons/fa';
 import { SITE_CONFIG } from '@/lib/seo';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { BOOKING_ADDONS, isAddOnSupported } from '@/lib/pricing/add-ons';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
 import { calculateAdvanceToken, isGroupVehicleCategory } from '@/lib/pricing';
@@ -351,68 +352,76 @@ function CheckoutContent() {
     }
   };
 
-  // Group Vehicle Manual Quotation WhatsApp Link
+  // Group Vehicle Manual Quotation WhatsApp Link (Unified Format)
   const whatsappGroupEnquiryUrl = useMemo(() => {
-    const lines = [
-      '🚖 *URGENT TAXIS — GROUP VEHICLE QUOTATION INQUIRY*',
-      '━━━━━━━━━━━━━━━━━━━━',
-      '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
-      '',
-      '📋 *TRIP DETAILS*',
-      `• 🚗 *Vehicle:* *${vehicle.name}* (${vehicle.models})`,
-      `• 👥 *Seating Capacity:* ${vehicle.seats} • ${vehicle.bags}`,
-      `• 📍 *Pickup:* ${effectivePickup}`,
-      `• 🏁 *Drop:* ${effectiveDrop}`,
-      `• 🛣️ *Distance:* ~${routeData.distanceKm} km (${routeData.durationText})`,
-      `• 📅 *Schedule:* ${formattedDate} at ${formattedTime}`,
-      '',
-      'Please check vehicle availability, permits, and provide a customized group rate.',
-      '',
-      '📞 *Helpline:* +91 7310651940 | Masuri, Ghaziabad',
-      '💬 *WhatsApp:* +91 8595066033',
-    ];
-    return `https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${encodeURIComponent(lines.join('\n'))}`;
-  }, [vehicle, effectivePickup, effectiveDrop, routeData, formattedDate, formattedTime]);
+    return generateWhatsAppLink({
+      tripType: 'Group Charter (Tempo Traveller / Force Urbania / Bus)',
+      pickup: effectivePickup,
+      drop: effectiveDrop,
+      stops: stops.length > 0 ? stops : undefined,
+      journeyDate: formattedDate,
+      pickupTime: formattedTime,
+      distance: routeData.distanceKm,
+      vehicleCategory: vehicle.name,
+      vehicleModel: vehicle.models,
+      capacity: `${vehicle.seats} • ${vehicle.bags}`,
+      pageUrl: `https://www.urgenttaxis.in/cabs?${new URLSearchParams({ pickup: pickupCity, drop: dropCity, serviceType }).toString()}`,
+      customMessage: 'Need luxury group vehicle quotation and route clearance',
+    });
+  }, [vehicle, effectivePickup, effectiveDrop, routeData, formattedDate, formattedTime, pickupCity, dropCity, serviceType, stops]);
 
-  // WhatsApp quick booking link
+  // WhatsApp quick booking link (Unified Strict Format)
   const whatsappBookingUrl = useMemo(() => {
-    const serviceTitle = serviceType === 'one_way' ? 'One-Way Outstation' : serviceType === 'round_trip' ? 'Round-Trip' : serviceType === 'local_rental' ? 'Hourly Rental' : 'Airport Transfer';
-    const lines = [
-      '🚖 *URGENT TAXIS — CHECKOUT BOOKING INQUIRY*',
-      '━━━━━━━━━━━━━━━━━━━━',
-      '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
-      '',
-      '📋 *TRIP DETAILS*',
-      `• 🚗 *Service:* ${serviceTitle}`,
-      `• 📍 *Pickup:* ${effectivePickup}`,
-      `• 🏁 *Drop:* ${effectiveDrop}`,
-      `• 🛣️ *Distance:* ~${routeData.distanceKm} km (${routeData.durationText})`,
-      `• 📅 *Date:* ${formattedDate} at ${formattedTime}`,
-      customerFullName ? `• 👤 *Passenger:* ${customerTitle} ${customerFullName} (${customerPhone || 'Phone on call'})` : '',
-      '',
-      '🚘 *VEHICLE SELECTED*',
-      `• 🚗 *Vehicle:* *${vehicle.name}* (${vehicle.models})`,
-      `• 👥 *Capacity:* ${vehicle.seats} • ${vehicle.bags}`,
-      '',
-      '💰 *FARE & PAYMENT BREAKDOWN*',
-      `• 💵 *Base Cab Rental:* ₹${calculatedFare.baseFare.toLocaleString('en-IN')}`,
-      `• 🛣️ *Tolls & Permits:* ${serviceType === 'one_way' ? 'Included' : 'At Actuals'}`,
-      `• 👨‍✈️ *Chauffeur & Fuel:* Included`,
-      `• 🛡️ *GST (5%):* Included`,
-      calculatedFare.selectedAddOnsList?.length ? `• ➕ *Add-ons (${calculatedFare.selectedAddOnsList.length}):* +₹${calculatedFare.addOnTotal.toLocaleString('en-IN')}` : '',
-      '────────────────────',
-      `• 💳 *TOTAL FARE:* *₹${calculatedFare.grandTotal.toLocaleString('en-IN')}*`,
-      `• 🟢 *30% Advance Token:* *₹${calculatedFare.tokenAmount.toLocaleString('en-IN')}* (To Confirm)`,
-      `• ⚪ *70% Driver Balance:* *₹${calculatedFare.balanceAmount.toLocaleString('en-IN')}* (At Pickup)`,
-      '',
-      '📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad',
-      '💬 *WhatsApp Desk:* +91 8595066033',
-      '',
-      'Please confirm cab assignment & booking! ✨',
-    ].filter(Boolean);
+    const serviceTitle =
+      serviceType === 'one_way'
+        ? 'One-way'
+        : serviceType === 'round_trip'
+        ? 'Round-trip'
+        : serviceType === 'local_rental'
+        ? 'Local Rental'
+        : 'Airport Transfer';
+    const pageUrl = `https://www.urgenttaxis.in/cabs?${new URLSearchParams({
+      pickup: pickupCity,
+      drop: dropCity,
+      serviceType,
+      ...(stops.length > 0 ? { stops: stops.join('|') } : {}),
+    }).toString()}`;
 
-    return `https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${encodeURIComponent(lines.join('\n'))}`;
-  }, [vehicle, serviceType, pickupCity, dropCity, routeData, formattedDate, formattedTime, calculatedFare]);
+    return generateWhatsAppLink({
+      tripType: serviceTitle,
+      pickup: effectivePickup,
+      drop: effectiveDrop,
+      stops: stops.length > 0 ? stops : undefined,
+      journeyDate: formattedDate,
+      pickupTime: formattedTime,
+      distance: routeData.distanceKm,
+      customerName: customerFullName ? `${customerTitle} ${customerFullName} (${customerPhone || 'Phone on call'})` : undefined,
+      passengerCount,
+      vehicleCategory: vehicle.name,
+      vehicleModel: vehicle.models,
+      capacity: `${vehicle.seats} • ${vehicle.bags}`,
+      totalFare: calculatedFare.grandTotal,
+      tokenAmount: calculatedFare.tokenAmount,
+      balanceAmount: calculatedFare.balanceAmount,
+      pageUrl,
+    });
+  }, [
+    vehicle,
+    serviceType,
+    pickupCity,
+    dropCity,
+    routeData,
+    formattedDate,
+    formattedTime,
+    calculatedFare,
+    effectivePickup,
+    effectiveDrop,
+    customerTitle,
+    customerFullName,
+    customerPhone,
+    passengerCount,
+    stops,
+  ]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-28 sm:pb-20 font-sans">
@@ -758,6 +767,32 @@ function CheckoutContent() {
                     City: {dropCity}
                   </span>
                 </div>
+
+                {/* Via Intermediate Stops Corridor (if any stops selected) */}
+                {stops.length > 0 && (
+                  <div className="bg-amber-50/70 p-4 rounded-2xl border border-amber-200">
+                    <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
+                      <label className="text-xs font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+                        <span>Via Intermediate Stops ({stops.length})</span>
+                      </label>
+                      <span className="text-[10px] text-amber-800 font-bold bg-amber-100/70 px-2 py-0.5 rounded-md border border-amber-300 shrink-0">
+                        Route Corridor
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      {stops.map((stop, sIdx) => (
+                        <span
+                          key={sIdx}
+                          className="bg-white border border-amber-300 text-amber-950 font-bold px-3 py-1 rounded-xl text-xs flex items-center gap-1.5 shadow-xs"
+                        >
+                          <span className="text-amber-600 font-extrabold">{sIdx + 1}.</span>
+                          <span>{stop}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -870,6 +905,24 @@ function CheckoutContent() {
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-slate-900 focus:outline-none focus:border-brand-blue"
                   />
                 </div>
+
+                {/* Mobile Direct Action Button (Visible directly inside Passenger form on mobile) */}
+                <div className="lg:hidden col-span-12 pt-3 border-t border-slate-100 space-y-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-3.5 px-4 bg-[#059669] hover:bg-[#047857] active:scale-98 text-white font-black text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-emerald-700/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    <span>{isSubmitting ? 'Confirming Ride...' : `Confirm & Book Ride (₹${calculatedFare.tokenAmount.toLocaleString('en-IN')} Token)`}</span>
+                    <FaArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                  <a
+                    href="#fare-summary-card"
+                    className="block text-center text-xs font-bold text-brand-blue hover:underline py-1"
+                  >
+                    Review full fare breakdown &amp; payment options below ↓
+                  </a>
+                </div>
               </div>
             </form>
 
@@ -980,6 +1033,12 @@ function CheckoutContent() {
                   <span className="font-semibold text-slate-500">Route Distance:</span>
                   <strong className="text-slate-900">{routeData.distanceKm} km Highway</strong>
                 </div>
+                {stops.length > 0 && (
+                  <div className="flex justify-between items-center text-amber-800 bg-amber-50/70 px-2.5 py-1.5 rounded-lg border border-amber-200/60">
+                    <span className="font-semibold text-xs">Via Stops ({stops.length}):</span>
+                    <span className="font-bold text-xs truncate max-w-[160px]">{stops.join(' ➔ ')}</span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-slate-500">Scheduled Date:</span>
                   <strong className="text-slate-900">{formattedDate}</strong>
@@ -1025,29 +1084,53 @@ function CheckoutContent() {
                   </span>
                 </div>
 
-                {/* Tolls & State Tax (MMT One-Way vs Round-Trip Policy) */}
+                {/* 1. Highway FASTag Tolls */}
                 <div className="flex justify-between items-center text-slate-700">
-                  <span className="font-medium">Highway Tolls &amp; State Border Taxes</span>
+                  <div>
+                    <span className="font-medium text-slate-800 block">Highway FASTag Tolls</span>
+                    <span className="text-[10px] text-slate-400">Electronic toll plaza charges</span>
+                  </div>
                   {serviceType === 'one_way' ? (
-                    <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[11px] border border-emerald-200/60">
-                      ✓ Included (₹0 Extra)
+                    <span className="font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded text-[11px] border border-emerald-200/60">
+                      ✓ Included
                     </span>
                   ) : serviceType === 'round_trip' ? (
-                    <span className="font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded text-[11px] border border-amber-200">
-                      Payable At Toll Plazas
+                    <span className="font-bold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded text-[11px] border border-amber-200">
+                      Payable at toll plazas
                     </span>
                   ) : (
-                    <span className="font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded text-[11px]">
-                      At Actuals
+                    <span className="font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded text-[11px]">
+                      At actuals
                     </span>
                   )}
                 </div>
 
-                {/* Driver Allowance & Fuel */}
+                {/* 2. State Border Entry Taxes */}
                 <div className="flex justify-between items-center text-slate-700">
-                  <span className="font-medium">Chauffeur Daily Allowance &amp; Fuel</span>
-                  <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[11px] border border-emerald-200/60">
-                    ✓ Included (₹0 Extra)
+                  <div>
+                    <span className="font-medium text-slate-800 block">State Border Entry Taxes</span>
+                    <span className="text-[10px] text-slate-400">Interstate passenger transport permits</span>
+                  </div>
+                  {serviceType === 'one_way' ? (
+                    <span className="font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded text-[11px] border border-emerald-200/60">
+                      ✓ Included
+                    </span>
+                  ) : serviceType === 'round_trip' ? (
+                    <span className="font-bold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded text-[11px] border border-amber-200">
+                      Payable at state borders
+                    </span>
+                  ) : (
+                    <span className="font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded text-[11px]">
+                      At actuals
+                    </span>
+                  )}
+                </div>
+
+                {/* 3. Driver Allowance & Fuel */}
+                <div className="flex justify-between items-center text-slate-700">
+                  <span className="font-medium text-slate-800">Chauffeur Daily Allowance &amp; Fuel</span>
+                  <span className="font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded text-[11px] border border-emerald-200/60">
+                    ✓ Included
                   </span>
                 </div>
 

@@ -327,7 +327,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
                     <p className="text-brand-blue font-medium">{intermediateStops.join(' ➔ ')}</p>
                   </div>
                 )}
-                {maskedDrop && (
+                {actualDrop && actualDrop !== '—' && (
                   <div>
                     <span className="font-bold text-slate-700 block">Drop Location:</span>
                     <p className="text-slate-900 font-medium">{actualDrop}</p>
@@ -413,18 +413,41 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
                 <span className="font-bold text-slate-900 tabular-nums shrink-0 text-sm">₹{taxableBaseFare.toLocaleString('en-IN')}</span>
               </div>
 
-              {/* Highway Tolls & State Entry Permits */}
+              {/* Highway Fastag Tolls */}
               <div className="flex justify-between items-start gap-4 pt-2 border-t border-slate-100">
                 <div>
-                  <span className="font-bold text-slate-900 block">FASTag Tolls &amp; State Border Permits</span>
+                  <span className="font-bold text-slate-900 block">Highway Fastag Tolls</span>
                   <span className="text-[11px] text-slate-500">
                     {booking.trip_type?.includes('round')
-                      ? 'Payable at actuals as per highway plazas encountered.'
-                      : 'All highway tolls & inter-state passenger vehicle entry permits prepaid and included.'}
+                      ? 'Payable at actuals as per highway toll plazas encountered.'
+                      : 'All highway tolls prepaid and included.'}
                   </span>
                 </div>
-                <span className="font-bold text-emerald-700 tabular-nums shrink-0 text-xs bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
-                  {booking.trip_type?.includes('round') ? 'At Actuals' : 'Included (₹0 Extra)'}
+                <span className={`font-bold tabular-nums shrink-0 text-xs px-2 py-0.5 rounded border ${
+                  booking.trip_type?.includes('round')
+                    ? 'text-amber-800 bg-amber-50 border-amber-200'
+                    : 'text-emerald-700 bg-emerald-50 border-emerald-200/60'
+                }`}>
+                  {booking.trip_type?.includes('round') ? 'Pay on actuals' : 'Included'}
+                </span>
+              </div>
+
+              {/* State Border Entry Taxes */}
+              <div className="flex justify-between items-start gap-4 pt-2 border-t border-slate-100">
+                <div>
+                  <span className="font-bold text-slate-900 block">State Border Taxes &amp; Entry Permits</span>
+                  <span className="text-[11px] text-slate-500">
+                    {booking.trip_type?.includes('round')
+                      ? 'Inter-state commercial passenger vehicle taxes payable at state borders on actuals.'
+                      : 'Inter-state commercial passenger entry permits prepaid and included.'}
+                  </span>
+                </div>
+                <span className={`font-bold tabular-nums shrink-0 text-xs px-2 py-0.5 rounded border ${
+                  booking.trip_type?.includes('round')
+                    ? 'text-amber-800 bg-amber-50 border-amber-200'
+                    : 'text-emerald-700 bg-emerald-50 border-emerald-200/60'
+                }`}>
+                  {booking.trip_type?.includes('round') ? 'Pay on actuals' : 'Included'}
                 </span>
               </div>
 
@@ -435,7 +458,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
                   <span className="text-[11px] text-slate-500">Driver food and daily maintenance allowance included.</span>
                 </div>
                 <span className="font-bold text-emerald-700 tabular-nums shrink-0 text-xs bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
-                  Included (₹0 Extra)
+                  Included
                 </span>
               </div>
 

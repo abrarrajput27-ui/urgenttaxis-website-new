@@ -33,6 +33,7 @@ import {
   FaInfoCircle,
 } from 'react-icons/fa';
 import { SITE_CONFIG } from '@/lib/seo';
+import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
 import {
   calculateAdvanceToken,
@@ -85,6 +86,11 @@ export default function CabsClient() {
   const initialTime = searchParams.get('time') || searchParams.get('pickupTime') || '09:00';
   const initialDistanceKm = Number(searchParams.get('distanceKm') || searchParams.get('km') || 0);
   const initialPackageId = (searchParams.get('packageId') as HourlyRentalPackageId) || '8h80km';
+  const rawStops = searchParams.get('stops') || '';
+  const initialStops = useMemo(
+    () => (rawStops ? rawStops.split('|').map((s) => s.trim()).filter(Boolean) : []),
+    [rawStops]
+  );
 
   // State
   const [serviceType, setServiceType] = useState<BookingServiceType>(initialServiceType);
@@ -95,6 +101,7 @@ export default function CabsClient() {
   const [isModifyOpen, setIsModifyOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<VehicleFilterKey>('all');
   const [activeTabMap, setActiveTabMap] = useState<Record<string, 'inclusions' | 'exclusions'>>({});
+  const [stops, setStops] = useState<string[]>(initialStops);
 
   // Form draft state for modify drawer
   const [editPickup, setEditPickup] = useState(initialPickup);
@@ -125,7 +132,10 @@ export default function CabsClient() {
       setServiceType(initialServiceType);
       setEditServiceType(initialServiceType);
     }
-  }, [initialPickup, initialDrop, initialDate, initialTime, initialServiceType]);
+    if (rawStops) {
+      setStops(rawStops.split('|').map((s) => s.trim()).filter(Boolean));
+    }
+  }, [initialPickup, initialDrop, initialDate, initialTime, initialServiceType, rawStops]);
 
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
 
@@ -531,37 +541,39 @@ export default function CabsClient() {
     return vehiclesList.filter((v) => v.filterKey === selectedFilter);
   }, [vehiclesList, selectedFilter]);
 
-  // Build WhatsApp booking link
+  // Build WhatsApp booking link (Unified Strict Urgent Taxis Format)
   const getWhatsAppLink = (v: VehicleCardData) => {
-    const serviceTitle = serviceType === 'one_way' ? 'One-Way Outstation Cab' : serviceType === 'round_trip' ? 'Round-Trip Cab' : serviceType === 'local_rental' ? 'Hourly Local Rental' : 'Airport Cab Transfer';
-    const lines = [
-      '🚖 *URGENT TAXIS — VEHICLE SELECTION INQUIRY*',
-      '━━━━━━━━━━━━━━━━━━━━',
-      '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
-      '',
-      '📋 *TRIP DETAILS*',
-      `• 🚗 *Service:* ${serviceTitle}`,
-      `• 📍 *Pickup:* ${pickup}`,
-      `• 🏁 *Drop:* ${drop}`,
-      `• 🛣️ *Distance:* ~${routeData.distanceKm} km (${routeData.durationText})`,
-      `• 📅 *Date:* ${formattedDate} at ${formattedTime}`,
-      '',
-      '🚘 *VEHICLE SELECTED*',
-      `• 🚗 *Vehicle:* *${v.name}*`,
-      `• 💺 *Models:* ${v.models}`,
-      `• 👥 *Capacity:* ${v.seats} • ${v.bags}`,
-      '',
-      '💰 *FARE & PAYMENT BREAKDOWN*',
-      `• 💳 *Total Fare:* *₹${v.totalFare.toLocaleString('en-IN')}*`,
-      `• 🟢 *30% Advance Token:* *₹${v.tokenAmount.toLocaleString('en-IN')}* (To Confirm)`,
-      `• ⚪ *70% Driver Balance:* *₹${v.balanceAmount.toLocaleString('en-IN')}* (At Pickup)`,
-      '',
-      '📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad',
-      '💬 *WhatsApp Desk:* +91 8595066033',
-      '',
-      'Please confirm driver availability and reservation! ✨',
-    ];
-    return `https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${encodeURIComponent(lines.join('\n'))}`;
+    const serviceTitle =
+      serviceType === 'one_way'
+        ? 'One-way'
+        : serviceType === 'round_trip'
+        ? 'Round-trip'
+        : serviceType === 'local_rental'
+        ? 'Local Rental'
+        : 'Airport Transfer';
+    const pageUrl = `https://www.urgenttaxis.in/cabs?${new URLSearchParams({
+      pickup,
+      drop,
+      serviceType,
+      ...(stops.length > 0 ? { stops: stops.join('|') } : {}),
+    }).toString()}`;
+
+    return generateWhatsAppLink({
+      tripType: serviceTitle,
+      pickup,
+      drop,
+      stops: stops.length > 0 ? stops : undefined,
+      journeyDate: formattedDate,
+      pickupTime: formattedTime,
+      distance: routeData.distanceKm,
+      vehicleCategory: v.name,
+      vehicleModel: v.models,
+      capacity: `${v.seats} • ${v.bags}`,
+      totalFare: v.totalFare,
+      tokenAmount: v.tokenAmount,
+      balanceAmount: v.balanceAmount,
+      pageUrl,
+    });
   };
 
   // Build Checkout link leading directly to Step 3
@@ -577,6 +589,9 @@ export default function CabsClient() {
       time: journeyTime,
       km: String(serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, 250) : routeData.distanceKm),
     });
+    if (stops.length > 0) {
+      p.set('stops', stops.join('|'));
+    }
     return `/checkout?${p.toString()}`;
   };
 
@@ -651,6 +666,12 @@ export default function CabsClient() {
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight flex items-center gap-2 flex-wrap">
                 <span>{pickup && drop ? `${pickup} to ${drop} Cabs` : 'Available Cabs'}</span>
               </h1>
+              {stops.length > 0 && (
+                <div className="flex items-center gap-1.5 text-xs text-amber-300 font-semibold bg-amber-950/40 border border-amber-500/30 px-3 py-1 rounded-lg w-fit">
+                  <span>🚩 Via Stops:</span>
+                  <span className="font-bold text-white">{stops.join(' ➔ ')}</span>
+                </div>
+              )}
 
               {/* Accurate Highway Distance & Driving Duration (Zero Fake Data) */}
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-semibold text-slate-300 pt-1">
@@ -1149,9 +1170,18 @@ export default function CabsClient() {
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <a
-              href={`https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${encodeURIComponent(
-                `Hello Urgent Taxis! I need a Tempo Traveller / Bus quote for ${pickup} to ${drop} on ${formattedDate}.`
-              )}`}
+              href={generateWhatsAppLink({
+                tripType: 'Group Charter (Tempo Traveller / Force Urbania / Bus)',
+                pickup,
+                drop,
+                stops: stops.length > 0 ? stops : undefined,
+                journeyDate: formattedDate,
+                pickupTime: formattedTime,
+                vehicleCategory: 'Tempo Traveller / Force Urbania / Luxury Bus',
+                vehicleModel: '12/16/20/26 Seater Maharaja Tempo Traveller or 27-45 Seater Coach',
+                pageUrl: `https://www.urgenttaxis.in/cabs?${new URLSearchParams({ pickup, drop, serviceType }).toString()}`,
+                customMessage: 'Need luxury group vehicle with pushback seats and luggage space',
+              })}
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-3 bg-[#25D366] hover:bg-[#1ebc59] text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer"

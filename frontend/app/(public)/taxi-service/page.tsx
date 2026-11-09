@@ -60,9 +60,31 @@ export default function TaxiServiceHubPage() {
     })),
   };
 
-  const whatsappBaseUrl = `https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(
-    'Hello Urgent Taxis, I am looking to book a cab in Ghaziabad / Delhi NCR. Please share details.'
-  )}`;
+  const whatsappBaseUrl = `https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent([
+    '🚖 *URGENT TAXIS — CAB BOOKING INQUIRY*',
+    '━━━━━━━━━━━━━━━━━━━━',
+    '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
+    '',
+    '📋 *TRIP DETAILS*',
+    '• 🚗 *Service:* Taxi Service in Ghaziabad / Delhi NCR',
+    '• 📍 *Pickup:* Ghaziabad / Delhi NCR',
+    '• 🏁 *Drop:* Flexible',
+    '• 📅 *Date:* Immediate / Flexible',
+    '',
+    '🚘 *VEHICLE SELECTION*',
+    '• 🚗 *Vehicle:* *Sedan / SUV / Ertiga*',
+    '',
+    '💰 *FARE & PAYMENT BREAKDOWN*',
+    '• 🏷️ Guaranteed Lowest Direct-Operator Rates',
+    '• 🟢 Only 30% Advance Token to Confirm',
+    '• ⚪ 70% Driver Balance on Pickup',
+    '',
+    '🌐 *Website:* https://www.urgenttaxis.in/taxi-service',
+    '📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad',
+    '💬 *WhatsApp Desk:* +91 8595066033',
+    '',
+    'Please confirm cab availability & driver assignment! ✨',
+  ].join('\n'))}`;
 
   return (
     <div className="bg-slate-50 text-slate-900 min-h-screen font-sans">

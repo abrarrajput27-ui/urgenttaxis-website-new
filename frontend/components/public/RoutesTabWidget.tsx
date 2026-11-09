@@ -127,7 +127,7 @@ export default function RoutesTabWidget() {
       const price = quote?.sedanFare || Math.round(distance * 11);
       const duration = quote?.durationText || `${Math.round(distance / 50)} hrs`;
       const slug = quote?.slug || `${activeOrigin.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-to-${dest.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-taxi`;
-      const image = getDestinationImage(dest);
+      const image = getDestinationImage(dest, activeState);
 
       return {
         id: `${activeOrigin}-${dest}-${idx}`,
@@ -288,7 +288,7 @@ export default function RoutesTabWidget() {
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/destinations/delhi.webp';
+                        (e.target as HTMLImageElement).src = getDestinationImage('', activeState);
                       }}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     />

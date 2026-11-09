@@ -24,9 +24,32 @@ export default function ContactInquiryForm() {
       return;
     }
 
-    const text = `*New Taxi Inquiry from Website*\n\n👤 *Name:* ${formData.name}\n📞 *Phone:* ${formData.phone}\n📍 *Pickup:* ${formData.pickup || 'Not specified'}\n🏁 *Drop / Destination:* ${formData.drop || 'Not specified'}\n📅 *Travel Date:* ${formData.travelDate || 'Flexible'}\n🚗 *Vehicle Preferred:* ${formData.vehicle}\n💬 *Message:* ${formData.message || 'Please provide quotation.'}`;
+    const lines = [
+      '🚖 *URGENT TAXIS — CAB BOOKING INQUIRY*',
+      '━━━━━━━━━━━━━━━━━━━━',
+      '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
+      '',
+      '📋 *TRIP DETAILS*',
+      '• 🚗 *Service:* Custom Taxi Inquiry / Callback',
+      `• 📍 *Pickup:* ${formData.pickup || 'Not specified'}`,
+      `• 🏁 *Drop:* ${formData.drop || 'Not specified'}`,
+      `• 📅 *Date:* ${formData.travelDate || 'Immediate / Flexible'}`,
+      `• 👤 *Passenger:* ${formData.name} (${formData.phone})`,
+      '',
+      '🚘 *VEHICLE SELECTION*',
+      `• 🚗 *Vehicle:* *${formData.vehicle}*`,
+      '',
+      '💬 *INQUIRY MESSAGE*',
+      `• ${formData.message || 'Please provide cab availability and instant fare quote.'}`,
+      '',
+      '🌐 *Website:* https://www.urgenttaxis.in/contact',
+      '📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad',
+      '💬 *WhatsApp Desk:* +91 8595066033',
+      '',
+      'Please confirm cab availability & driver assignment! ✨',
+    ];
 
-    const waUrl = `https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(text)}`;
+    const waUrl = `https://wa.me/${BUSINESS_CONFIG.phone.whatsappRaw}?text=${encodeURIComponent(lines.join('\n'))}`;
     setSubmitted(true);
     window.open(waUrl, '_blank');
   };
