@@ -1,9 +1,11 @@
 import { BUSINESS_CONFIG } from './config';
+import { formatTime12Hour, formatDateReadable } from './date-utils';
 
 export interface WhatsAppMessageParams {
   bookingReference?: string;
   invoiceUrl?: string;
   customerName?: string;
+  customerPhone?: string;
   passengerCount?: number;
 
   pickup?: string;
@@ -12,6 +14,9 @@ export interface WhatsAppMessageParams {
   tripType?: 'One Way' | 'Round Trip' | 'Airport Transfer' | 'Local Rental' | 'Corporate' | 'Tempo Traveller' | 'Bus' | 'Tour Package' | string;
   journeyDate?: string;
   pickupTime?: string;
+  returnDate?: string;
+  returnTime?: string;
+  durationDays?: number | string;
   distance?: number;
 
   vehicleCategory?: string;
@@ -48,12 +53,15 @@ export interface WhatsAppMessageParams {
  * ━━━━━━━━━━━━━━━━━━━━
  * ✨ *Fast To Your Destination – Your Quick Ride Solution!*
  * 📋 *TRIP DETAILS*
- * • 🚗 *Service:* One-way
+ * • 🚗 *Service:* One-way / Round-trip
  * • 📍 *Pickup:* Ghaziabad
  * • 🏁 *Drop:* Jim Corbett
- * • 📅 *Date:* Immediate / Flexible
+ * • 🛣️ *Distance:* ~260 km (or Total Distance: ~520 km (Round-trip))
+ * • 📅 *Date:* Mon, Nov 9, 2026 at 09:00 AM
+ * • 🔄 *Return Date / Duration:* Wed, Nov 11, 2026 (3 Days)
  * 🚘 *VEHICLE SELECTION*
  * • 🚗 *Vehicle:* *Sedan*
+ * • 💺 *Models:* Maruti Dzire, Toyota Etios
  * 💰 *FARE & PAYMENT BREAKDOWN*
  * • 💳 *Estimated Total Fare:* *₹3,499*
  * • 🟢 *30% Advance Token:* *₹1,050* (To Confirm)
@@ -102,16 +110,66 @@ export function generateWhatsAppLink(
 
   if (hasTripDetails) {
     lines.push('📋 *TRIP DETAILS*');
-    if (params.tripType) lines.push(`• 🚗 *Service:* ${params.tripType}`);
-    if (params.pickup) lines.push(`• 📍 *Pickup:* ${params.pickup}`);
-    if (params.stops && params.stops.length > 0) {
-      lines.push(`• 🛑 *Via Stops:* ${params.stops.join(' ➔ ')}`);
+
+    const rawType = String(params.tripType || '').toLowerCase();
+    const isRoundTrip = rawType.includes('round') || Boolean(params.returnDate);
+
+    if (isRoundTrip) {
+      lines.push('• 🚗 *Service:* Round-trip');
+      if (params.pickup) lines.push(`• 📍 *Pickup:* ${params.pickup}`);
+      if (params.stops && params.stops.length > 0) {
+        lines.push(`• 🛑 *Via Stops:* ${params.stops.join(' ➔ ')}`);
+      }
+      if (params.drop) lines.push(`• 🏁 *Destination:* ${params.drop}`);
+      if (params.distance && params.distance > 0) {
+        lines.push(`• 🛣️ *Total Distance:* ~${params.distance} km (Round-trip)`);
+      }
+      const depDate = params.journeyDate ? formatDateReadable(params.journeyDate) : 'Immediate / Flexible';
+      const depTime = params.pickupTime ? ` at ${formatTime12Hour(params.pickupTime)}` : '';
+      lines.push(`• 📅 *Departure Date:* ${depDate}${depTime}`);
+
+      if (params.returnDate) {
+        const retDate = formatDateReadable(params.returnDate);
+        const retTime = params.returnTime ? ` at ${formatTime12Hour(params.returnTime)}` : '';
+        const daysLabel = params.durationDays
+          ? ` (${params.durationDays} ${Number(params.durationDays) === 1 ? 'Day' : 'Days'})`
+          : '';
+        lines.push(`• 🔄 *Return Date / Duration:* ${retDate}${retTime}${daysLabel}`);
+      } else if (params.durationDays) {
+        lines.push(`• ⏱️ *Trip Duration:* ${params.durationDays} ${Number(params.durationDays) === 1 ? 'Day' : 'Days'}`);
+      }
+
+      if (params.customerName) {
+        const phoneSuffix = params.customerPhone ? ` (${params.customerPhone})` : '';
+        lines.push(`• 👤 *Passenger:* ${params.customerName}${phoneSuffix}`);
+      }
+      if (params.passengerCount) {
+        lines.push(`• 👥 *Passengers:* ${params.passengerCount} Persons`);
+      }
+    } else {
+      // One-way or other service types
+      const serviceLabel = params.tripType || 'One-way';
+      lines.push(`• 🚗 *Service:* ${serviceLabel}`);
+      if (params.pickup) lines.push(`• 📍 *Pickup:* ${params.pickup}`);
+      if (params.stops && params.stops.length > 0) {
+        lines.push(`• 🛑 *Via Stops:* ${params.stops.join(' ➔ ')}`);
+      }
+      if (params.drop) lines.push(`• 🏁 *Drop:* ${params.drop}`);
+      if (params.distance && params.distance > 0) {
+        lines.push(`• 🛣️ *Distance:* ~${params.distance} km`);
+      }
+      const travelDate = params.journeyDate ? formatDateReadable(params.journeyDate) : 'Immediate / Flexible';
+      const travelTime = params.pickupTime ? ` at ${formatTime12Hour(params.pickupTime)}` : '';
+      lines.push(`• 📅 *Date:* ${travelDate}${travelTime}`);
+
+      if (params.customerName) {
+        const phoneSuffix = params.customerPhone ? ` (${params.customerPhone})` : '';
+        lines.push(`• 👤 *Passenger:* ${params.customerName}${phoneSuffix}`);
+      }
+      if (params.passengerCount) {
+        lines.push(`• 👥 *Passengers:* ${params.passengerCount} Persons`);
+      }
     }
-    if (params.drop) lines.push(`• 🏁 *Drop:* ${params.drop}`);
-    lines.push(`• 📅 *Date:* ${params.journeyDate || 'Immediate / Flexible'}${params.pickupTime ? ` at ${params.pickupTime}` : ''}`);
-    if (params.distance) lines.push(`• 🛣️ *Distance:* ~${params.distance} km`);
-    if (params.customerName) lines.push(`• 👤 *Passenger:* ${params.customerName}`);
-    if (params.passengerCount) lines.push(`• 👥 *Passengers:* ${params.passengerCount} Persons`);
   } else {
     // General structured inquiry
     lines.push('📋 *TRIP INQUIRY REQUIREMENTS*');
@@ -162,7 +220,11 @@ export function generateWhatsAppLink(
   lines.push(`🌐 *Website:* ${params.pageUrl || 'https://www.urgenttaxis.in'}`);
   lines.push('📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad');
   lines.push('💬 *WhatsApp Desk:* +91 8595066033');
-  lines.push(isConfirmed ? 'Please share UPI payment details / QR code to dispatch cab! ✨' : 'Please confirm cab availability & driver assignment! ✨');
+  lines.push(
+    isConfirmed
+      ? 'Please share UPI payment details / QR code to dispatch cab! ✨'
+      : 'Please confirm cab availability & driver assignment! ✨'
+  );
 
   const text = lines.join('\n');
   return `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`;

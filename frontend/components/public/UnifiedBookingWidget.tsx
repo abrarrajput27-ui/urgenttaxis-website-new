@@ -632,6 +632,11 @@ export default function UnifiedBookingWidget({
       ? `Requested Add-ons: ${selectedAddOns.map(id => BOOKING_ADDONS[id]?.name).join(', ')} (+₹${addOnTotal})`
       : undefined;
 
+    const currentKm = activeVehicleQuote?.distanceKm || distanceKm || 0;
+    const tripKm = serviceType === 'round_trip'
+      ? Math.max(currentKm * 2, numberOfDays * 250)
+      : currentKm;
+
     return buildWhatsAppBookingLink({
       serviceType: serviceTypeLabel,
       vehicleName: vCard.name,
@@ -639,11 +644,17 @@ export default function UnifiedBookingWidget({
       destination: effectiveDestination || 'Outstation',
       travelDate: pickupDate,
       travelTime: pickupTime,
+      returnDate: serviceType === 'round_trip' ? returnDate : undefined,
+      returnTime: serviceType === 'round_trip' ? returnTime : undefined,
+      numberOfDays: serviceType === 'round_trip' ? numberOfDays : undefined,
+      distanceKm: tripKm > 0 ? tripKm : undefined,
       estimatedFare: fare,
       pageUrl: typeof window !== 'undefined' ? window.location.href : 'https://www.urgenttaxis.in',
       customNote: addOnNote,
     });
-  }, [selectedAddOns, addOnTotal, 
+  }, [
+    selectedAddOns,
+    addOnTotal,
     selectedVehicleKey,
     activeVehicleQuote,
     serviceTypeLabel,
@@ -651,12 +662,19 @@ export default function UnifiedBookingWidget({
     effectiveDestination,
     pickupDate,
     pickupTime,
+    serviceType,
+    returnDate,
+    returnTime,
+    numberOfDays,
+    distanceKm,
   ]);
 
   // Custom WhatsApp quote link for unmapped routes or multi-stop
   const customWhatsAppUrl = useMemo(() => {
     const validStops = stops.map((s) => s.trim()).filter(Boolean);
     const stopDetails = validStops.length > 0 ? ` with stops: ${validStops.join(', ')}` : '';
+    const currentKm = distanceKm || 0;
+    const tripKm = serviceType === 'round_trip' ? Math.max(currentKm * 2, numberOfDays * 250) : currentKm;
     return buildWhatsAppBookingLink({
       serviceType: serviceTypeLabel,
       vehicleName: 'Sedan / SUV',
@@ -664,9 +682,13 @@ export default function UnifiedBookingWidget({
       destination: `${destination || 'Drop City'}${stopDetails}`,
       travelDate: pickupDate,
       travelTime: pickupTime,
+      returnDate: serviceType === 'round_trip' ? returnDate : undefined,
+      returnTime: serviceType === 'round_trip' ? returnTime : undefined,
+      numberOfDays: serviceType === 'round_trip' ? numberOfDays : undefined,
+      distanceKm: tripKm > 0 ? tripKm : undefined,
       pageUrl: typeof window !== 'undefined' ? window.location.href : 'https://www.urgenttaxis.in',
     });
-  }, [serviceTypeLabel, origin, destination, stops, pickupDate, pickupTime]);
+  }, [serviceTypeLabel, origin, destination, stops, pickupDate, pickupTime, serviceType, returnDate, returnTime, numberOfDays, distanceKm]);
 
   // Submit Handler -> Navigate to Checkout
   const handleProceedToCheckout = (e: React.FormEvent) => {

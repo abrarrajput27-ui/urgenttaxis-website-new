@@ -17,6 +17,7 @@ import masterRoutesData from './data/processed-master-routes.json';
 import { AIRPORT_ROUTES_DATA } from './data/airport-routes-data';
 import { SITE_CONFIG } from './seo';
 import { resolveAccurateRoute } from './distance-resolver';
+import { formatTime12Hour, formatDateReadable } from './date-utils';
 
 // -----------------------------------------------------------------------------
 // 1. RATE CONSTANTS (Owner Confirmed Values)
@@ -616,12 +617,16 @@ export function calculateLocalRentalFare(
 // -----------------------------------------------------------------------------
 
 export interface WhatsAppBookingParams {
-  serviceType: 'One-way' | 'Round-trip' | 'Local rental' | 'Airport transfer';
+  serviceType: 'One-way' | 'Round-trip' | 'Local rental' | 'Airport transfer' | string;
   vehicleName: string;
   origin: string;
   destination: string;
   travelDate?: string;
   travelTime?: string;
+  returnDate?: string;
+  returnTime?: string;
+  numberOfDays?: number;
+  distanceKm?: number;
   estimatedFare?: number;
   pageUrl?: string;
   customNote?: string;
@@ -641,16 +646,50 @@ export function buildWhatsAppBookingLink(params: WhatsAppBookingParams): string 
     ? params.estimatedFare - token
     : 0;
 
+  const rawService = String(params.serviceType || '').toLowerCase();
+  const isRoundTrip = rawService.includes('round') || Boolean(params.returnDate);
+
+  const tripLines: string[] = [];
+  if (isRoundTrip) {
+    tripLines.push('• 🚗 *Service:* Round-trip');
+    tripLines.push(`• 📍 *Pickup:* ${params.origin}`);
+    tripLines.push(`• 🏁 *Destination:* ${params.destination}`);
+    if (params.distanceKm && params.distanceKm > 0) {
+      tripLines.push(`• 🛣️ *Total Distance:* ~${params.distanceKm} km (Round-trip)`);
+    }
+    const depDate = params.travelDate ? formatDateReadable(params.travelDate) : 'Immediate / Flexible';
+    const depTime = params.travelTime ? ` at ${formatTime12Hour(params.travelTime)}` : '';
+    tripLines.push(`• 📅 *Departure Date:* ${depDate}${depTime}`);
+
+    if (params.returnDate) {
+      const retDate = formatDateReadable(params.returnDate);
+      const retTime = params.returnTime ? ` at ${formatTime12Hour(params.returnTime)}` : '';
+      const daysText = params.numberOfDays
+        ? ` (${params.numberOfDays} ${params.numberOfDays === 1 ? 'Day' : 'Days'})`
+        : '';
+      tripLines.push(`• 🔄 *Return Date / Duration:* ${retDate}${retTime}${daysText}`);
+    } else if (params.numberOfDays) {
+      tripLines.push(`• ⏱️ *Trip Duration:* ${params.numberOfDays} ${params.numberOfDays === 1 ? 'Day' : 'Days'}`);
+    }
+  } else {
+    tripLines.push(`• 🚗 *Service:* ${params.serviceType}`);
+    tripLines.push(`• 📍 *Pickup:* ${params.origin}`);
+    tripLines.push(`• 🏁 *Drop:* ${params.destination}`);
+    if (params.distanceKm && params.distanceKm > 0) {
+      tripLines.push(`• 🛣️ *Distance:* ~${params.distanceKm} km`);
+    }
+    const travelDate = params.travelDate ? formatDateReadable(params.travelDate) : 'Immediate / Flexible';
+    const travelTime = params.travelTime ? ` at ${formatTime12Hour(params.travelTime)}` : '';
+    tripLines.push(`• 📅 *Date:* ${travelDate}${travelTime}`);
+  }
+
   const lines = [
     '🚖 *URGENT TAXIS — CAB BOOKING INQUIRY*',
     '━━━━━━━━━━━━━━━━━━━━',
     '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
     '',
     '📋 *TRIP DETAILS*',
-    `• 🚗 *Service:* ${params.serviceType}`,
-    `• 📍 *Pickup:* ${params.origin}`,
-    `• 🏁 *Drop:* ${params.destination}`,
-    params.travelDate ? `• 📅 *Date:* ${params.travelDate}${params.travelTime ? ` at ${params.travelTime}` : ''}` : '• 📅 *Date:* Immediate / Flexible',
+    ...tripLines,
     '',
     '🚘 *VEHICLE SELECTION*',
     `• 🚗 *Vehicle:* *${params.vehicleName}*`,

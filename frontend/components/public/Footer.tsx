@@ -12,7 +12,7 @@ export default function PublicFooter() {
       {/* 1. Top Call-to-Action Banner */}
       <div className="w-full bg-transparent pt-16 sm:pt-24 lg:pt-8 pb-8 sm:pb-12 lg:pb-6 my-6 sm:my-10 relative z-20 overflow-x-clip">
         <div className="w-[98%] lg:w-[94%] xl:max-w-7xl mx-auto relative z-20">
-          <div className="bg-[#0a1128] relative rounded-[2rem] text-center px-3 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:py-6 shadow-2xl border border-white/10 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[auto] lg:min-h-[100px] overflow-hidden">
+          <div className="bg-[#0a1128] relative rounded-[2rem] text-center px-3 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:py-6 shadow-2xl border border-white/10 flex flex-col lg:flex-row lg:items-center lg:justify-between min-h-[auto] lg:min-h-[100px] overflow-visible">
             {/* Authentic Dotted Pattern matching Footer & Master Theme */}
             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none rounded-[2rem]" />
             
@@ -42,14 +42,14 @@ export default function PublicFooter() {
               </div>
             </div>
 
-            {/* Overflowing Car Image */}
+            {/* Overflowing Car Image - Half Outside Container */}
             <div className="absolute -top-20 sm:-top-24 lg:top-1/2 left-1/2 lg:left-auto lg:right-4 -translate-x-1/2 lg:translate-x-0 lg:-translate-y-1/2 w-[98%] max-w-[340px] sm:max-w-[400px] lg:max-w-[440px] xl:max-w-[500px] z-10 pointer-events-none">
               <Image
                 src="/cta-hero.webp"
                 alt="Urgent Taxis Cab"
                 width={700}
                 height={400}
-                className="object-contain w-full h-auto drop-shadow-2xl mix-blend-multiply"
+                className="object-contain w-full h-auto drop-shadow-2xl"
                 priority
               />
             </div>

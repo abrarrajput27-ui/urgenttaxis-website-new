@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { maskCustomerName, maskPhoneNumber, maskEmailAddress, maskAddress } from '@/lib/security/masking';
 import { getVehicleProfile } from '@/lib/fleet-mapping';
 import BookingTracker from '@/components/public/BookingTracker';
+import { formatDateTimeReadable } from '@/lib/date-utils';
 
 export default async function BookingConfirmationPage({ params }: { params: Promise<{ reference: string }> }) {
   const { reference } = await params;
@@ -340,13 +341,13 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
               <span className="text-[11px] text-slate-500 uppercase font-bold block mb-2">Schedule & Capacity</span>
               <div className="space-y-2 text-xs sm:text-sm">
                 <div>
-                  <span className="font-bold text-slate-700 block">Departure Date & Time:</span>
-                  <p className="text-slate-900 font-medium">{new Date(booking.pickup_datetime).toLocaleString('en-IN')}</p>
+                  <span className="font-bold text-slate-700 block">Departure Date &amp; Time:</span>
+                  <p className="text-slate-900 font-medium">{formatDateTimeReadable(booking.pickup_datetime)}</p>
                 </div>
                 {booking.return_datetime && (
                   <div>
                     <span className="font-bold text-slate-700 block">Return Schedule:</span>
-                    <p className="text-slate-900 font-medium">{new Date(booking.return_datetime).toLocaleString('en-IN')}</p>
+                    <p className="text-slate-900 font-medium">{formatDateTimeReadable(booking.return_datetime)}</p>
                   </div>
                 )}
                 <div className="flex gap-6 pt-1">
@@ -590,7 +591,8 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
                 `• 🚘 *Vehicle:* ${booking.vehicle_categories?.name || 'Commercial AC Cab'}`,
                 `• 📍 *Pickup:* ${booking.pickup_address}`,
                 booking.drop_address ? `• 🏁 *Drop:* ${booking.drop_address}` : '',
-                `• 📅 *Date:* ${new Date(booking.pickup_datetime).toLocaleString('en-IN')}`,
+                `• 📅 *Departure Date:* ${formatDateTimeReadable(booking.pickup_datetime)}`,
+                booking.return_datetime ? `• 🔄 *Return Schedule:* ${formatDateTimeReadable(booking.return_datetime)}` : '',
                 '',
                 '💰 *PAYMENT BREAKDOWN*',
                 `• 💳 *Total Fare:* *₹${customerPayable.toLocaleString('en-IN')}*`,

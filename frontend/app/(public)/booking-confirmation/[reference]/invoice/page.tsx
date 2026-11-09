@@ -8,6 +8,7 @@ import { BUSINESS_CONFIG } from '@/lib/config';
 import { getClientIp, checkLookupRateLimit, recordFailedLookup } from '@/lib/security/rate-limiter';
 import { maskCustomerName, maskPhoneNumber, maskEmailAddress, maskAddress } from '@/lib/security/masking';
 import { getVehicleProfile } from '@/lib/fleet-mapping';
+import { formatDateTimeReadable } from '@/lib/date-utils';
 
 export const metadata = {
   title: 'Official Tax Invoice & Receipt | Urgent Taxis',
@@ -412,12 +413,12 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
             )}
             <div>
               <span className="text-slate-500 text-[10px] uppercase font-bold block">Pickup Departure Schedule</span>
-              <p className="text-slate-900 font-bold mt-0.5 tabular-nums">{new Date(booking.pickup_datetime).toLocaleString('en-IN')}</p>
+              <p className="text-slate-900 font-bold mt-0.5 tabular-nums">{formatDateTimeReadable(booking.pickup_datetime)}</p>
             </div>
             {booking.return_datetime && (
               <div>
                 <span className="text-slate-500 text-[10px] uppercase font-bold block">Return Departure Schedule</span>
-                <p className="text-slate-900 font-bold mt-0.5 tabular-nums">{new Date(booking.return_datetime).toLocaleString('en-IN')}</p>
+                <p className="text-slate-900 font-bold mt-0.5 tabular-nums">{formatDateTimeReadable(booking.return_datetime)}</p>
               </div>
             )}
           </div>

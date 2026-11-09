@@ -35,6 +35,7 @@ import {
 import { SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
+import { formatTime12Hour, formatDateReadable, calculateRoundTripDays } from '@/lib/date-utils';
 import {
   calculateAdvanceToken,
   calculateRoundTripFare,
@@ -84,6 +85,7 @@ export default function CabsClient() {
   const initialDrop = searchParams.get('drop') || searchParams.get('destination') || 'Nainital, Uttarakhand';
   const initialDate = searchParams.get('date') || searchParams.get('pickupDate') || '';
   const initialTime = searchParams.get('time') || searchParams.get('pickupTime') || '09:00';
+  const initialReturnDate = searchParams.get('returnDate') || searchParams.get('return_date') || '';
   const initialDistanceKm = Number(searchParams.get('distanceKm') || searchParams.get('km') || 0);
   const initialPackageId = (searchParams.get('packageId') as HourlyRentalPackageId) || '8h80km';
   const rawStops = searchParams.get('stops') || '';
@@ -98,6 +100,7 @@ export default function CabsClient() {
   const [drop, setDrop] = useState(initialDrop);
   const [journeyDate, setJourneyDate] = useState(initialDate);
   const [journeyTime, setJourneyTime] = useState(initialTime);
+  const [returnDate, setReturnDate] = useState(initialReturnDate);
   const [isModifyOpen, setIsModifyOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<VehicleFilterKey>('all');
   const [activeTabMap, setActiveTabMap] = useState<Record<string, 'inclusions' | 'exclusions'>>({});
@@ -108,6 +111,7 @@ export default function CabsClient() {
   const [editDrop, setEditDrop] = useState(initialDrop);
   const [editDate, setEditDate] = useState(initialDate);
   const [editTime, setEditTime] = useState(initialTime);
+  const [editReturnDate, setEditReturnDate] = useState(initialReturnDate);
   const [editServiceType, setEditServiceType] = useState<BookingServiceType>(initialServiceType);
 
   // Sync when searchParams change
@@ -128,6 +132,10 @@ export default function CabsClient() {
       setJourneyTime(initialTime);
       setEditTime(initialTime);
     }
+    if (initialReturnDate) {
+      setReturnDate(initialReturnDate);
+      setEditReturnDate(initialReturnDate);
+    }
     if (initialServiceType) {
       setServiceType(initialServiceType);
       setEditServiceType(initialServiceType);
@@ -135,7 +143,7 @@ export default function CabsClient() {
     if (rawStops) {
       setStops(rawStops.split('|').map((s) => s.trim()).filter(Boolean));
     }
-  }, [initialPickup, initialDrop, initialDate, initialTime, initialServiceType, rawStops]);
+  }, [initialPickup, initialDrop, initialDate, initialTime, initialReturnDate, initialServiceType, rawStops]);
 
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
 
@@ -193,33 +201,24 @@ export default function CabsClient() {
 
   // Format readable display date (e.g. "Sun, 8 Nov 2026")
   const formattedDate = useMemo(() => {
-    if (!journeyDate) return 'Today';
-    try {
-      const [y, m, d] = journeyDate.split('-').map(Number);
-      const dt = new Date(y, m - 1, d);
-      return dt.toLocaleDateString('en-US', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
-    } catch {
-      return journeyDate;
-    }
+    return formatDateReadable(journeyDate);
   }, [journeyDate]);
+
+  // Format readable return date
+  const formattedReturnDate = useMemo(() => {
+    return returnDate ? formatDateReadable(returnDate) : '';
+  }, [returnDate]);
 
   // Format readable time (e.g. "09:00 AM")
   const formattedTime = useMemo(() => {
-    if (!journeyTime) return '09:00 AM';
-    try {
-      const [h, m] = journeyTime.split(':').map(Number);
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      const hour12 = h % 12 || 12;
-      return `${hour12}:${String(m).padStart(2, '0')} ${ampm}`;
-    } catch {
-      return journeyTime;
-    }
+    return formatTime12Hour(journeyTime);
   }, [journeyTime]);
+
+  // Calculated round-trip calendar days (e.g. 1 day, 2 days, 3 days)
+  const tripDays = useMemo(() => {
+    if (serviceType !== 'round_trip' || !journeyDate || !returnDate) return 1;
+    return calculateRoundTripDays(journeyDate, returnDate);
+  }, [serviceType, journeyDate, returnDate]);
 
   // Handle Modify Form Submit
   const handleModifySubmit = (e: React.FormEvent) => {
@@ -235,10 +234,15 @@ export default function CabsClient() {
         return;
       }
     }
+    if (editServiceType === 'round_trip' && editReturnDate && editReturnDate < editDate) {
+      alert('Return date cannot be earlier than departure date.');
+      return;
+    }
     setPickup(editPickup);
     setDrop(editDrop);
     setJourneyDate(editDate);
     setJourneyTime(editTime);
+    setReturnDate(editReturnDate);
     setServiceType(editServiceType);
     setIsModifyOpen(false);
 
@@ -249,6 +253,9 @@ export default function CabsClient() {
     p.set('drop', editDrop);
     p.set('date', editDate);
     p.set('time', editTime);
+    if (editServiceType === 'round_trip' && editReturnDate) {
+      p.set('returnDate', editReturnDate);
+    }
     router.replace(`/cabs?${p.toString()}`);
   };
 
@@ -289,10 +296,10 @@ export default function CabsClient() {
       urbaniaFare = Math.max(6000, Math.round(dist * 32));
       busFare = Math.max(9000, Math.round(dist * 48));
     } else if (serviceType === 'round_trip') {
-      const rtSedan = calculateRoundTripFare(dist, 1, 'sedan');
-      const rtErtiga = calculateRoundTripFare(dist, 1, 'suv-muv');
-      const rtCrysta = calculateRoundTripFare(dist, 1, 'executive-suv');
-      const rtHatch = calculateRoundTripFare(dist, 1, 'hatchback');
+      const rtSedan = calculateRoundTripFare(dist, tripDays, 'sedan');
+      const rtErtiga = calculateRoundTripFare(dist, tripDays, 'suv-muv');
+      const rtCrysta = calculateRoundTripFare(dist, tripDays, 'executive-suv');
+      const rtHatch = calculateRoundTripFare(dist, tripDays, 'hatchback');
 
       sedanFare = rtSedan.totalFare;
       ertigaFare = rtErtiga.totalFare;
@@ -556,7 +563,12 @@ export default function CabsClient() {
       drop,
       serviceType,
       ...(stops.length > 0 ? { stops: stops.join('|') } : {}),
+      ...(serviceType === 'round_trip' && returnDate ? { returnDate } : {}),
     }).toString()}`;
+
+    const tripDistance = serviceType === 'round_trip'
+      ? Math.max(routeData.distanceKm * 2, tripDays * 250)
+      : routeData.distanceKm;
 
     return generateWhatsAppLink({
       tripType: serviceTitle,
@@ -565,7 +577,9 @@ export default function CabsClient() {
       stops: stops.length > 0 ? stops : undefined,
       journeyDate: formattedDate,
       pickupTime: formattedTime,
-      distance: routeData.distanceKm,
+      returnDate: serviceType === 'round_trip' ? formattedReturnDate : undefined,
+      durationDays: serviceType === 'round_trip' ? tripDays : undefined,
+      distance: tripDistance,
       vehicleCategory: v.name,
       vehicleModel: v.models,
       capacity: `${v.seats} • ${v.bags}`,
@@ -587,10 +601,14 @@ export default function CabsClient() {
       destination: drop,
       date: journeyDate,
       time: journeyTime,
-      km: String(serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, 250) : routeData.distanceKm),
+      km: String(serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm),
     });
     if (stops.length > 0) {
       p.set('stops', stops.join('|'));
+    }
+    if (serviceType === 'round_trip' && returnDate) {
+      p.set('returnDate', returnDate);
+      p.set('days', String(tripDays));
     }
     return `/checkout?${p.toString()}`;
   };
@@ -680,10 +698,10 @@ export default function CabsClient() {
                 <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-lg">
                   <FaRoad className="text-emerald-400" />
                   <span className="text-white font-bold">
-                    {serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, 250) : routeData.distanceKm} km
+                    {serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm} km
                   </span>
                   <span className="text-slate-400 text-[11px]">
-                    {serviceType === 'round_trip' ? 'Round-Trip' : 'Highway'}
+                    {serviceType === 'round_trip' ? 'Round-Trip Total' : 'Highway'}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-lg">
@@ -696,6 +714,13 @@ export default function CabsClient() {
                   <span className="text-white font-bold">{formattedDate}</span>
                   <span className="text-slate-400 text-[11px]">at {formattedTime}</span>
                 </div>
+                {serviceType === 'round_trip' && (
+                  <div className="flex items-center gap-1.5 bg-emerald-500/20 border border-emerald-400/30 px-3 py-1 rounded-lg">
+                    <span className="text-emerald-300 font-bold">🔄 Return:</span>
+                    <span className="text-white font-bold">{formattedReturnDate || 'Flexible'}</span>
+                    <span className="text-emerald-300 text-[11px] font-bold">({tripDays} {tripDays === 1 ? 'Day' : 'Days'})</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -734,7 +759,7 @@ export default function CabsClient() {
                 <span className="text-[11px] text-slate-500">Universal distance &amp; fare calculated for any address</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className={`grid grid-cols-1 sm:grid-cols-2 ${editServiceType === 'round_trip' ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-3`}>
                 {/* Pickup City */}
                 <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
                   <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
@@ -765,7 +790,7 @@ export default function CabsClient() {
                   />
                 </div>
 
-                {/* Date */}
+                {/* Departure Date */}
                 <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
                   <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                     Departure Date
@@ -777,6 +802,9 @@ export default function CabsClient() {
                     onChange={(e) => {
                       const newD = e.target.value;
                       setEditDate(newD);
+                      if (editReturnDate && editReturnDate < newD) {
+                        setEditReturnDate(newD);
+                      }
                       if (newD === todayStr) {
                         const minT = getMinTimeForToday();
                         if (editTime < minT) setEditTime(minT);
@@ -786,6 +814,23 @@ export default function CabsClient() {
                     required
                   />
                 </div>
+
+                {/* Return Date (Round-Trip Only) */}
+                {editServiceType === 'round_trip' && (
+                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Return Date
+                    </label>
+                    <input
+                      type="date"
+                      min={editDate || todayStr}
+                      value={editReturnDate}
+                      onChange={(e) => setEditReturnDate(e.target.value)}
+                      className="w-full bg-transparent font-bold text-sm text-slate-900 focus:outline-none mt-1 cursor-pointer"
+                      required
+                    />
+                  </div>
+                )}
 
                 {/* Time */}
                 <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">

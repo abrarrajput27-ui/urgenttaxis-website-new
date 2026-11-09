@@ -38,6 +38,8 @@ import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { BOOKING_ADDONS, isAddOnSupported } from '@/lib/pricing/add-ons';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
 import { calculateAdvanceToken, isGroupVehicleCategory } from '@/lib/pricing';
+import { trackBookingCompleted } from '@/lib/analytics';
+import { formatTime12Hour, formatDateReadable, calculateRoundTripDays } from '@/lib/date-utils';
 
 // Vehicle Display Profiles
 const VEHICLE_INFO: Record<string, { name: string; models: string; seats: string; bags: string; image: string; perKm: string; baseRate: number }> = {
@@ -64,6 +66,7 @@ function CheckoutContent() {
   const dropCity = searchParams.get('drop') || searchParams.get('destination') || 'Nainital, Uttarakhand';
   const rawDate = searchParams.get('date') || searchParams.get('pickupDate') || '';
   const rawTime = searchParams.get('time') || searchParams.get('pickupTime') || '09:00';
+  const rawReturnDate = searchParams.get('returnDate') || searchParams.get('return_date') || '';
   const initialKm = Number(searchParams.get('km') || searchParams.get('distanceKm') || 0);
 
   const rawStops = searchParams.get('stops') || '';
@@ -134,40 +137,23 @@ function CheckoutContent() {
 
   // Formatted Date & Time (Accurate string representation without timezone skew)
   const formattedDate = useMemo(() => {
-    if (!rawDate) {
-      const today = new Date();
-      return today.toLocaleDateString('en-US', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
-    }
-    try {
-      const [y, m, d] = rawDate.split('-').map(Number);
-      const dt = new Date(y, m - 1, d);
-      return dt.toLocaleDateString('en-US', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
-    } catch {
-      return rawDate;
-    }
+    return formatDateReadable(rawDate);
   }, [rawDate]);
 
+  const formattedReturnDate = useMemo(() => {
+    return rawReturnDate ? formatDateReadable(rawReturnDate) : '';
+  }, [rawReturnDate]);
+
   const formattedTime = useMemo(() => {
-    if (!rawTime) return '09:00 AM';
-    try {
-      const [h, m] = rawTime.split(':').map(Number);
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      const hour12 = h % 12 || 12;
-      return `${hour12}:${String(m).padStart(2, '0')} ${ampm}`;
-    } catch {
-      return rawTime;
-    }
+    return formatTime12Hour(rawTime);
   }, [rawTime]);
+
+  const tripDays = useMemo(() => {
+    const urlDays = Number(searchParams.get('days') || 0);
+    if (urlDays > 0) return urlDays;
+    if (serviceType !== 'round_trip' || !rawDate || !rawReturnDate) return 1;
+    return calculateRoundTripDays(rawDate, rawReturnDate);
+  }, [serviceType, rawDate, rawReturnDate, searchParams]);
 
   // Guaranteed Authoritative Base Fare & Breakdown Calculation
   const calculatedFare = useMemo(() => {
@@ -196,9 +182,10 @@ function CheckoutContent() {
       }
     } else if (serviceType === 'round_trip') {
       const minDailyKm = 250;
-      const billableKm = Math.max(dist * 2, minDailyKm);
-      const driver = vehicle.name.includes('Bus') ? 1000 : vehicle.name.includes('Tempo') ? 600 : vehicle.name.includes('Urbania') ? 700 : 400;
-      base = Math.round(billableKm * vehicle.baseRate + driver);
+      const billableKm = Math.max(dist * 2, tripDays * minDailyKm);
+      const driverDaily = vehicle.name.includes('Bus') ? 1000 : vehicle.name.includes('Tempo') ? 600 : vehicle.name.includes('Urbania') ? 700 : 400;
+      const totalDriver = driverDaily * tripDays;
+      base = Math.round(billableKm * vehicle.baseRate + totalDriver);
     } else {
       // Local or Airport default
       base = vehicle.name === 'Sedan' ? 1599 : vehicle.name === 'Hatchback' ? 1399 : 2199;
@@ -287,6 +274,7 @@ function CheckoutContent() {
       : dropCity;
 
     const travelDateTime = rawDate ? `${rawDate}T${rawTime}:00` : new Date().toISOString();
+    const returnDateTime = (serviceType === 'round_trip' && rawReturnDate) ? `${rawReturnDate}T${rawTime}:00` : null;
 
     try {
       const response = await fetch('/api/public/book', {
@@ -299,7 +287,9 @@ function CheckoutContent() {
           pickupAddress: fullPickup,
           dropAddress: fullDrop,
           travelDateTime,
-          actualDistanceKm: routeData.distanceKm,
+          returnDateTime,
+          numberOfDays: tripDays,
+          actualDistanceKm: serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
           calculatedBaseFare: calculatedFare.baseFare,
           passengerCount,
           specialInstructions: specialInstructions.trim(),
@@ -316,36 +306,68 @@ function CheckoutContent() {
         if (typeof window !== 'undefined') {
           sessionStorage.setItem(`ga4_tracked_${data.bookingReference}`, 'true');
         }
-        trackBookingCompleted(
-          vehicle.name,
-          calculatedFare.baseFare,
-          serviceType,
-          routeData.origin || 'Delhi NCR',
-          routeData.destination || 'Outstation'
-        );
+        try {
+          if (typeof trackBookingCompleted === 'function') {
+            trackBookingCompleted(
+              vehicle.name,
+              calculatedFare.baseFare,
+              serviceType,
+              routeData.origin || 'Delhi NCR',
+              routeData.destination || 'Outstation'
+            );
+          }
+        } catch (analyticsErr) {
+          console.warn('Analytics tracking non-fatal error:', analyticsErr);
+        }
         router.push(`/booking-confirmation/${data.bookingReference}`);
       } else {
-        // Direct WhatsApp fallback if database network has hiccups
-        const waText = encodeURIComponent(
-          `Hello Urgent Taxis! I want to confirm my cab booking:\n\n` +
-          `🚗 Vehicle: ${vehicle.name} (${vehicle.models})\n` +
-          `📍 Pickup: ${fullPickup}\n` +
-          `📍 Drop: ${fullDrop}\n` +
-          `📅 Date: ${formattedDate} at ${formattedTime}\n` +
-          `👤 Passenger: ${customerTitle} ${customerFullName} (${customerPhone})\n` +
-          `💰 Total Fare: ₹${calculatedFare.grandTotal.toLocaleString('en-IN')}\n` +
-          `💳 30% Token: ₹${calculatedFare.tokenAmount.toLocaleString('en-IN')}\n\n` +
-          `Please confirm booking directly!`
-        );
-        window.location.href = `https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${waText}`;
+        // Authoritative WhatsApp fallback with complete detailed itinerary
+        const fallbackWaUrl = generateWhatsAppLink({
+          tripType: serviceType === 'round_trip' ? 'Round-trip' : 'One-way',
+          pickup: fullPickup,
+          drop: fullDrop,
+          stops: stops.length > 0 ? stops : undefined,
+          journeyDate: formattedDate,
+          pickupTime: formattedTime,
+          returnDate: serviceType === 'round_trip' ? formattedReturnDate : undefined,
+          durationDays: serviceType === 'round_trip' ? tripDays : undefined,
+          distance: serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
+          customerName: `${customerTitle} ${customerFullName.trim()}`,
+          customerPhone: customerPhone.trim(),
+          passengerCount,
+          vehicleCategory: vehicle.name,
+          vehicleModel: vehicle.models,
+          capacity: `${vehicle.seats} • ${vehicle.bags}`,
+          totalFare: calculatedFare.grandTotal,
+          tokenAmount: calculatedFare.tokenAmount,
+          balanceAmount: calculatedFare.balanceAmount,
+        });
+        window.location.href = fallbackWaUrl;
       }
     } catch {
       setError('Connection interrupted. Connecting to dispatch desk via WhatsApp...');
       setTimeout(() => {
-        const waText = encodeURIComponent(
-          `Hello Urgent Taxis! I want to book a ${vehicle.name} from ${fullPickup} to ${fullDrop} on ${formattedDate}. Passenger: ${customerFullName} (${customerPhone}).`
-        );
-        window.location.href = `https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${waText}`;
+        const fallbackWaUrl = generateWhatsAppLink({
+          tripType: serviceType === 'round_trip' ? 'Round-trip' : 'One-way',
+          pickup: fullPickup,
+          drop: fullDrop,
+          stops: stops.length > 0 ? stops : undefined,
+          journeyDate: formattedDate,
+          pickupTime: formattedTime,
+          returnDate: serviceType === 'round_trip' ? formattedReturnDate : undefined,
+          durationDays: serviceType === 'round_trip' ? tripDays : undefined,
+          distance: serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
+          customerName: `${customerTitle} ${customerFullName.trim()}`,
+          customerPhone: customerPhone.trim(),
+          passengerCount,
+          vehicleCategory: vehicle.name,
+          vehicleModel: vehicle.models,
+          capacity: `${vehicle.seats} • ${vehicle.bags}`,
+          totalFare: calculatedFare.grandTotal,
+          tokenAmount: calculatedFare.tokenAmount,
+          balanceAmount: calculatedFare.balanceAmount,
+        });
+        window.location.href = fallbackWaUrl;
       }, 1000);
     } finally {
       setIsSubmitting(false);
@@ -361,14 +383,14 @@ function CheckoutContent() {
       stops: stops.length > 0 ? stops : undefined,
       journeyDate: formattedDate,
       pickupTime: formattedTime,
-      distance: routeData.distanceKm,
+      distance: serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
       vehicleCategory: vehicle.name,
       vehicleModel: vehicle.models,
       capacity: `${vehicle.seats} • ${vehicle.bags}`,
       pageUrl: `https://www.urgenttaxis.in/cabs?${new URLSearchParams({ pickup: pickupCity, drop: dropCity, serviceType }).toString()}`,
       customMessage: 'Need luxury group vehicle quotation and route clearance',
     });
-  }, [vehicle, effectivePickup, effectiveDrop, routeData, formattedDate, formattedTime, pickupCity, dropCity, serviceType, stops]);
+  }, [vehicle, effectivePickup, effectiveDrop, routeData, formattedDate, formattedTime, pickupCity, dropCity, serviceType, stops, tripDays]);
 
   // WhatsApp quick booking link (Unified Strict Format)
   const whatsappBookingUrl = useMemo(() => {
@@ -385,7 +407,12 @@ function CheckoutContent() {
       drop: dropCity,
       serviceType,
       ...(stops.length > 0 ? { stops: stops.join('|') } : {}),
+      ...(serviceType === 'round_trip' && rawReturnDate ? { returnDate: rawReturnDate } : {}),
     }).toString()}`;
+
+    const tripDistance = serviceType === 'round_trip'
+      ? Math.max(routeData.distanceKm * 2, tripDays * 250)
+      : routeData.distanceKm;
 
     return generateWhatsAppLink({
       tripType: serviceTitle,
@@ -394,8 +421,11 @@ function CheckoutContent() {
       stops: stops.length > 0 ? stops : undefined,
       journeyDate: formattedDate,
       pickupTime: formattedTime,
-      distance: routeData.distanceKm,
-      customerName: customerFullName ? `${customerTitle} ${customerFullName} (${customerPhone || 'Phone on call'})` : undefined,
+      returnDate: serviceType === 'round_trip' ? formattedReturnDate : undefined,
+      durationDays: serviceType === 'round_trip' ? tripDays : undefined,
+      distance: tripDistance,
+      customerName: customerFullName ? `${customerTitle} ${customerFullName.trim()}` : undefined,
+      customerPhone: customerPhone ? customerPhone.trim() : undefined,
       passengerCount,
       vehicleCategory: vehicle.name,
       vehicleModel: vehicle.models,
@@ -413,6 +443,8 @@ function CheckoutContent() {
     routeData,
     formattedDate,
     formattedTime,
+    formattedReturnDate,
+    tripDays,
     calculatedFare,
     effectivePickup,
     effectiveDrop,
@@ -421,6 +453,7 @@ function CheckoutContent() {
     customerPhone,
     passengerCount,
     stops,
+    rawReturnDate,
   ]);
 
   return (
@@ -1033,7 +1066,11 @@ function CheckoutContent() {
               <div className="space-y-2.5 text-xs text-slate-600 pb-4 border-b border-slate-100">
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-slate-500">Route Distance:</span>
-                  <strong className="text-slate-900">{routeData.distanceKm} km Highway</strong>
+                  <strong className="text-slate-900">
+                    {serviceType === 'round_trip'
+                      ? `${Math.max(routeData.distanceKm * 2, tripDays * 250)} km Total (Round-Trip)`
+                      : `${routeData.distanceKm} km Highway`}
+                  </strong>
                 </div>
                 {stops.length > 0 && (
                   <div className="flex justify-between items-center text-amber-800 bg-amber-50/70 px-2.5 py-1.5 rounded-lg border border-amber-200/60">
@@ -1042,13 +1079,27 @@ function CheckoutContent() {
                   </div>
                 )}
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold text-slate-500">Scheduled Date:</span>
+                  <span className="font-semibold text-slate-500">Departure Date:</span>
                   <strong className="text-slate-900">{formattedDate}</strong>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-slate-500">Pickup Time:</span>
                   <strong className="text-slate-900">{formattedTime}</strong>
                 </div>
+                {serviceType === 'round_trip' && (
+                  <>
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-slate-500">Return Date:</span>
+                      <strong className="text-slate-900">{formattedReturnDate || 'Same Day'}</strong>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-slate-500">Trip Duration:</span>
+                      <strong className="text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        {tripDays} {tripDays === 1 ? 'Day' : 'Days'}
+                      </strong>
+                    </div>
+                  </>
+                )}
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-slate-500">Selected Vehicle:</span>
                   <strong className="text-brand-blue">{vehicle.name}</strong>
@@ -1061,14 +1112,14 @@ function CheckoutContent() {
                 <div className="p-2.5 bg-blue-50/70 border border-blue-200/80 rounded-xl flex items-center justify-between text-xs mb-1">
                   <div>
                     <span className="font-bold text-slate-900 block">
-                      {serviceType === 'round_trip' ? 'Round-Trip Distance' : 'Doorstep Highway Distance'}
+                      {serviceType === 'round_trip' ? 'Round-Trip Total Distance' : 'Doorstep Highway Distance'}
                     </span>
                     <span className="text-[10px] text-slate-500">
-                      {pickupAddressDetail || dropAddressDetail ? 'Auto-calculated for your exact address' : 'Standard city center corridor'}
+                      {serviceType === 'round_trip' ? `Minimum ${tripDays * 250} km quota for ${tripDays} days` : pickupAddressDetail || dropAddressDetail ? 'Auto-calculated for your exact address' : 'Standard city center corridor'}
                     </span>
                   </div>
                   <span className="font-black text-brand-blue tabular-nums bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs">
-                    {serviceType === 'round_trip' ? `${Math.max(routeData.distanceKm * 2, 250)} km` : `${routeData.distanceKm} km`}
+                    {serviceType === 'round_trip' ? `${Math.max(routeData.distanceKm * 2, tripDays * 250)} km` : `${routeData.distanceKm} km`}
                   </span>
                 </div>
 
@@ -1079,7 +1130,7 @@ function CheckoutContent() {
                       ? 'Taxable Hourly Package'
                       : serviceType === 'airport_transfer'
                       ? 'Taxable Airport Transfer Base'
-                      : `Taxable Base Vehicle Hire (${serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, 250) : routeData.distanceKm} km)`}
+                      : `Taxable Base Vehicle Hire (${serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm} km)`}
                   </span>
                   <span className="font-bold text-slate-900 tabular-nums">
                     ₹{calculatedFare.taxableBaseFare.toLocaleString('en-IN')}
