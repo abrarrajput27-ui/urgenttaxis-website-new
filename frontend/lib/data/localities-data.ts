@@ -19,6 +19,32 @@ export interface LocalityFaq {
   answer: string;
 }
 
+export interface SightseeingSpot {
+  name: string;
+  desc: string;
+  type?: 'popular' | 'hidden_gem' | 'cultural' | 'nature';
+  timing?: string;
+}
+
+export interface FamousFoodItem {
+  name: string;
+  famousPlace: string;
+  desc: string;
+}
+
+export interface RecommendedHotel {
+  name: string;
+  category: string;
+  location: string;
+}
+
+export interface NearbyExcursion {
+  name: string;
+  distance: string;
+  desc: string;
+  taxiSlug?: string;
+}
+
 export interface LocalityData {
   slug: string;
   name: string;
@@ -41,6 +67,11 @@ export interface LocalityData {
     pickupAdvice: string;
   };
   popularRoutes: LocalityRouteFare[];
+  popularSightseeing?: SightseeingSpot[];
+  hiddenGems?: SightseeingSpot[];
+  famousFoods?: FamousFoodItem[];
+  recommendedHotels?: RecommendedHotel[];
+  nearbyExcursions?: NearbyExcursion[];
   faqs: LocalityFaq[];
 }
 
@@ -87,15 +118,128 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'During peak morning hours (7:30 AM to 10:30 AM), we advise scheduling your pickup at least 3.5 hours before flight departure to account for Dhaula Kuan corridor flow.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 200, durationText: '3 hr 45 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Dehradun', distanceKm: 230, durationText: '4 hr 15 min', sedanFare: 3899, ertigaFare: 5199, crystaFare: 9499, routeSlug: 'delhi-to-dehradun-taxi' },
-      { destination: 'Rishikesh', distanceKm: 220, durationText: '4 hr 10 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'delhi-to-rishikesh-taxi' },
-      { destination: 'Nainital', distanceKm: 270, durationText: '5 hr 45 min', sedanFare: 4299, ertigaFare: 5699, crystaFare: 10499, routeSlug: 'delhi-to-nainital-taxi' },
-      { destination: 'Agra', distanceKm: 215, durationText: '3 hr 30 min', sedanFare: 3199, ertigaFare: 4399, crystaFare: 7999, routeSlug: 'delhi-to-agra-taxi' },
-      { destination: 'Jaipur', distanceKm: 295, durationText: '5 hr 15 min', sedanFare: 4199, ertigaFare: 5599, crystaFare: 9999, routeSlug: 'delhi-to-jaipur-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 46, durationText: '1 hr 15 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2799, routeSlug: 'delhi-airport-transfers' },
-    ],
-    faqs: [
+    {
+      destination: "Haridwar",
+      distanceKm: 195,
+      durationText: "3 hr 45 min",
+      sedanFare: 2699,
+      ertigaFare: 3699,
+      crystaFare: 5699,
+      routeSlug: "ghaziabad-to-haridwar-taxi"
+    },
+    {
+      destination: "Dehradun",
+      distanceKm: 225,
+      durationText: "4 hr 15 min",
+      sedanFare: 2999,
+      ertigaFare: 4099,
+      crystaFare: 6199,
+      routeSlug: "ghaziabad-to-dehradun-taxi"
+    },
+    {
+      destination: "Rishikesh",
+      distanceKm: 220,
+      durationText: "4 hr 00 min",
+      sedanFare: 2999,
+      ertigaFare: 4099,
+      crystaFare: 6199,
+      routeSlug: "ghaziabad-to-rishikesh-taxi"
+    },
+    {
+      destination: "Agra",
+      distanceKm: 210,
+      durationText: "3 hr 30 min",
+      sedanFare: 2799,
+      ertigaFare: 3799,
+      crystaFare: 5899,
+      routeSlug: "ghaziabad-to-agra-taxi"
+    },
+    {
+      destination: "Jaipur",
+      distanceKm: 295,
+      durationText: "5 hr 15 min",
+      sedanFare: 3799,
+      ertigaFare: 5099,
+      crystaFare: 7799,
+      routeSlug: "ghaziabad-to-jaipur-taxi"
+    },
+    {
+      destination: "Delhi Airport (IGI)",
+      distanceKm: 42,
+      durationText: "1 hr 15 min",
+      sedanFare: 1199,
+      ertigaFare: 1699,
+      crystaFare: 2499,
+      routeSlug: "ghaziabad-to-delhi-airport"
+    }
+  ],
+  popularSightseeing: [
+    {
+      name: "Doodheshwar Nath Mandir",
+      desc: "Ancient 5000-year-old self-manifested (Swayambhu) Shiva temple deeply revered across NCR.",
+      type: "cultural"
+    },
+    {
+      name: "City Forest Ghaziabad",
+      desc: "Expansive 175-acre urban ecological green belt along the Hindon river with walking trails and horse riding.",
+      type: "nature"
+    },
+    {
+      name: "Swarna Jayanti Park (Indirapuram)",
+      desc: "Beautifully manicured 25-acre family park with musical fountains, boating pond, and jogging tracks.",
+      type: "popular"
+    }
+  ],
+  famousFoods: [
+    {
+      name: "Bikanervala RDC & Masuri Treats",
+      famousPlace: "RDC & NH-9 Corridor",
+      desc: "Signature North Indian delicacies, chole bhature, dal makhani, and traditional rasgulla."
+    },
+    {
+      name: "Udupi Krishna Vegetarian",
+      famousPlace: "Kaushambi / Vaishali",
+      desc: "Authentic South Indian crispy dosas, filter coffee, and idli sambar."
+    }
+  ],
+  recommendedHotels: [
+    {
+      name: "Radisson Blu Kaushambi",
+      category: "5-Star Luxury",
+      location: "Kaushambi / Delhi Border"
+    },
+    {
+      name: "Country Inn & Suites by Radisson",
+      category: "4-Star Premium",
+      location: "Sahibabad Industrial Area"
+    },
+    {
+      name: "Mahagun Sarovar Portico",
+      category: "4-Star Business",
+      location: "Vaishali"
+    }
+  ],
+  nearbyExcursions: [
+    {
+      name: "Haridwar & Rishikesh",
+      distance: "195 km",
+      desc: "Holy Ganga river shrines, evening aartis, and Himalayan gateway.",
+      taxiSlug: "ghaziabad-to-haridwar-taxi"
+    },
+    {
+      name: "Agra Taj Mahal",
+      distance: "210 km",
+      desc: "World wonder monument and historic Mughal capital via Yamuna Expressway.",
+      taxiSlug: "ghaziabad-to-agra-taxi"
+    },
+    {
+      name: "Mathura & Vrindavan",
+      distance: "160 km",
+      desc: "Sacred land of Lord Krishna temples, Banke Bihari, and Prem Mandir.",
+      taxiSlug: "ghaziabad-to-mathura-taxi"
+    }
+  ],
+  faqs: [
       {
         question: 'Ghaziabad me outstation taxi book karne ka kya process hai?',
         answer: 'Aap seedhe hamare dispatch number +91 7310651940 par call kar sakte hain ya WhatsApp (+91 8595066033) par apna pickup address, journey date aur car type bhej kar 2 minute me booking confirm kar sakte hain.',
@@ -156,11 +300,11 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'The NH-9 elevated expressway provides signal-free travel from Masuri to Ghazipur border, making early morning airport runs extremely quick and predictable.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 185, durationText: '3 hr 15 min', sedanFare: 3299, ertigaFare: 4499, crystaFare: 8499, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Haldwani', distanceKm: 235, durationText: '4 hr 30 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'delhi-to-haldwani-taxi' },
-      { destination: 'Dehradun', distanceKm: 215, durationText: '3 hr 50 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'delhi-to-dehradun-taxi' },
-      { destination: 'Agra', distanceKm: 210, durationText: '3 hr 15 min', sedanFare: 3099, ertigaFare: 4299, crystaFare: 7799, routeSlug: 'delhi-to-agra-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 58, durationText: '1 hr 20 min', sedanFare: 1399, ertigaFare: 1899, crystaFare: 2999, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 185, durationText: '3 hr 15 min', sedanFare: 3299, ertigaFare: 4499, crystaFare: 8499, routeSlug: 'masuri-to-haridwar-taxi' },
+      { destination: 'Haldwani', distanceKm: 235, durationText: '4 hr 30 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'masuri-to-haldwani-taxi' },
+      { destination: 'Dehradun', distanceKm: 215, durationText: '3 hr 50 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'masuri-to-dehradun-taxi' },
+      { destination: 'Agra', distanceKm: 210, durationText: '3 hr 15 min', sedanFare: 3099, ertigaFare: 4299, crystaFare: 7799, routeSlug: 'masuri-to-agra-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 58, durationText: '1 hr 20 min', sedanFare: 1399, ertigaFare: 1899, crystaFare: 2999, routeSlug: 'masuri-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -219,11 +363,11 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'From Indirapuram, the signal-free NH-9 expressway to Barapullah corridor allows seamless transit. Average travel time outside peak rush is approximately 55 to 65 minutes.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 205, durationText: '3 hr 45 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Dehradun', distanceKm: 235, durationText: '4 hr 15 min', sedanFare: 3899, ertigaFare: 5199, crystaFare: 9499, routeSlug: 'delhi-to-dehradun-taxi' },
-      { destination: 'Agra', distanceKm: 210, durationText: '3 hr 15 min', sedanFare: 3199, ertigaFare: 4399, crystaFare: 7999, routeSlug: 'delhi-to-agra-taxi' },
-      { destination: 'Jaipur', distanceKm: 290, durationText: '5 hr 00 min', sedanFare: 4199, ertigaFare: 5599, crystaFare: 9999, routeSlug: 'delhi-to-jaipur-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 38, durationText: '1 hr 00 min', sedanFare: 1099, ertigaFare: 1599, crystaFare: 2599, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 205, durationText: '3 hr 45 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'indirapuram-to-haridwar-taxi' },
+      { destination: 'Dehradun', distanceKm: 235, durationText: '4 hr 15 min', sedanFare: 3899, ertigaFare: 5199, crystaFare: 9499, routeSlug: 'indirapuram-to-dehradun-taxi' },
+      { destination: 'Agra', distanceKm: 210, durationText: '3 hr 15 min', sedanFare: 3199, ertigaFare: 4399, crystaFare: 7999, routeSlug: 'indirapuram-to-agra-taxi' },
+      { destination: 'Jaipur', distanceKm: 290, durationText: '5 hr 00 min', sedanFare: 4199, ertigaFare: 5599, crystaFare: 9999, routeSlug: 'indirapuram-to-jaipur-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 38, durationText: '1 hr 00 min', sedanFare: 1099, ertigaFare: 1599, crystaFare: 2599, routeSlug: 'indirapuram-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -281,10 +425,10 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'Vaishali’s proximity to Gazipur and Anand Vihar gives direct access to the elevated road network, making airport transfers smooth and fast.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 205, durationText: '3 hr 45 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Dehradun', distanceKm: 235, durationText: '4 hr 15 min', sedanFare: 3899, ertigaFare: 5199, crystaFare: 9499, routeSlug: 'delhi-to-dehradun-taxi' },
-      { destination: 'Agra', distanceKm: 210, durationText: '3 hr 15 min', sedanFare: 3199, ertigaFare: 4399, crystaFare: 7999, routeSlug: 'delhi-to-agra-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 34, durationText: '0 hr 55 min', sedanFare: 999, ertigaFare: 1499, crystaFare: 2499, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 205, durationText: '3 hr 45 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'vaishali-to-haridwar-taxi' },
+      { destination: 'Dehradun', distanceKm: 235, durationText: '4 hr 15 min', sedanFare: 3899, ertigaFare: 5199, crystaFare: 9499, routeSlug: 'vaishali-to-dehradun-taxi' },
+      { destination: 'Agra', distanceKm: 210, durationText: '3 hr 15 min', sedanFare: 3199, ertigaFare: 4399, crystaFare: 7999, routeSlug: 'vaishali-to-agra-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 34, durationText: '0 hr 55 min', sedanFare: 999, ertigaFare: 1499, crystaFare: 2499, routeSlug: 'vaishali-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -338,9 +482,9 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'Allow 60 to 70 minutes for peak-hour journeys to Terminal 3. Off-peak night transfers take approximately 45 to 50 minutes.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 205, durationText: '3 hr 45 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Nainital', distanceKm: 275, durationText: '5 hr 45 min', sedanFare: 4299, ertigaFare: 5699, crystaFare: 10499, routeSlug: 'delhi-to-nainital-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 37, durationText: '1 hr 00 min', sedanFare: 1099, ertigaFare: 1599, crystaFare: 2599, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 205, durationText: '3 hr 45 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'vasundhara-to-haridwar-taxi' },
+      { destination: 'Nainital', distanceKm: 275, durationText: '5 hr 45 min', sedanFare: 4299, ertigaFare: 5699, crystaFare: 10499, routeSlug: 'vasundhara-to-nainital-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 37, durationText: '1 hr 00 min', sedanFare: 1099, ertigaFare: 1599, crystaFare: 2599, routeSlug: 'vasundhara-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -388,10 +532,10 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'Using the Hindon Elevated Road cuts 25 minutes of local traffic when driving from Raj Nagar to IGI Airport.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 190, durationText: '3 hr 30 min', sedanFare: 3399, ertigaFare: 4599, crystaFare: 8799, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Dehradun', distanceKm: 220, durationText: '4 hr 00 min', sedanFare: 3799, ertigaFare: 5099, crystaFare: 9299, routeSlug: 'delhi-to-dehradun-taxi' },
-      { destination: 'Chandigarh', distanceKm: 250, durationText: '4 hr 30 min', sedanFare: 3899, ertigaFare: 5299, crystaFare: 9499, routeSlug: 'delhi-to-chandigarh-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 44, durationText: '1 hr 05 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2699, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 190, durationText: '3 hr 30 min', sedanFare: 3399, ertigaFare: 4599, crystaFare: 8799, routeSlug: 'raj-nagar-to-haridwar-taxi' },
+      { destination: 'Dehradun', distanceKm: 220, durationText: '4 hr 00 min', sedanFare: 3799, ertigaFare: 5099, crystaFare: 9299, routeSlug: 'raj-nagar-to-dehradun-taxi' },
+      { destination: 'Chandigarh', distanceKm: 250, durationText: '4 hr 30 min', sedanFare: 3899, ertigaFare: 5299, crystaFare: 9499, routeSlug: 'raj-nagar-to-chandigarh-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 44, durationText: '1 hr 05 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2699, routeSlug: 'raj-nagar-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -441,11 +585,11 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'The Hindon Elevated Road provides a swift 12-minute run to the Delhi border, making airport transfers from Raj Nagar Extension surprisingly quick.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 185, durationText: '3 hr 15 min', sedanFare: 3299, ertigaFare: 4499, crystaFare: 8499, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Rishikesh', distanceKm: 205, durationText: '3 hr 45 min', sedanFare: 3599, ertigaFare: 4899, crystaFare: 8999, routeSlug: 'delhi-to-rishikesh-taxi' },
-      { destination: 'Dehradun', distanceKm: 215, durationText: '3 hr 55 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'delhi-to-dehradun-taxi' },
-      { destination: 'Meerut', distanceKm: 45, durationText: '0 hr 45 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2699, routeSlug: 'delhi-to-meerut-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 42, durationText: '0 hr 55 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2699, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 185, durationText: '3 hr 15 min', sedanFare: 3299, ertigaFare: 4499, crystaFare: 8499, routeSlug: 'raj-nagar-extension-to-haridwar-taxi' },
+      { destination: 'Rishikesh', distanceKm: 205, durationText: '3 hr 45 min', sedanFare: 3599, ertigaFare: 4899, crystaFare: 8999, routeSlug: 'raj-nagar-extension-to-rishikesh-taxi' },
+      { destination: 'Dehradun', distanceKm: 215, durationText: '3 hr 55 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'raj-nagar-extension-to-dehradun-taxi' },
+      { destination: 'Meerut', distanceKm: 45, durationText: '0 hr 45 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2699, routeSlug: 'raj-nagar-extension-to-meerut-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 42, durationText: '0 hr 55 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2699, routeSlug: 'raj-nagar-extension-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -495,9 +639,9 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'Being right on the Delhi border, Kaushambi offers one of the shortest travel times to IGI Airport from Ghaziabad.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 210, durationText: '3 hr 50 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Agra', distanceKm: 210, durationText: '3 hr 15 min', sedanFare: 3199, ertigaFare: 4399, crystaFare: 7999, routeSlug: 'delhi-to-agra-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 33, durationText: '0 hr 50 min', sedanFare: 999, ertigaFare: 1499, crystaFare: 2499, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 210, durationText: '3 hr 50 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'kaushambi-to-haridwar-taxi' },
+      { destination: 'Agra', distanceKm: 210, durationText: '3 hr 15 min', sedanFare: 3199, ertigaFare: 4399, crystaFare: 7999, routeSlug: 'kaushambi-to-agra-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 33, durationText: '0 hr 50 min', sedanFare: 999, ertigaFare: 1499, crystaFare: 2499, routeSlug: 'kaushambi-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -545,9 +689,9 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'Sahibabad Site 4 enjoys quick connectivity through the Link Road directly to the Delhi highway network.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 200, durationText: '3 hr 40 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Agra', distanceKm: 215, durationText: '3 hr 20 min', sedanFare: 3199, ertigaFare: 4399, crystaFare: 7999, routeSlug: 'delhi-to-agra-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 38, durationText: '1 hr 00 min', sedanFare: 1099, ertigaFare: 1599, crystaFare: 2599, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 200, durationText: '3 hr 40 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'sahibabad-to-haridwar-taxi' },
+      { destination: 'Agra', distanceKm: 215, durationText: '3 hr 20 min', sedanFare: 3199, ertigaFare: 4399, crystaFare: 7999, routeSlug: 'sahibabad-to-agra-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 38, durationText: '1 hr 00 min', sedanFare: 1099, ertigaFare: 1599, crystaFare: 2599, routeSlug: 'sahibabad-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -593,10 +737,10 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'The NH-9 entrance at ABES Crossing allows immediate high-speed expressway driving with no local bottlenecks.',
     },
     popularRoutes: [
-      { destination: 'Haldwani', distanceKm: 245, durationText: '4 hr 45 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'delhi-to-haldwani-taxi' },
-      { destination: 'Haridwar', distanceKm: 200, durationText: '3 hr 35 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Agra', distanceKm: 205, durationText: '3 hr 10 min', sedanFare: 3099, ertigaFare: 4299, crystaFare: 7799, routeSlug: 'delhi-to-agra-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 45, durationText: '1 hr 05 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2699, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haldwani', distanceKm: 245, durationText: '4 hr 45 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'crossings-republik-to-haldwani-taxi' },
+      { destination: 'Haridwar', distanceKm: 200, durationText: '3 hr 35 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8999, routeSlug: 'crossings-republik-to-haridwar-taxi' },
+      { destination: 'Agra', distanceKm: 205, durationText: '3 hr 10 min', sedanFare: 3099, ertigaFare: 4299, crystaFare: 7799, routeSlug: 'crossings-republik-to-agra-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 45, durationText: '1 hr 05 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2699, routeSlug: 'crossings-republik-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -643,9 +787,9 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'Allow extra travel buffer during morning office hours around the Wazirabad bridge intersection.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 185, durationText: '3 hr 20 min', sedanFare: 3299, ertigaFare: 4499, crystaFare: 8499, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Dehradun', distanceKm: 210, durationText: '3 hr 50 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'delhi-to-dehradun-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 42, durationText: '1 hr 15 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2699, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 185, durationText: '3 hr 20 min', sedanFare: 3299, ertigaFare: 4499, crystaFare: 8499, routeSlug: 'loni-to-haridwar-taxi' },
+      { destination: 'Dehradun', distanceKm: 210, durationText: '3 hr 50 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 9199, routeSlug: 'loni-to-dehradun-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 42, durationText: '1 hr 15 min', sedanFare: 1199, ertigaFare: 1699, crystaFare: 2699, routeSlug: 'loni-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -693,9 +837,9 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'The DME Bhojpur toll plaza provides rapid entry onto the expressway, bypassing Modinagar city traffic.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 160, durationText: '2 hr 45 min', sedanFare: 2999, ertigaFare: 4099, crystaFare: 7699, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Dehradun', distanceKm: 190, durationText: '3 hr 30 min', sedanFare: 3399, ertigaFare: 4599, crystaFare: 8799, routeSlug: 'delhi-to-dehradun-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 65, durationText: '1 hr 25 min', sedanFare: 1499, ertigaFare: 2099, crystaFare: 3199, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 160, durationText: '2 hr 45 min', sedanFare: 2999, ertigaFare: 4099, crystaFare: 7699, routeSlug: 'modinagar-to-haridwar-taxi' },
+      { destination: 'Dehradun', distanceKm: 190, durationText: '3 hr 30 min', sedanFare: 3399, ertigaFare: 4599, crystaFare: 8799, routeSlug: 'modinagar-to-dehradun-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 65, durationText: '1 hr 25 min', sedanFare: 1499, ertigaFare: 2099, crystaFare: 3199, routeSlug: 'modinagar-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -742,8 +886,8 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'The DME link at Muradnagar offers smooth non-stop driving directly to Delhi border.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 175, durationText: '3 hr 00 min', sedanFare: 3199, ertigaFare: 4299, crystaFare: 8199, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 55, durationText: '1 hr 15 min', sedanFare: 1399, ertigaFare: 1899, crystaFare: 2999, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 175, durationText: '3 hr 00 min', sedanFare: 3199, ertigaFare: 4299, crystaFare: 8199, routeSlug: 'muradnagar-to-haridwar-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 55, durationText: '1 hr 15 min', sedanFare: 1399, ertigaFare: 1899, crystaFare: 2999, routeSlug: 'muradnagar-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -789,10 +933,10 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'The NH-9 elevated highway allows a straight 75 km run with minimal signals until central Delhi.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 180, durationText: '3 hr 15 min', sedanFare: 3299, ertigaFare: 4499, crystaFare: 8499, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Haldwani', distanceKm: 215, durationText: '4 hr 00 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8799, routeSlug: 'delhi-to-haldwani-taxi' },
-      { destination: 'Moradabad', distanceKm: 105, durationText: '2 hr 00 min', sedanFare: 2199, ertigaFare: 3099, crystaFare: 5599, routeSlug: 'delhi-to-moradabad-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 75, durationText: '1 hr 35 min', sedanFare: 1699, ertigaFare: 2399, crystaFare: 3599, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 180, durationText: '3 hr 15 min', sedanFare: 3299, ertigaFare: 4499, crystaFare: 8499, routeSlug: 'hapur-to-haridwar-taxi' },
+      { destination: 'Haldwani', distanceKm: 215, durationText: '4 hr 00 min', sedanFare: 3499, ertigaFare: 4699, crystaFare: 8799, routeSlug: 'hapur-to-haldwani-taxi' },
+      { destination: 'Moradabad', distanceKm: 105, durationText: '2 hr 00 min', sedanFare: 2199, ertigaFare: 3099, crystaFare: 5599, routeSlug: 'hapur-to-moradabad-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 75, durationText: '1 hr 35 min', sedanFare: 1699, ertigaFare: 2399, crystaFare: 3599, routeSlug: 'hapur-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -841,10 +985,10 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'The DME allows Meerut residents to reach IGI Airport in roughly 90 minutes outside peak city rush.',
     },
     popularRoutes: [
-      { destination: 'Haridwar', distanceKm: 140, durationText: '2 hr 30 min', sedanFare: 2699, ertigaFare: 3699, crystaFare: 6999, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Dehradun', distanceKm: 170, durationText: '3 hr 15 min', sedanFare: 3199, ertigaFare: 4299, crystaFare: 8199, routeSlug: 'delhi-to-dehradun-taxi' },
-      { destination: 'Rishikesh', distanceKm: 160, durationText: '3 hr 00 min', sedanFare: 2999, ertigaFare: 4099, crystaFare: 7699, routeSlug: 'delhi-to-rishikesh-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 85, durationText: '1 hr 30 min', sedanFare: 1899, ertigaFare: 2599, crystaFare: 3899, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Haridwar', distanceKm: 140, durationText: '2 hr 30 min', sedanFare: 2699, ertigaFare: 3699, crystaFare: 6999, routeSlug: 'meerut-to-haridwar-taxi' },
+      { destination: 'Dehradun', distanceKm: 170, durationText: '3 hr 15 min', sedanFare: 3199, ertigaFare: 4299, crystaFare: 8199, routeSlug: 'meerut-to-dehradun-taxi' },
+      { destination: 'Rishikesh', distanceKm: 160, durationText: '3 hr 00 min', sedanFare: 2999, ertigaFare: 4099, crystaFare: 7699, routeSlug: 'meerut-to-rishikesh-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 85, durationText: '1 hr 30 min', sedanFare: 1899, ertigaFare: 2599, crystaFare: 3899, routeSlug: 'meerut-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -894,13 +1038,119 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'From Noida sectors near the Expressway (128-144), using Kalindi Kunj bypass or DND Flyway provides a fast 55-65 minute connection to IGI Terminal 3.',
     },
     popularRoutes: [
-      { destination: 'Agra', distanceKm: 195, durationText: '2 hr 45 min', sedanFare: 2999, ertigaFare: 4099, crystaFare: 7699, routeSlug: 'delhi-to-agra-taxi' },
-      { destination: 'Mathura', distanceKm: 145, durationText: '2 hr 15 min', sedanFare: 2499, ertigaFare: 3499, crystaFare: 6499, routeSlug: 'delhi-to-mathura-taxi' },
-      { destination: 'Haridwar', distanceKm: 215, durationText: '4 hr 00 min', sedanFare: 3599, ertigaFare: 4799, crystaFare: 9199, routeSlug: 'delhi-to-haridwar-taxi' },
-      { destination: 'Dehradun', distanceKm: 245, durationText: '4 hr 30 min', sedanFare: 3999, ertigaFare: 5299, crystaFare: 9699, routeSlug: 'delhi-to-dehradun-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 38, durationText: '1 hr 00 min', sedanFare: 1099, ertigaFare: 1599, crystaFare: 2599, routeSlug: 'delhi-airport-transfers' },
-    ],
-    faqs: [
+    {
+      destination: "Agra",
+      distanceKm: 190,
+      durationText: "2 hr 45 min",
+      sedanFare: 2499,
+      ertigaFare: 3499,
+      crystaFare: 5499,
+      routeSlug: "noida-to-agra-taxi"
+    },
+    {
+      destination: "Mathura",
+      distanceKm: 145,
+      durationText: "2 hr 10 min",
+      sedanFare: 2099,
+      ertigaFare: 2899,
+      crystaFare: 4499,
+      routeSlug: "noida-to-mathura-taxi"
+    },
+    {
+      destination: "Haridwar",
+      distanceKm: 210,
+      durationText: "4 hr 00 min",
+      sedanFare: 2799,
+      ertigaFare: 3799,
+      crystaFare: 5799,
+      routeSlug: "noida-to-haridwar-taxi"
+    },
+    {
+      destination: "Jaipur",
+      distanceKm: 280,
+      durationText: "5 hr 00 min",
+      sedanFare: 3599,
+      ertigaFare: 4899,
+      crystaFare: 7499,
+      routeSlug: "noida-to-jaipur-taxi"
+    },
+    {
+      destination: "Delhi Airport (IGI)",
+      distanceKm: 35,
+      durationText: "55 min",
+      sedanFare: 999,
+      ertigaFare: 1499,
+      crystaFare: 2199,
+      routeSlug: "noida-to-delhi-airport"
+    }
+  ],
+  popularSightseeing: [
+    {
+      name: "Okhla Bird Sanctuary",
+      desc: "Sprawling 4-square-km wetland sanctuary on the Yamuna river hosting over 300 rare migratory bird species.",
+      type: "nature"
+    },
+    {
+      name: "Worlds of Wonder & DLF Mall of India",
+      desc: "Premier entertainment hub with thrilling waterpark, roller coasters, and India's largest retail destination.",
+      type: "popular"
+    },
+    {
+      name: "Rashtriya Dalit Prerna Sthal",
+      desc: "Massive 82-acre architectural memorial park along the Yamuna with green lawns and sandstone elephant statues.",
+      type: "cultural"
+    }
+  ],
+  famousFoods: [
+    {
+      name: "Brahmaputra Market (BP Market Sector 29)",
+      famousPlace: "Sector 29 Noida",
+      desc: "Noida's famous evening street food street serving spicy galawati kebabs, biryani, chaat, and kulfi."
+    },
+    {
+      name: "Sector 18 Atta Market Cafes",
+      famousPlace: "Sector 18 Commercial Hub",
+      desc: "Lively shopping center packed with multi-cuisine bistros, burger joints, and sweet shops."
+    }
+  ],
+  recommendedHotels: [
+    {
+      name: "Radisson Blu MBD Hotel Noida",
+      category: "5-Star Luxury",
+      location: "Sector 18"
+    },
+    {
+      name: "Crowne Plaza Greater Noida",
+      category: "5-Star Luxury",
+      location: "Surajpur Chowk"
+    },
+    {
+      name: "Mosaic Hotel Noida",
+      category: "4-Star Boutique",
+      location: "Sector 18"
+    }
+  ],
+  nearbyExcursions: [
+    {
+      name: "Agra Taj Mahal",
+      distance: "190 km",
+      desc: "World wonder marble monument via seamless Yamuna Expressway.",
+      taxiSlug: "noida-to-agra-taxi"
+    },
+    {
+      name: "Vrindavan & Mathura",
+      distance: "145 km",
+      desc: "Divine Krishna pilgrimage to Banke Bihari and Prem Mandir.",
+      taxiSlug: "noida-to-mathura-taxi"
+    },
+    {
+      name: "Jaipur Pink City",
+      distance: "280 km",
+      desc: "Royal Rajasthani palaces, Amer Fort, and vibrant bazaars.",
+      taxiSlug: "noida-to-jaipur-taxi"
+    }
+  ],
+  faqs: [
       {
         question: 'Noida se Agra cab Yamuna Expressway se jaati hai?',
         answer: 'Haan, Noida to Agra taxis take the 6-lane Yamuna Expressway directly from Pari Chowk, covering 195 km in about 2 hours 45 minutes.',
@@ -945,9 +1195,9 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       pickupAdvice: 'The signal-free Noida expressway makes the first 30 km effortless. Schedule your cab 3.5 hours before flight check-in.',
     },
     popularRoutes: [
-      { destination: 'Agra', distanceKm: 165, durationText: '2 hr 15 min', sedanFare: 2699, ertigaFare: 3699, crystaFare: 6999, routeSlug: 'delhi-to-agra-taxi' },
-      { destination: 'Mathura', distanceKm: 120, durationText: '1 hr 45 min', sedanFare: 2199, ertigaFare: 3099, crystaFare: 5799, routeSlug: 'delhi-to-mathura-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 54, durationText: '1 hr 15 min', sedanFare: 1399, ertigaFare: 1899, crystaFare: 2999, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Agra', distanceKm: 165, durationText: '2 hr 15 min', sedanFare: 2699, ertigaFare: 3699, crystaFare: 6999, routeSlug: 'greater-noida-to-agra-taxi' },
+      { destination: 'Mathura', distanceKm: 120, durationText: '1 hr 45 min', sedanFare: 2199, ertigaFare: 3099, crystaFare: 5799, routeSlug: 'greater-noida-to-mathura-taxi' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 54, durationText: '1 hr 15 min', sedanFare: 1399, ertigaFare: 1899, crystaFare: 2999, routeSlug: 'greater-noida-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -1047,7 +1297,7 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
     popularRoutes: [
       { destination: 'Agra', distanceKm: 180, durationText: '2 hr 45 min', sedanFare: 2799, ertigaFare: 3899, crystaFare: 7299, routeSlug: 'faridabad-to-agra-taxi' },
       { destination: 'Mathura', distanceKm: 125, durationText: '1 hr 55 min', sedanFare: 2199, ertigaFare: 3099, crystaFare: 5799, routeSlug: 'faridabad-to-mathura-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 36, durationText: '0 hr 55 min', sedanFare: 1099, ertigaFare: 1599, crystaFare: 2599, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 36, durationText: '0 hr 55 min', sedanFare: 1099, ertigaFare: 1599, crystaFare: 2599, routeSlug: 'faridabad-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -1099,7 +1349,7 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       { destination: 'Jaipur', distanceKm: 245, durationText: '3 hr 45 min', sedanFare: 3699, ertigaFare: 4999, crystaFare: 8999, routeSlug: 'gurugram-to-jaipur-taxi' },
       { destination: 'Agra', distanceKm: 225, durationText: '3 hr 30 min', sedanFare: 3199, ertigaFare: 4399, crystaFare: 7999, routeSlug: 'gurugram-to-agra-taxi' },
       { destination: 'Chandigarh', distanceKm: 275, durationText: '4 hr 45 min', sedanFare: 4099, ertigaFare: 5499, crystaFare: 9899, routeSlug: 'gurugram-to-chandigarh-taxi' },
-      { destination: 'Delhi Airport (IGI)', distanceKm: 15, durationText: '0 hr 25 min', sedanFare: 799, ertigaFare: 1199, crystaFare: 1999, routeSlug: 'delhi-airport-transfers' },
+      { destination: 'Delhi Airport (IGI)', distanceKm: 15, durationText: '0 hr 25 min', sedanFare: 799, ertigaFare: 1199, crystaFare: 1999, routeSlug: 'gurugram-to-delhi-airport' },
     ],
     faqs: [
       {
@@ -1157,48 +1407,152 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
   popularRoutes: [
     {
       destination: "Delhi",
-      distanceKm: 250,
-      durationText: "5 hr 00 min",
-      sedanFare: 3899,
-      ertigaFare: 5199,
-      crystaFare: 9499,
-      routeSlug: "delhi-to-dehradun-taxi"
+      distanceKm: 245,
+      durationText: "4 hr 30 min",
+      sedanFare: 3199,
+      ertigaFare: 4399,
+      crystaFare: 6499,
+      routeSlug: "dehradun-to-delhi-taxi"
     },
     {
-      destination: "Haridwar",
-      distanceKm: 52,
+      destination: "Mussoorie",
+      distanceKm: 34,
       durationText: "1 hr 15 min",
       sedanFare: 1499,
-      ertigaFare: 2099,
-      crystaFare: 3999,
-      routeSlug: "delhi-to-haridwar-taxi"
+      ertigaFare: 1999,
+      crystaFare: 2999,
+      routeSlug: "dehradun-to-mussoorie-taxi"
     },
     {
       destination: "Rishikesh",
       distanceKm: 45,
       durationText: "1 hr 10 min",
-      sedanFare: 1399,
-      ertigaFare: 1999,
-      crystaFare: 3799,
-      routeSlug: "delhi-to-rishikesh-taxi"
+      sedanFare: 1599,
+      ertigaFare: 2199,
+      crystaFare: 3299,
+      routeSlug: "dehradun-to-rishikesh-taxi"
     },
     {
-      destination: "Ghaziabad",
-      distanceKm: 230,
-      durationText: "4 hr 30 min",
-      sedanFare: 3799,
-      ertigaFare: 5099,
-      crystaFare: 9299,
-      routeSlug: "ghaziabad-to-dehradun-taxi"
+      destination: "Haridwar",
+      distanceKm: 52,
+      durationText: "1 hr 20 min",
+      sedanFare: 1699,
+      ertigaFare: 2299,
+      crystaFare: 3499,
+      routeSlug: "dehradun-to-haridwar-taxi"
     },
     {
-      destination: "Jaipur",
-      distanceKm: 530,
-      durationText: "9 hr 30 min",
-      sedanFare: 7499,
-      ertigaFare: 9999,
-      crystaFare: 17999,
-      routeSlug: "delhi-to-jaipur-taxi"
+      destination: "Chandigarh",
+      distanceKm: 170,
+      durationText: "3 hr 45 min",
+      sedanFare: 2799,
+      ertigaFare: 3799,
+      crystaFare: 5699,
+      routeSlug: "dehradun-to-chandigarh-taxi"
+    }
+  ],
+  popularSightseeing: [
+    {
+      name: "Robber's Cave (Guchhupani)",
+      desc: "Natural river cave formation where cold mountain streams flow between narrow limestone gorge walls.",
+      type: "popular"
+    },
+    {
+      name: "Sahastradhara",
+      desc: "Thousandfold sulfur water springs and cascading limestone waterfalls known for therapeutic natural mineral baths.",
+      type: "popular"
+    },
+    {
+      name: "Mindrolling Monastery",
+      desc: "One of the largest Buddhist centers in India featuring the majestic 220-foot Great Stupa and tranquil landscaped gardens.",
+      type: "cultural"
+    },
+    {
+      name: "Forest Research Institute (FRI)",
+      desc: "Colonial Greco-Roman heritage campus spread across 450 hectares with six specialized forestry museums.",
+      type: "cultural"
+    },
+    {
+      name: "Tapkeshwar Mahadev Temple",
+      desc: "Ancient Shiva shrine located inside a natural cave where holy water continuously drips onto the Shivling.",
+      type: "popular"
+    }
+  ],
+  hiddenGems: [
+    {
+      name: "Maldevta",
+      desc: "Pristine river valley paradise surrounded by lush Sal forests, quiet hamlets, and crystalline freshwater pools.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Shikhar Falls",
+      desc: "Scenic mountain waterfall accessible via a short hiking trail through rustic greenery away from crowds.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Malsi Deer Park (Dehradun Zoo)",
+      desc: "Peaceful zoological park on Mussoorie Road featuring spotted deer, nilgai, and native Himalayan birds.",
+      type: "hidden_gem"
+    }
+  ],
+  famousFoods: [
+    {
+      name: "Chetan Puri Wala",
+      famousPlace: "Hanuman Chowk",
+      desc: "Legendary crispy puris served with tangy spicy chole and sweet pumpkin halwa since 1952."
+    },
+    {
+      name: "Kalsang Cafe & Restaurant",
+      famousPlace: "Rajpur Road",
+      desc: "Authentic Tibetan delicacies including hot thukpa, momos, devil's chicken, and butter tea."
+    },
+    {
+      name: "Kumar Sweets Rasmalai",
+      famousPlace: "Clock Tower",
+      desc: "Signature melt-in-mouth saffron rasmalai and authentic Garhwali sweet treats."
+    }
+  ],
+  recommendedHotels: [
+    {
+      name: "Hyatt Regency Dehradun",
+      category: "5-Star Luxury Resort",
+      location: "Malsi Forest, Mussoorie Road"
+    },
+    {
+      name: "Fairfield by Marriott",
+      category: "4-Star Premium",
+      location: "Rajpur Road"
+    },
+    {
+      name: "Lemon Tree Hotel",
+      category: "Comfort Business",
+      location: "Pacific Mall, Rajpur Road"
+    }
+  ],
+  nearbyExcursions: [
+    {
+      name: "Mussoorie (Queen of Hills)",
+      distance: "34 km",
+      desc: "Colonial hill retreat with Mall Road, Kempty Falls, and panoramic Himalayan peaks.",
+      taxiSlug: "dehradun-to-mussoorie-taxi"
+    },
+    {
+      name: "Rishikesh (Yoga Capital)",
+      distance: "45 km",
+      desc: "Spiritual haven on the Ganga with Laxman Jhula, river rafting, and evening Ganga Aarti.",
+      taxiSlug: "dehradun-to-rishikesh-taxi"
+    },
+    {
+      name: "Haridwar (Gateway to Gods)",
+      distance: "52 km",
+      desc: "Holy pilgrimage site famous for Har Ki Pauri and mesmerizing evening Maha Aarti.",
+      taxiSlug: "dehradun-to-haridwar-taxi"
+    },
+    {
+      name: "Dhanaulti & Kanatal",
+      distance: "60 km",
+      desc: "Peaceful alpine destination nestled amidst dense deodar, oak, and rhododendron forests.",
+      taxiSlug: "dehradun-to-dhanaulti-taxi"
     }
   ],
   faqs: [
@@ -1265,48 +1619,141 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
   popularRoutes: [
     {
       destination: "Delhi",
-      distanceKm: 220,
-      durationText: "4 hr 00 min",
-      sedanFare: 3499,
-      ertigaFare: 4699,
-      crystaFare: 8999,
-      routeSlug: "delhi-to-haridwar-taxi"
+      distanceKm: 215,
+      durationText: "4 hr 15 min",
+      sedanFare: 2899,
+      ertigaFare: 3899,
+      crystaFare: 5999,
+      routeSlug: "haridwar-to-delhi-taxi"
     },
     {
       destination: "Rishikesh",
       distanceKm: 25,
-      durationText: "40 min",
-      sedanFare: 999,
-      ertigaFare: 1499,
-      crystaFare: 2899,
-      routeSlug: "delhi-to-rishikesh-taxi"
+      durationText: "45 min",
+      sedanFare: 1199,
+      ertigaFare: 1699,
+      crystaFare: 2499,
+      routeSlug: "haridwar-to-rishikesh-taxi"
     },
     {
       destination: "Dehradun",
       distanceKm: 52,
-      durationText: "1 hr 15 min",
-      sedanFare: 1499,
-      ertigaFare: 2099,
-      crystaFare: 3999,
-      routeSlug: "delhi-to-dehradun-taxi"
+      durationText: "1 hr 20 min",
+      sedanFare: 1699,
+      ertigaFare: 2299,
+      crystaFare: 3499,
+      routeSlug: "haridwar-to-dehradun-taxi"
     },
     {
       destination: "Ghaziabad",
-      distanceKm: 200,
+      distanceKm: 195,
       durationText: "3 hr 45 min",
-      sedanFare: 3499,
-      ertigaFare: 4699,
-      crystaFare: 8999,
-      routeSlug: "ghaziabad-to-haridwar-taxi"
+      sedanFare: 2699,
+      ertigaFare: 3699,
+      crystaFare: 5699,
+      routeSlug: "haridwar-to-ghaziabad-taxi"
     },
     {
-      destination: "Noida",
-      distanceKm: 215,
-      durationText: "4 hr 00 min",
-      sedanFare: 3599,
-      ertigaFare: 4799,
-      crystaFare: 9199,
-      routeSlug: "delhi-to-haridwar-taxi"
+      destination: "Nainital",
+      distanceKm: 235,
+      durationText: "5 hr 30 min",
+      sedanFare: 3699,
+      ertigaFare: 4999,
+      crystaFare: 7499,
+      routeSlug: "haridwar-to-nainital-taxi"
+    }
+  ],
+  popularSightseeing: [
+    {
+      name: "Har Ki Pauri & Ganga Aarti",
+      desc: "The most sacred ghat on the holy Ganga where thousands gather daily for the mesmerizing evening lamp Aarti.",
+      type: "popular"
+    },
+    {
+      name: "Mansa Devi Temple",
+      desc: "Hilltop wish-fulfilling shrine atop Bilwa Parvat accessible via scenic ropeway cable car (Udan Khatola).",
+      type: "popular"
+    },
+    {
+      name: "Chandi Devi Temple",
+      desc: "Revered temple on Neel Parvat offering sweeping panoramic vistas of the holy river plains.",
+      type: "popular"
+    },
+    {
+      name: "Maya Devi Temple",
+      desc: "Ancient Siddhapeeth temple where Goddess Sati's heart and navel are believed to have fallen.",
+      type: "cultural"
+    }
+  ],
+  hiddenGems: [
+    {
+      name: "Daksheswar Mahadev Temple",
+      desc: "Ancient temple complex in historic Kankhal associated with King Daksha's sacred yagna.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Sapt Rishi Ashram & Sapt Sarovar",
+      desc: "Tranquil ashram site where seven holy sages meditated and the Ganga split into seven peaceful streams.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Pawan Dham",
+      desc: "Stunning modern temple adorned with intricate glass mosaics and mirror artwork.",
+      type: "hidden_gem"
+    }
+  ],
+  famousFoods: [
+    {
+      name: "Mohan Ji Poori Wale",
+      famousPlace: "Near Har Ki Pauri",
+      desc: "Piping hot puris served with spicy hing aloo sabzi and sweet boondi halwa."
+    },
+    {
+      name: "Mathura Walo Ki Pracheen Dukan",
+      famousPlace: "Bada Bazar",
+      desc: "Century-old confectioner famous for hot jalebis, rabri, and traditional milk pedas."
+    },
+    {
+      name: "Pandit Sevaram Sharma Doodh Wale",
+      famousPlace: "Moti Bazar",
+      desc: "Thick creamy saffron kulhad milk topped with heavy clotted malai and chopped almonds."
+    }
+  ],
+  recommendedHotels: [
+    {
+      name: "Pilibhit House, IHCL SeleQtions",
+      category: "5-Star Heritage Luxury",
+      location: "Niranjani Akhada Ghat"
+    },
+    {
+      name: "Radisson Blu Hotel Haridwar",
+      category: "5-Star Business",
+      location: "SIDCUL Industrial Area"
+    },
+    {
+      name: "Haveli Hari Ganga",
+      category: "Heritage Boutique",
+      location: "Bazar Ghat, Old City"
+    }
+  ],
+  nearbyExcursions: [
+    {
+      name: "Rishikesh",
+      distance: "25 km",
+      desc: "Adventure rafting, yoga ashrams, and Beatles Ashram along the emerald upper Ganga.",
+      taxiSlug: "haridwar-to-rishikesh-taxi"
+    },
+    {
+      name: "Dehradun",
+      distance: "52 km",
+      desc: "Capital city nestled in the Doon Valley with colonial heritage and mountain access.",
+      taxiSlug: "haridwar-to-dehradun-taxi"
+    },
+    {
+      name: "Rajaji National Park",
+      distance: "18 km",
+      desc: "Vast tiger and elephant sanctuary offering thrilling open jeep wildlife safaris.",
+      taxiSlug: "haridwar-to-rajaji-taxi"
     }
   ],
   faqs: [
@@ -1373,37 +1820,130 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       destination: "Delhi",
       distanceKm: 240,
       durationText: "4 hr 30 min",
-      sedanFare: 3699,
-      ertigaFare: 4999,
-      crystaFare: 9199,
-      routeSlug: "delhi-to-rishikesh-taxi"
+      sedanFare: 3299,
+      ertigaFare: 4499,
+      crystaFare: 6699,
+      routeSlug: "rishikesh-to-delhi-taxi"
     },
     {
       destination: "Haridwar",
       distanceKm: 25,
-      durationText: "40 min",
-      sedanFare: 999,
-      ertigaFare: 1499,
-      crystaFare: 2899,
-      routeSlug: "delhi-to-haridwar-taxi"
+      durationText: "45 min",
+      sedanFare: 1199,
+      ertigaFare: 1699,
+      crystaFare: 2499,
+      routeSlug: "rishikesh-to-haridwar-taxi"
     },
     {
       destination: "Dehradun",
       distanceKm: 45,
       durationText: "1 hr 10 min",
-      sedanFare: 1399,
-      ertigaFare: 1999,
-      crystaFare: 3799,
-      routeSlug: "delhi-to-dehradun-taxi"
+      sedanFare: 1599,
+      ertigaFare: 2199,
+      crystaFare: 3299,
+      routeSlug: "rishikesh-to-dehradun-taxi"
     },
     {
-      destination: "Ghaziabad",
-      distanceKm: 220,
-      durationText: "4 hr 10 min",
-      sedanFare: 3699,
-      ertigaFare: 4999,
-      crystaFare: 9199,
-      routeSlug: "delhi-to-rishikesh-taxi"
+      destination: "Mussoorie",
+      distanceKm: 75,
+      durationText: "2 hr 15 min",
+      sedanFare: 2299,
+      ertigaFare: 3199,
+      crystaFare: 4699,
+      routeSlug: "rishikesh-to-mussoorie-taxi"
+    }
+  ],
+  popularSightseeing: [
+    {
+      name: "Laxman Jhula & Ram Jhula",
+      desc: "Iconic suspension bridges swaying over the emerald green Ganga connecting historic temples and ashrams.",
+      type: "popular"
+    },
+    {
+      name: "Triveni Ghat Maha Aarti",
+      desc: "Grand sacred confluence of Ganga, Yamuna, and Saraswati hosting soul-stirring evening fire prayers with Vedic chanting.",
+      type: "popular"
+    },
+    {
+      name: "Beatles Ashram (Chaurasi Kutia)",
+      desc: "Historic Maharishi Mahesh Yogi ashram where The Beatles stayed and composed in 1968, adorned with graffiti art.",
+      type: "cultural"
+    },
+    {
+      name: "Neelkanth Mahadev Temple",
+      desc: "Sacred mountain temple located at 1,330m where Lord Shiva consumed the divine poison Halahala.",
+      type: "popular"
+    }
+  ],
+  hiddenGems: [
+    {
+      name: "Neer Garh Waterfall",
+      desc: "Two-tiered turquoise mountain waterfall hidden inside a lush jungle trail ideal for a refreshing dip.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Vashistha Cave (Gufa)",
+      desc: "Deep peaceful river cave along the Ganga where Sage Vashistha meditated for centuries in complete silence.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Patna Waterfall & Limestone Caves",
+      desc: "Secluded natural waterfall located near Garud Chatti with ancient stalactite formations.",
+      type: "hidden_gem"
+    }
+  ],
+  famousFoods: [
+    {
+      name: "Chotiwala Restaurant",
+      famousPlace: "Swargashram",
+      desc: "Traditional pure vegetarian North & South Indian thalis served since 1958 with its iconic live mascot."
+    },
+    {
+      name: "The Beatles Cafe (60s Cafe)",
+      famousPlace: "Tapovan",
+      desc: "Vibrant riverside cafe serving healthy vegan food, wood-fired pizzas, herbal teas, and panoramic river views."
+    },
+    {
+      name: "Little Buddha Cafe",
+      famousPlace: "Laxman Jhula",
+      desc: "Tree-house style open cafe with river views serving Tibetan momos, falafel platters, and organic shakes."
+    }
+  ],
+  recommendedHotels: [
+    {
+      name: "Anand Kashi by the Ganges (IHCL)",
+      category: "5-Star Luxury Resort",
+      location: "Badrinath Road, Sursingdhar"
+    },
+    {
+      name: "Aloha On The Ganges",
+      category: "4-Star Riverside Resort",
+      location: "Tapovan"
+    },
+    {
+      name: "The Roseate Ganges",
+      category: "5-Star Ultra Luxury",
+      location: "Shivpuri"
+    }
+  ],
+  nearbyExcursions: [
+    {
+      name: "Shivpuri & Byasi",
+      distance: "16 km",
+      desc: "Premier whitewater river rafting camps and beachside tented stays.",
+      taxiSlug: "rishikesh-to-shivpuri-taxi"
+    },
+    {
+      name: "Devprayag Confluence",
+      distance: "70 km",
+      desc: "The divine holy sangam where Alaknanda and Bhagirathi rivers meet to form the holy Ganga.",
+      taxiSlug: "rishikesh-to-devprayag-taxi"
+    },
+    {
+      name: "Haridwar",
+      distance: "25 km",
+      desc: "Gateway to the Char Dham with historic river ghats and spiritual markets.",
+      taxiSlug: "rishikesh-to-haridwar-taxi"
     }
   ],
   faqs: [
@@ -1470,37 +2010,98 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       destination: "Delhi",
       distanceKm: 275,
       durationText: "5 hr 30 min",
-      sedanFare: 4199,
-      ertigaFare: 5499,
-      crystaFare: 9999,
-      routeSlug: "delhi-to-haldwani-taxi"
+      sedanFare: 3699,
+      ertigaFare: 4999,
+      crystaFare: 7499,
+      routeSlug: "haldwani-to-delhi-taxi"
     },
     {
       destination: "Nainital",
-      distanceKm: 35,
-      durationText: "1 hr 15 min",
-      sedanFare: 1499,
+      distanceKm: 42,
+      durationText: "1 hr 30 min",
+      sedanFare: 1599,
       ertigaFare: 2199,
-      crystaFare: 3999,
-      routeSlug: "delhi-to-nainital-taxi"
+      crystaFare: 3299,
+      routeSlug: "haldwani-to-nainital-taxi"
     },
     {
       destination: "Bareilly",
-      distanceKm: 105,
-      durationText: "2 hr 30 min",
-      sedanFare: 2199,
-      ertigaFare: 2999,
-      crystaFare: 5499,
-      routeSlug: "delhi-to-bareilly-taxi"
+      distanceKm: 95,
+      durationText: "2 hr 15 min",
+      sedanFare: 1899,
+      ertigaFare: 2599,
+      crystaFare: 3899,
+      routeSlug: "haldwani-to-bareilly-taxi"
     },
     {
-      destination: "Ghaziabad",
-      distanceKm: 255,
-      durationText: "5 hr 00 min",
-      sedanFare: 3999,
-      ertigaFare: 5299,
-      crystaFare: 9699,
-      routeSlug: "delhi-to-haldwani-taxi"
+      destination: "Almora",
+      distanceKm: 90,
+      durationText: "3 hr 00 min",
+      sedanFare: 2499,
+      ertigaFare: 3399,
+      crystaFare: 4999,
+      routeSlug: "haldwani-to-almora-taxi"
+    }
+  ],
+  popularSightseeing: [
+    {
+      name: "Gaula Barrage",
+      desc: "Historic irrigation barrage and scenic picnic spot along the Gaula riverbed at the foot of Kumaon hills.",
+      type: "nature"
+    },
+    {
+      name: "Haidakhan Babaji Ashram",
+      desc: "Spiritual sanctuary located in Chorgaliya road along the peaceful foothills.",
+      type: "cultural"
+    },
+    {
+      name: "Sanjay Van (Tanda Forest)",
+      desc: "Lush green recreational forest reserve popular for nature walks, picnics, and cycling trails.",
+      type: "nature"
+    }
+  ],
+  famousFoods: [
+    {
+      name: "Standard Sweets Bal Mithai",
+      famousPlace: "Nainital Road",
+      desc: "Authentic roasted brown khoya fudge coated with sugar balls, Kumaon's signature delicacy."
+    },
+    {
+      name: "Lee's Kitchen",
+      famousPlace: "Kaladhungi Road",
+      desc: "Popular Tibetan and pan-Asian delicacies including crispy chilli garlic momos and noodles."
+    }
+  ],
+  recommendedHotels: [
+    {
+      name: "Fortune Walkway Mall Haldwani",
+      category: "4-Star Business & Leisure",
+      location: "Nainital Road"
+    },
+    {
+      name: "Lemon Tree Hotel Haldwani",
+      category: "4-Star Comfort",
+      location: "Ranibagh / Nainital Highway"
+    }
+  ],
+  nearbyExcursions: [
+    {
+      name: "Kathgodam Railhead",
+      distance: "6 km",
+      desc: "Gateway railway terminal connecting Kumaon with New Delhi, Lucknow, and Dehradun.",
+      taxiSlug: "haldwani-to-kathgodam-taxi"
+    },
+    {
+      name: "Nainital Lake",
+      distance: "28 km",
+      desc: "Famous hill station lake with boating, ropeway, and pine forest viewpoints.",
+      taxiSlug: "haldwani-to-nainital-taxi"
+    },
+    {
+      name: "Kainchi Dham",
+      distance: "36 km",
+      desc: "Sacred Neem Karoli Baba temple along the Bhowali-Almora highway.",
+      taxiSlug: "haldwani-to-kainchi-dham-taxi"
     }
   ],
   faqs: [
@@ -1564,39 +2165,147 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
   popularRoutes: [
     {
       destination: "Delhi",
-      distanceKm: 300,
-      durationText: "6 hr 15 min",
-      sedanFare: 4499,
-      ertigaFare: 5899,
-      crystaFare: 10499,
-      routeSlug: "delhi-to-nainital-taxi"
+      distanceKm: 310,
+      durationText: "6 hr 30 min",
+      sedanFare: 4299,
+      ertigaFare: 5799,
+      crystaFare: 8499,
+      routeSlug: "nainital-to-delhi-taxi"
     },
     {
-      destination: "Haldwani",
+      destination: "Kathgodam",
       distanceKm: 35,
       durationText: "1 hr 15 min",
       sedanFare: 1499,
+      ertigaFare: 1999,
+      crystaFare: 2999,
+      routeSlug: "nainital-to-kathgodam-taxi"
+    },
+    {
+      destination: "Haldwani",
+      distanceKm: 42,
+      durationText: "1 hr 30 min",
+      sedanFare: 1599,
       ertigaFare: 2199,
-      crystaFare: 3999,
-      routeSlug: "delhi-to-haldwani-taxi"
+      crystaFare: 3299,
+      routeSlug: "nainital-to-haldwani-taxi"
     },
     {
-      destination: "Bareilly",
-      distanceKm: 140,
-      durationText: "3 hr 30 min",
-      sedanFare: 2699,
-      ertigaFare: 3599,
-      crystaFare: 6499,
-      routeSlug: "delhi-to-bareilly-taxi"
+      destination: "Kainchi Dham",
+      distanceKm: 18,
+      durationText: "45 min",
+      sedanFare: 1199,
+      ertigaFare: 1699,
+      crystaFare: 2499,
+      routeSlug: "nainital-to-kainchi-dham-taxi"
     },
     {
-      destination: "Ghaziabad",
-      distanceKm: 280,
-      durationText: "5 hr 45 min",
-      sedanFare: 4299,
-      ertigaFare: 5699,
-      crystaFare: 10299,
-      routeSlug: "delhi-to-nainital-taxi"
+      destination: "Jim Corbett",
+      distanceKm: 65,
+      durationText: "2 hr 15 min",
+      sedanFare: 2499,
+      ertigaFare: 3399,
+      crystaFare: 4999,
+      routeSlug: "nainital-to-jim-corbett-taxi"
+    }
+  ],
+  popularSightseeing: [
+    {
+      name: "Naini Lake & Yacht Boating",
+      desc: "Crescent-shaped emerald eye lake surrounded by seven verdant hills offering romantic wooden boat rides.",
+      type: "popular"
+    },
+    {
+      name: "Naina Devi Temple",
+      desc: "Sacred 51-Shaktipeeth temple perched right on the northern shore of Naini Lake.",
+      type: "cultural"
+    },
+    {
+      name: "Snow View Point",
+      desc: "Accessible via aerial ropeway, offering spectacular panoramic vistas of Nanda Devi, Trishul, and Nanda Kot peaks.",
+      type: "popular"
+    },
+    {
+      name: "Tiffin Top (Dorothy's Seat)",
+      desc: "Scenic hilltop viewpoint at 2,290m offering 360-degree vistas of the town and Kumaon countryside.",
+      type: "nature"
+    }
+  ],
+  hiddenGems: [
+    {
+      name: "Pangot & Kilbury Bird Sanctuary",
+      desc: "Quiet pine-clad paradise just 15 km away hosting over 580 exotic Himalayan bird species.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Khurpatal Emerald Lake",
+      desc: "Secluded terraced lake nestled in a valley known for change of water hues and peaceful fishing.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Land's End",
+      desc: "Breathtaking cliff edge viewpoint overlooking terraced fields of Khurpatal and surrounding forested valley.",
+      type: "hidden_gem"
+    }
+  ],
+  famousFoods: [
+    {
+      name: "Sakley's Restaurant & Pastry Shop",
+      famousPlace: "The Mall",
+      desc: "Colonial-style mountain bakery famous for warm apple pie, molten chocolate truffles, and gourmet steaks."
+    },
+    {
+      name: "Sonam Fast Food",
+      famousPlace: "Tibetan Market",
+      desc: "The most popular stall for steaming hot mutton and veg momos served with fiery red chili chutney."
+    },
+    {
+      name: "Machan Restaurant",
+      famousPlace: "Mall Road",
+      desc: "Iconic family dining venue known for Kumaoni specialities, Butter Chicken, and rich dal makhani."
+    }
+  ],
+  recommendedHotels: [
+    {
+      name: "The Manu Maharani",
+      category: "5-Star Mountain Resort",
+      location: "Grassmere, Mallital"
+    },
+    {
+      name: "The Naini Retreat by Leisure Hotels",
+      category: "Heritage Luxury",
+      location: "Ayarpatta Slopes"
+    },
+    {
+      name: "Shervani Hilltop Nainital",
+      category: "4-Star Boutique",
+      location: "Mallital"
+    }
+  ],
+  nearbyExcursions: [
+    {
+      name: "Kainchi Dham Ashram",
+      distance: "18 km",
+      desc: "World-revered spiritual ashram of Neem Karoli Baba Maharaj visited by devotees worldwide.",
+      taxiSlug: "nainital-to-kainchi-dham-taxi"
+    },
+    {
+      name: "Bhimtal & Naukuchiatal",
+      distance: "22 km",
+      desc: "Peaceful larger lakes offering island cafe boating, kayaking, and paragliding.",
+      taxiSlug: "nainital-to-bhimtal-taxi"
+    },
+    {
+      name: "Mukteshwar",
+      distance: "48 km",
+      desc: "High-altitude scenic ridge at 2,170m known for Chauli Ki Jali cliffs and apple orchards.",
+      taxiSlug: "nainital-to-mukteshwar-taxi"
+    },
+    {
+      name: "Jim Corbett National Park",
+      distance: "65 km",
+      desc: "India's oldest national park famous for wild Bengal tigers, elephants, and luxury jungle lodges.",
+      taxiSlug: "nainital-to-jim-corbett-taxi"
     }
   ],
   faqs: [
@@ -1669,25 +2378,25 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       sedanFare: 6999,
       ertigaFare: 9299,
       crystaFare: 16999,
-      routeSlug: "delhi-to-lucknow-taxi"
+      routeSlug: "lucknow-to-delhi-taxi"
     },
     {
-      destination: "Agra",
-      distanceKm: 335,
-      durationText: "4 hr 30 min",
-      sedanFare: 4499,
-      ertigaFare: 5999,
-      crystaFare: 10999,
-      routeSlug: "delhi-to-agra-taxi"
+      destination: "Ayodhya",
+      distanceKm: 135,
+      durationText: "2 hr 30 min",
+      sedanFare: 2199,
+      ertigaFare: 2999,
+      crystaFare: 4999,
+      routeSlug: "lucknow-to-ayodhya-taxi"
     },
     {
-      destination: "Bareilly",
-      distanceKm: 250,
-      durationText: "4 hr 45 min",
-      sedanFare: 3499,
-      ertigaFare: 4699,
-      crystaFare: 8499,
-      routeSlug: "delhi-to-bareilly-taxi"
+      destination: "Varanasi",
+      distanceKm: 310,
+      durationText: "5 hr 15 min",
+      sedanFare: 4199,
+      ertigaFare: 5599,
+      crystaFare: 9999,
+      routeSlug: "lucknow-to-varanasi-taxi"
     },
     {
       destination: "Kanpur",
@@ -1696,7 +2405,184 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       sedanFare: 1799,
       ertigaFare: 2499,
       crystaFare: 4499,
-      routeSlug: "delhi-to-kanpur-taxi"
+      routeSlug: "lucknow-to-kanpur-taxi"
+    },
+    {
+      destination: "Agra",
+      distanceKm: 335,
+      durationText: "4 hr 30 min",
+      sedanFare: 4499,
+      ertigaFare: 5999,
+      crystaFare: 10999,
+      routeSlug: "lucknow-to-agra-taxi"
+    },
+    {
+      destination: "Bareilly",
+      distanceKm: 250,
+      durationText: "4 hr 45 min",
+      sedanFare: 3499,
+      ertigaFare: 4699,
+      crystaFare: 8499,
+      routeSlug: "lucknow-to-bareilly-taxi"
+    }
+  ],
+  popularSightseeing: [
+    {
+      name: "Bara Imambara & Bhool Bhulaiya",
+      desc: "Iconic 18th-century monument built by Nawab Asaf-ud-Daula with unsupported vaulted central hall and world-famous labyrinth corridors.",
+      type: "popular",
+      timing: "6:00 AM - 5:00 PM"
+    },
+    {
+      name: "Chota Imambara",
+      desc: "Exquisite 'Palace of Lights' adorned with Belgian chandeliers, gilt domes, Arabic calligraphy, and royal tombs.",
+      type: "popular",
+      timing: "6:00 AM - 5:00 PM"
+    },
+    {
+      name: "Rumi Darwaza",
+      desc: "The 60-foot soaring Turkish Gateway, historic architectural symbol of Lucknow and Awadhi splendour.",
+      type: "popular"
+    },
+    {
+      name: "The British Residency",
+      desc: "Historic siege site from the 1857 First War of Independence set in scenic landscaped gardens with cannon marks.",
+      type: "popular",
+      timing: "7:00 AM - 6:00 PM"
+    },
+    {
+      name: "Ambedkar Memorial Park",
+      desc: "Expansive 107-acre sandstone architectural marvel in Gomti Nagar with grand elephant columns and night illumination.",
+      type: "cultural",
+      timing: "11:00 AM - 9:00 PM"
+    },
+    {
+      name: "Constantia (La Martiniere)",
+      desc: "Remarkable 18th-century European baroque fortress-mansion built by French Major-General Claude Martin.",
+      type: "cultural"
+    }
+  ],
+  hiddenGems: [
+    {
+      name: "Kukrail Forest & Ghariyal Reserve",
+      desc: "Serene urban forest reserve and endangered gharial and crocodile conservation sanctuary on the outskirts of Lucknow.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Dilkusha Kothi & Garden",
+      desc: "Atmospheric 18th-century hunting lodge ruins with English baroque architecture surrounded by quiet green lawns.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Hussainabad Picture Gallery",
+      desc: "Historic 1838 gallery housing life-size portraits of Nawabs of Awadh featuring optical-illusion perspective artwork.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Sikandar Bagh",
+      desc: "Historic summer garden and walled pavilion site of the fierce 1857 battle, now an oasis of quiet trees.",
+      type: "hidden_gem"
+    },
+    {
+      name: "Chattar Manzil",
+      desc: "The famed Umbrella Palace situated along the Gomti River featuring a graceful blend of European and Indo-Islamic architecture.",
+      type: "hidden_gem"
+    }
+  ],
+  famousFoods: [
+    {
+      name: "Tunday Galawati Kababs",
+      famousPlace: "Aminabad & Chowk",
+      desc: "World-renowned melt-in-mouth buffalo and mutton galawati kababs prepared with 160 traditional secret spices."
+    },
+    {
+      name: "Awadhi Dum Biryani & Curries",
+      famousPlace: "Dastarkhwan (Hazratganj)",
+      desc: "Fragrant saffron mutton dum biryani, Chicken Masala, and Awadhi Shahi Tukda cooked in classical royal style."
+    },
+    {
+      name: "Royal Basket Chaat",
+      famousPlace: "Royal Cafe (Hazratganj)",
+      desc: "Crisp potato basket filled with spicy aloo tikki, sprouts, curd, tangy chutneys, and fresh pomegranate."
+    },
+    {
+      name: "Prakash Ki Kulfi",
+      famousPlace: "Aminabad Market",
+      desc: "Rich condensed rabri falooda kulfi served fresh for over 60 years in the historic food lanes."
+    },
+    {
+      name: "Sharma Chai & Bun Makkhan",
+      famousPlace: "Lalbagh",
+      desc: "The city's favorite morning destination serving piping hot ginger kulhad tea, hand-beaten buttered buns, and samosas."
+    },
+    {
+      name: "Malai Gilori (Malai Paan)",
+      famousPlace: "Ram Asrey (Chowk, Est. 1805)",
+      desc: "Delicate sweet made of paper-thin clotted cream (malai) filled with dry fruits and silver leaf."
+    }
+  ],
+  recommendedHotels: [
+    {
+      name: "Taj Mahal Lucknow",
+      category: "5-Star Luxury",
+      location: "Vipin Khand, Gomti Nagar"
+    },
+    {
+      name: "Hyatt Regency Lucknow",
+      category: "5-Star Premium",
+      location: "Vibhuti Khand, Gomti Nagar"
+    },
+    {
+      name: "Renaissance Lucknow Hotel",
+      category: "5-Star Luxury by Marriott",
+      location: "Vipin Khand, Gomti Nagar"
+    },
+    {
+      name: "Clarks Avadh",
+      category: "Heritage 5-Star",
+      location: "8 MG Marg, Hazratganj"
+    },
+    {
+      name: "Lebua Lucknow",
+      category: "Luxury Boutique Heritage",
+      location: "Saraca Estate, Mall Avenue"
+    },
+    {
+      name: "Lemon Tree Hotel",
+      category: "Premium Transit",
+      location: "Transport Nagar, near CCS Airport"
+    }
+  ],
+  nearbyExcursions: [
+    {
+      name: "Ayodhya Dham",
+      distance: "135 km",
+      desc: "Holy pilgrimage to Shri Ram Janmabhoomi Mandir, Kanak Bhawan, and tranquil Saryu River Ghats.",
+      taxiSlug: "lucknow-to-ayodhya-taxi"
+    },
+    {
+      name: "Naimisharanya (Neemsar)",
+      distance: "85 km",
+      desc: "Sacred ancient forest pilgrimage where the Mahabharata was recited and 88,000 rishis meditated.",
+      taxiSlug: "lucknow-to-naimisharanya-taxi"
+    },
+    {
+      name: "Dewa Sharif",
+      distance: "42 km",
+      desc: "Revered Sufi shrine of Haji Waris Ali Shah known for universal brotherhood and vibrant spiritual harmony.",
+      taxiSlug: "lucknow-to-dewa-sharif-taxi"
+    },
+    {
+      name: "Nawabganj Bird Sanctuary",
+      distance: "45 km",
+      desc: "Pristine wetland sanctuary hosting thousands of migratory birds, deer park, and walking trails.",
+      taxiSlug: "lucknow-to-nawabganj-taxi"
+    },
+    {
+      name: "Bithoor & Kanpur",
+      distance: "85 km",
+      desc: "Historic riverside town on the banks of Ganga associated with Maharishi Valmiki and Nana Sahib.",
+      taxiSlug: "lucknow-to-kanpur-taxi"
     }
   ],
   faqs: [
@@ -1763,21 +2649,21 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
   popularRoutes: [
     {
       destination: "Delhi",
-      distanceKm: 260,
-      durationText: "5 hr 00 min",
-      sedanFare: 3799,
-      ertigaFare: 4999,
-      crystaFare: 9299,
-      routeSlug: "delhi-to-bareilly-taxi"
+      distanceKm: 250,
+      durationText: "4 hr 45 min",
+      sedanFare: 3499,
+      ertigaFare: 4699,
+      crystaFare: 7499,
+      routeSlug: "bareilly-to-delhi-taxi"
     },
     {
       destination: "Haldwani",
-      distanceKm: 105,
-      durationText: "2 hr 30 min",
-      sedanFare: 2199,
-      ertigaFare: 2999,
-      crystaFare: 5499,
-      routeSlug: "delhi-to-haldwani-taxi"
+      distanceKm: 95,
+      durationText: "2 hr 15 min",
+      sedanFare: 1899,
+      ertigaFare: 2599,
+      crystaFare: 3899,
+      routeSlug: "bareilly-to-haldwani-taxi"
     },
     {
       destination: "Lucknow",
@@ -1785,17 +2671,83 @@ export const LOCALITIES_DATA: Record<string, LocalityData> = {
       durationText: "4 hr 45 min",
       sedanFare: 3499,
       ertigaFare: 4699,
-      crystaFare: 8499,
-      routeSlug: "delhi-to-lucknow-taxi"
+      crystaFare: 7499,
+      routeSlug: "bareilly-to-lucknow-taxi"
     },
     {
       destination: "Moradabad",
       distanceKm: 90,
-      durationText: "2 hr 00 min",
-      sedanFare: 1899,
-      ertigaFare: 2599,
-      crystaFare: 4699,
-      routeSlug: "delhi-to-moradabad-taxi"
+      durationText: "1 hr 45 min",
+      sedanFare: 1799,
+      ertigaFare: 2499,
+      crystaFare: 3699,
+      routeSlug: "bareilly-to-moradabad-taxi"
+    }
+  ],
+  popularSightseeing: [
+    {
+      name: "Alakhnath Temple",
+      desc: "The ancient headquarter of the Anand Akhada sanyasis and one of Bareilly's seven sacred Nath temples.",
+      type: "cultural"
+    },
+    {
+      name: "Trivati Nath Temple",
+      desc: "Centuries-old Shiva shrine located in the center of the city surrounded by three sacred banyan trees.",
+      type: "cultural"
+    },
+    {
+      name: "Phoenix United Mall",
+      desc: "Premier shopping, dining, and family entertainment complex on Pilibhit Bypass Road.",
+      type: "popular"
+    },
+    {
+      name: "Bareilly Cantonment Heritage",
+      desc: "Spacious British colonial cantonment area with wide tree-lined avenues, churches, and historic grounds.",
+      type: "cultural"
+    }
+  ],
+  famousFoods: [
+    {
+      name: "Bareilly Ka Surma & Jhumka",
+      famousPlace: "Civil Lines & Qutubkhana",
+      desc: "Iconic historical heritage crafts alongside mouthwatering kebabs and biryani."
+    },
+    {
+      name: "Deenanath Lassi & Sweets",
+      famousPlace: "Old City",
+      desc: "Rich sweet kulhad curd lassi topped with thick rabri and saffron essence."
+    }
+  ],
+  recommendedHotels: [
+    {
+      name: "Radisson Hotel Bareilly Airport",
+      category: "5-Star Premium",
+      location: "Civil Lines / Airport Road"
+    },
+    {
+      name: "Hotel Sobti Continental",
+      category: "4-Star Business",
+      location: "Green Park Colony"
+    }
+  ],
+  nearbyExcursions: [
+    {
+      name: "Haldwani & Nainital",
+      distance: "95 km",
+      desc: "Gateway to the Kumaon hills and scenic high-altitude Himalayan lakes.",
+      taxiSlug: "bareilly-to-haldwani-taxi"
+    },
+    {
+      name: "Pilibhit Tiger Reserve",
+      distance: "65 km",
+      desc: "Dense sal forest reserve and pristine lake known for Royal Bengal Tigers and swamp deer.",
+      taxiSlug: "bareilly-to-pilibhit-taxi"
+    },
+    {
+      name: "Dudhwa National Park",
+      distance: "135 km",
+      desc: "Renowned Terai ecosystem reserve home to one-horned rhinos, tigers, and wild elephants.",
+      taxiSlug: "bareilly-to-dudhwa-taxi"
     }
   ],
   faqs: [

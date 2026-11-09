@@ -64,10 +64,10 @@ export default function PublicFooter() {
         <div className="relative z-10">
         {/* 2. Main Footer Content Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b border-white/10">
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           
           {/* Column 1: Brand Logo & Description */}
-          <div className="space-y-4 col-span-2 lg:col-span-1">
+          <div className="space-y-4 col-span-1">
             <div className="bg-white p-2.5 rounded-lg inline-block">
               <Image
                 src="/logo.jpg"
@@ -141,22 +141,8 @@ export default function PublicFooter() {
             </ul>
           </div>
 
-          {/* Column 4: Top Routes */}
+          {/* Column 4: Contact Us */}
           <div className="space-y-4 col-span-1">
-            <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
-              Top Routes
-            </h4>
-            <ul className="space-y-3 text-[13px] text-slate-400">
-              <li><Link href="/routes/delhi-to-haridwar-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haridwar</Link></li>
-              <li><Link href="/routes/delhi-to-dehradun-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Dehradun</Link></li>
-              <li><Link href="/routes/delhi-to-haldwani-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Haldwani</Link></li>
-              <li><Link href="/routes/delhi-to-rishikesh-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Rishikesh</Link></li>
-              <li><Link href="/routes/delhi-to-shimla-taxi" prefetch={true} className="hover:text-white transition-colors block">Delhi to Shimla</Link></li>
-            </ul>
-          </div>
-
-          {/* Column 5: Contact Us */}
-          <div className="space-y-4 col-span-2 lg:col-span-1">
             <h4 className="text-white font-bold text-[15px] tracking-wide uppercase">
               Contact Us
             </h4>

@@ -10,7 +10,7 @@ import MmtBookingWidget from '@/components/public/MmtBookingWidget';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
 import { getCitySpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
-import { Phone, MessageSquare, MapPin, CheckCircle2, Shield, Clock, Compass, Plane, ArrowRight, Car, Users, Briefcase, Sparkles } from 'lucide-react';
+import { Phone, MessageSquare, MapPin, CheckCircle2, Shield, Clock, Compass, Plane, ArrowRight, Car, Users, Briefcase, Sparkles, Utensils, Hotel, Eye, Star } from 'lucide-react';
 
 interface LocalityPageProps {
   params: Promise<{ locality: string }>;
@@ -446,6 +446,265 @@ export default async function LocalityPage({ params }: LocalityPageProps) {
             </div>
           </div>
         </section>
+
+        {/* ── 5. POPULAR DIRECT OUTSTATION CAB CORRIDORS ── */}
+        {data.popularRoutes && data.popularRoutes.length > 0 && (
+          <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6">
+              <div>
+                <span className="text-brand-green font-bold text-xs uppercase tracking-wider block mb-1">
+                  FREQUENTLY BOOKED CORRIDORS
+                </span>
+                <h2 className="text-xl sm:text-3xl font-black text-brand-blue">
+                  Popular Cab Routes Departing from {data.name}
+                </h2>
+                <p className="mt-1 text-sm text-slate-600">
+                  Fixed transparent fares, verified highway drivers, and instant online booking.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {data.popularRoutes.map((route, i) => (
+                <div
+                  key={i}
+                  className="p-5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-white hover:border-brand-blue hover:shadow-md transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-base font-bold text-slate-900">
+                        {data.name} → {route.destination}
+                      </h3>
+                      <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                        {route.distanceKm} km
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 mb-3 flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" />
+                      <span>Est. {route.durationText}</span>
+                    </p>
+                    <div className="space-y-1 text-xs text-slate-700 py-2 border-y border-slate-200/70 mb-4">
+                      <div className="flex justify-between">
+                        <span>Sedan (Dzire):</span>
+                        <strong className="text-brand-blue font-bold">₹{route.sedanFare.toLocaleString('en-IN')}</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Ertiga (6-Seater):</span>
+                        <strong className="text-brand-blue font-bold">₹{route.ertigaFare.toLocaleString('en-IN')}</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Innova Crysta:</span>
+                        <strong className="text-brand-blue font-bold">₹{route.crystaFare.toLocaleString('en-IN')}</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2">
+                    <Link
+                      href={`/routes/${route.routeSlug}`}
+                      prefetch={true}
+                      className="flex-1 text-center py-2 px-3 rounded-xl bg-brand-blue hover:bg-brand-blue-hover text-white font-bold text-xs transition-colors shadow-xs"
+                    >
+                      View Route &amp; Book
+                    </Link>
+                    <a
+                      href={generateWhatsAppLink({
+                        tripType: `Cab Booking from ${data.name} to ${route.destination}`,
+                        pickup: data.name,
+                        drop: route.destination,
+                        customMessage: `Hello Urgent Taxis! I want to book a cab from ${data.name} to ${route.destination}. Please confirm availability.`,
+                      })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors shadow-xs flex items-center justify-center gap-1"
+                      title="Book on WhatsApp"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── 6. POPULAR ATTRACTIONS & HIDDEN SIGHTSEEING GEMS ── */}
+        {((data.popularSightseeing && data.popularSightseeing.length > 0) || (data.hiddenGems && data.hiddenGems.length > 0)) && (
+          <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-8">
+            <div>
+              <span className="text-brand-green font-bold text-xs uppercase tracking-wider block mb-1">
+                LOCAL TRAVEL &amp; SIGHTSEEING GUIDE
+              </span>
+              <h2 className="text-xl sm:text-3xl font-black text-brand-blue">
+                Must-Visit Attractions &amp; Hidden Gems in {data.name}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Explore iconic landmarks, historic monuments, and peaceful offbeat spots with our local chauffeur-driven cabs.
+              </p>
+            </div>
+
+            {/* Popular Sightseeing Cards */}
+            {data.popularSightseeing && data.popularSightseeing.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-base sm:text-lg font-bold text-slate-800 flex items-center gap-2">
+                  <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                  <span>Top Popular Tourist Spots in {data.name}</span>
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {data.popularSightseeing.map((spot, i) => (
+                    <div key={i} className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 hover:border-brand-blue/30 transition-all">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 uppercase tracking-wider">
+                          {spot.type || 'Attraction'}
+                        </span>
+                        {spot.timing && (
+                          <span className="text-[11px] text-slate-500 font-medium flex items-center gap-1">
+                            <Clock className="w-3 h-3" /> {spot.timing}
+                          </span>
+                        )}
+                      </div>
+                      <h4 className="text-sm font-bold text-brand-blue mb-1">{spot.name}</h4>
+                      <p className="text-xs text-slate-600 leading-relaxed">{spot.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Hidden Gems Cards */}
+            {data.hiddenGems && data.hiddenGems.length > 0 && (
+              <div className="space-y-4 pt-4 border-t border-slate-100">
+                <h3 className="text-base sm:text-lg font-bold text-slate-800 flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-emerald-600" />
+                  <span>Lesser-Known &amp; Offbeat Hidden Gems</span>
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {data.hiddenGems.map((gem, i) => (
+                    <div key={i} className="bg-emerald-50/40 p-5 rounded-2xl border border-emerald-100/80 hover:border-emerald-300 transition-all">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 uppercase tracking-wider">
+                          Hidden Gem
+                        </span>
+                      </div>
+                      <h4 className="text-sm font-bold text-slate-900 mb-1">{gem.name}</h4>
+                      <p className="text-xs text-slate-600 leading-relaxed">{gem.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* ── 7. FAMOUS LOCAL FOODS & CULINARY SPECIALTIES ── */}
+        {data.famousFoods && data.famousFoods.length > 0 && (
+          <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+            <div className="mb-6">
+              <span className="text-brand-green font-bold text-xs uppercase tracking-wider block mb-1">
+                AUTHENTIC LOCAL FOOD TRAIL
+              </span>
+              <h2 className="text-xl sm:text-3xl font-black text-brand-blue">
+                Famous Local Foods &amp; Iconic Food Spots in {data.name}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Experience authentic local delicacies and time-honored food joints recommended by local chauffeurs.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {data.famousFoods.map((food, i) => (
+                <div key={i} className="p-5 rounded-2xl bg-amber-50/40 border border-amber-200/60 hover:border-amber-300 transition-all">
+                  <div className="flex items-center gap-2 text-amber-700 text-xs font-bold mb-2">
+                    <Utensils className="w-3.5 h-3.5 text-amber-600" />
+                    <span>{food.famousPlace}</span>
+                  </div>
+                  <h3 className="text-sm font-bold text-slate-900 mb-1">{food.name}</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">{food.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── 8. RECOMMENDED HOTELS & STAYS ── */}
+        {data.recommendedHotels && data.recommendedHotels.length > 0 && (
+          <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+            <div className="mb-6">
+              <span className="text-brand-green font-bold text-xs uppercase tracking-wider block mb-1">
+                WHERE TO STAY
+              </span>
+              <h2 className="text-xl sm:text-3xl font-black text-brand-blue">
+                Recommended Hotels &amp; Accommodations in {data.name}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Top luxury, heritage, and business stays with reliable 24/7 doorstep cab pickups and drop-offs.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {data.recommendedHotels.map((hotel, i) => (
+                <div key={i} className="p-5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-brand-blue/40 transition-all">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 uppercase tracking-wider">
+                      {hotel.category}
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-bold text-brand-blue mb-1 flex items-center gap-1.5">
+                    <Hotel className="w-4 h-4 text-blue-600 shrink-0" />
+                    <span>{hotel.name}</span>
+                  </h3>
+                  <p className="text-xs text-slate-500 flex items-center gap-1 mt-2">
+                    <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span>{hotel.location}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── 9. NEARBY EXCURSIONS & DAY TRIPS ── */}
+        {data.nearbyExcursions && data.nearbyExcursions.length > 0 && (
+          <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+            <div className="mb-6">
+              <span className="text-brand-green font-bold text-xs uppercase tracking-wider block mb-1">
+                POPULAR GETAWAYS &amp; DAY TRIPS
+              </span>
+              <h2 className="text-xl sm:text-3xl font-black text-brand-blue">
+                Popular Excursions &amp; Nearby Spots from {data.name}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Plan convenient weekend getaways and pilgrimage trips with our dedicated round-trip outstation cabs.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {data.nearbyExcursions.map((exc, i) => (
+                <div key={i} className="p-5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-brand-blue/40 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-sm font-bold text-brand-blue">{exc.name}</h3>
+                      <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                        {exc.distance}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 leading-relaxed mb-4">{exc.desc}</p>
+                  </div>
+                  {exc.taxiSlug ? (
+                    <Link
+                      href={`/routes/${exc.taxiSlug}`}
+                      prefetch={true}
+                      className="text-xs font-bold text-brand-blue hover:text-brand-green transition-colors inline-flex items-center gap-1 pt-2 border-t border-slate-200"
+                    >
+                      <span>Book Cab to {exc.name}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ── 5. AVAILABLE FLEET CATEGORIES ── */}
         <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">

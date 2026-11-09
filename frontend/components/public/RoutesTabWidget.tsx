@@ -294,7 +294,7 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                   className="group bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col h-full"
                 >
                   {/* Destination WebP Image */}
-                  <div className="h-40 relative overflow-hidden bg-slate-100">
+                  <Link href={`/routes/${route.slug}`} prefetch={true} className="h-40 relative overflow-hidden bg-slate-100 block group/cardimg">
                     <Image
                       src={route.image}
                       alt={`${route.origin} to ${route.destination} cab`}
@@ -319,7 +319,7 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                         {route.destination}, <span className="text-emerald-300 font-bold">{activeState}</span>
                       </h3>
                     </div>
-                  </div>
+                  </Link>
 
                   {/* Route Specs & Badges */}
                   <div className="p-4 flex-grow flex flex-col justify-between">
