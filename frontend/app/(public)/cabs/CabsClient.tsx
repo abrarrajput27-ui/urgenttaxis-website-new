@@ -43,6 +43,7 @@ import {
   resolveAirportFare,
   HourlyRentalPackageId,
   LOCAL_RENTAL_CONFIG,
+  HOURLY_RENTAL_PACKAGES,
 } from '@/lib/pricing';
 
 export type BookingServiceType = 'one_way' | 'round_trip' | 'local_rental' | 'airport_transfer';
