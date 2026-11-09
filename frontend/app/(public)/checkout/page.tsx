@@ -36,16 +36,16 @@ import {
 import { SITE_CONFIG } from '@/lib/seo';
 import { BOOKING_ADDONS, isAddOnSupported } from '@/lib/pricing/add-ons';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
-import { calculateAdvanceToken } from '@/lib/pricing';
+import { calculateAdvanceToken, isGroupVehicleCategory } from '@/lib/pricing';
 
 // Vehicle Display Profiles
 const VEHICLE_INFO: Record<string, { name: string; models: string; seats: string; bags: string; image: string; perKm: string; baseRate: number }> = {
-  hatchback: { name: 'Hatchback', models: 'Maruti WagonR, Swift, Celerio', seats: '4 Seats', bags: '2 Bags', image: '/fleet-brand/Hatchback.webp', perKm: '₹10/km', baseRate: 10 },
-  sedan: { name: 'Sedan', models: 'Maruti Dzire, Toyota Etios, Honda Amaze', seats: '4 Seats', bags: '3 Bags', image: '/fleet-brand/dzire.webp', perKm: '₹11/km', baseRate: 11 },
+  hatchback: { name: 'Hatchback', models: 'Maruti WagonR, Swift, Celerio', seats: '4 Seats', bags: '2 Bags', image: '/fleet-brand/Hatchback.webp', perKm: '₹11/km', baseRate: 11 },
+  sedan: { name: 'Sedan', models: 'Maruti Dzire, Toyota Etios, Honda Amaze', seats: '4 Seats', bags: '3 Bags', image: '/fleet-brand/dzire.webp', perKm: '₹12/km', baseRate: 12 },
   ertiga: { name: 'Maruti Ertiga', models: 'Maruti Ertiga 6-Seater AC', seats: '6 Seats', bags: '4 Bags', image: '/fleet-brand/Ertiga.webp', perKm: '₹15/km', baseRate: 15 },
   'suv-muv': { name: 'SUV / MUV', models: 'Renault Triber, Kia Carens, Bolero (SUV / MPV)', seats: '6/7 Seats', bags: '4 Bags', image: '/fleet-brand/Ertiga.webp', perKm: '₹15/km', baseRate: 15 },
-  innova: { name: 'Toyota Innova', models: 'Toyota Innova 7-Seater Classic', seats: '7 Seats', bags: '5 Bags', image: '/fleet-brand/Innova Crysta.webp', perKm: '₹18/km', baseRate: 18 },
-  'executive-suv': { name: 'Innova Crysta', models: 'Toyota Innova Crysta, Hycross', seats: '7 Seats', bags: '5 Bags', image: '/fleet-brand/Innova Crysta.webp', perKm: '₹20/km', baseRate: 20 },
+  innova: { name: 'Toyota Innova', models: 'Toyota Innova 7-Seater Classic', seats: '7 Seats', bags: '5 Bags', image: '/fleet-brand/Innova Crysta.webp', perKm: '₹19/km', baseRate: 19 },
+  'executive-suv': { name: 'Innova Crysta', models: 'Toyota Innova Crysta, Hycross', seats: '7 Seats', bags: '5 Bags', image: '/fleet-brand/Innova Crysta.webp', perKm: '₹22/km', baseRate: 22 },
   tempo: { name: 'Tempo Traveller', models: 'Force Traveller 12-26 Seater', seats: '12-26 Seats', bags: '15 Bags', image: '/fleet-brand/Tempo Traveller.webp', perKm: '₹26/km', baseRate: 26 },
   urbania: { name: 'Force Urbania', models: 'Force Urbania Luxury (12 / 16 Seater)', seats: '12-16 Seats', bags: '14 Bags', image: '/fleet-brand/Urbania.webp', perKm: '₹32/km', baseRate: 32 },
   bus: { name: 'Luxury Bus / Coach', models: '27 Seater Minibus / 45 Seater Volvo', seats: '27-45 Seats', bags: '45 Bags', image: '/fleet-brand/volvo bus.webp', perKm: '₹48/km', baseRate: 48 },
@@ -100,6 +100,11 @@ function CheckoutContent() {
     if (key.includes('bus')) return VEHICLE_INFO['bus'];
     if (key.includes('hatch')) return VEHICLE_INFO['hatchback'];
     return VEHICLE_INFO['sedan'];
+  }, [categoryId]);
+
+  // Group vehicle detection (Blocks automated online booking and requires manual quotation)
+  const isGroupVehicle = useMemo(() => {
+    return isGroupVehicleCategory(categoryId);
   }, [categoryId]);
 
   // Effective Doorstep Pickup & Drop Address Resolution (Dynamic Real-time Recalculation)
@@ -170,15 +175,15 @@ function CheckoutContent() {
 
     if (serviceType === 'one_way') {
       if (vehicle.name === 'Sedan') {
-        base = routeData.sedanFare || Math.max(1600, Math.round(dist * 11));
+        base = routeData.sedanFare || Math.max(1600, Math.round(dist * 12));
       } else if (vehicle.name === 'Hatchback') {
-        base = routeData.sedanFare ? Math.round(routeData.sedanFare * 0.88) : Math.max(1300, Math.round(dist * 10));
+        base = routeData.sedanFare ? Math.round(routeData.sedanFare * 0.88) : Math.max(1300, Math.round(dist * 11));
       } else if (vehicle.name === 'Maruti Ertiga' || vehicle.name === 'SUV / MUV') {
         base = routeData.ertigaFare || Math.max(2200, Math.round(dist * 15));
       } else if (vehicle.name === 'Innova Crysta') {
-        base = routeData.crystaFare || Math.max(3400, Math.round(dist * 20));
+        base = routeData.crystaFare || Math.max(3400, Math.round(dist * 22));
       } else if (vehicle.name === 'Toyota Innova') {
-        base = Math.max(2800, Math.round(dist * 18));
+        base = Math.max(2800, Math.round(dist * 19));
       } else if (vehicle.name === 'Tempo Traveller') {
         base = Math.max(4500, Math.round(dist * 26));
       } else if (vehicle.name === 'Force Urbania') {
@@ -225,6 +230,9 @@ function CheckoutContent() {
 
   // Background server fare verification
   useEffect(() => {
+    if (isGroupVehicle) {
+      return;
+    }
     let isCancelled = false;
     const travelDateTime = rawDate ? `${rawDate}T${rawTime}:00` : new Date().toISOString();
 
@@ -256,7 +264,7 @@ function CheckoutContent() {
     return () => {
       isCancelled = true;
     };
-  }, [serviceType, categoryId, routeId, rawDate, rawTime, routeData.distanceKm, selectedAddOns]);
+  }, [serviceType, categoryId, routeId, rawDate, rawTime, routeData.distanceKm, selectedAddOns, isGroupVehicle]);
 
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
@@ -342,6 +350,29 @@ function CheckoutContent() {
       setIsSubmitting(false);
     }
   };
+
+  // Group Vehicle Manual Quotation WhatsApp Link
+  const whatsappGroupEnquiryUrl = useMemo(() => {
+    const lines = [
+      '🚖 *URGENT TAXIS — GROUP VEHICLE QUOTATION INQUIRY*',
+      '━━━━━━━━━━━━━━━━━━━━',
+      '✨ *Fast To Your Destination – Your Quick Ride Solution!*',
+      '',
+      '📋 *TRIP DETAILS*',
+      `• 🚗 *Vehicle:* *${vehicle.name}* (${vehicle.models})`,
+      `• 👥 *Seating Capacity:* ${vehicle.seats} • ${vehicle.bags}`,
+      `• 📍 *Pickup:* ${effectivePickup}`,
+      `• 🏁 *Drop:* ${effectiveDrop}`,
+      `• 🛣️ *Distance:* ~${routeData.distanceKm} km (${routeData.durationText})`,
+      `• 📅 *Schedule:* ${formattedDate} at ${formattedTime}`,
+      '',
+      'Please check vehicle availability, permits, and provide a customized group rate.',
+      '',
+      '📞 *Helpline:* +91 7310651940 | Masuri, Ghaziabad',
+      '💬 *WhatsApp:* +91 8595066033',
+    ];
+    return `https://wa.me/${SITE_CONFIG.whatsappRaw}?text=${encodeURIComponent(lines.join('\n'))}`;
+  }, [vehicle, effectivePickup, effectiveDrop, routeData, formattedDate, formattedTime]);
 
   // WhatsApp quick booking link
   const whatsappBookingUrl = useMemo(() => {
@@ -470,10 +501,10 @@ function CheckoutContent() {
             <div className="space-y-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="px-2.5 py-0.5 bg-brand-green text-white rounded-full text-[10px] font-black uppercase tracking-wider">
-                  {serviceType === 'one_way' ? 'One-Way Outstation' : serviceType === 'round_trip' ? 'Round-Trip' : 'Cab Booking'}
+                  {isGroupVehicle ? 'Group Fleet Enquiry' : serviceType === 'one_way' ? 'One-Way Outstation' : serviceType === 'round_trip' ? 'Round-Trip' : 'Cab Booking'}
                 </span>
                 <span className="text-xs text-slate-300 font-semibold">
-                  Step 3 of 4: Enter Passenger &amp; Pickup Address
+                  {isGroupVehicle ? 'Customized Quotation & Manual Dispatch' : 'Step 3 of 4: Enter Passenger &amp; Pickup Address'}
                 </span>
               </div>
               <h1 className="text-base sm:text-2xl font-black text-white tracking-tight leading-snug flex items-center gap-2 flex-wrap break-words">
@@ -513,6 +544,85 @@ function CheckoutContent() {
           </div>
         )}
 
+        {isGroupVehicle ? (
+          <div className="max-w-3xl mx-auto bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200 text-center space-y-6 my-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-xs font-black uppercase tracking-wider">
+              <span>⚠️</span> Manual Quotation Required
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                {vehicle.name}
+              </h2>
+              <p className="text-sm font-semibold text-slate-600">
+                {vehicle.models} • {vehicle.seats} • {vehicle.bags}
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-4 sm:p-6 border border-slate-200/80 text-left space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Trip Summary</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div>
+                  <span className="text-slate-500 text-xs block">Pickup Location</span>
+                  <strong className="text-slate-800">{pickupCity}</strong>
+                </div>
+                <div>
+                  <span className="text-slate-500 text-xs block">Drop Location</span>
+                  <strong className="text-slate-800">{dropCity}</strong>
+                </div>
+                <div>
+                  <span className="text-slate-500 text-xs block">Estimated Distance</span>
+                  <strong className="text-slate-800">~{routeData.distanceKm} km ({routeData.durationText})</strong>
+                </div>
+                <div>
+                  <span className="text-slate-500 text-xs block">Travel Schedule</span>
+                  <strong className="text-slate-800">{formattedDate} at {formattedTime}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-blue-50/70 border border-blue-200/60 rounded-2xl p-4 sm:p-5 text-left text-xs text-slate-700 space-y-2">
+              <div className="font-bold text-brand-blue flex items-center gap-1.5 text-sm">
+                <FaInfoCircle className="w-4 h-4 text-brand-blue" />
+                Why is automated online booking unavailable for this vehicle?
+              </div>
+              <p className="leading-relaxed text-slate-600">
+                Group travel vehicles (Tempo Travellers, Force Urbanias, and Luxury Buses) require route-specific commercial permits, state passenger manifests, seating layout alignment, and driver route scheduling. Instant online automated booking is not permitted for this fleet class.
+              </p>
+              <p className="leading-relaxed text-slate-600 font-semibold">
+                Please contact our 24x7 commercial reservations desk directly for an instant customized tariff quote, vehicle availability check, and immediate dispatch reservation.
+              </p>
+            </div>
+
+            {/* Direct Action Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <a
+                href={`tel:${SITE_CONFIG.phoneRaw}`}
+                className="flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-brand-blue text-white font-black text-sm hover:bg-brand-blue-hover transition-all shadow-md hover:shadow-lg"
+              >
+                <span>📞</span> Call Now (+91 7310651940)
+              </a>
+              <a
+                href={whatsappGroupEnquiryUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-brand-green text-white font-black text-sm hover:bg-brand-green-hover transition-all shadow-md hover:shadow-lg"
+              >
+                <span>💬</span> WhatsApp Enquiry (+91 8595066033)
+              </a>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-3 text-xs text-slate-500">
+              <span>Need instant online booking?</span>
+              <Link
+                href={`/cabs?serviceType=${serviceType}&pickup=${encodeURIComponent(pickupCity)}&drop=${encodeURIComponent(dropCity)}&km=${routeData.distanceKm}`}
+                className="font-bold text-brand-blue hover:underline inline-flex items-center gap-1"
+              >
+                Choose Sedan / Ertiga / Innova Crysta ➔
+              </Link>
+            </div>
+          </div>
+        ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
           
           {/* ── LEFT COLUMN: MMT TRIP & PASSENGER FORMS (8 COLS) ── */}
@@ -1049,6 +1159,7 @@ function CheckoutContent() {
           </div>
 
         </div>
+        )}
       </main>
 
     </div>

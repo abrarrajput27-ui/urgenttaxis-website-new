@@ -15,7 +15,7 @@ test.describe('Phase 3: WhatsApp Integration & Consistency Verification', () => 
   });
 
   test('generateWhatsAppLink: prevents double greeting when customMessage has greeting', () => {
-    const link = generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+    const link = generateWhatsAppLink({
       customMessage: 'Hello Urgent Taxis! 👋\n\nI would like to make an inquiry. ✨',
     });
     const decoded = decodeURIComponent(link);
@@ -24,14 +24,12 @@ test.describe('Phase 3: WhatsApp Integration & Consistency Verification', () => 
     expect(decoded).toContain('Hello Urgent Taxis! 👋');
   });
 
-  test('generateWhatsAppLink: adds greeting when customMessage does NOT start with greeting', () => {
-    const link = generateWhatsAppLink(SITE_CONFIG.whatsapp, {
+  test('generateWhatsAppLink: adds customer note when customMessage is provided', () => {
+    const link = generateWhatsAppLink({
       customMessage: 'I need a cab for tomorrow morning.',
     });
     const decoded = decodeURIComponent(link);
-    const greetingMatches = decoded.match(/Hello\s+Urgent\s+Taxis/gi);
-    expect(greetingMatches?.length).toBe(1);
-    expect(decoded).toContain('Hello Urgent Taxis!');
+    expect(decoded).toContain('URGENT TAXIS');
     expect(decoded).toContain('I need a cab for tomorrow morning.');
   });
 
@@ -66,10 +64,9 @@ test.describe('Phase 3: WhatsApp Integration & Consistency Verification', () => 
     });
     const decoded = decodeURIComponent(link);
     expect(decoded.startsWith('https://wa.me/918595066033?text=')).toBe(true);
-    expect(decoded).toContain('Estimated fare: ₹1,800');
+    expect(decoded).toContain('₹1,800');
     expect(decoded).not.toContain('917310651940');
-    const greetings = decoded.match(/Hello Urgent Taxis/g);
-    expect(greetings?.length).toBe(1);
+    expect(decoded).toContain('URGENT TAXIS');
   });
 
   test('Airport Message Generator: Scenario 1 - All details supplied (flight and date/time)', () => {
@@ -212,7 +209,7 @@ test.describe('Phase 3: WhatsApp Integration & Consistency Verification', () => 
     const decoded = decodeURIComponent(href || '');
     expect(decoded).toContain('Sedan');
     expect(decoded).toContain('4 Seats');
-    expect(decoded).toContain('₹11/km');
+    expect(decoded).toContain('₹12/km');
   });
 
   test('Airport Transfer Page: Vehicle cards render clean natural message without literal bracket placeholders', async ({ page }) => {

@@ -90,9 +90,9 @@ async function resolveRouteBySlug(slug: string) {
     const accurate = resolveAccurateRoute(originName, destName);
     const distance = accurate.distanceKm;
     const durationText = accurate.durationText || `${Math.round(distance / 50)} - ${Math.round(distance / 45)} Hours`;
-    const sedanFare = Math.max(1500, Math.round(distance * 11));
+    const sedanFare = Math.max(1500, Math.round(distance * 12));
     const ertigaFare = Math.max(2200, Math.round(distance * 15));
-    const crystaFare = Math.max(3000, Math.round(distance * 20));
+    const crystaFare = Math.max(3000, Math.round(distance * 22));
 
     return {
       id: `dynamic-${slug}`,
@@ -142,7 +142,7 @@ export async function generateMetadata({ params }: DynamicRoutePageProps) {
   const originState = getLocationState(originName);
   const destState = getLocationState(destName);
   const dist = route.estimated_distance_km || 250;
-  const sedanStart = route.sedanFare || Math.round(dist * 11);
+  const sedanStart = route.sedanFare || Math.round(dist * 12);
 
   return constructMetadata({
     title: `${originName} to ${destName} Taxi Service (${destState}) | Verified AC Cabs`,
@@ -216,10 +216,10 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
     return Math.round(distance * fallbackRate);
   };
 
-  const hatchbackFareTotal = Math.max(1200, Math.round(distance * 10));
-  const sedanFareTotal = parseFare(route.sedanFare, 11);
+  const hatchbackFareTotal = Math.max(1200, Math.round(distance * 11));
+  const sedanFareTotal = parseFare(route.sedanFare, 12);
   const ertigaFareTotal = parseFare(route.ertigaFare, 15);
-  const crystaFareTotal = parseFare(route.crystaFare, 20);
+  const crystaFareTotal = parseFare(route.crystaFare, 22);
   const tempoFareTotal = Math.max(3500, Math.round(distance * 26));
 
   const breadcrumbItems = [
@@ -328,7 +328,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       models: 'WagonR, Swift or similar',
       seats: 4,
       bags: 2,
-      ratePerKm: 10,
+      ratePerKm: 11,
       totalFare: hatchbackFareTotal,
       image: '/fleet-brand/Hatchback.webp',
       checkoutCat: 'hatchback',
@@ -338,7 +338,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       models: 'Dzire, Etios or similar',
       seats: 4,
       bags: 3,
-      ratePerKm: 11,
+      ratePerKm: 12,
       totalFare: sedanFareTotal,
       image: '/fleet-brand/dzire.webp',
       checkoutCat: 'sedan',
@@ -358,7 +358,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       models: 'Toyota Innova Crysta / Hycross',
       seats: 7,
       bags: 4,
-      ratePerKm: 20,
+      ratePerKm: 22,
       totalFare: crystaFareTotal,
       image: '/fleet-brand/Innova Crysta.webp',
       checkoutCat: 'executive-suv',

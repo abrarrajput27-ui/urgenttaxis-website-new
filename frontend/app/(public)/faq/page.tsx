@@ -21,7 +21,7 @@ const FAQ_CATEGORIES = [
       },
       {
         q: 'How does the Round-Trip daily minimum billing work?',
-        a: 'All round-trip outstation journeys carry an industry-standard minimum of 250 km per calendar day. If your total travel exceeds the minimum threshold, extra distance is billed at the standard category per-km rate (e.g., ₹11/km for Sedan, ₹15/km for SUV).',
+        a: 'All round-trip outstation journeys carry an industry-standard minimum of 250 km per calendar day. If your total travel exceeds the minimum threshold, extra distance is billed at the standard category per-km rate (e.g., ₹12/km for Sedan, ₹15/km for SUV).',
       },
       {
         q: 'Are toll taxes and state border taxes included in the fare?',

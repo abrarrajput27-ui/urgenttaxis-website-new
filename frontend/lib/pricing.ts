@@ -27,14 +27,14 @@ export const ROUND_TRIP_MIN_KM_PER_DAY = 250;
 
 /** Extra KM Rate per vehicle class */
 export const EXTRA_KM_RATES: Record<string, number> = {
-  hatchback: 10,
-  sedan: 11,
+  hatchback: 11,
+  sedan: 12,
   'suv-muv': 15,
   suv_mpv: 15,
   suv: 15,
-  'executive-suv': 20,
-  innova: 20,
-  innova_crysta: 20,
+  'executive-suv': 22,
+  innova: 19,
+  innova_crysta: 22,
   tempo12: 24,
   tempo16: 26,
   tempo20: 28,
@@ -282,9 +282,9 @@ export function resolveOneWayFare(
   // 2. Universal Dynamic Calculation for all addresses, cities & unmapped locations
   const accurate = resolveAccurateRoute(origin, destination, knownDistanceKm || 0);
   const distanceKm = accurate.distanceKm;
-  const sedanFare = accurate.sedanFare || Math.max(1600, Math.round(distanceKm * 11));
+  const sedanFare = accurate.sedanFare || Math.max(1600, Math.round(distanceKm * 12));
   const ertigaFare = accurate.ertigaFare || Math.max(2200, Math.round(distanceKm * 15));
-  const crystaFare = accurate.crystaFare || Math.max(3400, Math.round(distanceKm * 20));
+  const crystaFare = accurate.crystaFare || Math.max(3400, Math.round(distanceKm * 22));
   const startsAt = Math.min(sedanFare, ertigaFare, crystaFare);
   const estimatedToll = Math.round(distanceKm * 1.6);
 
@@ -680,3 +680,4 @@ export function buildWhatsAppBookingLink(params: WhatsAppBookingParams): string 
 // 8. RE-EXPORT CHARGEABLE VEHICLE ADD-ONS (PHASE 3)
 // -----------------------------------------------------------------------------
 export * from './pricing/add-ons';
+export * from './pricing/routes';

@@ -7,7 +7,12 @@ import {
   calculateMasterAirportTransferFare,
   MasterFareInput,
 } from '@/lib/pricing/engine';
-import { calculateAdvanceToken } from '@/lib/pricing';
+import {
+  calculateAdvanceToken,
+  findVerifiedMasterRoute,
+  getVerifiedRouteCorridorFare,
+  validateAndNormalizeVehicleCategory,
+} from '@/lib/pricing';
 import { validateAndComputeAddOns } from '@/lib/pricing/add-ons';
 import { sendBookingConfirmationEmail } from '@/lib/email/booking-mailer';
 import { randomBytes } from 'crypto';
@@ -48,6 +53,37 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
     }
 
+    // Strict vehicle category validation
+    const vehicleValidation = validateAndNormalizeVehicleCategory(categoryId);
+    if (!vehicleValidation.isValid || !vehicleValidation.normalizedCategory) {
+      return NextResponse.json(
+        { success: false, message: vehicleValidation.error || 'Invalid vehicle category.' },
+        { status: 400 }
+      );
+    }
+
+    // Strict group vehicle online booking restriction (Requires manual quotation)
+    if (vehicleValidation.requiresManualQuote || !vehicleValidation.isOnlineBookingPermitted) {
+      return NextResponse.json(
+        {
+          success: false,
+          code: 'GROUP_VEHICLE_QUOTE_REQUIRED',
+          isFareOnRequest: true,
+          message:
+            vehicleValidation.quoteRequiredMessage ||
+            'Group vehicles (Tempo Traveller, Force Urbania, and Luxury Buses) require manual quotation and dispatch confirmation. Please contact our 24x7 desk via Call (+91 7310651940) or WhatsApp (+91 8595066033).',
+          contact: {
+            phone: '7310651940',
+            phoneDisplay: '+91 7310651940',
+            whatsapp: '8595066033',
+            whatsappUrl: 'https://wa.me/918595066033',
+          },
+        },
+        { status: 400 }
+      );
+    }
+    const normalizedCategory = vehicleValidation.normalizedCategory;
+
     // Server-side validation of chargeable add-ons
     const addOnValidation = validateAndComputeAddOns(selectedAddOns, categoryId);
     if (addOnValidation.errors.length > 0) {
@@ -82,50 +118,77 @@ export async function POST(req: NextRequest) {
       rule = data;
     }
 
-    const catLower = String(categoryId).toLowerCase();
-    const isHatch = catLower.includes('hatch');
-    const isErtiga = catLower.includes('ertiga');
-    const isSuv = (catLower.includes('suv') || catLower.includes('muv') || isErtiga) && !catLower.includes('exec') && !catLower.includes('crysta');
-    const isInnova = catLower.includes('innova') && !catLower.includes('crysta');
-    const isExec = catLower.includes('exec') || catLower.includes('crysta');
-    const isTempo = catLower.includes('tempo');
-    const isUrbania = catLower.includes('urbania');
-    const isBus = catLower.includes('bus');
+    const isHatch = normalizedCategory === 'hatchback';
+    const isSuv = normalizedCategory === 'suv-muv';
+    const isErtiga = normalizedCategory === 'suv-muv';
+    const isInnova = normalizedCategory === 'innova';
+    const isExec = normalizedCategory === 'executive-suv';
+    const isTempo = normalizedCategory === 'tempo';
+    const isUrbania = normalizedCategory === 'urbania';
+    const isBus = normalizedCategory === 'bus';
 
     if (!rule) {
       if (serviceType === 'one_way') {
-        let baseRate = 11;
-        let extraKmRate = 11;
-        if (isHatch) { baseRate = 10; extraKmRate = 10; }
-        else if (isErtiga || isSuv) { baseRate = 15; extraKmRate = 15; }
-        else if (isInnova) { baseRate = 18; extraKmRate = 18; }
-        else if (isExec) { baseRate = 20; extraKmRate = 20; }
-        else if (isTempo) { baseRate = 26; extraKmRate = 26; }
-        else if (isUrbania) { baseRate = 32; extraKmRate = 32; }
-        else if (isBus) { baseRate = 48; extraKmRate = 48; }
+        const verifiedRoute = findVerifiedMasterRoute(routeId, pickupAddress, dropAddress);
 
-        rule = {
-          id: `standard-ow-${categoryId}`,
-          route_id: routeId || '',
-          category_id: categoryId,
-          base_fare: Math.round(numericDistance * baseRate),
-          included_km: numericDistance,
-          extra_km_rate: extraKmRate,
-          driver_allowance: 0,
-          night_charge: 0,
-          default_included_charges: ['Fuel', 'Driver Allowance'],
-          default_excluded_charges: ['Toll Tax', 'State Tax', 'Parking'],
-          is_active: true,
-          created_at: new Date().toISOString(),
-        };
+        let extraKmRate = 12;
+        if (isHatch) { extraKmRate = 11; }
+        else if (isErtiga || isSuv) { extraKmRate = 15; }
+        else if (isInnova) { extraKmRate = 19; }
+        else if (isExec) { extraKmRate = 22; }
+        else if (isTempo) { extraKmRate = 26; }
+        else if (isUrbania) { extraKmRate = 32; }
+        else if (isBus) { extraKmRate = 48; }
+
+        if (verifiedRoute) {
+          const verifiedFare = getVerifiedRouteCorridorFare(verifiedRoute, categoryId, numericDistance);
+          rule = {
+            id: `master-ow-${verifiedRoute.id}-${categoryId}`,
+            route_id: verifiedRoute.id,
+            category_id: categoryId,
+            base_fare: verifiedFare.fare,
+            included_km: Math.max(verifiedRoute.estimated_distance_km || 0, numericDistance),
+            extra_km_rate: extraKmRate,
+            driver_allowance: 0,
+            night_charge: 0,
+            default_included_charges: ['Fuel', 'Driver Allowance'],
+            default_excluded_charges: ['Toll Tax', 'State Tax', 'Parking'],
+            is_active: true,
+            created_at: new Date().toISOString(),
+          };
+        } else {
+          // If no verified master route corridor exists, a valid distance is required
+          if (numericDistance <= 0) {
+            return NextResponse.json(
+              { success: false, message: 'Valid travel distance is required for custom outstation route calculation.' },
+              { status: 400 }
+            );
+          }
+          const baseRate = vehicleValidation.perKmRate || 12;
+
+          rule = {
+            id: `standard-ow-${categoryId}`,
+            route_id: routeId || '',
+            category_id: categoryId,
+            base_fare: Math.round(numericDistance * baseRate),
+            included_km: numericDistance,
+            extra_km_rate: extraKmRate,
+            driver_allowance: 0,
+            night_charge: 0,
+            default_included_charges: ['Fuel', 'Driver Allowance'],
+            default_excluded_charges: ['Toll Tax', 'State Tax', 'Parking'],
+            is_active: true,
+            created_at: new Date().toISOString(),
+          };
+        }
       } else if (serviceType === 'round_trip') {
-        let perKmRate = 11;
+        let perKmRate = 12;
         let minKm = 250;
         let driverAllowance = 400;
-        if (isHatch) { perKmRate = 10; minKm = 250; driverAllowance = 400; }
+        if (isHatch) { perKmRate = 11; minKm = 250; driverAllowance = 400; }
         else if (isErtiga || isSuv) { perKmRate = 15; minKm = 250; driverAllowance = 400; }
-        else if (isInnova) { perKmRate = 18; minKm = 250; driverAllowance = 500; }
-        else if (isExec) { perKmRate = 20; minKm = 250; driverAllowance = 500; }
+        else if (isInnova) { perKmRate = 19; minKm = 250; driverAllowance = 500; }
+        else if (isExec) { perKmRate = 22; minKm = 250; driverAllowance = 500; }
         else if (isTempo) { perKmRate = 26; minKm = 250; driverAllowance = 600; }
         else if (isUrbania) { perKmRate = 32; minKm = 250; driverAllowance = 700; }
         else if (isBus) { perKmRate = 48; minKm = 250; driverAllowance = 1000; }
@@ -246,11 +309,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Fare calculation failed.' }, { status: 500 });
     }
 
-    // Phase 3 Add-on Calculation
+    // Phase 3 Add-on Calculation & Authoritative Server-Side Fare Enforcement
+    // Client calculatedBaseFare is validated against authoritative server calculation (calcResult.customerPayable)
+    // to prevent client-side manipulation while preserving verified fixed corridor fares.
     const reqBaseFare = Number(calculatedBaseFare);
-    const baseVehicleFare = (reqBaseFare && reqBaseFare > 0 && Math.abs(reqBaseFare - calcResult.customerPayable) < 2500)
-      ? reqBaseFare
-      : calcResult.customerPayable;
+    if (reqBaseFare > 0 && Math.abs(reqBaseFare - calcResult.customerPayable) > 50) {
+      console.warn(
+        `[Pricing Guard] Client base fare (₹${reqBaseFare}) differs from authoritative server fare (₹${calcResult.customerPayable}) for route ${routeId || 'generic'} (${categoryId}). Enforcing server fare.`
+      );
+    }
+    const baseVehicleFare = calcResult.customerPayable;
     const finalCustomerPayable = baseVehicleFare + addOnValidation.addOnTotal;
     const finalTokenAmount = calculateAdvanceToken(finalCustomerPayable, 30);
     const finalBalanceAmount = finalCustomerPayable - finalTokenAmount;
@@ -288,14 +356,39 @@ export async function POST(req: NextRequest) {
         const SLUG_TO_UUID: Record<string, string> = {
           'sedan': 'b8f8e608-491d-4c7c-847d-14456fb41696',
           'cat-sedan': 'b8f8e608-491d-4c7c-847d-14456fb41696',
+          'dzire': 'b8f8e608-491d-4c7c-847d-14456fb41696',
+          'etios': 'b8f8e608-491d-4c7c-847d-14456fb41696',
           'suv-muv': '1550e012-7d85-4829-b912-1f0e2cf99d84',
           'cat-suv': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'suv': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'muv': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'mpv': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'ertiga': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'carens': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'innova': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'cat-innova': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'toyota-innova': '1550e012-7d85-4829-b912-1f0e2cf99d84',
           'executive-suv': '833d9fb3-65b6-4846-8a9d-44ba6ace6942',
           'cat-exec-suv': '833d9fb3-65b6-4846-8a9d-44ba6ace6942',
+          'crysta': '833d9fb3-65b6-4846-8a9d-44ba6ace6942',
+          'innova-crysta': '833d9fb3-65b6-4846-8a9d-44ba6ace6942',
+          'innova_crysta': '833d9fb3-65b6-4846-8a9d-44ba6ace6942',
           'hatchback': '9e1014d2-71de-43cf-9b73-128773002872',
           'cat-hatchback': '9e1014d2-71de-43cf-9b73-128773002872',
+          'wagonr': '9e1014d2-71de-43cf-9b73-128773002872',
+          'swift': '9e1014d2-71de-43cf-9b73-128773002872',
+          'tempo': '1550e012-7d85-4829-b912-1f0e2cf99d84',
+          'urbania': '833d9fb3-65b6-4846-8a9d-44ba6ace6942',
+          'bus': '1550e012-7d85-4829-b912-1f0e2cf99d84',
         };
-        resolvedCategoryUuid = SLUG_TO_UUID[categoryId] || 'b8f8e608-491d-4c7c-847d-14456fb41696';
+        const mappedUuid = SLUG_TO_UUID[categoryId.toLowerCase().trim()] || SLUG_TO_UUID[normalizedCategory];
+        if (!mappedUuid) {
+          return NextResponse.json(
+            { success: false, message: `Vehicle category '${categoryId}' could not be resolved to a valid fleet record.` },
+            { status: 400 }
+          );
+        }
+        resolvedCategoryUuid = mappedUuid;
       }
     }
 
@@ -370,7 +463,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 9. Dispatch Transactional Confirmation Email (Non-blocking, never fails booking)
-    const categoryName = isExec ? 'Executive SUV (Innova Crysta)' : isSuv ? 'SUV / MUV (Ertiga / Carens)' : isHatch ? 'Hatchback (WagonR / Swift)' : 'Sedan (Dzire / Etios)';
+    const categoryName = vehicleValidation.displayName || 'Commercial AC Cab';
     sendBookingConfirmationEmail(bookingReference, {
       bookingId: booking.id,
       customerId: customerId,

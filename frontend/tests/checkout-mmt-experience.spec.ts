@@ -61,11 +61,12 @@ test.describe('Trip & Passenger Details Page (MakeMyTrip Experience)', () => {
     await expect(page.locator('h2:has-text("Selected Cab: Innova Crysta")')).toBeVisible();
     await expect(page.locator('text=7 Seats').first()).toBeVisible();
 
-    // Test with Tempo Traveller
+    // Test with Tempo Traveller (Phase 2.13: Group vehicle blocks online booking and requires manual quotation)
     await page.goto('http://localhost:3000/checkout?pickup=Delhi&drop=Shimla&serviceType=one_way&categoryId=tempo&km=350&date=2026-11-08&time=06:00', {
       waitUntil: 'domcontentloaded',
     });
-    await expect(page.locator('h2:has-text("Selected Cab: Tempo Traveller")')).toBeVisible();
+    await expect(page.locator('text=Manual Quotation Required').first()).toBeVisible();
+    await expect(page.locator('h2:has-text("Tempo Traveller")')).toBeVisible();
   });
 
   test('3. Full funnel navigation from Home -> Cabs -> Checkout works seamlessly', async ({ page }) => {

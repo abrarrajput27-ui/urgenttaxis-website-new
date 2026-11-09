@@ -675,7 +675,7 @@ export const BLOG_ARTICLES: Record<string, BlogArticle> = {
       {
         heading: 'Core Components of an Outstation Taxi Bill',
         paragraphs: [
-          '1. Base Distance Charge: Charged at a fixed per-kilometer rate (e.g., ₹11/km for Sedan, ₹15/km for Ertiga).',
+          '1. Base Distance Charge: Charged at a fixed per-kilometer rate (e.g., ₹12/km for Sedan, ₹15/km for Ertiga).',
           '2. Daily Minimum Kilometers: For multi-day round trips, a minimum baseline of 250 km per calendar day applies.',
           '3. Driver Night Allowance: Standard ₹300 per night for late driving between 10:00 PM and 06:00 AM.',
           '4. Toll & State Taxes: Paid at actual electronic FASTag and state border checkpost rates.',

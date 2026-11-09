@@ -8,7 +8,12 @@ import {
   MasterFareInput,
   MasterFareResult,
 } from '@/lib/pricing/engine';
-import { calculateAdvanceToken } from '@/lib/pricing';
+import {
+  calculateAdvanceToken,
+  findVerifiedMasterRoute,
+  getVerifiedRouteCorridorFare,
+  validateAndNormalizeVehicleCategory,
+} from '@/lib/pricing';
 import { validateAndComputeAddOns } from '@/lib/pricing/add-ons';
 
 export interface PublicQuotationDTO {
@@ -63,7 +68,18 @@ export async function POST(request: NextRequest) {
       pickupDateTime,
       fuelTypePreference,
       selectedAddOns = [],
-    } = body as Partial<MasterFareInput> & { stops?: string[]; selectedAddOns?: string[] };
+      origin,
+      destination,
+      pickupAddress,
+      dropAddress,
+    } = body as Partial<MasterFareInput> & {
+      stops?: string[];
+      selectedAddOns?: string[];
+      origin?: string;
+      destination?: string;
+      pickupAddress?: string;
+      dropAddress?: string;
+    };
 
     // 1. Basic input validation
     if (!serviceType || !categoryId) {
@@ -72,6 +88,37 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Strict vehicle category validation
+    const vehicleValidation = validateAndNormalizeVehicleCategory(categoryId);
+    if (!vehicleValidation.isValid || !vehicleValidation.normalizedCategory) {
+      return NextResponse.json(
+        { success: false, isFareOnRequest: true, message: vehicleValidation.error || 'Invalid vehicle category.' },
+        { status: 400 }
+      );
+    }
+
+    // Strict group vehicle online quotation block (Requires manual quotation)
+    if (vehicleValidation.requiresManualQuote || !vehicleValidation.isOnlineBookingPermitted) {
+      return NextResponse.json(
+        {
+          success: false,
+          code: 'GROUP_VEHICLE_QUOTE_REQUIRED',
+          isFareOnRequest: true,
+          message:
+            vehicleValidation.quoteRequiredMessage ||
+            'Group vehicles (Tempo Traveller, Force Urbania, and Luxury Buses) require manual quotation and dispatch confirmation. Please contact our 24x7 desk via Call (+91 7310651940) or WhatsApp (+91 8595066033).',
+          contact: {
+            phone: '7310651940',
+            phoneDisplay: '+91 7310651940',
+            whatsapp: '8595066033',
+            whatsappUrl: 'https://wa.me/918595066033',
+          },
+        },
+        { status: 400 }
+      );
+    }
+    const normalizedCategory = vehicleValidation.normalizedCategory;
 
     // Server-side validation of chargeable add-ons
     const addOnValidation = validateAndComputeAddOns(selectedAddOns, categoryId);
@@ -151,57 +198,84 @@ export async function POST(request: NextRequest) {
 
     // 4. Calculate fare using authoritative server-side engine
     let calcResult: MasterFareResult | null = null;
-    const catLower = categoryId.toLowerCase();
-    const isHatch = catLower.includes('hatch');
-    const isErtiga = catLower.includes('ertiga');
-    const isSuv = (catLower.includes('suv') || catLower.includes('muv') || isErtiga) && !catLower.includes('exec') && !catLower.includes('crysta');
-    const isInnova = catLower.includes('innova') && !catLower.includes('crysta');
-    const isExec = catLower.includes('exec') || catLower.includes('crysta');
-    const isTempo = catLower.includes('tempo');
-    const isUrbania = catLower.includes('urbania');
-    const isBus = catLower.includes('bus');
+    const isHatch = normalizedCategory === 'hatchback';
+    const isSuv = normalizedCategory === 'suv-muv';
+    const isErtiga = normalizedCategory === 'suv-muv';
+    const isInnova = normalizedCategory === 'innova';
+    const isExec = normalizedCategory === 'executive-suv';
+    const isTempo = normalizedCategory === 'tempo';
+    const isUrbania = normalizedCategory === 'urbania';
+    const isBus = normalizedCategory === 'bus';
 
     if (serviceType === 'one_way') {
       let rule = (oneWayRules || []).find((r) => r.route_id === routeId && r.category_id === categoryId);
       if (!rule) {
-        // Authoritative fallback rule for one-way journeys
-        let baseRate = 11;
-        let extraKmRate = 11;
-        if (isHatch) { baseRate = 10; extraKmRate = 10; }
-        else if (isErtiga || isSuv) { baseRate = 15; extraKmRate = 15; }
-        else if (isInnova) { baseRate = 18; extraKmRate = 18; }
-        else if (isExec) { baseRate = 20; extraKmRate = 20; }
-        else if (isTempo) { baseRate = 26; extraKmRate = 26; }
-        else if (isUrbania) { baseRate = 32; extraKmRate = 32; }
-        else if (isBus) { baseRate = 48; extraKmRate = 48; }
+        const verifiedRoute = findVerifiedMasterRoute(routeId, pickupAddress || origin, dropAddress || destination);
 
-        rule = {
-          id: `standard-ow-${categoryId}`,
-          route_id: routeId || '',
-          category_id: categoryId,
-          base_fare: Math.round(Number(actualDistanceKm) * baseRate),
-          included_km: Number(actualDistanceKm),
-          extra_km_rate: extraKmRate,
-          driver_allowance: 0,
-          night_charge: 0,
-          default_included_charges: ['Fuel', 'Driver Allowance'],
-          default_excluded_charges: ['Toll Tax', 'State Tax', 'Parking'],
-          is_active: true,
-          created_at: new Date().toISOString(),
-        };
+        let extraKmRate = 12;
+        if (isHatch) { extraKmRate = 11; }
+        else if (isErtiga || isSuv) { extraKmRate = 15; }
+        else if (isInnova) { extraKmRate = 19; }
+        else if (isExec) { extraKmRate = 22; }
+        else if (isTempo) { extraKmRate = 26; }
+        else if (isUrbania) { extraKmRate = 32; }
+        else if (isBus) { extraKmRate = 48; }
+
+        if (verifiedRoute) {
+          const verifiedFare = getVerifiedRouteCorridorFare(verifiedRoute, categoryId, Number(actualDistanceKm));
+          rule = {
+            id: `master-ow-${verifiedRoute.id}-${categoryId}`,
+            route_id: verifiedRoute.id,
+            category_id: categoryId,
+            base_fare: verifiedFare.fare,
+            included_km: Math.max(verifiedRoute.estimated_distance_km || 0, Number(actualDistanceKm)),
+            extra_km_rate: extraKmRate,
+            driver_allowance: 0,
+            night_charge: 0,
+            default_included_charges: ['Fuel', 'Driver Allowance'],
+            default_excluded_charges: ['Toll Tax', 'State Tax', 'Parking'],
+            is_active: true,
+            created_at: new Date().toISOString(),
+          };
+        } else {
+          // If no verified master route corridor exists, a valid distance is required
+          const numDist = Number(actualDistanceKm) || 0;
+          if (numDist <= 0) {
+            return NextResponse.json(
+              { success: false, isFareOnRequest: true, message: 'Valid travel distance is required for custom outstation route calculation.' },
+              { status: 400 }
+            );
+          }
+          const baseRate = vehicleValidation.perKmRate || 12;
+
+          rule = {
+            id: `standard-ow-${categoryId}`,
+            route_id: routeId || '',
+            category_id: categoryId,
+            base_fare: Math.round(numDist * baseRate),
+            included_km: numDist,
+            extra_km_rate: extraKmRate,
+            driver_allowance: 0,
+            night_charge: 0,
+            default_included_charges: ['Fuel', 'Driver Allowance'],
+            default_excluded_charges: ['Toll Tax', 'State Tax', 'Parking'],
+            is_active: true,
+            created_at: new Date().toISOString(),
+          };
+        }
       }
       calcResult = calculateMasterOneWayFare(calcInput, rule, dynamicRules || []);
     } else if (serviceType === 'round_trip') {
       let rule = (roundTripRules || []).find((r) => r.category_id === categoryId);
       if (!rule) {
         // Authoritative fallback rule for round-trip journeys
-        let perKmRate = 11;
+        let perKmRate = 12;
         let minKm = 250;
         let driverAllowance = 400;
-        if (isHatch) { perKmRate = 10; minKm = 250; driverAllowance = 400; }
+        if (isHatch) { perKmRate = 11; minKm = 250; driverAllowance = 400; }
         else if (isErtiga || isSuv) { perKmRate = 15; minKm = 250; driverAllowance = 400; }
-        else if (isInnova) { perKmRate = 18; minKm = 250; driverAllowance = 500; }
-        else if (isExec) { perKmRate = 20; minKm = 250; driverAllowance = 500; }
+        else if (isInnova) { perKmRate = 19; minKm = 250; driverAllowance = 500; }
+        else if (isExec) { perKmRate = 22; minKm = 250; driverAllowance = 500; }
         else if (isTempo) { perKmRate = 26; minKm = 250; driverAllowance = 600; }
         else if (isUrbania) { perKmRate = 32; minKm = 250; driverAllowance = 700; }
         else if (isBus) { perKmRate = 48; minKm = 250; driverAllowance = 1000; }

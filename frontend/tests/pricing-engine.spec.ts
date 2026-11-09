@@ -6,6 +6,10 @@ import {
   resolveOneWayFare,
   resolveAirportFare,
   buildWhatsAppBookingLink,
+  findVerifiedMasterRoute,
+  getVerifiedRouteCorridorFare,
+  validateAndNormalizeVehicleCategory,
+  resolveCanonicalPlace,
 } from '../lib/pricing';
 
 test.describe('Phase 1: Master Pricing Engine Unit Tests', () => {
@@ -50,23 +54,23 @@ test.describe('Phase 1: Master Pricing Engine Unit Tests', () => {
 
   test('Round Trip: Delhi to Agra (220 km one-way, 1 day, Sedan)', () => {
     // 220 km * 2 = 440 km round trip. Guaranteed min km = 250 km. Billable = 440 km.
-    // Base = 440 * 11 = 4840. Driver allowance = 400. Total = 5240.
+    // Base = 440 * 12 = 5280. Driver allowance = 400. Total = 5680.
     const rt = calculateRoundTripFare(220, 1, 'sedan');
     expect(rt.billableKm).toBe(440);
-    expect(rt.baseFare).toBe(4840);
+    expect(rt.baseFare).toBe(5280);
     expect(rt.totalDriverAllowance).toBe(400);
-    expect(rt.totalFare).toBe(5240);
-    expect(rt.tokenAmount).toBe(1570); // 5240 * 0.30 = 1572 -> 1570
-    expect(rt.workingExplanation).toContain('Billable 440 km × ₹11/km + Driver Allowance ₹400');
+    expect(rt.totalFare).toBe(5680);
+    expect(rt.tokenAmount).toBe(1700); // 5680 * 0.30 = 1704 -> 1700
+    expect(rt.workingExplanation).toContain('Billable 440 km × ₹12/km + Driver Allowance ₹400');
   });
 
   test('Round Trip: Minimum Daily Guarantee Applied (100 km one-way, 2 days, Sedan)', () => {
     // Total km = 200. Guaranteed = 250 * 2 = 500 km. Billable = 500 km.
-    // Base = 500 * 11 = 5500. Driver allowance = 800. Total = 6300.
+    // Base = 500 * 12 = 6000. Driver allowance = 800. Total = 6800.
     const rt = calculateRoundTripFare(100, 2, 'sedan');
     expect(rt.billableKm).toBe(500);
-    expect(rt.totalFare).toBe(6300);
-    expect(rt.tokenAmount).toBe(1890); // 6300 * 0.30 = 1890
+    expect(rt.totalFare).toBe(6800);
+    expect(rt.tokenAmount).toBe(2040); // 6800 * 0.30 = 2040
   });
 
   test('Master Route Resolution: Ghaziabad to Haridwar', () => {
@@ -120,5 +124,80 @@ test.describe('Phase 1: Master Pricing Engine Unit Tests', () => {
     expect(decoded).toContain('Haridwar');
     expect(decoded).toContain('₹3,499');
     expect(decoded).toContain('+91 7310651940');
+  });
+
+  test('Phase 2.9: Reverse Route Policy - Forward matches but unseeded reverse falls back to generic', () => {
+    // Delhi -> Nainital exists forward
+    const forward = findVerifiedMasterRoute(undefined, 'Delhi', 'Nainital');
+    expect(forward).not.toBeNull();
+    expect(forward!.sedanFare).toBe(4999);
+
+    // Nainital -> Delhi has no explicit reverse record -> returns null
+    const reverse = findVerifiedMasterRoute(undefined, 'Nainital', 'Delhi');
+    expect(reverse).toBeNull();
+
+    // Client submitting forward routeId on reverse route is rejected
+    const forcedForward = findVerifiedMasterRoute('delhi-to-nainital-taxi', 'Nainital', 'Delhi');
+    expect(forcedForward).toBeNull();
+
+    // Explicit directional pair preserves different fares
+    const ddnForward = findVerifiedMasterRoute(undefined, 'Delhi', 'Dehradun');
+    const ddnReverse = findVerifiedMasterRoute(undefined, 'Dehradun', 'Delhi');
+    expect(ddnForward).not.toBeNull();
+    expect(ddnReverse).not.toBeNull();
+    expect(ddnForward!.sedanFare).toBe(3999);
+    expect(ddnReverse!.sedanFare).toBe(3899);
+  });
+
+  test('Phase 2.9: Location Matching Security - Greater Noida and Noida strictly distinct', () => {
+    expect(resolveCanonicalPlace('Greater Noida')).toBe('Greater Noida');
+    expect(resolveCanonicalPlace('Pari Chowk, Greater Noida West')).toBe('Greater Noida');
+    expect(resolveCanonicalPlace('Sector 62, Noida')).toBe('Noida');
+    expect(resolveCanonicalPlace('Near Greater Noida Expressway, Sector 62, Noida')).toBe('AMBIGUOUS');
+
+    // Noida to Agra matches corridor; Greater Noida to Agra must NOT match
+    const noidaAgra = findVerifiedMasterRoute(undefined, 'Noida', 'Agra');
+    expect(noidaAgra).not.toBeNull();
+    expect(noidaAgra!.id).toBe('master-route-299');
+
+    const grNoidaAgra = findVerifiedMasterRoute(undefined, 'Greater Noida', 'Agra');
+    expect(grNoidaAgra).toBeNull();
+
+    // Ambiguous address returns null
+    const ambMatch = findVerifiedMasterRoute(undefined, 'Near Greater Noida Expressway, Sector 62, Noida', 'Agra');
+    expect(ambMatch).toBeNull();
+  });
+
+  test('Phase 2.9: Strict Vehicle Category Validation - Reject invalid categories and enforce approved rates', () => {
+    // Invalid categories
+    expect(validateAndNormalizeVehicleCategory(undefined).isValid).toBe(false);
+    expect(validateAndNormalizeVehicleCategory('').isValid).toBe(false);
+    expect(validateAndNormalizeVehicleCategory('helicopter').isValid).toBe(false);
+    expect(validateAndNormalizeVehicleCategory('rocket').isValid).toBe(false);
+
+    // Approved rates
+    expect(validateAndNormalizeVehicleCategory('hatchback').perKmRate).toBe(11);
+    expect(validateAndNormalizeVehicleCategory('sedan').perKmRate).toBe(12);
+    expect(validateAndNormalizeVehicleCategory('suv-muv').perKmRate).toBe(15);
+    expect(validateAndNormalizeVehicleCategory('innova').perKmRate).toBe(19);
+    expect(validateAndNormalizeVehicleCategory('executive-suv').perKmRate).toBe(22);
+    expect(validateAndNormalizeVehicleCategory('tempo').perKmRate).toBe(26);
+    expect(validateAndNormalizeVehicleCategory('urbania').perKmRate).toBe(32);
+    expect(validateAndNormalizeVehicleCategory('bus').perKmRate).toBe(48);
+
+    // Unsupported vehicle does NOT default to Sedan in corridor calculation
+    const route = findVerifiedMasterRoute(undefined, 'Delhi', 'Haldwani')!;
+    const badCorridor = getVerifiedRouteCorridorFare(route, 'helicopter');
+    expect(badCorridor.isVerified).toBe(false);
+    expect(badCorridor.fare).toBe(0);
+
+    // Valid vehicle classes get their distinct fares
+    const sedanCorridor = getVerifiedRouteCorridorFare(route, 'sedan');
+    expect(sedanCorridor.isVerified).toBe(true);
+    expect(sedanCorridor.fare).toBe(3999);
+
+    const ertigaCorridor = getVerifiedRouteCorridorFare(route, 'suv-muv');
+    expect(ertigaCorridor.isVerified).toBe(true);
+    expect(ertigaCorridor.fare).toBe(4999);
   });
 });

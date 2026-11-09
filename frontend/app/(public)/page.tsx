@@ -171,10 +171,10 @@ export default async function HomePage() {
           <div className="overflow-hidden relative w-full pb-8">
             <div className="flex gap-6 w-max animate-slow-slide hover:[animation-play-state:paused]">
             {[
-              { image: "/fleet-brand/Hatchback.webp", title: "Hatchback", models: "(WagonR, Swift, Celerio)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹10/km", localPrice: "₹1200", href: "/fleet/hatchback" },
-              { image: "/fleet-brand/dzire.webp", title: "Sedan", models: "(Dzire, Etios, Amaze)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹11/km", localPrice: "₹1500", href: "/fleet/sedan" },
+              { image: "/fleet-brand/Hatchback.webp", title: "Hatchback", models: "(WagonR, Swift, Celerio)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹11/km", localPrice: "₹1200", href: "/fleet/hatchback" },
+              { image: "/fleet-brand/dzire.webp", title: "Sedan", models: "(Dzire, Etios, Amaze)", seats: "4 Seats", bags: "2 Bags", ac: true, music: true, outstationPrice: "₹12/km", localPrice: "₹1500", href: "/fleet/sedan" },
               { image: "/fleet-brand/Ertiga.webp", title: "SUV / MPV", models: "(Ertiga, Triber, Carens)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹15/km", localPrice: "₹2000", href: "/fleet/suv-muv" },
-              { image: "/fleet-brand/Innova Crysta.webp", title: "Premium SUV", models: "(Innova Crysta, Hycross)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹20/km", localPrice: "₹2500", href: "/fleet/executive-suv" },
+              { image: "/fleet-brand/Innova Crysta.webp", title: "Premium SUV", models: "(Innova Crysta, Hycross)", seats: "6/7 Seats", bags: "4 Bags", ac: true, music: true, outstationPrice: "₹22/km", localPrice: "₹2500", href: "/fleet/executive-suv" },
               { image: "/fleet-brand/Tempo Traveller.webp", title: "12 Seater Traveller", models: "Force Traveller 1x1", seats: "12 Seats", bags: "10 Bags", ac: true, music: true, outstationPrice: "₹24/km", localPrice: "₹3500", href: "/tempo-traveller" },
               { image: "/fleet-brand/Tempo Traveller.webp", title: "16 Seater Traveller", models: "Force Traveller 2x1", seats: "16 Seats", bags: "12 Bags", ac: true, music: true, outstationPrice: "₹26/km", localPrice: "₹4500", href: "/tempo-traveller" },
               { image: "/fleet-brand/Tempo Traveller.webp", title: "20 Seater Traveller", models: "Force Traveller 2x1", seats: "20 Seats", bags: "15 Bags", ac: true, music: true, outstationPrice: "₹28/km", localPrice: "₹5500", href: "/tempo-traveller" },

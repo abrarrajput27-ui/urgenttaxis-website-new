@@ -49,10 +49,11 @@ export default function BookingPolicyPage() {
               Outstation journeys are priced using our standardized rate card based on vehicle category:
             </p>
             <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
-              <li><strong>Hatchback (WagonR, Swift):</strong> ₹9 - ₹10/km (Round-Trip) | ₹11/km (One-Way)</li>
-              <li><strong>Sedan (Dzire, Etios):</strong> ₹11/km (Round-Trip) | ₹13.5/km (One-Way)</li>
-              <li><strong>SUV / MPV (Ertiga 6-Seater):</strong> ₹15/km (Round-Trip) | ₹17.5/km (One-Way)</li>
-              <li><strong>Premium SUV (Innova Crysta 7-Seater):</strong> ₹20/km (Round-Trip) | ₹26/km (One-Way)</li>
+              <li><strong>Hatchback (WagonR, Swift):</strong> ₹11/km (Round-Trip) | ₹11/km (One-Way)</li>
+              <li><strong>Sedan (Dzire, Etios):</strong> ₹12/km (Round-Trip) | ₹12/km (One-Way)</li>
+              <li><strong>SUV / MPV (Ertiga 6-Seater):</strong> ₹15/km (Round-Trip) | ₹15/km (One-Way)</li>
+              <li><strong>Innova (Classic 7-Seater):</strong> ₹19/km (Round-Trip) | ₹19/km (One-Way)</li>
+              <li><strong>Premium SUV (Innova Crysta 7-Seater):</strong> ₹22/km (Round-Trip) | ₹22/km (One-Way)</li>
             </ul>
             <p className="pt-2">
               <strong>Minimum Billing for Round Trips:</strong> For round-trip outstation bookings, a standard industry minimum of <strong>{BUSINESS_CONFIG.policies.roundTripMinKmPerDay} km per calendar day</strong> applies (300 km/day for Innova Crysta). If actual distance exceeds this baseline, additional kilometers are charged at the vehicle category’s standard per-km rate.

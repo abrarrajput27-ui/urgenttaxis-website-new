@@ -268,13 +268,13 @@ export default function CabsClient() {
         crystaFare = routeData.crystaFare || Math.round(sedanFare * 2.1);
         hatchbackFare = Math.round(sedanFare * 0.88);
       } else {
-        sedanFare = Math.max(1600, Math.round(dist * 11));
+        sedanFare = Math.max(1600, Math.round(dist * 12));
         ertigaFare = Math.max(2200, Math.round(dist * 15));
-        crystaFare = Math.max(3400, Math.round(dist * 20));
-        hatchbackFare = Math.max(1300, Math.round(dist * 10));
+        crystaFare = Math.max(3400, Math.round(dist * 22));
+        hatchbackFare = Math.max(1300, Math.round(dist * 11));
       }
       suvMuvFare = ertigaFare;
-      innovaFare = Math.max(2800, Math.round(dist * 18));
+      innovaFare = Math.max(2800, Math.round(dist * 19));
       tempoFare = Math.max(4500, Math.round(dist * 26));
       urbaniaFare = Math.max(6000, Math.round(dist * 32));
       busFare = Math.max(9000, Math.round(dist * 48));
@@ -455,7 +455,7 @@ export default function CabsClient() {
         'BUDGET VALUE',
         'bg-amber-600',
         hatchbackFare,
-        '₹10/km'
+        '₹11/km'
       ),
       buildCard(
         'sedan',
@@ -468,7 +468,7 @@ export default function CabsClient() {
         'MOST POPULAR',
         'bg-emerald-600',
         sedanFare,
-        '₹11/km'
+        '₹12/km'
       ),
       buildCard(
         'ertiga',
@@ -507,7 +507,7 @@ export default function CabsClient() {
         'COMFORT RIDE',
         'bg-indigo-700',
         innovaFare,
-        '₹18/km'
+        '₹19/km'
       ),
       buildCard(
         'executive-suv',
@@ -520,7 +520,7 @@ export default function CabsClient() {
         'PREMIUM LUXURY',
         'bg-slate-900',
         crystaFare,
-        '₹20/km'
+        '₹22/km'
       ),
     ];
   }, [routeData, serviceType, pickup, drop, initialPackageId]);
