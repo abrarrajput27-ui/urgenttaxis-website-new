@@ -294,16 +294,17 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                   className="group bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col h-full"
                 >
                   {/* Destination WebP Image */}
-                  <Link href={`/routes/${route.slug}`} prefetch={true} className="h-40 relative overflow-hidden bg-slate-100 block group/cardimg">
+                  <Link href={`/routes/${route.slug}`} className="h-40 relative overflow-hidden bg-slate-100 block group/cardimg">
                     <Image
                       src={route.image}
                       alt={`${route.origin} to ${route.destination} cab`}
                       fill
+                      loading="lazy"
                       className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = getDestinationImage('', activeState);
                       }}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      sizes="(max-width: 640px) 360px, (max-width: 1024px) 50vw, 25vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent"></div>
                     <div className="absolute top-2.5 right-2.5">
@@ -354,7 +355,6 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                       <div className="grid grid-cols-2 gap-2 pt-1">
                         <Link
                           href={`/cabs?pickup=${encodeURIComponent(route.origin)}&drop=${encodeURIComponent(route.destination)}&serviceType=one_way`}
-                          prefetch={true}
                           className="bg-[#1e1b4b] hover:bg-slate-800 text-white text-xs text-center font-bold px-3 py-2 rounded-xl shadow-xs transition-all flex items-center justify-center cursor-pointer"
                         >
                           Select Cab

@@ -1,5 +1,6 @@
-import { supabaseServer } from '@/lib/supabase/server';
+import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 import MmtBookingWidget from '@/components/public/MmtBookingWidget';
+import HeroVideoBackground from '@/components/public/HeroVideoBackground';
 import VehicleImage from '@/components/public/VehicleImage';
 import { constructMetadata, generateLocalBusinessSchema, SITE_CONFIG } from '@/lib/seo';
 import Link from 'next/link';
@@ -19,6 +20,8 @@ import {
   withTimeout,
 } from '@/lib/data/fallback-data';
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 export const metadata = constructMetadata({
   title: 'Taxi Service in Ghaziabad & Outstation Cabs',
   description: 'Book reliable taxi service in Ghaziabad, Noida & Delhi NCR. Verified AC cabs for outstation trips, IGI airport transfers & local rentals. Call 24/7.',
@@ -31,7 +34,7 @@ export default async function HomePage() {
   let localPackages = FALLBACK_PACKAGES;
 
   try {
-    const supabase = await supabaseServer();
+    const supabase = getPublicSupabaseClient();
     const [catRes, routeRes, locRes, pkgRes] = await Promise.all([
       withTimeout(
         supabase.from('vehicle_categories').select('*').eq('is_active', true).order('display_order', { ascending: true }),
@@ -92,22 +95,8 @@ export default async function HomePage() {
 
       {/* 2. HERO SECTION */}
       <section className="relative bg-brand-blue pt-28 sm:pt-32 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/10 overflow-hidden">
-        {/* Background Decorative Elements */}
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          poster="/hero-poster.webp"
-          preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover z-0"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-        {/* Dark overlay for contrast */}
-        <div className="absolute inset-0 bg-[#0a1128]/75 z-0"></div>
-        {/* Authentic Dotted Pattern matching Footer & Master Theme */}
-        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none z-0" />
+        {/* Background Visual Element (Instant WebP + Deferred Idle Video) */}
+        <HeroVideoBackground />
 
         <div className="max-w-5xl mx-auto text-center space-y-3 mb-6 relative z-10">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white border border-white/20 text-xs font-bold tracking-wide shadow-sm">
@@ -193,6 +182,8 @@ export default async function HomePage() {
                     alt={v.title}
                     width={280}
                     height={160}
+                    loading="lazy"
+                    sizes="280px"
                     className="w-full h-full object-contain"
                   />
                 </div>

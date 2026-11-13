@@ -1,4 +1,4 @@
-import { supabaseServer } from '@/lib/supabase/server';
+import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
@@ -14,6 +14,8 @@ import {
   withTimeout,
 } from '@/lib/data/fallback-data';
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 export const metadata = constructMetadata({
   title: 'Local Hourly Cab Rentals | 8h/80km & 12h/120km Packages',
   description: 'Book flexible local hourly cab rentals in Delhi NCR for business meetings, shopping, and city sightseeing. Active database packages with transparent extra-km and extra-hour rates.',
@@ -27,7 +29,7 @@ export default async function LocalRentalsPage() {
   let localPackages = FALLBACK_PACKAGES;
 
   try {
-    const supabase = await supabaseServer();
+    const supabase = getPublicSupabaseClient();
     const [pkgRes, catRes, routeRes, locRes] = await Promise.all([
       withTimeout(
         supabase.from('pricing_local_packages').select('*, vehicle_categories(*)').eq('is_active', true),

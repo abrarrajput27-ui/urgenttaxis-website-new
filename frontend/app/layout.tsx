@@ -35,6 +35,10 @@ export default function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <link rel="preconnect" href="https://maps.google.com" />
+        <link rel="dns-prefetch" href="https://maps.google.com" />
+        <link rel="preconnect" href="https://maps.googleapis.com" />
+        <link rel="dns-prefetch" href="https://maps.googleapis.com" />
       </head>
       <body className="min-h-full flex flex-col bg-brand-white text-slate-900 w-full max-w-full overflow-x-hidden">
         {/* Google Analytics 4 (only if NEXT_PUBLIC_GA_ID is configured) */}

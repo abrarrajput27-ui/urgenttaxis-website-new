@@ -1,4 +1,4 @@
-import { supabaseServer } from '@/lib/supabase/server';
+import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PublicFareWidget from '@/components/public/PublicFareWidget';
@@ -14,6 +14,8 @@ import Link from 'next/link';
 import PageFAQSection from '@/components/public/PageFAQSection';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 export const metadata = constructMetadata({
   title: 'Airport Taxi Transfer Service | IGI Airport Delhi Cabs',
   description: 'Book reliable airport taxi transfers to and from IGI Airport Delhi (Terminal 3 / Terminal 1) and Noida International Airport with doorstep pickup and fixed zone rates.',
@@ -27,7 +29,7 @@ export default async function AirportTransfersPage() {
   let localPackages = FALLBACK_PACKAGES;
 
   try {
-    const supabase = await supabaseServer();
+    const supabase = getPublicSupabaseClient();
     const [catRes, routeRes, locRes, pkgRes] = await Promise.all([
       withTimeout(
         supabase.from('vehicle_categories').select('*').eq('is_active', true).order('display_order', { ascending: true }),

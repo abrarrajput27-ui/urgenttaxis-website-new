@@ -50,7 +50,7 @@ export default function PublicFooter() {
                 width={700}
                 height={400}
                 className="object-contain w-full h-auto drop-shadow-2xl"
-                priority
+                loading="lazy"
               />
             </div>
           </div>

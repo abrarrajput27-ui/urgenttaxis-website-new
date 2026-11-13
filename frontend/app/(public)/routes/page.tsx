@@ -1,4 +1,4 @@
-import { supabaseServer } from '@/lib/supabase/server';
+import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import Link from 'next/link';
@@ -8,6 +8,8 @@ import { resolveOneWayFare } from '@/lib/pricing';
 import { getLocationState } from '@/lib/location-authority';
 import RoutesTabWidget from '@/components/public/RoutesTabWidget';
 import DirectBookingComparison from '@/components/public/DirectBookingComparison';
+
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
 
 export const metadata = constructMetadata({
   title: 'Outstation Taxi Routes & Intercity Cabs Directory',
@@ -20,7 +22,7 @@ function generateSlug(originName: string, destName: string): string {
 }
 
 export default async function RoutesDirectoryPage() {
-  const supabase = await supabaseServer();
+  const supabase = getPublicSupabaseClient();
 
   const { data: dbRoutes } = await supabase
     .from('routes')
