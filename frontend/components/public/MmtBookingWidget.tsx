@@ -722,7 +722,7 @@ export default function MmtBookingWidget({
                     </span>
                     <FaCalendarAlt className="w-3 h-3 text-brand-blue" />
                   </div>
-                  <div className="mt-1">
+                  <div className="mt-1" suppressHydrationWarning>
                     <div className="flex items-baseline gap-1">
                       <span className="text-2xl sm:text-3xl font-black text-slate-900">
                         {pickupDateFormatted.day}
@@ -758,7 +758,7 @@ export default function MmtBookingWidget({
                       </span>
                       <FaCalendarAlt className="w-3 h-3 text-brand-blue" />
                     </div>
-                    <div className="mt-1">
+                    <div className="mt-1" suppressHydrationWarning>
                       <div className="flex items-baseline gap-1">
                         <span className="text-2xl sm:text-3xl font-black text-slate-900">
                           {returnDateFormatted.day}
@@ -796,7 +796,7 @@ export default function MmtBookingWidget({
                     </span>
                     <FaClock className="w-3 h-3 text-brand-blue" />
                   </div>
-                  <div className="mt-1">
+                  <div className="mt-1" suppressHydrationWarning>
                     <span className="text-xl sm:text-2xl font-black text-slate-900 block">
                       {formatMmtTime(pickupTime)}
                     </span>
