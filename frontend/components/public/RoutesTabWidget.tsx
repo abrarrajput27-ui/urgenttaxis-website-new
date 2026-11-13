@@ -63,15 +63,35 @@ const STATE_DESTINATIONS: Record<string, string[]> = {
     "Charkhi Dadri", "Hisar", "Hansi", "Barwala", "Fatehabad", "Tohana", 
     "Sirsa", "Dabwali", "Jind", "Kaithal", "Palwal", "Hodal", "Nuh"
   ],
-  "Punjab & J&K": [
-    "Chandigarh", "Mohali", "Zirakpur", "Kharar", "Kurali", "Ropar", 
-    "Fatehgarh Sahib", "Sirhind", "Patiala", "Rajpura", "Nabha", "Ludhiana", 
-    "Khanna", "Doraha", "Jalandhar", "Phagwara", "Kapurthala", "Amritsar", 
-    "Beas", "Tarn Taran", "Wagah Border", "Batala", "Gurdaspur", "Pathankot", 
-    "Hoshiarpur", "Bathinda", "Mansa", "Barnala", "Sangrur", "Malerkotla", 
-    "Moga", "Firozpur", "Muktsar", "Faridkot", "Jammu", "Katra (Vaishno Devi)", 
-    "Udhampur", "Patnitop", "Ramban", "Banihal", "Anantnag", "Srinagar", 
-    "Gulmarg", "Pahalgam", "Sonamarg"
+  "Punjab": [
+    "Chandigarh", "Mohali", "Zirakpur", "Kharar", "Kurali", "Ropar",
+    "Fatehgarh Sahib", "Sirhind", "Patiala", "Rajpura", "Nabha", "Sanour",
+    "Ludhiana", "Khanna", "Doraha", "Jalandhar", "Phagwara", "Kapurthala",
+    "Sultanpur Lodhi", "Nakodar", "Amritsar", "Beas", "Tarn Taran",
+    "Wagah Border", "Batala", "Gurdaspur", "Pathankot", "Hoshiarpur",
+    "Dasuya", "Mukerian", "Bathinda", "Mansa", "Barnala", "Sangrur",
+    "Malerkotla", "Moga", "Firozpur", "Muktsar", "Faridkot", "Ferozepur Cantt",
+    "Abohar", "Fazilka", "Sri Muktsar Sahib", "Rampura Phul", "Talwandi Sabo",
+    "Anandpur Sahib", "Ropar", "Morinda", "Fatehgarh Sahib", "Nangal"
+  ],
+  "Jammu & Kashmir": [
+    "Jammu", "Katra (Vaishno Devi)", "Udhampur", "Patnitop", "Ramban",
+    "Banihal", "Qazigund", "Anantnag", "Pahalgam", "Srinagar", "Gulmarg",
+    "Sonamarg", "Kupwara", "Baramulla", "Pattan", "Narbal", "Sopore",
+    "Handwara", "Kulgam", "Shopian", "Pulwama", "Pampore", "Awantipora",
+    "Bijbehara", "Kokernag", "Doda", "Kishtwar", "Bhaderwah", "Reasi",
+    "Ramnagar (J&K)", "Akhnoor", "Rajouri", "Poonch", "Leh", "Kargil",
+    "Nubra Valley", "Pangong Lake", "Zanskar"
+  ],
+  "Madhya Pradesh": [
+    "Bhopal", "Vidisha", "Raisen", "Sehore", "Indore", "Dewas", "Dhar",
+    "Mhow", "Pithampur", "Gwalior", "Morena", "Bhind", "Datia", "Shivpuri",
+    "Guna", "Jabalpur", "Katni", "Narsinghpur", "Mandla", "Balaghat",
+    "Ujjain", "Ratlam", "Mandsaur", "Neemuch", "Shajapur", "Agar Malwa",
+    "Khajuraho", "Panna", "Chhatarpur", "Tikamgarh", "Orchha", "Satna",
+    "Rewa", "Sidhi", "Singrauli", "Sagar", "Damoh", "Rahatgarh",
+    "Pachmarhi", "Hoshangabad", "Harda", "Betul", "Chhindwara", "Seoni",
+    "Kanha", "Bandhavgarh", "Pench", "Omkareshwar", "Maheshwar", "Mandu"
   ],
   "Delhi NCR": [
     "Delhi Airport (IGI T3)", "Noida (All Sectors)", "Greater Noida (Pari Chowk)", 
@@ -80,7 +100,17 @@ const STATE_DESTINATIONS: Record<string, string[]> = {
     "Ghaziabad (Masuri HQ)", "Gurugram (Cyber City)", "Gurugram (Golf Course Road)", 
     "Gurugram (Sohna Road)", "Faridabad (Sector 15)", "Jewar (Noida Airport)", 
     "New Delhi (Connaught Place)", "South Delhi (Saket)", "West Delhi (Dwarka)", 
-    "North Delhi (Rohini)", "East Delhi (Anand Vihar)"
+    "North Delhi (Rohini)", "East Delhi (Anand Vihar)", "Chandni Chowk", "Karol Bagh",
+    "Mayur Vihar", "Lajpat Nagar", "Hauz Khas", "Vasant Kunj", "Janakpuri", "Najafgarh",
+    "Narela", "Alipur", "Bawana", "Kanjhawala", "Mehrauli", "Badarpur", "Okhla"
+  ],
+  "Other States": [
+    "Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar", "Somnath", "Dwarka",
+    "Mumbai", "Pune", "Nashik", "Shirdi", "Nagpur", "Aurangabad (Chhatrapati Sambhajinagar)",
+    "Goa", "Panaji", "Calangute", "Madgaon",
+    "Patna", "Gaya", "Bodh Gaya", "Muzaffarpur", "Bhagalpur", "Darbhanga",
+    "Ranchi", "Jamshedpur", "Dhanbad", "Deoghar (Baba Baidyanath Dham)",
+    "Kolkata", "Howrah", "Durgapur", "Siliguri", "Darjeeling"
   ]
 };
 

@@ -317,6 +317,75 @@ export const DESTINATION_IMAGE_MAP: Record<string, string> = {
   pahalgam: '/destinations/srinagar.webp',
   sonamarg: '/destinations/srinagar.webp',
 
+  // ── MADHYA PRADESH ──
+  gwalior: '/destinations/jhansi.webp',
+  morena: '/destinations/agra.webp',
+  bhind: '/destinations/agra.webp',
+  datia: '/destinations/jhansi.webp',
+  orchha: '/destinations/jhansi.webp',
+  khajuraho: '/destinations/jhansi.webp',
+  panna: '/destinations/jhansi.webp',
+  chhatarpur: '/destinations/jhansi.webp',
+  tikamgarh: '/destinations/jhansi.webp',
+  bhopal: '/destinations/lucknow.webp',
+  vidisha: '/destinations/lucknow.webp',
+  raisen: '/destinations/lucknow.webp',
+  sehore: '/destinations/lucknow.webp',
+  indore: '/destinations/jaipur.webp',
+  dewas: '/destinations/jaipur.webp',
+  dhar: '/destinations/jaipur.webp',
+  mhow: '/destinations/jaipur.webp',
+  pithampur: '/destinations/jaipur.webp',
+  ujjain: '/destinations/ayodhya.webp',
+  ratlam: '/destinations/jaipur.webp',
+  mandsaur: '/destinations/jaipur.webp',
+  neemuch: '/destinations/jaipur.webp',
+  shajapur: '/destinations/jaipur.webp',
+  jabalpur: '/destinations/prayagraj.webp',
+  katni: '/destinations/prayagraj.webp',
+  narsinghpur: '/destinations/prayagraj.webp',
+  mandla: '/destinations/jim-corbett.webp',
+  balaghat: '/destinations/jim-corbett.webp',
+  satna: '/destinations/prayagraj.webp',
+  rewa: '/destinations/prayagraj.webp',
+  sidhi: '/destinations/prayagraj.webp',
+  singrauli: '/destinations/prayagraj.webp',
+  sagar: '/destinations/jhansi.webp',
+  damoh: '/destinations/jhansi.webp',
+  pachmarhi: '/destinations/mussoorie.webp',
+  hoshangabad: '/destinations/lucknow.webp',
+  harda: '/destinations/lucknow.webp',
+  betul: '/destinations/lucknow.webp',
+  chhindwara: '/destinations/lucknow.webp',
+  seoni: '/destinations/jim-corbett.webp',
+  kanha: '/destinations/jim-corbett.webp',
+  bandhavgarh: '/destinations/jim-corbett.webp',
+  pench: '/destinations/jim-corbett.webp',
+  omkareshwar: '/destinations/ayodhya.webp',
+  maheshwar: '/destinations/ayodhya.webp',
+  mandu: '/destinations/jaipur.webp',
+
+  // ── OTHER STATES & NATIONAL HUBS ──
+  mumbai: '/destinations/delhi.webp',
+  pune: '/destinations/delhi.webp',
+  shirdi: '/destinations/ayodhya.webp',
+  nashik: '/destinations/ayodhya.webp',
+  goa: '/destinations/nainital.webp',
+  panaji: '/destinations/nainital.webp',
+  calangute: '/destinations/nainital.webp',
+  ahmedabad: '/destinations/jaipur.webp',
+  surat: '/destinations/delhi.webp',
+  vadodara: '/destinations/jaipur.webp',
+  somnath: '/destinations/ayodhya.webp',
+  dwarka: '/destinations/ayodhya.webp',
+  patna: '/destinations/varanasi.webp',
+  gaya: '/destinations/varanasi.webp',
+  'bodh-gaya': '/destinations/varanasi.webp',
+  deoghar: '/destinations/varanasi.webp',
+  kolkata: '/destinations/delhi.webp',
+  darjeeling: '/destinations/shimla.webp',
+  siliguri: '/destinations/dehradun.webp',
+
   // ── DELHI NCR ──
   'delhi-airport': '/destinations/delhi-airport.webp',
   'igi-airport': '/destinations/delhi-airport.webp',
@@ -421,14 +490,20 @@ export function getDestinationImage(cityName: string, stateNameOrContext?: strin
   if (state.includes('rajasthan') || raw.includes('rajasthan') || raw.includes('shekhawati')) {
     return '/destinations/jaipur.webp';
   }
-  if (state.includes('uttar pradesh') || raw.includes('uttar pradesh') || raw.includes('awadh')) {
-    return '/destinations/lucknow.webp';
+  if (state.includes('madhya pradesh') || raw.includes('madhya pradesh') || raw.includes('bhopal') || raw.includes('indore') || raw.includes('gwalior')) {
+    return '/destinations/jhansi.webp';
   }
-  if (state.includes('punjab') || state.includes('j&k') || state.includes('jammu') || raw.includes('punjab') || raw.includes('kashmir')) {
-    return '/destinations/chandigarh.webp';
+  if (state.includes('kashmir') || state.includes('jammu') || raw.includes('kashmir') || raw.includes('jammu') || raw.includes('katra')) {
+    return '/destinations/srinagar.webp';
+  }
+  if (state.includes('punjab') || raw.includes('punjab')) {
+    return '/destinations/amritsar.webp';
   }
   if (state.includes('haryana') || raw.includes('haryana')) {
-    return '/destinations/chandigarh.webp';
+    return '/destinations/gurugram.webp';
+  }
+  if (state.includes('uttar pradesh') || raw.includes('uttar pradesh') || raw.includes('awadh')) {
+    return '/destinations/lucknow.webp';
   }
 
   // Default to National Capital Region iconic vista (India Gate)
