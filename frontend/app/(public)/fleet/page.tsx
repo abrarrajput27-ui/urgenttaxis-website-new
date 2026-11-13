@@ -11,6 +11,8 @@ export const metadata = constructMetadata({
   canonicalPath: '/fleet',
 });
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 // Reusable Vehicle Card Component
 const VehicleCard = ({
   image,

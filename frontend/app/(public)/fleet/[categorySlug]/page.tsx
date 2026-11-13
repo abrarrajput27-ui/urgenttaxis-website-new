@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import { supabaseServer } from '@/lib/supabase/server';
 import { getPublicSupabaseClient } from '@/lib/supabase/static-public';
 import { constructMetadata, SITE_CONFIG } from '@/lib/seo';
 import { BUSINESS_CONFIG } from '@/lib/config';
@@ -16,6 +15,8 @@ import {
   FALLBACK_PACKAGES,
   withTimeout,
 } from '@/lib/data/fallback-data';
+
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
 
 interface DynamicCategoryPageProps {
   params: Promise<{

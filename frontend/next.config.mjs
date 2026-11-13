@@ -33,6 +33,12 @@ const nextConfig = {
         ],
       },
       {
+        source: '/services/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
         source: '/hero-poster.webp',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
@@ -40,6 +46,30 @@ const nextConfig = {
       },
       {
         source: '/logo.jpg',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/cta-hero.webp',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/fleet-hero-bg.webp',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/:all*(.+)\\.(webp|avif|jpg|jpeg|png|svg|ico|mp4|webm)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/:all*(.+)\\.(woff|woff2)',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],

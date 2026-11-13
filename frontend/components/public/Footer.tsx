@@ -111,16 +111,16 @@ export default function PublicFooter() {
               Quick links
             </h4>
             <ul className="space-y-3 text-[13px] text-slate-400">
-              <li><Link href="/" prefetch={true} className="hover:text-white transition-colors block">Home</Link></li>
-              <li><Link href="/about" prefetch={true} className="hover:text-white transition-colors block">About Us</Link></li>
-              <li><Link href="/fleet" prefetch={true} className="hover:text-white transition-colors block">Our Fleet</Link></li>
-              <li><Link href="/routes" prefetch={true} className="hover:text-white transition-colors block">Popular Routes</Link></li>
-              <li><Link href="/reviews" prefetch={true} className="hover:text-white transition-colors block">Reviews</Link></li>
-              <li><Link href="/blog" prefetch={true} className="hover:text-white transition-colors block">Blog</Link></li>
-              <li><Link href="/taxi-service" prefetch={true} className="hover:text-white transition-colors block">NCR Taxi Service</Link></li>
-              <li><Link href="/faq" prefetch={true} className="hover:text-white transition-colors block">FAQ</Link></li>
-              <li><Link href="/booking-policy" prefetch={true} className="hover:text-white transition-colors block">Booking Policy</Link></li>
-              <li><Link href="/contact" prefetch={true} className="hover:text-white transition-colors block">Contact Us</Link></li>
+              <li><Link href="/" className="hover:text-white transition-colors block">Home</Link></li>
+              <li><Link href="/about" className="hover:text-white transition-colors block">About Us</Link></li>
+              <li><Link href="/fleet" className="hover:text-white transition-colors block">Our Fleet</Link></li>
+              <li><Link href="/routes" className="hover:text-white transition-colors block">Popular Routes</Link></li>
+              <li><Link href="/reviews" className="hover:text-white transition-colors block">Reviews</Link></li>
+              <li><Link href="/blog" className="hover:text-white transition-colors block">Blog</Link></li>
+              <li><Link href="/taxi-service" className="hover:text-white transition-colors block">NCR Taxi Service</Link></li>
+              <li><Link href="/faq" className="hover:text-white transition-colors block">FAQ</Link></li>
+              <li><Link href="/booking-policy" className="hover:text-white transition-colors block">Booking Policy</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors block">Contact Us</Link></li>
             </ul>
           </div>
 
@@ -130,14 +130,14 @@ export default function PublicFooter() {
               Our services
             </h4>
             <ul className="space-y-3 text-[13px] text-slate-400">
-              <li><Link href="/routes" prefetch={true} className="hover:text-white transition-colors block">Outstation Cabs</Link></li>
-              <li><Link href="/airport-transfers" prefetch={true} className="hover:text-white transition-colors block">Airport Transfers</Link></li>
-              <li><Link href="/local-rentals" prefetch={true} className="hover:text-white transition-colors block">Local Rentals</Link></li>
-              <li><Link href="/corporate-taxi" prefetch={true} className="hover:text-white transition-colors block">Corporate Taxi</Link></li>
-              <li><Link href="/tempo-traveller" prefetch={true} className="hover:text-white transition-colors block">Tempo Traveller</Link></li>
-              <li><Link href="/bus-charter" prefetch={true} className="hover:text-white transition-colors block">Bus Charter</Link></li>
-              <li><Link href="/chardham-yatra" prefetch={true} className="hover:text-white transition-colors block">Chardham Yatra</Link></li>
-              <li><Link href="/tour-packages" prefetch={true} className="hover:text-white transition-colors block">Tour Packages</Link></li>
+              <li><Link href="/routes" className="hover:text-white transition-colors block">Outstation Cabs</Link></li>
+              <li><Link href="/airport-transfers" className="hover:text-white transition-colors block">Airport Transfers</Link></li>
+              <li><Link href="/local-rentals" className="hover:text-white transition-colors block">Local Rentals</Link></li>
+              <li><Link href="/corporate-taxi" className="hover:text-white transition-colors block">Corporate Taxi</Link></li>
+              <li><Link href="/tempo-traveller" className="hover:text-white transition-colors block">Tempo Traveller</Link></li>
+              <li><Link href="/bus-charter" className="hover:text-white transition-colors block">Bus Charter</Link></li>
+              <li><Link href="/chardham-yatra" className="hover:text-white transition-colors block">Chardham Yatra</Link></li>
+              <li><Link href="/tour-packages" className="hover:text-white transition-colors block">Tour Packages</Link></li>
             </ul>
           </div>
 

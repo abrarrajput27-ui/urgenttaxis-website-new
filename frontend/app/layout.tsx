@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: 'swap' });
 
 export const metadata: Metadata = {
   title: "Urgent Taxis - Reliable Outstation Cab Booking",
@@ -39,6 +39,10 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://maps.google.com" />
         <link rel="preconnect" href="https://maps.googleapis.com" />
         <link rel="dns-prefetch" href="https://maps.googleapis.com" />
+        <link rel="preconnect" href="https://maps.gstatic.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://maps.gstatic.com" />
+        <link rel="preconnect" href="https://www.google.com" />
+        <link rel="dns-prefetch" href="https://www.google.com" />
       </head>
       <body className="min-h-full flex flex-col bg-brand-white text-slate-900 w-full max-w-full overflow-x-hidden">
         {/* Google Analytics 4 (only if NEXT_PUBLIC_GA_ID is configured) */}

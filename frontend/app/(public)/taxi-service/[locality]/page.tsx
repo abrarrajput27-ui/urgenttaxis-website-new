@@ -12,6 +12,8 @@ import { getCitySpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-genera
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { Phone, MessageSquare, MapPin, CheckCircle2, Shield, Clock, Compass, Plane, ArrowRight, Car, Users, Briefcase, Sparkles, Utensils, Hotel, Eye, Star } from 'lucide-react';
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 interface LocalityPageProps {
   params: Promise<{ locality: string }>;
 }

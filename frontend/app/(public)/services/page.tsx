@@ -24,6 +24,8 @@ export const metadata = constructMetadata({
   canonicalPath: '/services',
 });
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 const serviceList = [
   {
     id: 'oneway',

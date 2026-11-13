@@ -10,6 +10,8 @@ import PublicFareWidget from '@/components/public/PublicFareWidget';
 import { getAirportSpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
 import { Phone, MessageSquare, Plane, Shield, Clock, CheckCircle2, ArrowRight, MapPin, Navigation } from 'lucide-react';
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 interface AirportRoutePageProps {
   params: Promise<{ slug: string }>;
 }

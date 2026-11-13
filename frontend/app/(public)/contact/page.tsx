@@ -13,6 +13,8 @@ export const metadata = constructMetadata({
   canonicalPath: '/contact',
 });
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 export default function ContactUsPage() {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },

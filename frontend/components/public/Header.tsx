@@ -86,7 +86,7 @@ export default function PublicHeader() {
       <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 py-0 flex items-center h-[60px] overflow-hidden">
         
         {/* Logo */}
-        <Link href="/" className="flex items-center flex-shrink-0" onClick={() => setMobileOpen(false)} prefetch={true}>
+        <Link href="/" className="flex items-center flex-shrink-0" onClick={() => setMobileOpen(false)}>
           <div className="relative h-10 sm:h-11 w-36 sm:w-44 flex items-center overflow-hidden">
             <Image
               src="/logo.jpg"
@@ -108,25 +108,24 @@ export default function PublicHeader() {
               <div key={link.name} className="relative group flex items-center">
                 {link.hasDropdown ? (
                   <>
-                    <Link href="/services" prefetch={true} className={`hover:text-brand-green transition-colors cursor-pointer flex items-center gap-1 pb-1 border-b-[3px] ${isActive ? 'text-brand-green border-brand-green' : 'border-transparent hover:border-brand-green/30'}`}>
+                    <Link href="/services" className={`hover:text-brand-green transition-colors cursor-pointer flex items-center gap-1 pb-1 border-b-[3px] ${isActive ? 'text-brand-green border-brand-green' : 'border-transparent hover:border-brand-green/30'}`}>
                       {link.name}
                     </Link>
                     <div className="absolute top-[30px] left-0 w-56 bg-white shadow-xl rounded-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all flex flex-col py-2 z-50 transform origin-top-left -translate-y-2 group-hover:translate-y-0">
-                      <Link href="/services" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">All Services Overview</Link>
-                      <Link href="/taxi-service" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">NCR Taxi Service</Link>
-                      <Link href="/airport-transfers" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Airport Transfers</Link>
-                      <Link href="/local-rentals" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Local Rentals</Link>
-                      <Link href="/corporate-taxi" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Corporate Taxi</Link>
-                      <Link href="/tempo-traveller" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Tempo Traveller</Link>
-                      <Link href="/bus-charter" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Bus Charter</Link>
-                      <Link href="/chardham-yatra" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Chardham Yatra</Link>
-                      <Link href="/tour-packages" prefetch={true} className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold">Tour Packages</Link>
+                      <Link href="/services" className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">All Services Overview</Link>
+                      <Link href="/taxi-service" className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">NCR Taxi Service</Link>
+                      <Link href="/airport-transfers" className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Airport Transfers</Link>
+                      <Link href="/local-rentals" className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Local Rentals</Link>
+                      <Link href="/corporate-taxi" className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Corporate Taxi</Link>
+                      <Link href="/tempo-traveller" className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Tempo Traveller</Link>
+                      <Link href="/bus-charter" className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Bus Charter</Link>
+                      <Link href="/chardham-yatra" className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold border-b border-slate-50">Chardham Yatra</Link>
+                      <Link href="/tour-packages" className="px-5 py-2.5 hover:bg-slate-50 hover:text-brand-green text-sm font-bold">Tour Packages</Link>
                     </div>
                   </>
                 ) : (
                   <Link 
                     href={link.href} 
-                    prefetch={true}
                     className={`hover:text-brand-green transition-colors pb-1 border-b-[3px] ${isActive ? 'text-brand-green border-brand-green' : 'border-transparent hover:border-brand-green/30'}`}
                   >
                     {link.name}
@@ -201,15 +200,15 @@ export default function PublicHeader() {
                       <span className={`transform transition-transform ${servicesOpen ? 'rotate-180' : ''}`}>▼</span>
                     </button>
                     <div className={`flex flex-col pl-6 space-y-1 overflow-hidden transition-all duration-300 ${servicesOpen ? 'max-h-[500px]' : 'max-h-0'}`}>
-                      <Link href="/services" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px] font-bold">All Services Overview</Link>
-                      <Link href="/taxi-service" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">NCR Taxi Service</Link>
-                      <Link href="/airport-transfers" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Airport Transfers</Link>
-                      <Link href="/local-rentals" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Local Rentals</Link>
-                      <Link href="/corporate-taxi" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Corporate Taxi</Link>
-                      <Link href="/tempo-traveller" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Tempo Traveller</Link>
-                      <Link href="/bus-charter" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Bus Charter</Link>
-                      <Link href="/chardham-yatra" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Chardham Yatra</Link>
-                      <Link href="/tour-packages" prefetch={true} onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Tour Packages</Link>
+                      <Link href="/services" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px] font-bold">All Services Overview</Link>
+                      <Link href="/taxi-service" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">NCR Taxi Service</Link>
+                      <Link href="/airport-transfers" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Airport Transfers</Link>
+                      <Link href="/local-rentals" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Local Rentals</Link>
+                      <Link href="/corporate-taxi" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Corporate Taxi</Link>
+                      <Link href="/tempo-traveller" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Tempo Traveller</Link>
+                      <Link href="/bus-charter" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Bus Charter</Link>
+                      <Link href="/chardham-yatra" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Chardham Yatra</Link>
+                      <Link href="/tour-packages" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-xl hover:bg-slate-50 hover:text-brand-green transition-colors text-[14px]">Tour Packages</Link>
                     </div>
                   </div>
                 );
@@ -219,7 +218,6 @@ export default function PublicHeader() {
                 <Link 
                   key={link.name}
                   href={link.href}
-                  prefetch={true} 
                   onClick={() => setMobileOpen(false)} 
                   className={`px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-brand-green/10 text-brand-green' : 'hover:bg-slate-50'}`}
                 >

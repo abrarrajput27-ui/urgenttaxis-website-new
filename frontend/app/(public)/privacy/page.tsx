@@ -7,6 +7,8 @@ export const metadata = constructMetadata({
   canonicalPath: '/privacy',
 });
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 export default function PrivacyPage() {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },

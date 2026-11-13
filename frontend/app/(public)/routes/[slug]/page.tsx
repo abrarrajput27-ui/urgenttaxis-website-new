@@ -22,6 +22,8 @@ import { getLocationState, formatLocationWithState } from '@/lib/location-author
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
 import { FaRoad, FaArrowRight, FaShieldAlt, FaUserCheck, FaHeadset, FaCheckCircle, FaCar } from 'react-icons/fa';
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 interface DynamicRoutePageProps {
   params: Promise<{
     slug: string;

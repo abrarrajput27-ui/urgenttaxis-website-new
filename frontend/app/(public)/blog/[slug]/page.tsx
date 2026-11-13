@@ -8,6 +8,8 @@ import PublicBreadcrumbs from '@/components/public/Breadcrumbs';
 import PageFAQSection from '@/components/public/PageFAQSection';
 import { Calendar, Clock, User, ArrowRight, Phone, MessageSquare, Tag, Bookmark } from 'lucide-react';
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 interface BlogPageProps {
   params: Promise<{ slug: string }>;
 }

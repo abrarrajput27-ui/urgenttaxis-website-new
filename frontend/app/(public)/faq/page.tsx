@@ -11,6 +11,8 @@ export const metadata = constructMetadata({
   canonicalPath: '/faq',
 });
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 const FAQ_CATEGORIES = [
   {
     category: 'Outstation Cab Booking & Pricing',

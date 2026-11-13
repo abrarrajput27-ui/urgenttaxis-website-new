@@ -9,6 +9,8 @@ export const metadata = constructMetadata({
   canonicalPath: '/tempo-traveller',
 });
 
+export const revalidate = 3600; // Static Edge Caching with 1-Hour ISR (TTFB < 50ms)
+
 export default function TempoTravellerPage() {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
