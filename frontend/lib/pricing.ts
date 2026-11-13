@@ -17,7 +17,7 @@ import masterRoutesData from './data/processed-master-routes.json';
 import { AIRPORT_ROUTES_DATA } from './data/airport-routes-data';
 import { SITE_CONFIG } from './seo';
 import { resolveAccurateRoute } from './distance-resolver';
-import { formatTime12Hour, formatDateReadable } from './date-utils';
+import { formatTime12Hour, formatDateReadable, calculateReturnTimeline, ReturnTimelineResult } from './date-utils';
 
 // -----------------------------------------------------------------------------
 // 1. RATE CONSTANTS (Owner Confirmed Values)
@@ -496,61 +496,252 @@ export function resolveAirportFare(slugOrOrigin: string, destination?: string): 
 }
 
 // -----------------------------------------------------------------------------
-// 5. ROUND-TRIP FARE CALCULATION
+// 5. ROUND-TRIP FARE CALCULATION ENGINE (CENTRAL AUTHORITATIVE UTILITY)
 // -----------------------------------------------------------------------------
 
+export interface RoundTripFareInput {
+  pickupDate?: string;
+  pickupTime?: string;
+  pickupLocation?: string;
+  destinationLocation?: string;
+  returnDate?: string;
+  returnTime?: string;
+  finalDropLocation?: string;
+  outboundDistanceKm?: number;
+  returnDistanceKm?: number;
+  actualTotalDistanceKm?: number;
+  vehicleCategory?: string;
+  vehicleId?: string;
+  vehicleRate?: number;
+  numberOfDays?: number;
+  numberOfNights?: number;
+}
+
 export interface RoundTripFareQuote {
-  actualDistanceKm: number;
-  totalRoundTripKm: number;
-  numberOfDays: number;
-  guaranteedMinKm: number;
+  // Calendar & Timeline
+  tripDays: number;
+  totalNights: number;
+  pickupDate: string;
+  pickupTime: string;
+  returnDate: string;
+  returnTime: string;
+  pickupLocation: string;
+  destinationLocation: string;
+  finalDropLocation: string;
+  
+  // Distance Math
+  outboundDistanceKm: number;
+  returnDistanceKm: number;
+  actualTotalDistanceKm: number;
+  dailyKmAllowance: number;
+  totalMinimumKm: number;
   billableKm: number;
+
+  // Financial Breakdown
+  vehicleRate: number;
   ratePerKm: number;
+  distanceFare: number;
   driverAllowancePerDay: number;
   totalDriverAllowance: number;
+  nightCharges: number;
+  isNightPickup: boolean;
+  additionalCharges: number;
+  estimatedGst: number;
   baseFare: number;
   totalFare: number;
   tokenAmount: number;
   balanceAmount: number;
+
+  // Arrival Timeline
+  estimatedFinalArrival: {
+    arrivalDate: string;
+    arrivalTime: string;
+    readableDateTime: string;
+  };
+  calculationStatus: 'success' | 'estimated';
   workingExplanation: string;
+
+  // Backward-compatibility aliases
+  actualDistanceKm: number;
+  totalRoundTripKm: number;
+  numberOfDays: number;
+  guaranteedMinKm: number;
 }
 
+/**
+ * Universal Master Round-Trip Calculation Engine.
+ * Single source of truth for:
+ * 1. Customer Booking Form
+ * 2. Route Search & Search Drawer
+ * 3. Vehicle Selection Page (/cabs)
+ * 4. Checkout Page (/checkout)
+ * 5. Booking Confirmation (/booking-confirmation/[reference])
+ * 6. Admin Booking Dashboard (/admin/bookings/[id])
+ * 7. Final Invoice PDF (/booking-confirmation/[reference]/invoice)
+ * 8. WhatsApp Quotations & Confirmations
+ * 
+ * Supports both modern object parameter and legacy numeric signature.
+ */
 export function calculateRoundTripFare(
-  oneWayDistanceKm: number,
-  numberOfDays: number = 1,
-  vehicleCategory: string = 'sedan'
+  inputOrDistance: number | RoundTripFareInput,
+  maybeDays: number = 1,
+  maybeCategory: string = 'sedan'
 ): RoundTripFareQuote {
-  const normCategory = vehicleCategory.toLowerCase();
-  const safeDays = Math.max(1, numberOfDays);
-  const totalRoundTripKm = oneWayDistanceKm * 2;
-  const guaranteedMinKm = ROUND_TRIP_MIN_KM_PER_DAY * safeDays;
-  const billableKm = Math.max(totalRoundTripKm, guaranteedMinKm);
+  // 1. Normalize input arguments
+  let input: RoundTripFareInput;
+  if (typeof inputOrDistance === 'number') {
+    input = {
+      outboundDistanceKm: inputOrDistance,
+      returnDistanceKm: inputOrDistance,
+      actualTotalDistanceKm: inputOrDistance * 2,
+      numberOfDays: maybeDays,
+      vehicleCategory: maybeCategory,
+    };
+  } else {
+    input = inputOrDistance || {};
+  }
 
-  const ratePerKm = ROUND_TRIP_PER_KM_RATES[normCategory] || 11;
+  const normCategory = (input.vehicleCategory || 'sedan').toLowerCase();
+  const pickupLoc = input.pickupLocation || 'Origin';
+  const destLoc = input.destinationLocation || 'Destination';
+  const finalDropLoc = input.finalDropLocation || input.pickupLocation || pickupLoc;
+
+  // 2. Resolve Outbound and Return Distances
+  let outboundDist = Number(input.outboundDistanceKm) || 0;
+  if (outboundDist <= 0 && input.pickupLocation && input.destinationLocation) {
+    const resolvedOut = resolveAccurateRoute(input.pickupLocation, input.destinationLocation);
+    outboundDist = resolvedOut.distanceKm;
+  }
+  if (outboundDist <= 0) outboundDist = 200;
+
+  let returnDist = Number(input.returnDistanceKm) || 0;
+  if (returnDist <= 0) {
+    // If final drop is specified and differs from original pickup, resolve actual return road distance
+    if (
+      input.destinationLocation &&
+      input.finalDropLocation &&
+      input.finalDropLocation.trim().toLowerCase() !== input.pickupLocation?.trim().toLowerCase()
+    ) {
+      const resolvedRet = resolveAccurateRoute(input.destinationLocation, input.finalDropLocation);
+      returnDist = resolvedRet.distanceKm;
+    } else {
+      returnDist = outboundDist;
+    }
+  }
+  if (returnDist <= 0) returnDist = outboundDist;
+
+  const actualTotalDistanceKm = input.actualTotalDistanceKm && input.actualTotalDistanceKm > 0
+    ? input.actualTotalDistanceKm
+    : outboundDist + returnDist;
+
+  // 3. Compute Timeline, Return Travel Duration, Final Arrival and Calendar Days
+  const timeline: ReturnTimelineResult = calculateReturnTimeline({
+    pickupDate: input.pickupDate,
+    pickupTime: input.pickupTime,
+    returnDate: input.returnDate,
+    returnTime: input.returnTime,
+    returnDistanceKm: returnDist,
+  });
+
+  const tripDays = input.numberOfDays && input.numberOfDays > 0
+    ? Math.max(1, input.numberOfDays)
+    : timeline.tripDays;
+  const totalNights = input.numberOfNights ?? Math.max(0, tripDays - 1);
+
+  // 4. Daily KM Allowance & 250 KM/day Master Fare Formula
+  // Formula: Billable KM = MAX(Actual Total Round-Trip KM, Total Trip Days × 250)
+  const dailyKmAllowance = ROUND_TRIP_MIN_KM_PER_DAY; // 250 KM
+  const totalMinimumKm = dailyKmAllowance * tripDays;
+  const billableKm = Math.max(actualTotalDistanceKm, totalMinimumKm);
+
+  // Rate per KM resolution
+  const configuredRate = ROUND_TRIP_PER_KM_RATES[normCategory] || 12;
+  const vehicleRate = input.vehicleRate && input.vehicleRate > 0 ? input.vehicleRate : configuredRate;
+
+  // Distance Fare calculation
+  const distanceFare = billableKm * vehicleRate;
+
+  // Driver Allowance (Standard commercial daily allowance for outstation round-trip)
   const driverAllowancePerDay = DRIVER_ALLOWANCE_PER_DAY[normCategory] || 400;
-  const totalDriverAllowance = driverAllowancePerDay * safeDays;
+  const totalDriverAllowance = driverAllowancePerDay * tripDays;
 
-  const baseFare = billableKm * ratePerKm;
-  const totalFare = baseFare + totalDriverAllowance;
+  // Night Pickup / Travel Allowance (10:00 PM to 06:00 AM)
+  let isNightPickup = false;
+  let nightCharges = 0;
+  const pTime = timeline.pickupTime;
+  const rTime = timeline.returnTime;
+  if (pTime || rTime) {
+    try {
+      const [pH] = (pTime || '09:00').split(':').map(Number);
+      const [rH] = (rTime || '23:59').split(':').map(Number);
+      if (pH >= 22 || pH < 6 || rH >= 22 || rH < 6) {
+        isNightPickup = true;
+        const nightRate = normCategory.includes('tempo') || normCategory.includes('urbania') || normCategory.includes('bus')
+          ? 400
+          : normCategory.includes('suv') || normCategory.includes('innova') || normCategory.includes('crysta') || normCategory.includes('ertiga')
+          ? 300
+          : 250;
+        nightCharges = nightRate;
+      }
+    } catch {
+      // fallback
+    }
+  }
+
+  // Subtotal base fare
+  const baseFare = distanceFare + totalDriverAllowance;
+  // Statutory 5% GST
+  const estimatedGst = Math.round((baseFare + nightCharges) * 0.05);
+  const totalFare = baseFare + nightCharges + estimatedGst;
+
+  // 30% Advance Token & 70% Driver Balance
   const tokenAmount = calculateAdvanceToken(totalFare, ADVANCE_PERCENT);
-  const balanceAmount = totalFare - tokenAmount;
+  const balanceAmount = Math.max(0, totalFare - tokenAmount);
 
-  const workingExplanation = `Billable ${billableKm} km × ₹${ratePerKm}/km + Driver Allowance ₹${totalDriverAllowance} (${safeDays} day${safeDays > 1 ? 's' : ''})`;
+  const workingExplanation = `Round-trip includes 250 KM/day allowance: MAX(${actualTotalDistanceKm} actual KM, ${totalMinimumKm} minimum KM for ${tripDays} days) = ${billableKm} billable KM × ₹${vehicleRate}/km + Driver Allowance ₹${totalDriverAllowance}`;
 
   return {
-    actualDistanceKm: oneWayDistanceKm,
-    totalRoundTripKm,
-    numberOfDays: safeDays,
-    guaranteedMinKm,
+    tripDays,
+    totalNights,
+    pickupDate: timeline.pickupDate,
+    pickupTime: timeline.pickupTime,
+    returnDate: timeline.returnDate,
+    returnTime: timeline.returnTime,
+    pickupLocation: pickupLoc,
+    destinationLocation: destLoc,
+    finalDropLocation: finalDropLoc,
+    outboundDistanceKm: outboundDist,
+    returnDistanceKm: returnDist,
+    actualTotalDistanceKm,
+    dailyKmAllowance,
+    totalMinimumKm,
     billableKm,
-    ratePerKm,
+    vehicleRate,
+    ratePerKm: vehicleRate,
+    distanceFare,
     driverAllowancePerDay,
     totalDriverAllowance,
+    nightCharges,
+    isNightPickup,
+    additionalCharges: nightCharges,
+    estimatedGst,
     baseFare,
     totalFare,
     tokenAmount,
     balanceAmount,
+    estimatedFinalArrival: {
+      arrivalDate: timeline.finalArrivalDate,
+      arrivalTime: timeline.finalArrivalTime,
+      readableDateTime: timeline.readableFinalArrival,
+    },
+    calculationStatus: 'success',
     workingExplanation,
+
+    // Backward-compatibility aliases
+    actualDistanceKm: outboundDist,
+    totalRoundTripKm: actualTotalDistanceKm,
+    numberOfDays: tripDays,
+    guaranteedMinKm: totalMinimumKm,
   };
 }
 

@@ -37,9 +37,9 @@ import { SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { BOOKING_ADDONS, isAddOnSupported } from '@/lib/pricing/add-ons';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
-import { calculateAdvanceToken, isGroupVehicleCategory, calculateLocalRentalFare, LOCAL_RENTAL_CONFIG, HourlyRentalPackageId } from '@/lib/pricing';
+import { calculateAdvanceToken, isGroupVehicleCategory, calculateLocalRentalFare, LOCAL_RENTAL_CONFIG, HourlyRentalPackageId, calculateRoundTripFare } from '@/lib/pricing';
 import { trackBookingCompleted } from '@/lib/analytics';
-import { formatTime12Hour, formatDateReadable, calculateRoundTripDays } from '@/lib/date-utils';
+import { formatTime12Hour, formatDateReadable, calculateRoundTripDays, calculateReturnTimeline } from '@/lib/date-utils';
 
 // Vehicle Display Profiles
 const VEHICLE_INFO: Record<string, { name: string; models: string; seats: string; bags: string; image: string; perKm: string; baseRate: number }> = {
@@ -71,6 +71,10 @@ function CheckoutContent() {
   const rawDate = searchParams.get('date') || searchParams.get('pickupDate') || '';
   const rawTime = searchParams.get('time') || searchParams.get('pickupTime') || '09:00';
   const rawReturnDate = searchParams.get('returnDate') || searchParams.get('return_date') || '';
+  const rawReturnTime = searchParams.get('returnTime') || '23:59';
+  const rawFinalDrop = searchParams.get('finalDrop') || pickupCity;
+  const rawOutboundKm = Number(searchParams.get('outboundKm') || 0);
+  const rawReturnKm = Number(searchParams.get('returnKm') || 0);
   const initialKm = Number(searchParams.get('km') || searchParams.get('distanceKm') || 0);
 
   const rawStops = searchParams.get('stops') || '';
@@ -85,6 +89,10 @@ function CheckoutContent() {
   const [customerEmail, setCustomerEmail] = useState('');
   const [pickupAddressDetail, setPickupAddressDetail] = useState('');
   const [dropAddressDetail, setDropAddressDetail] = useState('');
+  const [returnTime, setReturnTime] = useState(rawReturnTime);
+  const [finalDropAddressDetail, setFinalDropAddressDetail] = useState('');
+  const [isCustomReturnDrop, setIsCustomReturnDrop] = useState(rawFinalDrop.trim().toLowerCase() !== pickupCity.trim().toLowerCase());
+  const [finalDropCity, setFinalDropCity] = useState(rawFinalDrop);
   const [passengerCount, setPassengerCount] = useState(1);
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>(initialAddOns);
@@ -135,6 +143,17 @@ function CheckoutContent() {
       : `${detail}, ${dropCity}`;
   }, [dropAddressDetail, dropCity, isRental]);
 
+  const effectiveFinalDrop = useMemo(() => {
+    if (serviceType !== 'round_trip') return '';
+    const baseCity = isCustomReturnDrop ? (finalDropCity || pickupCity) : pickupCity;
+    const detail = finalDropAddressDetail.trim();
+    if (!detail) return baseCity;
+    const cleanCity = baseCity.split(',')[0].trim();
+    return detail.toLowerCase().includes(cleanCity.toLowerCase())
+      ? detail
+      : `${detail}, ${baseCity}`;
+  }, [finalDropAddressDetail, finalDropCity, isCustomReturnDrop, pickupCity, serviceType]);
+
   // Accurate Highway Distance & Travel Duration (Auto updates when specific address is entered)
   const routeData = useMemo(() => {
     if (isRental) {
@@ -152,6 +171,27 @@ function CheckoutContent() {
     return resolveAccurateRoute(effectivePickup, effectiveDrop, initialKm);
   }, [effectivePickup, effectiveDrop, initialKm, isRental, packageId]);
 
+  // Outbound and Return Road Distances
+  const outboundDistanceKm = useMemo(() => {
+    if (rawOutboundKm > 0 && !pickupAddressDetail && !dropAddressDetail) return rawOutboundKm;
+    return routeData.distanceKm;
+  }, [rawOutboundKm, routeData.distanceKm, pickupAddressDetail, dropAddressDetail]);
+
+  const returnDistanceKm = useMemo(() => {
+    if (serviceType !== 'round_trip') return outboundDistanceKm;
+    if (rawReturnKm > 0 && !dropAddressDetail && !finalDropAddressDetail && !isCustomReturnDrop) {
+      return rawReturnKm;
+    }
+    if (effectiveFinalDrop && effectiveFinalDrop.trim().toLowerCase() !== effectivePickup.trim().toLowerCase()) {
+      return resolveAccurateRoute(effectiveDrop, effectiveFinalDrop).distanceKm;
+    }
+    return outboundDistanceKm;
+  }, [serviceType, rawReturnKm, dropAddressDetail, finalDropAddressDetail, isCustomReturnDrop, effectiveFinalDrop, effectivePickup, effectiveDrop, outboundDistanceKm]);
+
+  const actualRoundTripKm = useMemo(() => {
+    return outboundDistanceKm + returnDistanceKm;
+  }, [outboundDistanceKm, returnDistanceKm]);
+
   // Formatted Date & Time (Accurate string representation without timezone skew)
   const formattedDate = useMemo(() => {
     return formatDateReadable(rawDate);
@@ -165,19 +205,35 @@ function CheckoutContent() {
     return formatTime12Hour(rawTime);
   }, [rawTime]);
 
+  const formattedReturnTime = useMemo(() => {
+    return formatTime12Hour(returnTime);
+  }, [returnTime]);
+
+  // Return timeline and calendar days
+  const roundTripTimeline = useMemo(() => {
+    if (serviceType !== 'round_trip' || !rawDate || !rawReturnDate) return null;
+    return calculateReturnTimeline({
+      pickupDate: rawDate,
+      pickupTime: rawTime,
+      returnDate: rawReturnDate,
+      returnTime,
+      returnDistanceKm,
+    });
+  }, [serviceType, rawDate, rawTime, rawReturnDate, returnTime, returnDistanceKm]);
+
   const tripDays = useMemo(() => {
     const urlDays = Number(searchParams.get('days') || 0);
     if (urlDays > 0) return urlDays;
-    if (serviceType !== 'round_trip' || !rawDate || !rawReturnDate) return 1;
-    return calculateRoundTripDays(rawDate, rawReturnDate);
-  }, [serviceType, rawDate, rawReturnDate, searchParams]);
+    if (serviceType !== 'round_trip') return 1;
+    return roundTripTimeline?.tripDays || 1;
+  }, [serviceType, searchParams, roundTripTimeline]);
 
   // Guaranteed Authoritative Base Fare & Breakdown Calculation
   const calculatedFare = useMemo(() => {
     const dist = routeData.distanceKm;
     let base = 0;
 
-    if (passedFare > 0) {
+    if (passedFare > 0 && !pickupAddressDetail && !dropAddressDetail && !finalDropAddressDetail) {
       base = passedFare;
     } else if (serviceType === 'one_way') {
       if (vehicle.name === 'Sedan') {
@@ -200,11 +256,22 @@ function CheckoutContent() {
         base = Math.max(1800, Math.round(dist * 14.5));
       }
     } else if (serviceType === 'round_trip') {
-      const minDailyKm = 250;
-      const billableKm = Math.max(dist * 2, tripDays * minDailyKm);
-      const driverDaily = vehicle.name.includes('Bus') ? 1000 : vehicle.name.includes('Tempo') ? 600 : vehicle.name.includes('Urbania') ? 700 : 400;
-      const totalDriver = driverDaily * tripDays;
-      base = Math.round(billableKm * vehicle.baseRate + totalDriver);
+      const rt = calculateRoundTripFare({
+        pickupDate: rawDate,
+        pickupTime: rawTime,
+        pickupLocation: effectivePickup,
+        destinationLocation: effectiveDrop,
+        returnDate: rawReturnDate,
+        returnTime,
+        finalDropLocation: effectiveFinalDrop,
+        outboundDistanceKm,
+        returnDistanceKm,
+        actualTotalDistanceKm: actualRoundTripKm,
+        numberOfDays: tripDays,
+        vehicleCategory: categoryId,
+        vehicleRate: vehicle.baseRate,
+      });
+      base = rt.baseFare;
     } else if (serviceType === 'local_rental') {
       const rentalQuote = calculateLocalRentalFare(packageId, categoryId);
       base = rentalQuote.basePrice;
@@ -298,7 +365,7 @@ function CheckoutContent() {
       : dropCity;
 
     const travelDateTime = rawDate ? `${rawDate}T${rawTime}:00` : new Date().toISOString();
-    const returnDateTime = (serviceType === 'round_trip' && rawReturnDate) ? `${rawReturnDate}T${rawTime}:00` : null;
+    const returnDateTime = (serviceType === 'round_trip' && rawReturnDate) ? `${rawReturnDate}T${returnTime}:00` : null;
 
     try {
       const response = await fetch('/api/public/book', {
@@ -313,11 +380,24 @@ function CheckoutContent() {
           dropAddress: fullDrop,
           travelDateTime,
           returnDateTime,
+          returnDate: rawReturnDate,
+          returnTime,
+          finalDropAddress: effectiveFinalDrop,
           numberOfDays: tripDays,
-          actualDistanceKm: serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
+          outboundDistanceKm,
+          returnDistanceKm,
+          actualDistanceKm: serviceType === 'round_trip' ? actualRoundTripKm : routeData.distanceKm,
+          actualTotalDistanceKm: serviceType === 'round_trip' ? actualRoundTripKm : routeData.distanceKm,
+          billableKm: serviceType === 'round_trip' ? Math.max(actualRoundTripKm, tripDays * 250) : routeData.distanceKm,
+          estimatedFinalArrival: roundTripTimeline?.estimatedFinalArrival,
           calculatedBaseFare: calculatedFare.baseFare,
           passengerCount,
-          specialInstructions: specialInstructions.trim(),
+          specialInstructions: (
+            specialInstructions.trim() +
+            (serviceType === 'round_trip' && effectiveFinalDrop && effectiveFinalDrop !== fullPickup
+              ? ` | Return Drop: ${effectiveFinalDrop}`
+              : '')
+          ).trim(),
           stops,
           selectedAddOns,
           customerFullName: `${customerTitle} ${customerFullName.trim()}`.trim(),
@@ -356,8 +436,9 @@ function CheckoutContent() {
           journeyDate: formattedDate,
           pickupTime: formattedTime,
           returnDate: serviceType === 'round_trip' ? formattedReturnDate : undefined,
+          returnTime: serviceType === 'round_trip' ? formattedReturnTime : undefined,
           durationDays: serviceType === 'round_trip' ? tripDays : undefined,
-          distance: isRental ? `${routeData.distanceKm} KM (Package Limit)` : serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
+          distance: isRental ? `${routeData.distanceKm} KM (Package Limit)` : serviceType === 'round_trip' ? Math.max(actualRoundTripKm, tripDays * 250) : routeData.distanceKm,
           customerName: `${customerTitle} ${customerFullName.trim()}`,
           customerPhone: customerPhone.trim(),
           passengerCount,
@@ -382,8 +463,9 @@ function CheckoutContent() {
           journeyDate: formattedDate,
           pickupTime: formattedTime,
           returnDate: serviceType === 'round_trip' ? formattedReturnDate : undefined,
+          returnTime: serviceType === 'round_trip' ? formattedReturnTime : undefined,
           durationDays: serviceType === 'round_trip' ? tripDays : undefined,
-          distance: isRental ? `${routeData.distanceKm} KM (Package Limit)` : serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm,
+          distance: isRental ? `${routeData.distanceKm} KM (Package Limit)` : serviceType === 'round_trip' ? Math.max(actualRoundTripKm, tripDays * 250) : routeData.distanceKm,
           customerName: `${customerTitle} ${customerFullName.trim()}`,
           customerPhone: customerPhone.trim(),
           passengerCount,
@@ -862,6 +944,81 @@ function CheckoutContent() {
                   </div>
                 )}
 
+                {/* Round-Trip Return Leg Details (Return Time & Final Drop Location) */}
+                {serviceType === 'round_trip' && (
+                  <div className="bg-blue-50/70 p-4 rounded-2xl border border-blue-200 space-y-3">
+                    <div className="flex items-center justify-between flex-wrap gap-1">
+                      <label className="text-xs font-black uppercase tracking-wider text-blue-950 flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+                        <span>Return Journey Specifications</span>
+                      </label>
+                      <span className="text-[10px] sm:text-[11px] text-blue-800 font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200 shrink-0">
+                        Leg 2: {dropCity} ➔ {isCustomReturnDrop ? finalDropCity : pickupCity}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+                          Return Departure Time
+                        </label>
+                        <input
+                          type="time"
+                          value={returnTime}
+                          onChange={(e) => setReturnTime(e.target.value)}
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:border-brand-blue"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase">
+                            Final Drop City / Location
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const next = !isCustomReturnDrop;
+                              setIsCustomReturnDrop(next);
+                              if (!next) setFinalDropCity(pickupCity);
+                            }}
+                            className="text-[10px] font-bold text-brand-blue hover:underline cursor-pointer"
+                          >
+                            {isCustomReturnDrop ? 'Reset to Pickup' : 'Different Drop'}
+                          </button>
+                        </div>
+                        {isCustomReturnDrop ? (
+                          <input
+                            type="text"
+                            value={finalDropCity}
+                            onChange={(e) => setFinalDropCity(e.target.value)}
+                            placeholder="Enter return drop city..."
+                            className="w-full bg-white border border-blue-300 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:border-brand-blue"
+                          />
+                        ) : (
+                          <div className="bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-700">
+                            Same as Pickup ({pickupCity})
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {isCustomReturnDrop && (
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+                          Doorstep Drop Address in {finalDropCity}
+                        </label>
+                        <input
+                          type="text"
+                          value={finalDropAddressDetail}
+                          onChange={(e) => setFinalDropAddressDetail(e.target.value)}
+                          placeholder="House/Building, Landmark, Colony for final return drop"
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-900 focus:outline-none focus:border-brand-blue"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Via Intermediate Stops Corridor (if any stops selected) */}
                 {stops.length > 0 && (
                   <div className="bg-amber-50/70 p-4 rounded-2xl border border-amber-200">
@@ -1129,12 +1286,32 @@ function CheckoutContent() {
                   </span>
                   <strong className="text-slate-900">
                     {serviceType === 'round_trip'
-                      ? `${Math.max(routeData.distanceKm * 2, tripDays * 250)} km Total (Round-Trip)`
+                      ? `${Math.max(actualRoundTripKm, tripDays * 250)} km Billable (${tripDays} Days)`
                       : isRental
                       ? `${routeData.distanceKm} km (${routeData.durationText})`
                       : `${routeData.distanceKm} km Highway`}
                   </strong>
                 </div>
+                {serviceType === 'round_trip' && (
+                  <>
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-500">Outbound Leg:</span>
+                      <strong className="text-slate-800">{outboundDistanceKm} km</strong>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-500">Return Leg:</span>
+                      <strong className="text-slate-800">{returnDistanceKm} km</strong>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-500">Actual Road Total:</span>
+                      <strong className="text-slate-800">{actualRoundTripKm} km</strong>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-500">Daily Quota (250 km/day):</span>
+                      <strong className="text-blue-700">{tripDays * 250} km</strong>
+                    </div>
+                  </>
+                )}
                 {stops.length > 0 && (
                   <div className="flex justify-between items-center text-amber-800 bg-amber-50/70 px-2.5 py-1.5 rounded-lg border border-amber-200/60">
                     <span className="font-semibold text-xs">Via Stops ({stops.length}):</span>
@@ -1142,19 +1319,21 @@ function CheckoutContent() {
                   </div>
                 )}
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold text-slate-500">Departure Date:</span>
-                  <strong className="text-slate-900">{formattedDate}</strong>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold text-slate-500">Pickup Time:</span>
-                  <strong className="text-slate-900">{formattedTime}</strong>
+                  <span className="font-semibold text-slate-500">Departure:</span>
+                  <strong className="text-slate-900">{formattedDate} at {formattedTime}</strong>
                 </div>
                 {serviceType === 'round_trip' && (
                   <>
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-slate-500">Return Date:</span>
-                      <strong className="text-slate-900">{formattedReturnDate || 'Same Day'}</strong>
+                      <span className="font-semibold text-slate-500">Return Departure:</span>
+                      <strong className="text-slate-900">{formattedReturnDate} at {formattedReturnTime}</strong>
                     </div>
+                    {roundTripTimeline?.estimatedFinalArrival && (
+                      <div className="flex justify-between items-center text-[11px] bg-emerald-50/70 p-1 rounded text-emerald-800">
+                        <span className="font-semibold">Est. Final Arrival:</span>
+                        <strong className="text-emerald-950 font-bold">{roundTripTimeline.estimatedFinalArrival.readableDateTime}</strong>
+                      </div>
+                    )}
                     <div className="flex justify-between items-center">
                       <span className="font-semibold text-slate-500">Trip Duration:</span>
                       <strong className="text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
@@ -1175,14 +1354,14 @@ function CheckoutContent() {
                 <div className="p-2.5 bg-blue-50/70 border border-blue-200/80 rounded-xl flex items-center justify-between text-xs mb-1">
                   <div>
                     <span className="font-bold text-slate-900 block">
-                      {serviceType === 'round_trip' ? 'Round-Trip Total Distance' : 'Doorstep Highway Distance'}
+                      {serviceType === 'round_trip' ? 'Round-Trip Billable Distance' : 'Doorstep Highway Distance'}
                     </span>
                     <span className="text-[10px] text-slate-500">
-                      {serviceType === 'round_trip' ? `Minimum ${tripDays * 250} km quota for ${tripDays} days` : pickupAddressDetail || dropAddressDetail ? 'Auto-calculated for your exact address' : 'Standard city center corridor'}
+                      {serviceType === 'round_trip' ? `Higher of actual (${actualRoundTripKm} km) or ${tripDays * 250} km quota` : pickupAddressDetail || dropAddressDetail ? 'Auto-calculated for your exact address' : 'Standard city center corridor'}
                     </span>
                   </div>
                   <span className="font-black text-brand-blue tabular-nums bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs">
-                    {serviceType === 'round_trip' ? `${Math.max(routeData.distanceKm * 2, tripDays * 250)} km` : `${routeData.distanceKm} km`}
+                    {serviceType === 'round_trip' ? `${Math.max(actualRoundTripKm, tripDays * 250)} km` : `${routeData.distanceKm} km`}
                   </span>
                 </div>
 
@@ -1193,7 +1372,7 @@ function CheckoutContent() {
                       ? 'Taxable Hourly Package'
                       : serviceType === 'airport_transfer'
                       ? 'Taxable Airport Transfer Base'
-                      : `Taxable Base Vehicle Hire (${serviceType === 'round_trip' ? Math.max(routeData.distanceKm * 2, tripDays * 250) : routeData.distanceKm} km)`}
+                      : `Taxable Base Vehicle Hire (${serviceType === 'round_trip' ? Math.max(actualRoundTripKm, tripDays * 250) : routeData.distanceKm} km)`}
                   </span>
                   <span className="font-bold text-slate-900 tabular-nums">
                     ₹{calculatedFare.taxableBaseFare.toLocaleString('en-IN')}

@@ -405,6 +405,12 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
                 <p className="text-slate-900 font-semibold mt-0.5">{actualDrop}</p>
               </div>
             )}
+            {isRoundTrip && breakdown.finalDropAddress && breakdown.finalDropAddress !== actualPickup && (
+              <div>
+                <span className="text-slate-500 text-[10px] uppercase font-bold block">Final Return Drop</span>
+                <p className="text-blue-900 font-semibold mt-0.5">{breakdown.finalDropAddress}</p>
+              </div>
+            )}
             {isRental && (
               <div>
                 <span className="text-slate-500 text-[10px] uppercase font-bold block">Usage Scope</span>
@@ -426,6 +432,22 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
                 <span className="text-slate-500 text-[10px] uppercase font-bold block">Return Departure Schedule</span>
                 <p className="text-slate-900 font-bold mt-0.5 tabular-nums">{formatDateTimeReadable(booking.return_datetime)}</p>
               </div>
+            )}
+            {isRoundTrip && (
+              <>
+                <div>
+                  <span className="text-slate-500 text-[10px] uppercase font-bold block">Estimated Final Arrival</span>
+                  <p className="text-emerald-900 font-bold mt-0.5 tabular-nums">
+                    {breakdown.estimatedFinalArrival?.readableDateTime || 'End of journey'}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-slate-500 text-[10px] uppercase font-bold block">Distance &amp; Allowance Baseline</span>
+                  <p className="text-slate-800 font-semibold mt-0.5">
+                    {breakdown.outboundDistanceKm || Math.round(breakdown.actualDistanceKm / 2) || 0} km Outbound + {breakdown.returnDistanceKm || Math.round(breakdown.actualDistanceKm / 2) || 0} km Return = {breakdown.actualTotalDistanceKm || breakdown.actualDistanceKm || 0} km Actual (Billable: {breakdown.billableKm || Math.max(breakdown.actualDistanceKm || 0, (breakdown.tripDays || 1) * 250)} km via 250 km/day quota)
+                  </p>
+                </div>
+              </>
             )}
           </div>
         </div>
@@ -528,10 +550,20 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
               {/* Base Taxable Vehicle Hire */}
               <tr>
                 <td className="py-2.5 px-3">
-                  <strong className="block text-slate-900 font-bold">Taxable Base Vehicle Hire &amp; Fuel Allowance</strong>
-                  <span className="text-[11px] text-slate-500">Commercial vehicle hire for entire corridor journey with driver navigation.</span>
+                  <strong className="block text-slate-900 font-bold">
+                    {isRoundTrip
+                      ? `Taxable Base Vehicle Distance Hire (${breakdown.billableKm || Math.max(breakdown.actualDistanceKm || 0, (breakdown.tripDays || 1) * 250)} km @ ₹${breakdown.vehicleRate || 12}/km)`
+                      : 'Taxable Base Vehicle Hire & Fuel Allowance'}
+                  </strong>
+                  <span className="text-[11px] text-slate-500">
+                    {isRoundTrip
+                      ? 'Round-trip package includes 250 KM per day. Billable kilometres are calculated using the higher of actual total round-trip kilometres or 250 KM multiplied by total trip days. FASTag highway tolls and state entry taxes are payable separately at actuals.'
+                      : 'Commercial vehicle hire for entire corridor journey with driver navigation.'}
+                  </span>
                 </td>
-                <td className="py-2.5 px-3 text-center text-slate-600 font-semibold">Taxable Baseline</td>
+                <td className="py-2.5 px-3 text-center text-slate-600 font-semibold">
+                  {isRoundTrip ? `${breakdown.billableKm || Math.max(breakdown.actualDistanceKm || 0, (breakdown.tripDays || 1) * 250)} km` : 'Taxable Baseline'}
+                </td>
                 <td className="py-2.5 px-3 text-right tabular-nums font-bold">₹{taxableBaseFare.toLocaleString('en-IN')}</td>
               </tr>
 
@@ -550,7 +582,11 @@ export default async function BookingInvoicePage({ params }: { params: Promise<{
               {/* Chauffeur Daily Allowance */}
               <tr>
                 <td className="py-2.5 px-3">
-                  <strong className="block text-slate-900 font-bold">Chauffeur Daily Maintenance Allowance</strong>
+                  <strong className="block text-slate-900 font-bold">
+                    {isRoundTrip
+                      ? `Chauffeur Daily Maintenance Allowance (${breakdown.tripDays || 1} Days)`
+                      : 'Chauffeur Daily Maintenance Allowance'}
+                  </strong>
                   <span className="text-[11px] text-slate-500">Professional chauffeur food and daily maintenance allowance included.</span>
                 </td>
                 <td className="py-2.5 px-3 text-center text-emerald-700 font-bold">Included</td>

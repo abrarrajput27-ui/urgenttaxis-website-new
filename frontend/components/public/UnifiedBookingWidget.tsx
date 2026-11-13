@@ -201,7 +201,9 @@ export default function UnifiedBookingWidget({
     return '09:00' > minT ? '09:00' : minT;
   });
   const [returnDate, setReturnDate] = useState(todayStr);
-  const [returnTime, setReturnTime] = useState('20:00');
+  const [returnTime, setReturnTime] = useState('23:59');
+  const [finalDrop, setFinalDrop] = useState(defaultOrigin || '');
+  const [isCustomReturnDrop, setIsCustomReturnDrop] = useState(false);
   const [numberOfDays, setNumberOfDays] = useState(1);
   const [passengerCount, setPassengerCount] = useState(2);
 
@@ -530,16 +532,34 @@ export default function UnifiedBookingWidget({
         }
       }
     } else if (serviceType === 'round_trip') {
-      const roundTripDist = distanceKm || 200;
+      const effectiveFinalDrop = isCustomReturnDrop && finalDrop.trim() ? finalDrop.trim() : origin.trim();
+      const outboundDist = distanceKm || 200;
+      const returnDist = (isCustomReturnDrop && finalDrop.trim() && finalDrop.trim().toLowerCase() !== origin.trim().toLowerCase())
+        ? (resolveAccurateRoute(destination.trim() || 'Nainital', finalDrop.trim()).distanceKm || outboundDist)
+        : outboundDist;
+
       VEHICLE_CARDS.forEach((v) => {
-        const rt = calculateRoundTripFare(roundTripDist, numberOfDays, v.pricingCategory);
+        const rt = calculateRoundTripFare({
+          pickupDate,
+          pickupTime,
+          pickupLocation: origin.trim(),
+          destinationLocation: destination.trim(),
+          returnDate,
+          returnTime,
+          finalDropLocation: effectiveFinalDrop,
+          outboundDistanceKm: outboundDist,
+          returnDistanceKm: returnDist,
+          actualTotalDistanceKm: outboundDist + returnDist,
+          numberOfDays,
+          vehicleCategory: v.pricingCategory,
+        });
         quotes[v.key] = {
           fare: rt.totalFare,
           tokenAmount: rt.tokenAmount,
           balanceAmount: rt.balanceAmount,
           isFixed: true,
-          estimatedToll: Math.round(roundTripDist * 3.2),
-          distanceKm: rt.actualDistanceKm,
+          estimatedToll: Math.round((outboundDist + returnDist) * 1.6),
+          distanceKm: rt.actualTotalDistanceKm,
           billableKm: rt.billableKm,
           driverAllowance: rt.totalDriverAllowance,
         };
@@ -759,10 +779,21 @@ export default function UnifiedBookingWidget({
     }
 
     if (serviceType === 'round_trip') {
+      const effectiveFinalDrop = isCustomReturnDrop && finalDrop.trim() ? finalDrop.trim() : origin.trim();
+      const outboundDist = distanceKm || 200;
+      const returnDist = (isCustomReturnDrop && finalDrop.trim() && finalDrop.trim().toLowerCase() !== origin.trim().toLowerCase())
+        ? (resolveAccurateRoute(destination.trim() || 'Nainital', finalDrop.trim()).distanceKm || outboundDist)
+        : outboundDist;
+
       query.set('returnDate', returnDate);
       query.set('returnTime', returnTime);
       query.set('days', String(numberOfDays));
-      query.set('returnTo', returnToPickupLocation);
+      query.set('finalDrop', effectiveFinalDrop);
+      query.set('returnTo', effectiveFinalDrop);
+      query.set('outboundKm', String(outboundDist));
+      query.set('returnKm', String(returnDist));
+      query.set('distanceKm', String(outboundDist + returnDist));
+      query.set('km', String(outboundDist + returnDist));
     } else if (serviceType === 'local_rental') {
       query.set('packageId', selectedPackageId);
     } else if (serviceType === 'airport_transfer') {
@@ -823,10 +854,21 @@ export default function UnifiedBookingWidget({
     if (distanceKm > 0) query.set('distanceKm', String(distanceKm));
     if (stops.length > 0) query.set('stops', stops.join('|'));
     if (serviceType === 'round_trip') {
+      const effectiveFinalDrop = isCustomReturnDrop && finalDrop.trim() ? finalDrop.trim() : origin.trim();
+      const outboundDist = distanceKm || 200;
+      const returnDist = (isCustomReturnDrop && finalDrop.trim() && finalDrop.trim().toLowerCase() !== origin.trim().toLowerCase())
+        ? (resolveAccurateRoute(destination.trim() || 'Nainital', finalDrop.trim()).distanceKm || outboundDist)
+        : outboundDist;
+
       query.set('returnDate', returnDate);
       query.set('returnTime', returnTime);
       query.set('days', String(numberOfDays));
-      query.set('returnTo', returnToPickupLocation);
+      query.set('finalDrop', effectiveFinalDrop);
+      query.set('returnTo', effectiveFinalDrop);
+      query.set('outboundKm', String(outboundDist));
+      query.set('returnKm', String(returnDist));
+      query.set('distanceKm', String(outboundDist + returnDist));
+      query.set('km', String(outboundDist + returnDist));
     } else if (serviceType === 'local_rental') {
       query.set('packageId', selectedPackageId);
       query.set('city', rentalCity);
@@ -1171,18 +1213,39 @@ export default function UnifiedBookingWidget({
               </div>
             </div>
 
-            {/* ROUND-TRIP RETURN TO PICKUP AUTOMATIC SYNC */}
+            {/* ROUND-TRIP RETURN TO PICKUP AUTOMATIC SYNC & CUSTOM RETURN DROP OPTION */}
             {serviceType === 'round_trip' && (
-              <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-2xl flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="text-brand-blue font-bold">🔁 Return Location:</span>
-                  <span className="font-semibold text-slate-800">
-                    {returnToPickupLocation} (automatically returns to your pickup address)
-                  </span>
+              <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-2 text-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-brand-blue font-bold">🔁 Return Drop:</span>
+                    <span className="font-semibold text-slate-800">
+                      {isCustomReturnDrop ? (finalDrop || 'Enter different drop') : returnToPickupLocation}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = !isCustomReturnDrop;
+                      setIsCustomReturnDrop(next);
+                      if (next && !finalDrop) setFinalDrop(origin);
+                    }}
+                    className="text-[10px] uppercase font-black text-brand-blue tracking-wider bg-white px-2.5 py-1 rounded-full border border-blue-200 hover:bg-blue-50 cursor-pointer"
+                  >
+                    {isCustomReturnDrop ? 'Reset to Pickup' : 'Change Drop'}
+                  </button>
                 </div>
-                <span className="text-[10px] uppercase font-black text-brand-blue tracking-wider bg-white px-2 py-0.5 rounded-full border border-blue-200">
-                  Auto Synced
-                </span>
+                {isCustomReturnDrop && (
+                  <div className="pt-1">
+                    <input
+                      type="text"
+                      value={finalDrop}
+                      onChange={(e) => setFinalDrop(e.target.value)}
+                      placeholder="Enter different final return drop address..."
+                      className="w-full bg-white text-slate-900 border border-blue-300 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#1e1b4b]"
+                    />
+                  </div>
+                )}
               </div>
             )}
           </div>

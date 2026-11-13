@@ -36,9 +36,11 @@ import {
   HOURLY_RENTAL_PACKAGES,
   HourlyRentalPackageId,
   calculateLocalRentalFare,
+  calculateRoundTripFare,
 } from '@/lib/pricing';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
 import { formatLocationWithState, POPULAR_AUTOCOMPLETE_CITIES } from '@/lib/location-authority';
+import { calculateReturnTimeline, formatDateReadable } from '@/lib/date-utils';
 
 export type MmtTripType = 'one_way' | 'round_trip' | 'airport_transfer' | 'local_rental';
 
@@ -143,6 +145,11 @@ export default function MmtBookingWidget({
     const minT = getMinTimeForToday();
     return '09:00' > minT ? '09:00' : minT;
   });
+  // Recommended default return departure time: 11:59 PM (23:59), independently selectable
+  const [returnTime, setReturnTime] = useState('23:59');
+  // Final return drop location (default: prefilled with origin, but fully editable)
+  const [finalDrop, setFinalDrop] = useState('');
+  const [isCustomReturnDrop, setIsCustomReturnDrop] = useState(false);
 
   const minTimeForToday = useMemo(() => getMinTimeForToday(), [pickupDate]);
 
@@ -187,10 +194,46 @@ export default function MmtBookingWidget({
     setPickupTime(newTime);
   };
 
+  // Dedicated return journey handlers (Preserves pickup time & allows independent return time)
+  const handleReturnDateChange = (newDate: string) => {
+    if (newDate < pickupDate) newDate = pickupDate;
+    setReturnDate(newDate);
+    // Preserve selected return time; if same day and return time is earlier than pickup, adjust to 23:59
+    if (newDate === pickupDate && returnTime <= pickupTime) {
+      setReturnTime('23:59');
+    }
+    setErrorMsg('');
+  };
+
+  const handleReturnTimeChange = (newTime: string) => {
+    setErrorMsg('');
+    setReturnTime(newTime);
+  };
+
   // Hidden date input refs to trigger native calendar with custom MMT UI
   const pickupDateInputRef = useRef<HTMLInputElement>(null);
   const returnDateInputRef = useRef<HTMLInputElement>(null);
   const pickupTimeInputRef = useRef<HTMLInputElement>(null);
+  const returnTimeInputRef = useRef<HTMLInputElement>(null);
+
+  // Dynamic Round-Trip Timeline & Distance Calculation
+  const roundTripTimeline = useMemo(() => {
+    if (tripType !== 'round_trip') return null;
+    const outboundRes = resolveAccurateRoute(origin || 'Delhi', destination || 'Nainital', defaultDistanceKm);
+    let retDist = outboundRes.distanceKm;
+    const effectiveFinalDrop = isCustomReturnDrop && finalDrop.trim() ? finalDrop.trim() : (origin || 'Delhi');
+    if (isCustomReturnDrop && finalDrop.trim() && finalDrop.trim().toLowerCase() !== (origin || '').trim().toLowerCase()) {
+      const retRes = resolveAccurateRoute(destination || 'Nainital', effectiveFinalDrop);
+      retDist = retRes.distanceKm;
+    }
+    return calculateReturnTimeline({
+      pickupDate,
+      pickupTime,
+      returnDate,
+      returnTime,
+      returnDistanceKm: retDist,
+    });
+  }, [tripType, pickupDate, pickupTime, returnDate, returnTime, origin, destination, finalDrop, isCustomReturnDrop, defaultDistanceKm]);
 
   // ── Hourly Rental State ──
   const [rentalPackageId, setRentalPackageId] = useState<HourlyRentalPackageId>('8h80km');
@@ -335,9 +378,15 @@ export default function MmtBookingWidget({
       }
     }
 
-    if (tripType === 'round_trip' && returnDate < pickupDate) {
-      setErrorMsg('Return date cannot be earlier than departure date.');
-      return;
+    if (tripType === 'round_trip') {
+      if (returnDate < pickupDate) {
+        setErrorMsg('Return date cannot be earlier than departure date.');
+        return;
+      }
+      if (returnDate === pickupDate && returnTime <= effectivePickupTime) {
+        setErrorMsg('For same-day round trips, return departure time must be later than pickup time.');
+        return;
+      }
     }
 
     // Build URL query params for /cabs page
@@ -366,21 +415,42 @@ export default function MmtBookingWidget({
       params.set('drop', destination.trim());
       if (tripType === 'round_trip') {
         params.set('returnDate', returnDate);
-      }
+        params.set('returnTime', returnTime);
+        const effectiveFinalDrop = isCustomReturnDrop && finalDrop.trim() ? finalDrop.trim() : origin.trim();
+        params.set('finalDrop', effectiveFinalDrop);
 
-      const validStops = stops.map((s) => s.trim()).filter(Boolean);
-      if (validStops.length > 0) {
-        params.set('stops', validStops.join('|'));
-        const multi = resolveMultiStopRoute(origin.trim(), validStops, destination.trim());
-        const totalKm = multi?.totalDistanceKm || defaultDistanceKm || 200;
-        params.set('distanceKm', String(totalKm));
-        params.set('km', String(totalKm));
+        // Separate Outbound and Return Distances
+        const outboundAccurate = resolveAccurateRoute(origin.trim(), destination.trim(), defaultDistanceKm);
+        const outboundKm = outboundAccurate.distanceKm;
+
+        let returnKm = outboundKm;
+        if (isCustomReturnDrop && finalDrop.trim() && finalDrop.trim().toLowerCase() !== origin.trim().toLowerCase()) {
+          const returnAccurate = resolveAccurateRoute(destination.trim(), finalDrop.trim());
+          returnKm = returnAccurate.distanceKm;
+        }
+
+        const totalRoundTripKm = outboundKm + returnKm;
+        params.set('outboundKm', String(outboundKm));
+        params.set('returnKm', String(returnKm));
+        params.set('distanceKm', String(totalRoundTripKm));
+        params.set('km', String(totalRoundTripKm));
+        const calculatedDays = roundTripTimeline?.tripDays || 1;
+        params.set('days', String(calculatedDays));
       } else {
-        const accurate = resolveAccurateRoute(origin.trim(), destination.trim(), defaultDistanceKm);
-        params.set('distanceKm', String(accurate.distanceKm));
-        params.set('km', String(accurate.distanceKm));
-        if (accurate.durationText) {
-          params.set('durationText', accurate.durationText);
+        const validStops = stops.map((s) => s.trim()).filter(Boolean);
+        if (validStops.length > 0) {
+          params.set('stops', validStops.join('|'));
+          const multi = resolveMultiStopRoute(origin.trim(), validStops, destination.trim());
+          const totalKm = multi?.totalDistanceKm || defaultDistanceKm || 200;
+          params.set('distanceKm', String(totalKm));
+          params.set('km', String(totalKm));
+        } else {
+          const accurate = resolveAccurateRoute(origin.trim(), destination.trim(), defaultDistanceKm);
+          params.set('distanceKm', String(accurate.distanceKm));
+          params.set('km', String(accurate.distanceKm));
+          if (accurate.durationText) {
+            params.set('durationText', accurate.durationText);
+          }
         }
       }
     }
@@ -726,14 +796,12 @@ export default function MmtBookingWidget({
 
                 {/* 3. DEPARTURE DATE CARD */}
                 <div
-                  className={`${
-                    tripType === 'round_trip' ? 'md:col-span-2' : 'md:col-span-3'
-                  } p-3.5 sm:p-4 hover:bg-white transition-colors cursor-pointer relative group`}
+                  className="md:col-span-3 p-3.5 sm:p-4 hover:bg-white transition-colors cursor-pointer relative group"
                   onClick={() => pickupDateInputRef.current?.showPicker?.()}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                      DEPARTURE
+                      DEPARTURE DATE
                     </span>
                     <FaCalendarAlt className="w-3 h-3 text-brand-blue" />
                   </div>
@@ -761,48 +829,9 @@ export default function MmtBookingWidget({
                   />
                 </div>
 
-                {/* 4. RETURN DATE CARD (Round-Trip Only) */}
-                {tripType === 'round_trip' && (
-                  <div
-                    className="md:col-span-2 p-3.5 sm:p-4 hover:bg-white transition-colors cursor-pointer relative group"
-                    onClick={() => returnDateInputRef.current?.showPicker?.()}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                        RETURN
-                      </span>
-                      <FaCalendarAlt className="w-3 h-3 text-brand-blue" />
-                    </div>
-                    <div className="mt-1" suppressHydrationWarning>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-2xl sm:text-3xl font-black text-slate-900">
-                          {returnDateFormatted.day}
-                        </span>
-                        <span className="text-sm font-black text-slate-800">
-                          {returnDateFormatted.monthYear}
-                        </span>
-                      </div>
-                      <span className="text-xs text-slate-500 font-medium block mt-0.5">
-                        {returnDateFormatted.weekday}
-                      </span>
-                    </div>
-                    <input
-                      ref={returnDateInputRef}
-                      type="date"
-                      min={pickupDate}
-                      value={returnDate}
-                      onChange={(e) => setReturnDate(e.target.value)}
-                      className="sr-only"
-                      aria-label="Return Date"
-                    />
-                  </div>
-                )}
-
-                {/* 5. PICKUP TIME CARD */}
+                {/* 4. OUTBOUND PICKUP TIME CARD */}
                 <div
-                  className={`${
-                    tripType === 'round_trip' ? 'md:col-span-2' : 'md:col-span-3'
-                  } p-3.5 sm:p-4 hover:bg-white transition-colors cursor-pointer relative group rounded-b-2xl md:rounded-b-none md:rounded-r-2xl`}
+                  className="md:col-span-3 p-3.5 sm:p-4 hover:bg-white transition-colors cursor-pointer relative group rounded-b-2xl md:rounded-b-none md:rounded-r-2xl"
                   onClick={() => pickupTimeInputRef.current?.showPicker?.()}
                 >
                   <div className="flex items-center justify-between">
@@ -816,7 +845,7 @@ export default function MmtBookingWidget({
                       {formatMmtTime(pickupTime)}
                     </span>
                     <span className="text-xs text-slate-500 font-medium block mt-0.5">
-                      Daylight / Evening
+                      Outbound Departure
                     </span>
                   </div>
                   <input
@@ -830,6 +859,160 @@ export default function MmtBookingWidget({
                   />
                 </div>
               </div>
+
+              {/* ── ROUND-TRIP RETURN JOURNEY BAR (Phase 1 & Phase 2 Separation) ── */}
+              {tripType === 'round_trip' && (
+                <div className="p-4 bg-gradient-to-r from-emerald-50/70 via-white to-blue-50/50 rounded-2xl border-2 border-emerald-500/30 shadow-xs space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-200/60 pb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                      <span className="text-xs font-black uppercase tracking-wider text-slate-800">
+                        🔄 Return Journey &amp; Final Drop Location
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
+                      250 KM/Day Daily Quota Included
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+                    {/* Return Departure Date */}
+                    <div
+                      className="md:col-span-3 bg-white p-3 rounded-xl border border-slate-200 hover:border-brand-blue transition-all cursor-pointer relative group"
+                      onClick={() => returnDateInputRef.current?.showPicker?.()}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                          RETURN DATE
+                        </span>
+                        <FaCalendarAlt className="w-3 h-3 text-brand-blue" />
+                      </div>
+                      <div className="mt-1" suppressHydrationWarning>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-xl sm:text-2xl font-black text-slate-900">
+                            {returnDateFormatted.day}
+                          </span>
+                          <span className="text-xs font-black text-slate-800">
+                            {returnDateFormatted.monthYear}
+                          </span>
+                        </div>
+                        <span className="text-[11px] text-slate-500 font-medium block">
+                          {returnDateFormatted.weekday}
+                        </span>
+                      </div>
+                      <input
+                        ref={returnDateInputRef}
+                        type="date"
+                        min={pickupDate}
+                        value={returnDate}
+                        onChange={(e) => handleReturnDateChange(e.target.value)}
+                        className="sr-only"
+                        aria-label="Return Date"
+                      />
+                    </div>
+
+                    {/* Return Departure Time (Independent selector, default 11:59 PM) */}
+                    <div
+                      className="md:col-span-3 bg-white p-3 rounded-xl border border-slate-200 hover:border-brand-blue transition-all cursor-pointer relative group"
+                      onClick={() => returnTimeInputRef.current?.showPicker?.()}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                          RETURN DEPARTURE TIME
+                        </span>
+                        <FaClock className="w-3 h-3 text-emerald-600" />
+                      </div>
+                      <div className="mt-1" suppressHydrationWarning>
+                        <span className="text-xl sm:text-2xl font-black text-slate-900 block">
+                          {formatMmtTime(returnTime)}
+                        </span>
+                        <span className="text-[11px] text-emerald-700 font-semibold block">
+                          Starts from {destination || 'Destination'}
+                        </span>
+                      </div>
+                      <input
+                        ref={returnTimeInputRef}
+                        type="time"
+                        value={returnTime}
+                        onChange={(e) => handleReturnTimeChange(e.target.value)}
+                        className="sr-only"
+                        aria-label="Return Departure Time"
+                      />
+                    </div>
+
+                    {/* Final Return Drop Location (Default: prefilled with origin, editable) */}
+                    <div className="md:col-span-6 bg-white p-3 rounded-xl border border-slate-200 hover:border-brand-blue transition-all">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                          FINAL RETURN DROP LOCATION
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsCustomReturnDrop(!isCustomReturnDrop);
+                            if (!isCustomReturnDrop) {
+                              setFinalDrop(origin);
+                            }
+                          }}
+                          className="text-[10px] font-bold text-brand-blue hover:text-blue-700 underline cursor-pointer"
+                        >
+                          {isCustomReturnDrop ? 'Reset to Origin' : 'Change Drop City?'}
+                        </button>
+                      </div>
+
+                      {isCustomReturnDrop ? (
+                        <div>
+                          <input
+                            type="text"
+                            value={finalDrop}
+                            onChange={(e) => setFinalDrop(e.target.value)}
+                            placeholder={`Enter return drop city (e.g. ${origin || 'Ghaziabad'})`}
+                            className="w-full text-sm font-bold text-slate-900 bg-slate-50 p-1.5 rounded-lg border border-slate-300 focus:outline-none focus:border-brand-blue"
+                          />
+                          <span className="text-[10px] text-slate-500 font-medium block mt-0.5">
+                            Return Route: {destination || 'Destination'} ➔ {finalDrop || origin || 'Origin'}
+                          </span>
+                        </div>
+                      ) : (
+                        <div
+                          onClick={() => {
+                            setIsCustomReturnDrop(true);
+                            setFinalDrop(origin);
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <span className="text-sm font-black text-slate-900 block truncate">
+                            {origin ? formatLocationWithState(origin) : 'Same as pickup city'}
+                          </span>
+                          <span className="text-[10px] text-emerald-700 font-bold block mt-0.5">
+                            ✓ Default: Drops back at {origin || 'Pickup City'} (Click to change)
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Trip Duration & Calculation Ribbon */}
+                  {roundTripTimeline && (
+                    <div className="pt-1 flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-slate-700 bg-white/70 p-2.5 rounded-xl border border-slate-200">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-md bg-emerald-600 text-white font-black text-[11px]">
+                          {roundTripTimeline.tripDays} Calendar {roundTripTimeline.tripDays === 1 ? 'Day' : 'Days'}
+                        </span>
+                        <span className="text-slate-500 text-[11px]">
+                          ({roundTripTimeline.totalNights} {roundTripTimeline.totalNights === 1 ? 'Night' : 'Nights'})
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-slate-600">
+                        <span>Return Journey Starts: <strong>{formatMmtTime(returnTime)}</strong> on {formatDateReadable(returnDate)}</span>
+                      </div>
+                      <div className="text-[11px] text-emerald-800 font-bold">
+                        <span>Est. Final Drop Arrival: <strong>{roundTripTimeline.readableFinalArrival}</strong></span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* ── INTERMEDIATE STOPS CARDS (When User Adds Stops) ── */}
               {stops.length > 0 && (

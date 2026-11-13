@@ -10,6 +10,8 @@ export interface WhatsAppMessageParams {
 
   pickup?: string;
   drop?: string;
+  destination?: string;
+  finalDropLocation?: string;
   stops?: string[];
   tripType?: 'One Way' | 'Round Trip' | 'Airport Transfer' | 'Local Rental' | 'Corporate' | 'Tempo Traveller' | 'Bus' | 'Tour Package' | string;
   journeyDate?: string;
@@ -17,7 +19,12 @@ export interface WhatsAppMessageParams {
   returnDate?: string;
   returnTime?: string;
   durationDays?: number | string;
-  distance?: number;
+  distance?: number | string;
+  outboundKm?: number;
+  returnKm?: number;
+  actualKm?: number;
+  billableKm?: number;
+  estimatedFinalArrival?: string;
 
   vehicleCategory?: string;
   vehicleModel?: string;
@@ -121,7 +128,18 @@ export function generateWhatsAppLink(
         lines.push(`• 🛑 *Via Stops:* ${params.stops.join(' ➔ ')}`);
       }
       if (params.drop) lines.push(`• 🏁 *Destination:* ${params.drop}`);
-      if (params.distance && params.distance > 0) {
+      if (params.finalDropLocation && params.pickup && params.finalDropLocation.trim().toLowerCase() !== params.pickup.trim().toLowerCase()) {
+        lines.push(`• 🔁 *Final Return Drop:* ${params.finalDropLocation}`);
+      }
+      if (params.outboundKm && params.returnKm) {
+        lines.push(`• 🛣️ *Outbound:* ~${params.outboundKm} km | *Return:* ~${params.returnKm} km`);
+      }
+      if (params.actualKm && params.actualKm > 0) {
+        lines.push(`• 🛣️ *Actual Total Distance:* ~${params.actualKm} km`);
+      }
+      if (params.billableKm && params.billableKm > 0) {
+        lines.push(`• 📏 *Billable Distance:* ~${params.billableKm} km (via 250 km/day daily quota)`);
+      } else if (params.distance) {
         lines.push(`• 🛣️ *Total Distance:* ~${params.distance} km (Round-trip)`);
       }
       const depDate = params.journeyDate ? formatDateReadable(params.journeyDate) : 'Immediate / Flexible';
@@ -137,6 +155,9 @@ export function generateWhatsAppLink(
         lines.push(`• 🔄 *Return Date / Duration:* ${retDate}${retTime}${daysLabel}`);
       } else if (params.durationDays) {
         lines.push(`• ⏱️ *Trip Duration:* ${params.durationDays} ${Number(params.durationDays) === 1 ? 'Day' : 'Days'}`);
+      }
+      if (params.estimatedFinalArrival) {
+        lines.push(`• 🏁 *Est. Final Arrival:* ${params.estimatedFinalArrival}`);
       }
 
       if (params.customerName) {

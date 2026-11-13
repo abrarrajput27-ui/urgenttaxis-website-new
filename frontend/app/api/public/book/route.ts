@@ -31,7 +31,15 @@ export async function POST(req: NextRequest) {
       dropAddress,
       travelDateTime,
       returnDateTime,
+      returnDate,
+      returnTime,
+      finalDropAddress,
+      outboundDistanceKm,
+      returnDistanceKm,
       actualDistanceKm = 0,
+      actualTotalDistanceKm,
+      billableKm,
+      estimatedFinalArrival,
       calculatedBaseFare,
       durationHours = 0,
       numberOfDays = 1,
@@ -95,7 +103,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Invalid passenger count' }, { status: 400 });
     }
 
-    const numericDistance = Number(actualDistanceKm);
+    const numericDistance = Number(actualTotalDistanceKm) || Number(actualDistanceKm) || 0;
     if (isNaN(numericDistance) || numericDistance < 0) {
       return NextResponse.json({ success: false, message: 'Invalid distance' }, { status: 400 });
     }
@@ -446,6 +454,25 @@ export async function POST(req: NextRequest) {
       breakdown_json: {
         ...calcResult,
         baseVehicleFare,
+        serviceType,
+        pickupAddress,
+        dropAddress,
+        returnDate: returnDate || (returnDateTime ? returnDateTime.split('T')[0] : null),
+        returnTime: returnTime || (returnDateTime ? returnDateTime.split('T')[1]?.slice(0, 5) : null),
+        finalDropAddress: finalDropAddress || pickupAddress,
+        outboundDistanceKm: Number(outboundDistanceKm) || Math.round(numericDistance / 2),
+        returnDistanceKm: Number(returnDistanceKm) || Math.round(numericDistance / 2),
+        actualTotalDistanceKm: Number(actualTotalDistanceKm) || numericDistance,
+        actualDistanceKm: Number(actualDistanceKm) || numericDistance,
+        billableKm: Number(billableKm) || calcResult.billableKm || Math.max(numericDistance, Number(numberOfDays) * 250),
+        tripDays: Number(numberOfDays) || 1,
+        vehicleRate: calcResult.ratePerKm || rule?.per_km_rate || 12,
+        distanceFare: (Number(billableKm) || calcResult.billableKm || Math.max(numericDistance, Number(numberOfDays) * 250)) * (calcResult.ratePerKm || rule?.per_km_rate || 12),
+        driverAllowance: calcResult.driverAllowance || 0,
+        estimatedFinalArrival: estimatedFinalArrival || null,
+        customerFullName,
+        customerPhone,
+        customerEmail,
         addOns: addOnValidation.validAddOns.map((a) => ({
           id: a.id,
           name: a.name,

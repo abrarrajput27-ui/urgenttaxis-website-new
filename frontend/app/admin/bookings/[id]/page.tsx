@@ -130,12 +130,18 @@ export default async function BookingDetailsPage({ params }: { params: Promise<{
       actual_fleet ( id, registration_number ),
       drivers ( id, full_name, phone ),
       vendors ( id, company_name ),
-      booking_remarks ( id, remark, created_at, created_by )
+      booking_remarks ( id, remark, created_at, created_by ),
+      fare_snapshots ( * )
     `)
     .eq('id', resolvedParams.id)
     .single();
 
   if (error || !booking) notFound();
+
+  // Authoritative fare snapshot extraction
+  const rawSnap = (booking as any).fare_snapshots;
+  const snapshot = Array.isArray(rawSnap) ? (rawSnap[0] || {}) : (rawSnap || {});
+  const breakdown = snapshot.breakdown_json || {};
 
   // Fetch available entities for assignment
   const { data: allDrivers } = await supabase.from('drivers').select('id, full_name, is_active').eq('is_active', true);
@@ -170,26 +176,62 @@ export default async function BookingDetailsPage({ params }: { params: Promise<{
             
             {/* Trip Details */}
             <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-              <div className="p-4 border-b border-slate-800 bg-slate-900/50">
-                <h3 className="font-bold text-white">Trip Details</h3>
+              <div className="p-4 border-b border-slate-800 bg-slate-900/50 flex justify-between items-center">
+                <h3 className="font-bold text-white">Trip & Itinerary Details</h3>
+                <span className="text-xs font-black uppercase text-brand-green bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+                  {booking.trip_type?.replace('_', ' ')}
+                </span>
               </div>
-              <div className="p-6 grid grid-cols-2 gap-6">
+              <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Pickup</p>
-                  <p className="text-sm text-white font-medium">{booking.pickup_location_name}</p>
-                  <p className="text-xs text-slate-400 mt-1">{booking.pickup_datetime ? format(new Date(booking.pickup_datetime), 'PPP pp') : 'TBD'}</p>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Pickup Address</p>
+                  <p className="text-sm text-white font-medium">{booking.pickup_address || booking.pickup_location_name || '—'}</p>
+                  <p className="text-xs text-emerald-400 mt-1 font-semibold">
+                    Departure: {booking.pickup_datetime ? format(new Date(booking.pickup_datetime), 'PPP pp') : 'TBD'}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Drop</p>
-                  <p className="text-sm text-white font-medium">{booking.drop_location_name}</p>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Drop Address</p>
+                  <p className="text-sm text-white font-medium">{booking.drop_address || booking.drop_location_name || '—'}</p>
+                  {booking.return_datetime && (
+                    <p className="text-xs text-blue-400 mt-1 font-semibold">
+                      Return Start: {format(new Date(booking.return_datetime), 'PPP pp')}
+                    </p>
+                  )}
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Trip Type</p>
-                  <p className="text-sm text-white font-medium capitalize">{booking.trip_type?.replace('_', ' ')}</p>
-                </div>
+
+                {booking.trip_type?.includes('round') && (
+                  <>
+                    <div>
+                      <p className="text-xs font-bold text-slate-500 uppercase mb-1">Final Return Drop</p>
+                      <p className="text-sm text-blue-300 font-medium">
+                        {breakdown.finalDropAddress || booking.pickup_address || booking.pickup_location_name}
+                      </p>
+                      {breakdown.estimatedFinalArrival?.readableDateTime && (
+                        <p className="text-xs text-amber-300 mt-1 font-semibold">
+                          Est. Final Arrival: {breakdown.estimatedFinalArrival.readableDateTime}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-slate-500 uppercase mb-1">Distance &amp; Billable Math</p>
+                      <p className="text-xs text-slate-300 space-y-0.5">
+                        <span className="block">Outbound: <strong className="text-white">{breakdown.outboundDistanceKm || Math.round(breakdown.actualDistanceKm / 2) || 0} km</strong> | Return: <strong className="text-white">{breakdown.returnDistanceKm || Math.round(breakdown.actualDistanceKm / 2) || 0} km</strong></span>
+                        <span className="block">Actual Total: <strong className="text-white">{breakdown.actualTotalDistanceKm || breakdown.actualDistanceKm || 0} km</strong></span>
+                        <span className="block">250 km/day Limit: <strong className="text-blue-400">{(breakdown.tripDays || 1) * 250} km ({breakdown.tripDays || 1} Days)</strong></span>
+                        <span className="block text-emerald-400 font-bold">Billable KM: {breakdown.billableKm || Math.max(breakdown.actualDistanceKm || 0, (breakdown.tripDays || 1) * 250)} km</span>
+                      </p>
+                    </div>
+                  </>
+                )}
+
                 <div>
                   <p className="text-xs font-bold text-slate-500 uppercase mb-1">Vehicle Category</p>
                   <p className="text-sm text-white font-medium">{booking.vehicle_categories?.name || 'Not Specified'}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Passengers / Luggage</p>
+                  <p className="text-sm text-white font-medium">{booking.passenger_count || 1} Persons • {booking.luggage_count || 0} Bags</p>
                 </div>
               </div>
             </div>

@@ -342,6 +342,36 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
                     <p className="text-slate-900 font-medium">{actualDrop}</p>
                   </div>
                 )}
+                {booking.trip_type?.includes('round') && breakdown.finalDropAddress && breakdown.finalDropAddress !== actualPickup && (
+                  <div>
+                    <span className="font-bold text-slate-700 block">Final Return Drop:</span>
+                    <p className="text-blue-900 font-medium">{breakdown.finalDropAddress}</p>
+                  </div>
+                )}
+                {booking.trip_type?.includes('round') && (
+                  <div className="pt-2 border-t border-slate-200/80 space-y-1 text-xs">
+                    <div className="flex justify-between text-slate-600">
+                      <span>Outbound Distance:</span>
+                      <strong className="text-slate-900">{breakdown.outboundDistanceKm || Math.round(breakdown.actualDistanceKm / 2) || 0} km</strong>
+                    </div>
+                    <div className="flex justify-between text-slate-600">
+                      <span>Return Distance:</span>
+                      <strong className="text-slate-900">{breakdown.returnDistanceKm || Math.round(breakdown.actualDistanceKm / 2) || 0} km</strong>
+                    </div>
+                    <div className="flex justify-between text-slate-600">
+                      <span>Total Actual Road Distance:</span>
+                      <strong className="text-slate-900">{breakdown.actualTotalDistanceKm || breakdown.actualDistanceKm || 0} km</strong>
+                    </div>
+                    <div className="flex justify-between text-slate-600">
+                      <span>250 km/day Quota ({breakdown.tripDays || 1} Days):</span>
+                      <strong className="text-blue-700">{(breakdown.tripDays || 1) * 250} km</strong>
+                    </div>
+                    <div className="flex justify-between text-blue-950 font-bold bg-blue-50/70 p-1 rounded">
+                      <span>Billable Kilometres:</span>
+                      <span className="tabular-nums font-black">{breakdown.billableKm || Math.max(breakdown.actualDistanceKm || 0, (breakdown.tripDays || 1) * 250)} km</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             
@@ -354,8 +384,14 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
                 </div>
                 {booking.return_datetime && (
                   <div>
-                    <span className="font-bold text-slate-700 block">Return Schedule:</span>
+                    <span className="font-bold text-slate-700 block">Return Departure Schedule:</span>
                     <p className="text-slate-900 font-medium">{formatDateTimeReadable(booking.return_datetime)}</p>
+                  </div>
+                )}
+                {breakdown.estimatedFinalArrival?.readableDateTime && (
+                  <div className="p-1.5 bg-emerald-50 rounded border border-emerald-200 text-xs text-emerald-900">
+                    <span className="font-bold block text-[10px] uppercase text-emerald-700">Estimated Final Arrival:</span>
+                    <p className="font-black text-emerald-950">{breakdown.estimatedFinalArrival.readableDateTime}</p>
                   </div>
                 )}
                 <div className="flex gap-6 pt-1">
