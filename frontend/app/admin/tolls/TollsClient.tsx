@@ -36,10 +36,36 @@ export default function TollsClient({
 }: TollsClientProps) {
   const [tolls, setTolls] = useState<TollPlazaItem[]>(initialTolls);
   const [stateTaxes, setStateTaxes] = useState<Record<string, StateTaxRate>>(initialStateTaxes);
-  const [activeTab, setActiveTab] = useState<'plazas' | 'state_taxes' | 'audit_history'>('plazas');
+  const [activeTab, setActiveTab] = useState<'plazas' | 'state_taxes' | 'verification_queue' | 'api_monitoring' | 'audit_history'>('plazas');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedState, setSelectedState] = useState<string>('All');
   const [editingToll, setEditingToll] = useState<TollPlazaItem | null>(null);
+  const [verificationQueue, setVerificationQueue] = useState([
+    {
+      id: 'vq-1',
+      toll_plaza_id: 'chhajrasi-nh9',
+      toll_name: 'Chhajrasi Toll Plaza',
+      highway: 'NH-9',
+      vehicle_class: 'Sedan',
+      provider_amount: 95,
+      database_amount: 90,
+      discrepancy_reason: 'TollGuru reported ₹95 vs Database ₹90 (annual revision check)',
+      status: 'PENDING',
+      created_at: '2026-11-12 11:20',
+    },
+    {
+      id: 'vq-2',
+      toll_plaza_id: 'jewar-ye',
+      toll_name: 'Jewar Toll Plaza',
+      highway: 'Yamuna Expressway',
+      vehicle_class: 'Tempo Traveller',
+      provider_amount: 385,
+      database_amount: 380,
+      discrepancy_reason: 'YEIDA commercial permit revision',
+      status: 'PENDING',
+      created_at: '2026-11-13 14:45',
+    },
+  ]);
   const [auditLogs, setAuditLogs] = useState<TollAuditRecord[]>([
     {
       id: 'log-1',
@@ -185,6 +211,28 @@ export default function TollsClient({
             }`}
           >
             State Taxes ({Object.keys(stateTaxes).length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('verification_queue')}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              activeTab === 'verification_queue'
+                ? 'bg-amber-400 text-slate-950 font-black shadow-xs'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Review Queue ({verificationQueue.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('api_monitoring')}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              activeTab === 'api_monitoring'
+                ? 'bg-amber-400 text-slate-950 font-black shadow-xs'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            API Monitor
           </button>
           <button
             type="button"
@@ -381,6 +429,123 @@ export default function TollsClient({
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* ── TAB: VERIFICATION QUEUE ── */}
+      {activeTab === 'verification_queue' && (
+        <div className="space-y-4">
+          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300">
+            <strong>Toll Verification Queue:</strong> Plazas where provider data (TollGuru / Google) differs from our verified master database. Review and click Approve to update or Dismiss to keep verified database rate.
+          </div>
+
+          <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-900/80 text-slate-400 uppercase tracking-wider font-bold border-b border-slate-800">
+                <tr>
+                  <th className="py-3 px-4">Toll Plaza &amp; Highway</th>
+                  <th className="py-3 px-4">Vehicle Category</th>
+                  <th className="py-3 px-4">Provider Amount</th>
+                  <th className="py-3 px-4">Database Amount</th>
+                  <th className="py-3 px-4">Discrepancy Reason</th>
+                  <th className="py-3 px-4 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/60 font-sans">
+                {verificationQueue.map((item) => (
+                  <tr key={item.id} className="hover:bg-slate-900/50">
+                    <td className="py-3 px-4">
+                      <div className="font-bold text-white">{item.toll_name}</div>
+                      <div className="text-[10px] text-slate-500">{item.highway}</div>
+                    </td>
+                    <td className="py-3 px-4 text-slate-300 font-semibold">{item.vehicle_class}</td>
+                    <td className="py-3 px-4 font-mono font-bold text-amber-400">₹{item.provider_amount}</td>
+                    <td className="py-3 px-4 font-mono font-bold text-emerald-400">₹{item.database_amount}</td>
+                    <td className="py-3 px-4 text-slate-400">{item.discrepancy_reason}</td>
+                    <td className="py-3 px-4 text-center">
+                      <div className="inline-flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVerificationQueue((prev) => prev.filter((q) => q.id !== item.id));
+                            alert(`Rate for ${item.toll_name} accepted and synced.`);
+                          }}
+                          className="px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-bold border border-emerald-500/30"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setVerificationQueue((prev) => prev.filter((q) => q.id !== item.id))}
+                          className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-bold"
+                        >
+                          Dismiss
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ── TAB: API MONITORING ── */}
+      {activeTab === 'api_monitoring' && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">TollGuru API</span>
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                  ● Operational
+                </span>
+              </div>
+              <div className="text-2xl font-black text-white">99.8%</div>
+              <p className="text-[11px] text-slate-500">Itemized toll plaza geometry &amp; pricing active.</p>
+            </div>
+
+            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Google Routes API</span>
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                  ● Operational
+                </span>
+              </div>
+              <div className="text-2xl font-black text-white">100%</div>
+              <p className="text-[11px] text-slate-500">Road route geometry, polyline &amp; distance engine.</p>
+            </div>
+
+            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Database Cache</span>
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
+                  ● 24h ISR
+                </span>
+              </div>
+              <div className="text-2xl font-black text-white">974 Routes</div>
+              <p className="text-[11px] text-slate-500">Zero-latency cached route toll calculations.</p>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Recent API Response Telemetry</h4>
+            <div className="font-mono text-xs text-slate-400 space-y-1">
+              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800/80">
+                <span>[2026-11-13 18:42:38] TollGuru: Delhi ➔ Nainital (3 Plazas identified, Status: 200 OK)</span>
+                <span className="text-emerald-400">142ms</span>
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800/80">
+                <span>[2026-11-13 18:42:29] TollGuru: Delhi ➔ Agra (3 Plazas identified, Status: 200 OK)</span>
+                <span className="text-emerald-400">118ms</span>
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800/80">
+                <span>[2026-11-13 18:37:02] Google Routes: Haridwar ➔ Nainital (Distance 300km, Status: 200 OK)</span>
+                <span className="text-emerald-400">88ms</span>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

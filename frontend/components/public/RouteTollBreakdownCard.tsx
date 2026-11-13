@@ -18,11 +18,11 @@ export default function RouteTollBreakdownCard({
   distanceKm = 250,
 }: RouteTollBreakdownCardProps) {
   const [vehicle, setVehicle] = useState<string>(initialVehicle);
-  const [tripType, setTripType] = useState<'one_way' | 'round_trip'>('one_way');
+  const tripType = 'one_way';
 
   const tollData = useMemo(() => {
-    return calculateRouteTolls(origin, destination, vehicle, tripType === 'round_trip', distanceKm);
-  }, [origin, destination, vehicle, tripType, distanceKm]);
+    return calculateRouteTolls(origin, destination, vehicle, false, distanceKm);
+  }, [origin, destination, vehicle, distanceKm]);
 
   return (
     <section className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 my-8">
@@ -41,30 +41,10 @@ export default function RouteTollBreakdownCard({
           </p>
         </div>
 
-        {/* Trip Type Selector */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={() => setTripType('one_way')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              tripType === 'one_way'
-                ? 'bg-white text-slate-900 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            One-Way
-          </button>
-          <button
-            type="button"
-            onClick={() => setTripType('round_trip')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              tripType === 'round_trip'
-                ? 'bg-white text-slate-900 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            Round-Trip (Return)
-          </button>
+        {/* One-Way Trip Scope Badge */}
+        <div className="flex items-center gap-1 bg-slate-100 px-3 py-1.5 rounded-xl self-start sm:self-auto text-xs font-bold text-slate-700">
+          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>One-Way Highway Toll</span>
         </div>
       </div>
 
@@ -75,8 +55,12 @@ export default function RouteTollBreakdownCard({
         </span>
         {[
           { id: 'sedan', label: 'Sedan (Dzire/Etios)' },
-          { id: 'suv', label: 'SUV (Ertiga/Innova)' },
-          { id: 'traveller', label: 'Tempo Traveller' },
+          { id: 'ertiga', label: 'Ertiga (6-Seater)' },
+          { id: 'suv', label: 'SUV (Innova Crysta)' },
+          { id: 'tempo_traveller', label: 'Tempo Traveller (12/16)' },
+          { id: 'force_urbania', label: 'Force Urbania' },
+          { id: 'minibus', label: 'Minibus (27-Seater)' },
+          { id: 'bus_coach', label: 'Bus / Coach (45-Seater)' },
         ].map((v) => (
           <button
             key={v.id}
@@ -100,7 +84,7 @@ export default function RouteTollBreakdownCard({
             Highway Toll Plazas ({tollData.tollPlazas.length} on Route)
           </h4>
           <span className="text-[11px] font-semibold text-slate-400">
-            {tripType === 'round_trip' ? 'Round-Trip Rate' : 'Single Journey'}
+            Single Journey One-Way
           </span>
         </div>
 
