@@ -376,7 +376,7 @@ export default function UnifiedBookingWidget({
     if (pickupDate === todayStr) {
       const minT = getMinTimeForToday();
       if (val < minT) {
-        setValidationError(`Selected pickup time has already passed. Earliest pickup is ${minT}.`);
+        setValidationError('');
         setPickupTime(minT);
         return;
       }
@@ -699,11 +699,12 @@ export default function UnifiedBookingWidget({
       return;
     }
 
+    let effectivePickupTime = pickupTime;
     if (pickupDate === todayStr) {
       const minT = getMinTimeForToday();
       if (pickupTime < minT) {
-        setValidationError(`Selected pickup time has already passed. Earliest dispatch is ${minT}.`);
-        return;
+        effectivePickupTime = minT;
+        setPickupTime(minT);
       }
     }
 

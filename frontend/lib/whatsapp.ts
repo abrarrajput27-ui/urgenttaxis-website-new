@@ -200,11 +200,29 @@ export function generateWhatsAppLink(
     lines.push(`• 💳 *Estimated Total Fare:* *₹${effectiveTotal.toLocaleString('en-IN')}*`);
     lines.push(`• 🟢 *30% Advance Token:* *₹${token.toLocaleString('en-IN')}* (To Confirm)`);
     lines.push(`• ⚪ *70% Driver Balance:* *₹${balance.toLocaleString('en-IN')}* (At Pickup)`);
+    
+    const rawType = String(params.tripType || '').toLowerCase();
+    const isOneWayOrAirport = rawType.includes('one') || rawType.includes('airport');
+
     if (params.estimatedToll && params.estimatedToll > 0) {
-      lines.push(`• 🛣️ *Estimated Highway Tolls:* ~₹${params.estimatedToll.toLocaleString('en-IN')} (At Actuals)`);
+      lines.push(
+        isOneWayOrAirport
+          ? `• 🛣️ *Highway Toll Taxes:* ₹${params.estimatedToll.toLocaleString('en-IN')} (Included in Total Fare)`
+          : `• 🛣️ *Estimated Highway Tolls:* ~₹${params.estimatedToll.toLocaleString('en-IN')} (Payable at actuals)`
+      );
     }
     if (params.estimatedStateTax && params.estimatedStateTax > 0) {
-      lines.push(`• 🏛️ *Estimated State Border Tax:* ~₹${params.estimatedStateTax.toLocaleString('en-IN')} (At Actuals)`);
+      lines.push(
+        isOneWayOrAirport
+          ? `• 🏛️ *State Border Passenger Tax:* ₹${params.estimatedStateTax.toLocaleString('en-IN')} (Included in Total Fare)`
+          : `• 🏛️ *Estimated State Border Tax:* ~₹${params.estimatedStateTax.toLocaleString('en-IN')} (Payable at actuals)`
+      );
+    }
+    if (params.nightCharges && params.nightCharges > 0) {
+      lines.push(`• 🌙 *Driver Night Allowance (10 PM - 6 AM):* ₹${params.nightCharges.toLocaleString('en-IN')} (Included in Total Fare)`);
+    }
+    if (params.gst && params.gst > 0) {
+      lines.push(`• 🧾 *Statutory GST (5%):* ₹${params.gst.toLocaleString('en-IN')} (Included in Total Fare)`);
     }
   } else if (!hasTripDetails) {
     lines.push('💰 *FARE & PAYMENT BREAKDOWN*');

@@ -20,6 +20,41 @@ export interface RoutePlaceItem {
   distanceKm: number;
   image?: string;
   highlight?: string;
+  priceRange?: string;
+}
+
+export interface AlternativeRouteOption {
+  id: string;
+  name: string;
+  highway: string;
+  distanceKm: number;
+  durationText: string;
+  tollPlazasCount: number;
+  tollAmount: number;
+  description: string;
+}
+
+export interface FamousFoodItem {
+  name: string;
+  location: string;
+  dish: string;
+  description: string;
+  image?: string;
+}
+
+export interface HiddenGemItem {
+  name: string;
+  location: string;
+  distanceKm: number;
+  description: string;
+  highlight: string;
+  image?: string;
+}
+
+export interface HotelCategoryGroup {
+  budget: RoutePlaceItem[];
+  medium: RoutePlaceItem[];
+  luxury: RoutePlaceItem[];
 }
 
 export interface CorridorDetail {
@@ -29,6 +64,10 @@ export interface CorridorDetail {
   milestones: RouteMilestone[];
   weather: RouteWeather;
   travelTips: string[];
+  alternativeRoutes?: AlternativeRouteOption[];
+  famousFoods?: FamousFoodItem[];
+  hiddenGems?: HiddenGemItem[];
+  hotelGroups?: HotelCategoryGroup;
   places: {
     restaurants: RoutePlaceItem[];
     hotels?: RoutePlaceItem[];
@@ -44,7 +83,266 @@ export interface CorridorDetail {
 }
 
 export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
-  // Delhi / NCR to Nainital / Haldwani / Jim Corbett / Almora / Kainchi Dham
+  // ---------------------------------------------------------------------------
+  // 1. DELHI / NCR TO HARIDWAR (Dedicated Master Corridor)
+  // ---------------------------------------------------------------------------
+  'delhi-haridwar': {
+    highway: 'via Delhi-Meerut Expressway (NE3) & NH334',
+    routeChain: 'Delhi / NCR → Akshardham → Meerut Expressway Bypass → Modinagar → Khatauli Bypass → Muzaffarnagar → Roorkee → Haridwar (Har Ki Pauri)',
+    roadType: 'High-Speed Delhi-Meerut Expressway (NE3) & 4/6-Lane NH334 Access Corridor',
+    weather: {
+      temp: '22°C',
+      condition: 'Pleasant Mountain Breeze & Clean Ganges Valley Air',
+      feelsLike: '21°C',
+    },
+    travelTips: [
+      'Delhi-Meerut Expressway via Akshardham saves 50+ minutes over the older Modinagar highway.',
+      'Khatauli Cheetal Grand (Km 98) & Mansurpur Namaste Midway (Km 112) are top-rated family dining & restroom stops.',
+      'Navgati-verified CNG pumps are operational at Meerut Expressway, Khatauli, Muzaffarnagar, and Roorkee Bypass.',
+      'Har Ki Pauri evening Ganga Aarti takes place at ~6:00 PM (winter) / ~7:00 PM (summer); reach 45 mins early for seating.',
+      'All Urgent Taxis vehicles carry verified FASTag for instant toll booth clearance.',
+    ],
+    alternativeRoutes: [
+      {
+        id: 'fastest-nh334',
+        name: 'Fastest 4/6-Lane Highway Corridor',
+        highway: 'via Delhi-Meerut Expressway & NH334',
+        distanceKm: 215,
+        durationText: '3.5 - 4 Hours',
+        tollPlazasCount: 3,
+        tollAmount: 255,
+        description: 'Smooth multi-lane expressway bypass via Khatauli, Muzaffarnagar and Roorkee. Best for fast and comfortable family taxi rides.',
+      },
+      {
+        id: 'scenic-ganga-canal',
+        name: 'Scenic Upper Ganga Canal Route',
+        highway: 'via Upper Ganga Canal Road (Kanwar Marg)',
+        distanceKm: 220,
+        durationText: '4.5 - 5 Hours',
+        tollPlazasCount: 1,
+        tollAmount: 90,
+        description: 'Picturesque canal-side drive with minimal truck traffic and lush green sugarcane farms. Lower toll charges.',
+      },
+      {
+        id: 'new-dehradun-expressway',
+        name: 'New Delhi-Dehradun Expressway Corridor',
+        highway: 'via Delhi-Saharanpur-Dehradun Access Corridor',
+        distanceKm: 205,
+        durationText: '3 - 3.5 Hours',
+        tollPlazasCount: 3,
+        tollAmount: 310,
+        description: 'Newly developed greenfield elevated expressway corridor saving city congestion around central towns.',
+      },
+    ],
+    milestones: [
+      { town: 'Delhi / NCR (Akshardham)', km: 0, timeText: '0 hr', description: 'Start via Delhi-Meerut Expressway elevated corridor' },
+      { town: 'Meerut Outer Toll Gate', km: 58, timeText: '40 mins', description: 'Expressway toll clearance onto 4-lane NH334 highway' },
+      { town: 'Khatauli (Cheetal Grand)', km: 98, timeText: '1.5 hr', description: 'Premier highway rest plaza, famous parathas & clean washrooms' },
+      { town: 'Muzaffarnagar Bypass', km: 128, timeText: '2 hr', description: 'Smooth elevated bypass with fuel & Navgati CNG hubs' },
+      { town: 'Roorkee Engineering Hub', km: 175, timeText: '2.5 - 3 hr', description: 'Historic Ganga Canal town approaching Uttarakhand border' },
+      { town: 'Haridwar (Har Ki Pauri)', km: 215, timeText: '3.5 - 4 hr', description: 'Doorstep drop at Har Ki Pauri ghats, ashrams or your hotel' },
+    ],
+    hotelGroups: {
+      budget: [
+        {
+          name: 'Shanti Kunj Ashram Guest House',
+          category: 'hotel',
+          location: 'Motichur, Haridwar',
+          distanceKm: 212,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Spiritual ashram rooms, satvik dining & lush gardens',
+          priceRange: '₹600 - ₹1,200 / night',
+        },
+        {
+          name: 'Hotel Ganga Lahari Heritage',
+          category: 'hotel',
+          location: 'Gau Ghat, Haridwar',
+          distanceKm: 215,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Sacred riverfront balcony facing Holy Ganga',
+          priceRange: '₹1,500 - ₹2,500 / night',
+        },
+        {
+          name: 'Hotel Midtown Haridwar',
+          category: 'hotel',
+          location: 'Railway Station Road, Haridwar',
+          distanceKm: 214,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Clean AC family rooms with 24x7 room service',
+          priceRange: '₹1,000 - ₹1,800 / night',
+        },
+      ],
+      medium: [
+        {
+          name: 'Ginger Hotel Haridwar',
+          category: 'hotel',
+          location: 'Bhopalwala, NH334, Haridwar',
+          distanceKm: 210,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Modern comfort, high-speed Wi-Fi & multi-cuisine dining',
+          priceRange: '₹2,500 - ₹4,000 / night',
+        },
+        {
+          name: 'Regenta Orko\'s Haridwar',
+          category: 'hotel',
+          location: 'Motichur, Haridwar',
+          distanceKm: 212,
+          image: '/destinations/hotel-resort.webp',
+          highlight: '4-Star comfort, rooftop pool & pure veg restaurant',
+          priceRange: '₹3,000 - ₹5,000 / night',
+        },
+        {
+          name: 'Hyphen Grand Hotel',
+          category: 'hotel',
+          location: 'Pentagon Mall, SIDCUL, Haridwar',
+          distanceKm: 218,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Spiritual & corporate luxury with direct mall access',
+          priceRange: '₹2,800 - ₹4,500 / night',
+        },
+      ],
+      luxury: [
+        {
+          name: 'Pilibhit House - IHCL SeleQtions',
+          category: 'hotel',
+          location: 'Niranjani Akhara Marg, Haridwar',
+          distanceKm: 215,
+          image: '/destinations/hotel-resort.webp',
+          highlight: '100-Year-Old restored Aristocratic Haveli with private Ganga bathing ghat',
+          priceRange: '₹14,000 - ₹25,000 / night',
+        },
+        {
+          name: 'Amatra by the Ganges Resort',
+          category: 'hotel',
+          location: 'Near Shyampur, Haridwar',
+          distanceKm: 224,
+          image: '/destinations/hotel-resort.webp',
+          highlight: '5-Star riverside luxury villas, infinity pool & ayurvedic spa',
+          priceRange: '₹8,000 - ₹16,000 / night',
+        },
+        {
+          name: 'Radisson Blu Hotel Haridwar',
+          category: 'hotel',
+          location: 'Plot C-1, Sector 12 SIDCUL, Haridwar',
+          distanceKm: 218,
+          image: '/destinations/hotel-resort.webp',
+          highlight: '5-Star international luxury, swimming pool & fine dining',
+          priceRange: '₹6,000 - ₹12,000 / night',
+        },
+      ],
+    },
+    famousFoods: [
+      {
+        name: 'Hoshiyar Puri (Since 1937)',
+        location: 'Moti Bazaar, Haridwar',
+        dish: 'Crispy Poori Chhole, Sitaphal Sabzi & Rice Kheer',
+        description: 'Haridwar\'s most legendary culinary spot serving pure desi ghee pooris with sweet-tangy pumpkin sabzi.',
+        image: '/destinations/food-plaza.webp',
+      },
+      {
+        name: 'Mohan Ji Puri Wale',
+        location: 'Subhash Ghat, Har Ki Pauri',
+        dish: 'Hot Aloo Puri, Methi Chutney & Chilled Kulhad Lassi',
+        description: 'Iconic morning pilgrim breakfast right by the sacred Ganges ghats with fresh sweet lassi.',
+        image: '/destinations/food-plaza.webp',
+      },
+      {
+        name: 'Mathura Walo Ki Pracheen Dukan',
+        location: 'Bada Bazaar, Haridwar',
+        dish: 'Warm Rabdi Malpua, Desi Ghee Jalebi & Khoya Sweets',
+        description: 'Over 100 years of pure heritage sweets, renowned for saffron-infused hot jalebis and thick malpua.',
+        image: '/destinations/food-plaza.webp',
+      },
+      {
+        name: 'Prakash Lok Sweets',
+        location: 'Railway Road, Haridwar',
+        dish: 'Layered Kulfi Falooda & Chilled Badam Milk',
+        description: 'The definitive summer dessert destination in Haridwar, crafted using rich reduced whole milk.',
+        image: '/destinations/food-plaza.webp',
+      },
+      {
+        name: 'Pandit Sevaram Sharma Sweets',
+        location: 'Moti Bazaar, Haridwar',
+        dish: 'Traditional Mathura Peda, Gulab Jamun & Rasgulla',
+        description: 'Famous among temple pilgrims for authentic temple offerings and pure milk sweets.',
+        image: '/destinations/food-plaza.webp',
+      },
+    ],
+    hiddenGems: [
+      {
+        name: 'Neel Dhara Pakshi Vihar',
+        location: 'Bhimgoda Barrage, Haridwar',
+        distanceKm: 218,
+        highlight: 'Winter Siberian Migratory Birds Sanctuary',
+        description: 'A peaceful haven on the turquoise Ganges waters where hundreds of migratory birds visit during winter months, away from city crowds.',
+        image: '/destinations/haridwar.webp',
+      },
+      {
+        name: 'Sapt Rishi Ashram & Sapt Sarovar',
+        location: 'Bhopatwala, Haridwar',
+        distanceKm: 211,
+        highlight: 'Where Ganga divides into 7 natural streams',
+        description: 'Ancient spiritual hermitage where Holy Ganga divided into seven distinct streams to not disturb seven meditating sages.',
+        image: '/destinations/haridwar.webp',
+      },
+      {
+        name: 'Bilkeshwar Mahadev Forest Temple',
+        location: 'Shivalik Forest Foothills, Haridwar',
+        distanceKm: 216,
+        highlight: 'Secluded Stone Temple inside Forest Foliage',
+        description: 'A deeply serene stone temple dedicated to Lord Shiva surrounded by dense trees, where Goddess Parvati is believed to have performed penance.',
+        image: '/destinations/haridwar.webp',
+      },
+      {
+        name: 'Kankhal Historic Heritage Lanes',
+        location: 'Kankhal, Haridwar',
+        distanceKm: 219,
+        highlight: 'Ancient Brick Havelis & Daksh Temple',
+        description: 'Haridwar\'s most historic cultural quarter featuring ancient brick architecture, serene bathing ghats, and the sacred Daksh Prajapati temple.',
+        image: '/destinations/haridwar.webp',
+      },
+    ],
+    places: {
+      restaurants: [
+        { name: 'Cheetal Grand Food Court', category: 'restaurant', location: 'Khatauli Bypass, UP (NH334)', distanceKm: 98, image: '/destinations/food-plaza.webp', highlight: 'Iconic Highway Breakfast, South Indian & Gardens' },
+        { name: 'Namaste Midway Food Complex', category: 'restaurant', location: 'Mansurpur (NH334)', distanceKm: 112, image: '/destinations/food-plaza.webp', highlight: 'Haldirams, Starbucks, Subway & Clean Restrooms' },
+        { name: 'Pandit Ji Da Dhaba', category: 'restaurant', location: 'Roorkee Highway, UK', distanceKm: 172, image: '/destinations/food-plaza.webp', highlight: 'Authentic Tandoori Roti & Dal Tadka' },
+        { name: 'Jain Shikanji & Highway Treat', category: 'restaurant', location: 'Modinagar / Meerut Bypass', distanceKm: 48, image: '/destinations/food-plaza.webp', highlight: 'Legendary Masala Shikanji & Paneer Pakoras' },
+        { name: 'Gulshan Dhaba & Family Restaurant', category: 'restaurant', location: 'Meerut Expressway Exit', distanceKm: 56, image: '/destinations/food-plaza.webp', highlight: 'Hot Stuffed Parathas with White Butter' },
+      ],
+      petrolPumps: [
+        { name: 'Indian Oil COCO Fuel Center', category: 'petrol', location: 'Khatauli Bypass (NH334)', distanceKm: 99 },
+        { name: 'Bharat Petroleum Highway Center', category: 'petrol', location: 'Muzaffarnagar Bypass, UP', distanceKm: 126 },
+        { name: 'HPCL Auto Care Centre', category: 'petrol', location: 'Roorkee Bypass, UK', distanceKm: 174 },
+        { name: 'Reliance Petroleum Fuel Point', category: 'petrol', location: 'Purkaji Bypass (NH334)', distanceKm: 148 },
+      ],
+      cngPumps: [
+        { name: 'Indraprastha Gas (IGL) CNG Mega Hub', category: 'cng', location: 'Delhi-Meerut Expressway Exit', distanceKm: 52 },
+        { name: 'Torrent Gas Highway CNG (Navgati Verified)', category: 'cng', location: 'Khatauli Bypass, UP', distanceKm: 96 },
+        { name: 'Green Gas CNG Station (Navgati Verified)', category: 'cng', location: 'Roorkee Highway, UK', distanceKm: 170 },
+        { name: 'Haridwar City Entrance CNG Pump', category: 'cng', location: 'Jwalapur Bypass, Haridwar', distanceKm: 210 },
+      ],
+      attractions: [
+        { name: 'Har Ki Pauri (Brahma Kund)', category: 'attraction', location: 'Haridwar Town Center', distanceKm: 215, image: '/destinations/haridwar.webp', highlight: 'Sacred Ganga Aarti & Brahma Kund Bathing Ghat' },
+        { name: 'Mansa Devi Temple (Ropeway)', category: 'attraction', location: 'Bilwa Parvat, Haridwar', distanceKm: 216, image: '/destinations/haridwar.webp', highlight: 'Hilltop Shakti Shrine via Udankhatola' },
+        { name: 'Chandi Devi Temple (Neel Parvat)', category: 'attraction', location: 'Neel Parvat, Haridwar', distanceKm: 219, image: '/destinations/haridwar.webp', highlight: 'Ancient Hill Shrine with Panoramic Views' },
+        { name: 'Shanti Kunj Gayatri Parivar', category: 'attraction', location: 'Motichur, Haridwar', distanceKm: 212, image: '/destinations/haridwar.webp', highlight: 'Global Spiritual Academy & Yajnashala' },
+        { name: 'Daksh Prajapati Temple', category: 'attraction', location: 'Kankhal, Haridwar', distanceKm: 219, image: '/destinations/haridwar.webp', highlight: 'Historic Lord Shiva Yagna & Mythology Shrine' },
+        { name: 'Maya Devi Temple', category: 'attraction', location: 'Upper Road, Haridwar', distanceKm: 214, image: '/destinations/haridwar.webp', highlight: '11th Century Ancient Shaktipeeth Temple' },
+      ],
+    },
+    gallery: [
+      { src: '/destinations/haridwar.webp', caption: 'Har Ki Pauri Evening Aarti', alt: 'Illuminated Ganga Aarti ceremony at Har Ki Pauri' },
+      { src: '/destinations/rishikesh.webp', caption: 'Ganges River Valley', alt: 'Holy river Ganges flowing down from Shivalik hills' },
+      { src: '/destinations/dehradun.webp', caption: 'Shivalik Mountain Foothills', alt: 'Shivalik hill ranges surrounding Haridwar' },
+      { src: '/destinations/food-plaza.webp', caption: 'Cheetal Grand Food Hub', alt: 'Highway restaurant and family food plaza' },
+      { src: '/destinations/hotel-resort.webp', caption: 'Haridwar Riverside Heritage Stays', alt: 'Riverside hotels and resorts in Haridwar' },
+    ],
+  },
+
+  // ---------------------------------------------------------------------------
+  // 2. DELHI / NCR TO NAINITAL & KUMAON (Master Corridor)
+  // ---------------------------------------------------------------------------
   'delhi-nainital': {
     highway: 'via Delhi-Meerut Expressway & NH9',
     routeChain: 'Delhi / NCR → Hapur Bypass → Gajraula → Moradabad Bypass → Rampur → Rudrapur → Haldwani → Nainital',
@@ -61,6 +359,28 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       'Visit Neem Karoli Baba Ashram at Kainchi Dham (approx. 18 km past Nainital/Bhowali).',
       'All Urgent Taxis vehicles are commercial yellow-plate cars driven by verified mountain highway chauffeurs.',
     ],
+    alternativeRoutes: [
+      {
+        id: 'fastest-nh9',
+        name: 'Fastest 4-Lane NH9 Highway Corridor',
+        highway: 'via Delhi-Meerut Expressway, Hapur, Moradabad Bypass, Rampur & Rudrapur',
+        distanceKm: 300,
+        durationText: '6 - 6.5 Hours',
+        tollPlazasCount: 3,
+        tollAmount: 275,
+        description: 'Smooth 4-lane national highway via Chhajrasi, Brijghat and Joya toll plazas. Fastest and most popular family outstation route.',
+      },
+      {
+        id: 'scenic-kaladhungi',
+        name: 'Scenic Bazpur & Kaladhungi Corbett Foothill Route',
+        highway: 'via Moradabad Bypass → Kashipur → Bazpur → Kaladhungi',
+        distanceKm: 295,
+        durationText: '6 Hours',
+        tollPlazasCount: 3,
+        tollAmount: 275,
+        description: 'Scenic countryside route bypassing Rudrapur city traffic, passing through Jim Corbett museum at Kaladhungi.',
+      },
+    ],
     milestones: [
       { town: 'Delhi / NCR', km: 0, timeText: '0 hr', description: 'Start via Delhi-Meerut Expressway & NH9' },
       { town: 'Hapur Bypass', km: 55, timeText: '45 mins', description: 'Smooth toll expressway merge towards Moradabad' },
@@ -69,6 +389,117 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       { town: 'Rudrapur', km: 225, timeText: '4 - 4.5 hr', description: 'Commercial gateway to Kumaon foothills' },
       { town: 'Haldwani / Kathgodam', km: 265, timeText: '5 hr', description: 'Base town before picturesque hill ascent' },
       { town: 'Nainital', km: 298, timeText: '6 - 6.5 hr', description: 'Arrive at Naini Lake, Mall Road & hilltop viewpoints' },
+    ],
+    hotelGroups: {
+      budget: [
+        {
+          name: 'Hotel Himalaya Nainital',
+          category: 'hotel',
+          location: 'Tallital, Nainital',
+          distanceKm: 298,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Comfortable family rooms near bus stand with lake glimpses',
+          priceRange: '₹1,500 - ₹2,800 / night',
+        },
+        {
+          name: 'KMVN Tourist Rest House',
+          category: 'hotel',
+          location: 'Sukhatal, Nainital',
+          distanceKm: 300,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Government-verified tourism lodge with safe parking',
+          priceRange: '₹1,200 - ₹2,200 / night',
+        },
+      ],
+      medium: [
+        {
+          name: 'The Pavilion Heritage Hotel',
+          category: 'hotel',
+          location: 'Near High Court, Mallital, Nainital',
+          distanceKm: 300,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Colonial heritage ambiance, pine garden lawns & multi-cuisine meals',
+          priceRange: '₹3,500 - ₹6,000 / night',
+        },
+        {
+          name: 'Radisson Blu Hotel Rudrapur',
+          category: 'hotel',
+          location: 'Rudrapur Commercial Hub, UK',
+          distanceKm: 220,
+          image: '/destinations/hotel-resort.webp',
+          highlight: '4-Star comfort, swimming pool & fine dining for foothill stopovers',
+          priceRange: '₹3,800 - ₹6,500 / night',
+        },
+      ],
+      luxury: [
+        {
+          name: 'The Manu Maharani Resort',
+          category: 'hotel',
+          location: 'Grassmere Estate, Nainital',
+          distanceKm: 300,
+          image: '/destinations/hotel-resort.webp',
+          highlight: '5-Star luxury resort with panoramic Naini Lake views & spa',
+          priceRange: '₹10,000 - ₹18,000 / night',
+        },
+        {
+          name: 'The Naini Retreat Heritage Palace',
+          category: 'hotel',
+          location: 'Ayarpatta Slopes, Nainital',
+          distanceKm: 299,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Historic royal residence of the Maharaja of Pilibhit',
+          priceRange: '₹11,000 - ₹22,000 / night',
+        },
+      ],
+    },
+    famousFoods: [
+      {
+        name: 'Sonam Fast Food',
+        location: 'Tibetan Market, Mallital, Nainital',
+        dish: 'Steamed Mutton & Veg Momos with Fiery Red Chutney',
+        description: 'Nainital\'s most celebrated mountain street food, famous for piping hot juicy momos and thukpa.',
+        image: '/destinations/nainital.webp',
+      },
+      {
+        name: 'Sakley\'s Restaurant & Pastry Shop',
+        location: 'Mallital, Nainital',
+        dish: 'Honey Roasted Chicken, Apple Pie & Chocolate Lava',
+        description: 'Charming vintage European cafe established in 1944 tucked under old oak trees.',
+        image: '/destinations/nainital.webp',
+      },
+      {
+        name: 'Mamu\'s Naini Sweets',
+        location: 'Tallital, Nainital',
+        dish: 'Bal Mithai & Singori Wrapped in Malu Leaves',
+        description: 'Authentic Kumaoni sweet made from roasted roasted khoya coated with sugar globules.',
+        image: '/destinations/nainital.webp',
+      },
+    ],
+    hiddenGems: [
+      {
+        name: 'Kainchi Dham Ashram (Neem Karoli Baba)',
+        location: 'Bhowali-Almora Highway (18 km from Nainital)',
+        distanceKm: 316,
+        highlight: 'Sacred Ashram visited by Steve Jobs & Mark Zuckerberg',
+        description: 'World-famous sacred shrine surrounded by pine hills and lush mountain greenery.',
+        image: '/destinations/kainchi-dham.webp',
+      },
+      {
+        name: 'Pangot & Kilbury Bird Sanctuary',
+        location: 'Pangot (15 km from Nainital)',
+        distanceKm: 314,
+        highlight: 'Quiet Himalayan Pine Forest & 250+ Bird Species',
+        description: 'A secluded pine forest destination perfect for walking trails away from Nainital town bustle.',
+        image: '/destinations/nainital.webp',
+      },
+      {
+        name: 'Land\'s End Cliff View',
+        location: 'Barapathar, Nainital',
+        distanceKm: 302,
+        highlight: 'Sheer Cliff View overlooking Khurpatal Lake',
+        description: 'Magnificent precipice providing an aerial view of terraced emerald farms of Khurpatal.',
+        image: '/destinations/nainital.webp',
+      },
     ],
     places: {
       restaurants: [
@@ -113,9 +544,11 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
     ],
   },
 
-  // Delhi / NCR to Dehradun / Mussoorie / Rishikesh / Haridwar
+  // ---------------------------------------------------------------------------
+  // 3. DELHI / NCR TO DEHRADUN & MUSSOORIE
+  // ---------------------------------------------------------------------------
   'delhi-dehradun': {
-    highway: 'via Delhi-Meerut Expressway & NH334 (4-Lane)',
+    highway: 'via Delhi-Meerut Expressway & NH334',
     routeChain: 'Delhi / NCR → Meerut Expressway → Khatauli → Muzaffarnagar → Roorkee → Mohand Ghats → Dehradun',
     roadType: 'High-Speed Delhi-Meerut Expressway & Smooth 4-Lane NH334',
     weather: {
@@ -127,8 +560,30 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       'Delhi-Meerut Expressway saves 50+ minutes over the older highway route.',
       'Cheetal Grand at Khatauli Bypass (Km 98) and Namaste Midway (Km 112) are top recommended pitstops.',
       'For Mussoorie, continue 34 km uphill from Dehradun via Rajpur Road.',
-      'Check in advance for weekend pilgrim rush during Kumbh / Shravan / Char Dham season.',
+      'Check in advance for weekend rush during hill station peak seasons.',
       'Cabs equipped with AC and experienced hill drivers guarantee smooth ride across Mohand Ghats.',
+    ],
+    alternativeRoutes: [
+      {
+        id: 'fastest-nh334',
+        name: 'Fastest NH334 Highway Corridor',
+        highway: 'via Delhi-Meerut Expressway, Khatauli, Roorkee & Mohand Pass',
+        distanceKm: 248,
+        durationText: '4 - 4.5 Hours',
+        tollPlazasCount: 3,
+        tollAmount: 255,
+        description: 'Standard fast route through western UP crossing Mohand wildlife forest tunnel into Dehradun valley.',
+      },
+      {
+        id: 'new-expressway',
+        name: 'New Delhi-Dehradun Access-Controlled Expressway',
+        highway: 'via Akshardham, Baghpat, Saharanpur & Asia\'s Longest Wildlife Elevated Corridor',
+        distanceKm: 212,
+        durationText: '3 Hours',
+        tollPlazasCount: 3,
+        tollAmount: 310,
+        description: 'State-of-the-art elevated highway through Rajaji National Park forest canopy.',
+      },
     ],
     milestones: [
       { town: 'Delhi / NCR', km: 0, timeText: '0 hr', description: 'Depart via Akshardham Delhi-Meerut Expressway' },
@@ -181,7 +636,9 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
     ],
   },
 
-  // Delhi / NCR to Agra / Mathura / Vrindavan
+  // ---------------------------------------------------------------------------
+  // 4. DELHI / NCR TO AGRA, MATHURA & VRINDAVAN
+  // ---------------------------------------------------------------------------
   'delhi-agra': {
     highway: 'via Yamuna Expressway (6-Lane Controlled-Access)',
     routeChain: 'Delhi / NCR → Greater Noida (Pari Chowk) → Jewar (Noida Airport) → Mathura Toll → Vrindavan Cut → Agra',
@@ -198,6 +655,28 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       'Combine your Agra trip with a spiritual stopover at Mathura Shri Krishna Janmabhoomi & Vrindavan Prem Mandir.',
       'Advance token booking assures dedicated doorstep pickup anytime from Delhi NCR.',
     ],
+    alternativeRoutes: [
+      {
+        id: 'yamuna-expressway',
+        name: 'Fastest 6-Lane Yamuna Expressway',
+        highway: 'via Greater Noida, Jewar, Mathura Toll & Agra Ring Road',
+        distanceKm: 215,
+        durationText: '3 Hours',
+        tollPlazasCount: 3,
+        tollAmount: 465,
+        description: 'World-class controlled-access concrete expressway with dedicated midway food plazas. Fastest route to Taj Mahal.',
+      },
+      {
+        id: 'old-mathura-nh19',
+        name: 'Historic Old Mathura Road (NH19)',
+        highway: 'via Faridabad, Ballabhgarh, Palwal, Kosi Kalan & Mathura',
+        distanceKm: 230,
+        durationText: '4.5 Hours',
+        tollPlazasCount: 2,
+        tollAmount: 215,
+        description: 'Traditional Grand Trunk road passing directly through Braj pilgrimage towns of Palwal and Kosi Kalan.',
+      },
+    ],
     milestones: [
       { town: 'Delhi / Noida', km: 0, timeText: '0 hr', description: 'Start via Noida-Greater Noida Expressway' },
       { town: 'Greater Noida (Pari Chowk)', km: 35, timeText: '30 mins', description: 'Enter Yamuna Expressway Zero Point' },
@@ -205,6 +684,67 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       { town: 'Mathura / Vrindavan Exit', km: 145, timeText: '1.5 - 2 hr', description: 'Exit for Banke Bihari & Prem Mandir' },
       { town: 'Agra Toll Plaza', km: 198, timeText: '2.5 - 3 hr', description: 'Exit onto Agra Ring Road' },
       { town: 'Agra (Taj Mahal)', km: 215, timeText: '3 - 3.5 hr', description: 'Doorstep drop at your hotel or Taj Mahal East Gate' },
+    ],
+    hotelGroups: {
+      budget: [
+        {
+          name: 'Hotel Taj Resort',
+          category: 'hotel',
+          location: 'Taj East Gate Road, Agra',
+          distanceKm: 214,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Walking distance to Taj Mahal with clean AC rooms',
+          priceRange: '₹1,500 - ₹2,500 / night',
+        },
+      ],
+      medium: [
+        {
+          name: 'Radisson Hotel Agra',
+          category: 'hotel',
+          location: 'Taj Nagari Phase 1, Agra',
+          distanceKm: 212,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Rooftop pool with Taj Mahal views & fine dining',
+          priceRange: '₹4,000 - ₹7,000 / night',
+        },
+      ],
+      luxury: [
+        {
+          name: 'The Oberoi Amarvilas',
+          category: 'hotel',
+          location: 'Taj East Gate Road, Agra',
+          distanceKm: 214,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'World-renowned ultra-luxury palace with private balcony Taj views',
+          priceRange: '₹35,000 - ₹75,000 / night',
+        },
+      ],
+    },
+    famousFoods: [
+      {
+        name: 'Panchi Petha Store',
+        location: 'Hari Parvat & Sadar Bazaar, Agra',
+        dish: 'Kesar Petha, Angoori Petha & Paan Petha',
+        description: 'World-famous authentic Agra ash gourd sweet prepared in pure saffron and rose syrup.',
+        image: '/destinations/agra.webp',
+      },
+      {
+        name: 'Deviram Sweets & Restaurant',
+        location: 'Pratap Pura, Agra',
+        dish: 'Bedmi Puri with Spicy Aloo Sabzi & Hot Jalebi',
+        description: 'Legendary morning Agra breakfast favorite featuring crispy lentil stuffed pooris.',
+        image: '/destinations/agra.webp',
+      },
+    ],
+    hiddenGems: [
+      {
+        name: 'Mehtab Bagh Moonlight Garden',
+        location: 'Opposite Taj Mahal across Yamuna River',
+        distanceKm: 216,
+        highlight: 'Sunset silhouette view of Taj Mahal without crowds',
+        description: 'Charbagh complex aligned perfectly across the river Yamuna providing stunning reflections of the Taj.',
+        image: '/destinations/agra.webp',
+      },
     ],
     places: {
       restaurants: [
@@ -247,7 +787,9 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
     ],
   },
 
-  // Delhi / NCR to Jaipur / Ajmer / Pushkar / Khatu Shyam Ji
+  // ---------------------------------------------------------------------------
+  // 5. DELHI / NCR TO JAIPUR & RAJASTHAN
+  // ---------------------------------------------------------------------------
   'delhi-jaipur': {
     highway: 'via Delhi-Mumbai Expressway (NE4) & NH48',
     routeChain: 'Delhi / NCR → Gurugram → Sohna (NE4 Entry) → Dausa Interchange → Jaipur (Pink City)',
@@ -263,6 +805,28 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       'Book online tickets for Amber Fort and City Palace to skip long ticket counter queues.',
       'If visiting Khatu Shyam Ji or Salasar Balaji, request direct route customization with your driver.',
       'Urgent Taxis provides comfortable AC Sedan, Ertiga & Innova Crysta cabs with 24/7 support.',
+    ],
+    alternativeRoutes: [
+      {
+        id: 'delhi-mumbai-expressway-ne4',
+        name: 'New 8-Lane Delhi-Mumbai Expressway (NE4)',
+        highway: 'via Sohna Elevated Road, NE4 Expressway & Dausa Interchange',
+        distanceKm: 275,
+        durationText: '3.5 - 4 Hours',
+        tollPlazasCount: 2,
+        tollAmount: 480,
+        description: 'Brand new high-speed 8-lane expressway with zero traffic signals, modern way-side amenities and scenic Aravalli tunnels.',
+      },
+      {
+        id: 'old-highway-nh48',
+        name: 'Classic NH48 Highway (via Dharuhera & Behror)',
+        highway: 'via Gurugram, Dharuhera, Neemrana, Behror & Kotputli',
+        distanceKm: 260,
+        durationText: '4.5 - 5 Hours',
+        tollPlazasCount: 3,
+        tollAmount: 335,
+        description: 'Classic highway passing by famous dhabas like Old Rao Hotel, Neemrana Japanese zone, and Highway King rest stops.',
+      },
     ],
     milestones: [
       { town: 'Delhi / NCR', km: 0, timeText: '0 hr', description: 'Depart via Rajiv Chowk Gurugram or Sohna NE4 Entry' },
@@ -333,10 +897,13 @@ export function getRouteCorridorDetails(
   }
 
   // Check key matches by destination
+  if (normDest.includes('haridwar')) {
+    return KNOWN_CORRIDORS['delhi-haridwar'];
+  }
   if (normDest.includes('nainital') || normDest.includes('haldwani') || normDest.includes('bhimtal') || normDest.includes('kainchi') || normDest.includes('ramnagar') || normDest.includes('corbett') || normDest.includes('almora') || normDest.includes('ranikhet')) {
     return KNOWN_CORRIDORS['delhi-nainital'];
   }
-  if (normDest.includes('dehradun') || normDest.includes('mussoorie') || normDest.includes('rishikesh') || normDest.includes('haridwar') || normDest.includes('roorkee')) {
+  if (normDest.includes('dehradun') || normDest.includes('mussoorie') || normDest.includes('rishikesh') || normDest.includes('roorkee')) {
     return KNOWN_CORRIDORS['delhi-dehradun'];
   }
   if (normDest.includes('agra') || normDest.includes('mathura') || normDest.includes('vrindavan') || normDest.includes('firozabad')) {
@@ -368,6 +935,72 @@ export function getRouteCorridorDetails(
       `All Urgent Taxis vehicles carry verified FASTag for instant toll booth clearance.`,
       `Doorstep pickup and drop is available 24/7 across all residential sectors and hotels.`,
       `Transparent per-KM rates guarantee no hidden surcharges at the end of your trip.`,
+    ],
+    alternativeRoutes: [
+      {
+        id: 'primary-highway',
+        name: `Primary Highway Corridor to ${destName}`,
+        highway: highwayName,
+        distanceKm: distanceKm,
+        durationText: `${Math.round(distanceKm / 50)} - ${Math.round(distanceKm / 45)} Hours`,
+        tollPlazasCount: Math.max(1, Math.min(4, Math.round(distanceKm / 80))),
+        tollAmount: Math.round(distanceKm * 1.2),
+        description: `Direct access-controlled highway corridor connecting ${originName} and ${destName} with verified FASTag plazas.`,
+      },
+    ],
+    hotelGroups: {
+      budget: [
+        {
+          name: `${destName} Central Budget Inn`,
+          category: 'hotel',
+          location: `${destName} City Center`,
+          distanceKm: distanceKm,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Clean AC rooms, 24x7 desk & safe parking',
+          priceRange: '₹1,200 - ₹2,000 / night',
+        },
+      ],
+      medium: [
+        {
+          name: `${destName} Comfort Residency`,
+          category: 'hotel',
+          location: `${destName} Main Road`,
+          distanceKm: distanceKm,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Modern family rooms, complimentary Wi-Fi & multi-cuisine restaurant',
+          priceRange: '₹2,500 - ₹4,500 / night',
+        },
+      ],
+      luxury: [
+        {
+          name: `${destName} Landmark Grand Resort`,
+          category: 'hotel',
+          location: `${destName} Scenic Zone`,
+          distanceKm: distanceKm,
+          image: '/destinations/hotel-resort.webp',
+          highlight: 'Premium hospitality, swimming pool & fine dining',
+          priceRange: '₹6,000 - ₹14,000 / night',
+        },
+      ],
+    },
+    famousFoods: [
+      {
+        name: `${destName} Heritage Food Center`,
+        location: `${destName} Main Bazaar`,
+        dish: `Authentic Regional Delicacy of ${destName}`,
+        description: `Famous local delicacies celebrated across ${destName} prepared using authentic traditional recipes.`,
+        image: '/destinations/food-plaza.webp',
+      },
+    ],
+    hiddenGems: [
+      {
+        name: `${destName} Scenic Viewpoint & Heritage Spot`,
+        location: `${destName} Outskirts`,
+        distanceKm: distanceKm + 5,
+        highlight: 'Quiet Panoramic Vista away from crowds',
+        description: `A peaceful local attraction cherished by residents for morning walks and photography.`,
+        image: getDestinationImage(destName),
+      },
     ],
     milestones: [
       { town: `${originName} Departure`, km: 0, timeText: '0 hr', description: `Doorstep pickup in ${originName}` },

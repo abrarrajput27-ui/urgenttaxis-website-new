@@ -146,6 +146,18 @@ export default function MmtBookingWidget({
 
   const minTimeForToday = useMemo(() => getMinTimeForToday(), [pickupDate]);
 
+  // Periodic auto-refresh interval for valid dispatch time (Zero-Error Search Guarantee)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const nowStr = new Date().toISOString().split('T')[0];
+      if (pickupDate === nowStr) {
+        const minT = getMinTimeForToday();
+        setPickupTime((prev) => (prev < minT ? minT : prev));
+      }
+    }, 30000); // Check every 30 seconds
+    return () => clearInterval(timer);
+  }, [pickupDate]);
+
   const handleDateChange = (newDate: string) => {
     if (newDate < todayStr) newDate = todayStr;
     setPickupDate(newDate);
@@ -165,8 +177,9 @@ export default function MmtBookingWidget({
     if (pickupDate === todayStr) {
       const minT = getMinTimeForToday();
       if (newTime < minT) {
-        setErrorMsg(`Selected pickup time has already passed. Earliest pickup is ${formatMmtTime(minT)}.`);
+        // Auto-refresh seamlessly instead of blocking
         setPickupTime(minT);
+        setErrorMsg('');
         return;
       }
     }
@@ -312,11 +325,13 @@ export default function MmtBookingWidget({
       return;
     }
 
+    let effectivePickupTime = pickupTime;
     if (pickupDate === todayStr) {
       const minT = getMinTimeForToday();
       if (pickupTime < minT) {
-        setErrorMsg(`Selected pickup time has already passed. Earliest dispatch is ${formatMmtTime(minT)}.`);
-        return;
+        // Auto-refresh to earliest dispatch time seamlessly so search never errors
+        effectivePickupTime = minT;
+        setPickupTime(minT);
       }
     }
 
@@ -329,7 +344,7 @@ export default function MmtBookingWidget({
     const params = new URLSearchParams();
     params.set('serviceType', tripType);
     params.set('date', pickupDate);
-    params.set('time', pickupTime);
+    params.set('time', effectivePickupTime);
 
     if (tripType === 'local_rental') {
       const city = (rentalCity || origin).trim() || 'Ghaziabad';

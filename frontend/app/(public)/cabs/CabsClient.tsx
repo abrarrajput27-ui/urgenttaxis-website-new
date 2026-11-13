@@ -55,7 +55,10 @@ export type VehicleFilterKey =
   | 'ertiga'
   | 'suv-muv'
   | 'innova'
-  | 'executive-suv';
+  | 'executive-suv'
+  | 'tempo'
+  | 'urbania'
+  | 'bus';
 
 interface VehicleCardData {
   key: string;
@@ -67,6 +70,12 @@ interface VehicleCardData {
   image: string;
   badge: string;
   badgeColor: string;
+  baseFare: number;
+  tollAmount: number;
+  stateTaxAmount: number;
+  gstAmount: number;
+  nightCharge: number;
+  isNightPickup: boolean;
   totalFare: number;
   originalPrice: number;
   discountText: string;
@@ -240,11 +249,12 @@ export default function CabsClient() {
       alert('Departure date cannot be in the past.');
       return;
     }
+    let safeTime = editTime;
     if (editDate === todayStr) {
       const minT = getMinTimeForToday();
       if (editTime < minT) {
-        alert(`Selected pickup time has already passed. Earliest pickup is ${minT}.`);
-        return;
+        safeTime = minT;
+        setEditTime(minT);
       }
     }
     if (editServiceType === 'round_trip' && editReturnDate && editReturnDate < editDate) {
@@ -256,7 +266,7 @@ export default function CabsClient() {
     setPickup(editPickup);
     setDrop(nextDrop);
     setJourneyDate(editDate);
-    setJourneyTime(editTime);
+    setJourneyTime(safeTime);
     setReturnDate(editReturnDate);
     setServiceType(editServiceType);
     setPackageId(editPackageId);
@@ -376,8 +386,27 @@ export default function CabsClient() {
       busFare = Math.round(sedanFare * 4.8);
     }
 
+    // Night Pickup Detection (10:00 PM to 06:00 AM)
+    const isNightPickup = (() => {
+      if (!journeyTime) return false;
+      try {
+        const [h] = journeyTime.split(':').map(Number);
+        return h >= 22 || h < 6;
+      } catch {
+        return false;
+      }
+    })();
+
+    const isOneWayOrAirport = serviceType === 'one_way' || serviceType === 'airport_transfer';
+
     // Helper: Dynamic MakeMyTrip Inclusions according to trip type
-    const getTripInclusions = (vehicleName: string, rateStr: string): string[] => {
+    const getTripInclusions = (
+      vehicleName: string,
+      rateStr: string,
+      tollAmt: number,
+      taxAmt: number,
+      nightAmt: number
+    ): string[] => {
       const base = [
         `Doorstep pickup at your address in ${pickup}`,
         `Direct drop at exact destination in ${drop}`,
@@ -389,17 +418,19 @@ export default function CabsClient() {
 
       if (serviceType === 'one_way') {
         return [
-          'All Highway Toll Taxes Included',
-          'Inter-State Border Entry Permits Included',
-          'GST (5%) & Service Taxes Included',
+          `All Highway Toll Taxes Included (${tollAmt > 0 ? `₹${tollAmt} via FASTag` : 'Included'})`,
+          `Inter-State Border Entry Permits Included (${taxAmt > 0 ? `₹${taxAmt}` : 'Included'})`,
+          'GST (5%) & Commercial Taxes Included',
+          ...(nightAmt > 0 ? [`Driver Night Allowance Included (₹${nightAmt})`] : []),
           ...base,
         ];
       }
       if (serviceType === 'round_trip') {
         return [
-          'Driver daily allowance included for the full trip',
-          'Minimum 250 km/day daily travel quota',
+          `Driver daily allowance included for full trip (${tripDays} days)`,
+          `Minimum 250 km/day daily travel quota (${tripDays * 250} km total)`,
           'GST (5%) included in vehicle rental',
+          ...(nightAmt > 0 ? [`Driver Night Allowance Included (₹${nightAmt})`] : []),
           ...base,
         ];
       }
@@ -407,18 +438,22 @@ export default function CabsClient() {
         return [
           'Full city package hours and kilometers included',
           'Unlimited local city stops within package',
+          'GST (5%) included in package rental',
+          ...(nightAmt > 0 ? [`Night Journey Allowance Included (₹${nightAmt})`] : []),
           ...base,
         ];
       }
       return [
         'Airport terminal entry & toll charges included',
         '60 minutes complimentary flight arrival waiting time',
+        'GST (5%) included',
+        ...(nightAmt > 0 ? [`Night Arrival Allowance Included (₹${nightAmt})`] : []),
         ...base,
       ];
     };
 
     // Helper: Dynamic MakeMyTrip Exclusions according to trip type
-    const getTripExclusions = (extraKmRate: string): string[] => {
+    const getTripExclusions = (extraKmRate: string, isNight: boolean): string[] => {
       if (serviceType === 'one_way') {
         return [
           'Airport / Railway station parking charges (payable at actuals if incurred)',
@@ -432,7 +467,8 @@ export default function CabsClient() {
           'Highway Toll Taxes & State Border Permits paid at actual toll booths during journey',
           'Airport / Monument / Hotel parking charges payable directly at actuals',
           `Kilometers driven beyond daily minimum quota charged at ${extraKmRate}`,
-          'Driver night allowance (₹300/night if travel between 11 PM and 5 AM)',
+          ...(isNight ? [] : ['Driver night allowance (₹300/night if travel between 10:00 PM and 06:00 AM)']),
+          'Multiple deviations outside designated route path',
         ];
       }
       if (serviceType === 'local_rental') {
@@ -458,13 +494,34 @@ export default function CabsClient() {
       image: string,
       badge: string,
       badgeColor: string,
-      fare: number,
+      baseFare: number,
       perKmRate: string
     ): VehicleCardData => {
-      const token = calculateAdvanceToken(fare);
-      const balance = Math.max(0, fare - token);
-      const original = Math.round(fare * 1.12);
-      const discountPercent = Math.round(((original - fare) / original) * 100);
+      // Calculate Tolls & State Border Passenger Taxes for this specific vehicle category
+      const tollInfo = calculateRouteTolls(pickup, drop, key, serviceType === 'round_trip', routeData.distanceKm);
+      const tollAmount = isOneWayOrAirport ? tollInfo.totalToll : 0;
+      const stateTaxAmount = isOneWayOrAirport ? tollInfo.totalStateTax : 0;
+
+      // Night Charge (10:00 PM to 06:00 AM)
+      let nightRate = 0;
+      if (isNightPickup) {
+        if (key.includes('tempo') || key.includes('urbania') || key.includes('bus')) {
+          nightRate = 400;
+        } else if (key.includes('suv') || key.includes('innova') || key.includes('crysta') || key.includes('ertiga')) {
+          nightRate = 300;
+        } else {
+          nightRate = 250;
+        }
+      }
+      const nightCharge = serviceType === 'round_trip' ? nightRate * tripDays : nightRate;
+      const gstAmount = Math.round(baseFare * 0.05);
+
+      const totalFare = baseFare + tollAmount + stateTaxAmount + nightCharge + gstAmount;
+
+      const token = calculateAdvanceToken(totalFare);
+      const balance = Math.max(0, totalFare - token);
+      const original = Math.round(totalFare * 1.12);
+      const discountPercent = Math.round(((original - totalFare) / original) * 100);
 
       return {
         key,
@@ -476,14 +533,20 @@ export default function CabsClient() {
         image,
         badge,
         badgeColor,
-        totalFare: fare,
+        baseFare,
+        tollAmount,
+        stateTaxAmount,
+        nightCharge,
+        isNightPickup,
+        gstAmount,
+        totalFare,
         originalPrice: original,
         discountText: `${discountPercent}% OFF`,
         tokenAmount: token,
         balanceAmount: balance,
         perKmRate,
-        inclusions: getTripInclusions(name, perKmRate),
-        exclusions: getTripExclusions(perKmRate),
+        inclusions: getTripInclusions(name, perKmRate, tollAmount, stateTaxAmount, nightCharge),
+        exclusions: getTripExclusions(perKmRate, isNightPickup),
       };
     };
 
@@ -569,8 +632,47 @@ export default function CabsClient() {
         crystaFare,
         '₹22/km'
       ),
+      buildCard(
+        'tempo16',
+        'tempo',
+        'Tempo Traveller',
+        'Force Tempo Traveller 12-16 Seater AC',
+        '12-16 Seats',
+        '10 Bags',
+        '/fleet-brand/Tempo Traveller.webp',
+        'GROUP TRAVEL',
+        'bg-purple-800',
+        tempoFare,
+        '₹26/km'
+      ),
+      buildCard(
+        'urbania12',
+        'urbania',
+        'Force Urbania',
+        'Force Urbania Luxury Van 12-16 Seater',
+        '12-16 Seats',
+        '10 Bags',
+        '/fleet-brand/Tempo Traveller.webp',
+        'ULTRA LUXURY',
+        'bg-cyan-800',
+        urbaniaFare,
+        '₹32/km'
+      ),
+      buildCard(
+        'bus27',
+        'bus',
+        'Luxury Coach Bus',
+        'Mini / Large AC Tourist Coach 27-45 Seater',
+        '27-45 Seats',
+        '25 Bags',
+        '/fleet-brand/Tempo Traveller.webp',
+        'LARGE GROUP',
+        'bg-rose-900',
+        busFare,
+        '₹48/km'
+      ),
     ];
-  }, [routeData, serviceType, pickup, drop, packageId, tripDays]);
+  }, [routeData, serviceType, pickup, drop, packageId, tripDays, journeyTime]);
 
   // Filter vehicles by category tab
   const filteredVehicles = useMemo(() => {
@@ -615,6 +717,11 @@ export default function CabsClient() {
       vehicleCategory: v.name,
       vehicleModel: v.models,
       capacity: `${v.seats} • ${v.bags}`,
+      baseFare: v.baseFare,
+      estimatedToll: v.tollAmount,
+      estimatedStateTax: v.stateTaxAmount,
+      nightCharges: v.nightCharge,
+      gst: v.gstAmount,
       totalFare: v.totalFare,
       tokenAmount: v.tokenAmount,
       balanceAmount: v.balanceAmount,
@@ -1134,6 +1241,39 @@ export default function CabsClient() {
             >
               ✨ Innova Crysta
             </button>
+            <button
+              type="button"
+              onClick={() => setSelectedFilter('tempo')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap ${
+                selectedFilter === 'tempo'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold'
+              }`}
+            >
+              🚐 Tempo Traveller
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedFilter('urbania')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap ${
+                selectedFilter === 'urbania'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold'
+              }`}
+            >
+              🚐 Force Urbania
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedFilter('bus')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap ${
+                selectedFilter === 'bus'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold'
+              }`}
+            >
+              🚌 Luxury Bus
+            </button>
 
           </div>
 
@@ -1282,7 +1422,7 @@ export default function CabsClient() {
                         }`}
                       >
                         <FaRoad className="w-3.5 h-3.5 text-brand-blue" />
-                        <span>Toll & State Tax Breakup</span>
+                        <span>Fare Breakup &amp; Tolls</span>
                       </button>
                     </div>
 
@@ -1310,7 +1450,7 @@ export default function CabsClient() {
                       </ul>
                     )}
 
-                    {/* Tab 3: Highway Tolls & State Tax Breakup */}
+                    {/* Tab 3: Detailed Fare Breakup, Highway Tolls & State Tax */}
                     {activeTab === 'tolls' && (() => {
                       const tollInfo = calculateRouteTolls(
                         pickup,
@@ -1321,37 +1461,72 @@ export default function CabsClient() {
                       );
 
                       return (
-                        <div className="space-y-2.5 animate-in fade-in duration-150 text-xs">
-                          <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider pb-1 border-b border-slate-100">
-                            <span>Route Toll Plazas ({tollInfo.tollPlazas.length})</span>
-                            <span>{serviceType === 'round_trip' ? 'Round-Trip' : 'One-Way'}</span>
-                          </div>
-                          <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                            {tollInfo.tollPlazas.map((p) => (
-                              <div
-                                key={p.id}
-                                className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200/60"
-                              >
-                                <div>
-                                  <div className="font-bold text-slate-800">{p.name}</div>
-                                  <div className="text-[10px] text-slate-400">{p.highway}</div>
-                                </div>
-                                <span className="font-black text-slate-900 tabular-nums">
-                                  ₹{p.appliedRate}
+                        <div className="space-y-3 animate-in fade-in duration-150 text-xs">
+                          {/* Itemized Fare Summary Table */}
+                          <div className="rounded-xl border border-slate-200 overflow-hidden bg-white">
+                            <div className="p-2.5 bg-slate-50 border-b border-slate-200 font-bold text-slate-800 flex items-center justify-between text-[11px] uppercase tracking-wider">
+                              <span>MakeMyTrip-Style Fare Breakup</span>
+                              <span className="text-brand-green font-black">
+                                {isOneWayOrAirport ? 'All-Inclusive' : 'Tolls Excluded'}
+                              </span>
+                            </div>
+                            <div className="p-3 space-y-1.5 text-xs">
+                              <div className="flex items-center justify-between text-slate-700">
+                                <span>Base Distance Fare ({routeData.distanceKm} km):</span>
+                                <span className="font-bold text-slate-900">₹{vehicle.baseFare.toLocaleString('en-IN')}</span>
+                              </div>
+                              <div className="flex items-center justify-between text-slate-700">
+                                <span>Highway Toll Taxes ({tollInfo.tollPlazas.length} Plazas):</span>
+                                <span className={`font-bold ${isOneWayOrAirport ? 'text-emerald-700' : 'text-slate-500'}`}>
+                                  {isOneWayOrAirport ? `₹${vehicle.tollAmount} (Included via FASTag)` : 'Excluded (Paid at actuals on highway)'}
                                 </span>
                               </div>
-                            ))}
-                          </div>
-                          <div className="flex items-center justify-between pt-1 font-bold text-slate-700 text-xs">
-                            <span>Total Estimated Highway Toll:</span>
-                            <span className="font-black text-[#1e1b4b]">₹{tollInfo.totalToll}</span>
-                          </div>
-                          {tollInfo.stateTaxes.length > 0 && (
-                            <div className="pt-1.5 border-t border-slate-100 text-[11px] text-slate-500">
-                              <span className="font-bold text-slate-700">Commercial State Tax: </span>
-                              {tollInfo.stateTaxes.map((st) => `${st.name} (₹${st.rate})`).join(', ')} (Paid at actual border posts).
+                              <div className="flex items-center justify-between text-slate-700">
+                                <span>State Border Passenger Taxes:</span>
+                                <span className={`font-bold ${isOneWayOrAirport ? 'text-emerald-700' : 'text-slate-500'}`}>
+                                  {isOneWayOrAirport ? `₹${vehicle.stateTaxAmount} (Included)` : 'Excluded (Paid at checkposts)'}
+                                </span>
+                              </div>
+                              {vehicle.nightCharge > 0 && (
+                                <div className="flex items-center justify-between text-indigo-800 bg-indigo-50/70 p-1 rounded font-semibold">
+                                  <span>Driver Night Allowance (10:00 PM – 06:00 AM):</span>
+                                  <span className="font-black text-indigo-900">₹{vehicle.nightCharge} (Included)</span>
+                                </div>
+                              )}
+                              <div className="flex items-center justify-between text-slate-700">
+                                <span>Statutory GST (5%):</span>
+                                <span className="font-bold text-slate-900">₹{vehicle.gstAmount.toLocaleString('en-IN')} (Included)</span>
+                              </div>
+                              <div className="pt-2 border-t border-slate-200 flex items-center justify-between font-black text-sm text-[#0a1128]">
+                                <span>Total Booking Fare:</span>
+                                <span className="text-emerald-700">₹{vehicle.totalFare.toLocaleString('en-IN')}</span>
+                              </div>
                             </div>
-                          )}
+                          </div>
+
+                          {/* Highway Toll Plazas Sub-breakdown */}
+                          <div className="space-y-1.5">
+                            <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                              <span>Plazas along Corridor ({tollInfo.tollPlazas.length})</span>
+                              <span>{serviceType === 'round_trip' ? 'Round-Trip' : 'One-Way'}</span>
+                            </div>
+                            <div className="space-y-1 max-h-28 overflow-y-auto pr-1">
+                              {tollInfo.tollPlazas.map((p) => (
+                                <div
+                                  key={p.id}
+                                  className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200/60"
+                                >
+                                  <div>
+                                    <div className="font-bold text-slate-800 text-[11px]">{p.name}</div>
+                                    <div className="text-[10px] text-slate-400">{p.highway}</div>
+                                  </div>
+                                  <span className="font-black text-slate-900 tabular-nums text-xs">
+                                    ₹{p.appliedRate}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       );
                     })()}
@@ -1393,6 +1568,17 @@ export default function CabsClient() {
                         ₹{vehicle.originalPrice.toLocaleString('en-IN')}
                       </span>
                     </div>
+
+                    {/* MakeMyTrip Style + Tolls & Taxes Subtitle */}
+                    {(serviceType === 'one_way' || serviceType === 'airport_transfer') ? (
+                      <div className="mt-1 text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 inline-block leading-tight">
+                        Base ₹{vehicle.baseFare.toLocaleString('en-IN')} + ₹{(vehicle.tollAmount + vehicle.stateTaxAmount + vehicle.gstAmount + vehicle.nightCharge).toLocaleString('en-IN')} (Tolls, State Tax &amp; GST Included)
+                      </div>
+                    ) : (
+                      <div className="mt-1 text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200 inline-block leading-tight">
+                        Base ₹{vehicle.baseFare.toLocaleString('en-IN')} + ₹{(vehicle.gstAmount + vehicle.nightCharge).toLocaleString('en-IN')} (Tolls &amp; State Taxes Excluded)
+                      </div>
+                    )}
 
                     {/* 30% Token & 70% Driver Balance breakdown */}
                     <div className="mt-3 p-3 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1.5 text-xs">

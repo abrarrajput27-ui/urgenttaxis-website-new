@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { calculateRouteTolls } from '@/lib/tolls';
-import { ShieldCheck, Info, Car, MapPin, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Info, MapPin } from 'lucide-react';
 
 interface RouteTollBreakdownCardProps {
   origin: string;
@@ -17,12 +17,10 @@ export default function RouteTollBreakdownCard({
   initialVehicle = 'sedan',
   distanceKm = 250,
 }: RouteTollBreakdownCardProps) {
-  const [vehicle, setVehicle] = useState<string>(initialVehicle);
-  const tripType = 'one_way';
-
   const tollData = useMemo(() => {
-    return calculateRouteTolls(origin, destination, vehicle, false, distanceKm);
-  }, [origin, destination, vehicle, distanceKm]);
+    // Show verified one-way toll for standard commercial taxi directly
+    return calculateRouteTolls(origin, destination, 'sedan', false, distanceKm);
+  }, [origin, destination, distanceKm]);
 
   return (
     <section className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 my-8">
@@ -31,60 +29,31 @@ export default function RouteTollBreakdownCard({
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-2">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>NHAI & Expressway Verified Breakdown</span>
+            <span>NHAI &amp; Expressway Verified One-Way Toll</span>
           </div>
           <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
-            Highway Tolls & State Border Entry Tax
+            Highway Tolls &amp; State Border Entry Tax Breakup
           </h3>
           <p className="text-xs text-slate-500 mt-0.5">
-            Individual plaza breakdown along the actual corridor path ({origin} → {destination})
+            Individual plaza breakdown along the actual highway corridor path ({origin} → {destination})
           </p>
         </div>
 
         {/* One-Way Trip Scope Badge */}
-        <div className="flex items-center gap-1 bg-slate-100 px-3 py-1.5 rounded-xl self-start sm:self-auto text-xs font-bold text-slate-700">
+        <div className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-xl self-start sm:self-auto text-xs font-bold text-slate-700">
           <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span>One-Way Highway Toll</span>
+          <span>Verified One-Way Toll</span>
         </div>
-      </div>
-
-      {/* Vehicle Category Chips */}
-      <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar py-4 border-b border-slate-100">
-        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1 mr-1">
-          <Car className="w-3.5 h-3.5" /> Vehicle:
-        </span>
-        {[
-          { id: 'sedan', label: 'Sedan (Dzire/Etios)' },
-          { id: 'ertiga', label: 'Ertiga (6-Seater)' },
-          { id: 'suv', label: 'SUV (Innova Crysta)' },
-          { id: 'tempo_traveller', label: 'Tempo Traveller (12/16)' },
-          { id: 'force_urbania', label: 'Force Urbania' },
-          { id: 'minibus', label: 'Minibus (27-Seater)' },
-          { id: 'bus_coach', label: 'Bus / Coach (45-Seater)' },
-        ].map((v) => (
-          <button
-            key={v.id}
-            type="button"
-            onClick={() => setVehicle(v.id)}
-            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer ${
-              vehicle === v.id
-                ? 'bg-[#1e1b4b] text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-            }`}
-          >
-            {v.label}
-          </button>
-        ))}
       </div>
 
       {/* Toll Plazas Table */}
       <div className="mt-5">
         <div className="flex items-center justify-between mb-3">
           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-            Highway Toll Plazas ({tollData.tollPlazas.length} on Route)
+            Highway Toll Plazas ({tollData.tollPlazas.length} on Corridor)
           </h4>
           <span className="text-[11px] font-semibold text-slate-400">
-            Single Journey One-Way
+            One-Way Standard Commercial Cab
           </span>
         </div>
 
@@ -131,7 +100,7 @@ export default function RouteTollBreakdownCard({
         <div className="mt-5">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              State Commercial Border Entry Taxes
+              State Commercial Passenger Border Entry Taxes
             </h4>
             <span className="text-[11px] font-semibold text-slate-400">Statutory Border Checkposts</span>
           </div>
@@ -151,16 +120,40 @@ export default function RouteTollBreakdownCard({
                 </div>
               </div>
             ))}
+            
+            {/* Total State Tax Row */}
+            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-100 border border-slate-200 font-bold text-xs sm:text-sm">
+              <span className="text-slate-800">Total Statutory State Border Passenger Taxes</span>
+              <span className="font-black text-[#1e1b4b] tabular-nums">₹{tollData.totalStateTax}</span>
+            </div>
           </div>
         </div>
       )}
 
+      {/* Combined Grand Total Summary Bar */}
+      <div className="mt-5 p-4 rounded-2xl bg-gradient-to-r from-[#0a1128] to-[#1e1b4b] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider block">
+            Corridor One-Way Statutory Highway Expenses
+          </span>
+          <span className="text-sm sm:text-base font-black">
+            Highway Toll (₹{tollData.totalToll}) + State Border Taxes (₹{tollData.totalStateTax})
+          </span>
+        </div>
+        <div className="text-right sm:shrink-0">
+          <span className="text-[10px] text-slate-300 block">Total One-Way Surcharges</span>
+          <span className="text-xl sm:text-2xl font-black text-emerald-400">
+            ₹{tollData.grandTotal}
+          </span>
+        </div>
+      </div>
+
       {/* Summary Note */}
-      <div className="mt-5 p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/60 flex items-start gap-2.5 text-xs text-amber-900">
+      <div className="mt-4 p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/60 flex items-start gap-2.5 text-xs text-amber-900">
         <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
         <div>
           <span className="font-bold">Transparent Highway Policy: </span>
-          Highway tolls and commercial state border taxes are electronic and paid seamlessly via vehicle FASTag or government portal at physical booths. Rates verified as of {tollData.lastVerified} per {tollData.verificationSource}.
+          Highway tolls and commercial state passenger taxes are paid seamlessly via vehicle FASTag or government portal. In <strong>One-Way &amp; Airport Cabs</strong>, tolls and state taxes are calculated and included in the all-inclusive fare. In <strong>Round-Trip &amp; Local Rentals</strong>, tolls and state border permits are paid at actuals on the highway.
         </div>
       </div>
     </section>

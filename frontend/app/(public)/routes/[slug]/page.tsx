@@ -616,7 +616,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
           </div>
         </section>
 
-        {/* Dedicated Full-Container Highway Route Map */}
+        {/* Dedicated Full-Container Highway Route Map with Alternative Routes Selector */}
         <section className="w-full">
           <RouteMapCard
             originName={originName}
@@ -624,6 +624,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
             distanceKm={distance}
             durationText={durationText}
             highwayName={corridor.highway}
+            alternativeRoutes={corridor.alternativeRoutes}
           />
         </section>
 
@@ -636,12 +637,15 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
           />
         </section>
 
-        {/* 4. PLACES ON THIS ROUTE (4 Categorized Columns with Show More options & verified maps) */}
+        {/* 4. PLACES ON THIS ROUTE (Highway Stops, Hotels, Famous Foods & Hidden Gems) */}
         <section>
           <RoutePlacesSection
             originName={originName}
             destName={destName}
             places={corridor.places}
+            hotelGroups={corridor.hotelGroups}
+            famousFoods={corridor.famousFoods}
+            hiddenGems={corridor.hiddenGems}
           />
         </section>
 
