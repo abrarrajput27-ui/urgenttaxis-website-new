@@ -192,6 +192,8 @@ export default function CabsClient() {
     }
   }, [initialPickup, initialDrop, initialDate, initialTime, initialReturnDate, initialReturnTime, initialFinalDrop, initialPackageId, initialServiceType, rawStops]);
 
+  const isOneWayOrAirport = serviceType === 'one_way' || serviceType === 'airport_transfer';
+
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
 
   // Compute minimum booking time (current time + 45 mins buffer to prevent past/expired bookings)
@@ -489,8 +491,6 @@ export default function CabsClient() {
         return false;
       }
     })();
-
-    const isOneWayOrAirport = serviceType === 'one_way' || serviceType === 'airport_transfer';
 
     // Helper: Dynamic MakeMyTrip Inclusions according to trip type
     const getTripInclusions = (
