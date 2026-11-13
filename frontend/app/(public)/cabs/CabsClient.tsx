@@ -36,6 +36,7 @@ import { SITE_CONFIG } from '@/lib/seo';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
 import { formatTime12Hour, formatDateReadable, calculateRoundTripDays } from '@/lib/date-utils';
+import { calculateRouteTolls } from '@/lib/tolls';
 import {
   calculateAdvanceToken,
   calculateRoundTripFare,
@@ -107,7 +108,7 @@ export default function CabsClient() {
   const [packageId, setPackageId] = useState<HourlyRentalPackageId>(initialPackageId);
   const [isModifyOpen, setIsModifyOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<VehicleFilterKey>('all');
-  const [activeTabMap, setActiveTabMap] = useState<Record<string, 'inclusions' | 'exclusions'>>({});
+  const [activeTabMap, setActiveTabMap] = useState<Record<string, 'inclusions' | 'exclusions' | 'tolls'>>({});
   const [stops, setStops] = useState<string[]>(initialStops);
 
   // Form draft state for modify drawer
@@ -1266,6 +1267,23 @@ export default function CabsClient() {
                         <FaInfoCircle className="w-3.5 h-3.5 text-amber-600" />
                         <span>Excluded / Extra Charges ({vehicle.exclusions.length})</span>
                       </button>
+
+                      <span className="text-slate-300">|</span>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setActiveTabMap((prev) => ({ ...prev, [vehicle.key]: 'tolls' }))
+                        }
+                        className={`text-xs font-black uppercase tracking-wider pb-1 transition-all flex items-center gap-1.5 cursor-pointer ${
+                          activeTab === 'tolls'
+                            ? 'text-brand-blue border-b-2 border-brand-blue'
+                            : 'text-slate-400 hover:text-slate-600'
+                        }`}
+                      >
+                        <FaRoad className="w-3.5 h-3.5 text-brand-blue" />
+                        <span>Toll & State Tax Breakup</span>
+                      </button>
                     </div>
 
                     {/* Tab 1: Inclusions List */}
@@ -1291,6 +1309,52 @@ export default function CabsClient() {
                         ))}
                       </ul>
                     )}
+
+                    {/* Tab 3: Highway Tolls & State Tax Breakup */}
+                    {activeTab === 'tolls' && (() => {
+                      const tollInfo = calculateRouteTolls(
+                        pickup,
+                        drop,
+                        vehicle.key,
+                        serviceType === 'round_trip',
+                        routeData.distanceKm
+                      );
+
+                      return (
+                        <div className="space-y-2.5 animate-in fade-in duration-150 text-xs">
+                          <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider pb-1 border-b border-slate-100">
+                            <span>Route Toll Plazas ({tollInfo.tollPlazas.length})</span>
+                            <span>{serviceType === 'round_trip' ? 'Round-Trip' : 'One-Way'}</span>
+                          </div>
+                          <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                            {tollInfo.tollPlazas.map((p) => (
+                              <div
+                                key={p.id}
+                                className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200/60"
+                              >
+                                <div>
+                                  <div className="font-bold text-slate-800">{p.name}</div>
+                                  <div className="text-[10px] text-slate-400">{p.highway}</div>
+                                </div>
+                                <span className="font-black text-slate-900 tabular-nums">
+                                  ₹{p.appliedRate}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex items-center justify-between pt-1 font-bold text-slate-700 text-xs">
+                            <span>Total Estimated Highway Toll:</span>
+                            <span className="font-black text-[#1e1b4b]">₹{tollInfo.totalToll}</span>
+                          </div>
+                          {tollInfo.stateTaxes.length > 0 && (
+                            <div className="pt-1.5 border-t border-slate-100 text-[11px] text-slate-500">
+                              <span className="font-bold text-slate-700">Commercial State Tax: </span>
+                              {tollInfo.stateTaxes.map((st) => `${st.name} (₹${st.rate})`).join(', ')} (Paid at actual border posts).
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   {/* Route Highlights Footer */}

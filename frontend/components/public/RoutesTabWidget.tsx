@@ -24,7 +24,11 @@ const STATE_DESTINATIONS: Record<string, string[]> = {
     "Devprayag", "Rudraprayag", "Karnaprayag", "Joshimath", "Badrinath", "Kedarnath", 
     "Guptkashi", "Sonprayag", "Gaurikund", "Chopta", "Tungnath", "Auli", 
     "Uttarkashi", "Barkot", "Gangotri", "Yamunotri", "Vikasnagar", "Chakrata", 
-    "Pithoragarh", "Champawat", "Lohaghat", "Bageshwar", "Dwarahat", "Chaukhutia"
+    "Pithoragarh", "Champawat", "Lohaghat", "Bageshwar", "Dwarahat", "Chaukhutia",
+    "Kaladhungi", "Kotabagh", "Okhalkanda", "Dhari", "Betalghat", "Ramgarh", 
+    "Dhikuli", "Mohan", "Marchula", "Salt", "Someshwar", "Takula", "Hawalbagh", 
+    "Lamgara", "Dhauladevi", "Bhaisiachhana", "Tarikhet", "Bhikiyasain", "Syalde", 
+    "Kirtinagar", "Hindolakhal"
   ],
   "Uttar Pradesh": [
     "Agra", "Mathura", "Vrindavan", "Goverdhan", "Barsana", "Gokul", 
@@ -35,7 +39,12 @@ const STATE_DESTINATIONS: Record<string, string[]> = {
     "Etawah", "Auraiya", "Muzaffarnagar", "Saharanpur", "Deoband", "Shamli", 
     "Baghpat", "Baraut", "Jhansi", "Lalitpur", "Orai", "Unnao", "Barabanki", 
     "Rae Bareli", "Sultanpur", "Jaunpur", "Mirzapur", "Basti", "Deoria", 
-    "Kushinagar", "Sitapur", "Lakhimpur Kheri", "Hardoi", "Banda", "Chitrakoot"
+    "Kushinagar", "Sitapur", "Lakhimpur Kheri", "Hardoi", "Banda", "Chitrakoot",
+    "Modinagar", "Muradnagar", "Pilkhuwa", "Garhmukteshwar", "Dhaulana", "Dadri", 
+    "Dankaur", "Jewar", "Jahangirabad", "Siyana", "Anupshahr", "Shikarpur", 
+    "Debai", "Khair", "Atrauli", "Iglas", "Sasni", "Sadabad", "Raya", "Baldeo", 
+    "Mahavan", "Radhakund", "Nandgaon", "Kosi Kalan", "Chhata", "Naujheel", "Mant", 
+    "Fatehabad", "Kheragarh", "Kiraoli", "Bah", "Pinahat"
   ],
   "Rajasthan": [
     "Jaipur", "Amer", "Chomu", "Ajmer", "Pushkar", "Kishangarh", "Beawar", 
@@ -44,7 +53,9 @@ const STATE_DESTINATIONS: Record<string, string[]> = {
     "Deeg", "Dholpur", "Karauli", "Sawai Madhopur", "Ranthambore", "Udaipur", 
     "Nathdwara", "Chittorgarh", "Bhilwara", "Jodhpur", "Osian", "Pali", 
     "Ranakpur", "Mount Abu", "Abu Road", "Bikaner", "Deshnoke", "Jaisalmer", 
-    "Pokhran", "Kota", "Bundi", "Sikar", "Jhunjhunu", "Nawalgarh", "Pilani"
+    "Pokhran", "Kota", "Bundi", "Sikar", "Jhunjhunu", "Nawalgarh", "Pilani",
+    "Mandhan", "Bardod", "Shahjahanpur (RJ)", "Paota", "Viratnagar", "Manoharpur", 
+    "Govindgarh", "Jamwa Ramgarh", "Bassi", "Chaksu", "Phagi", "Sanganer", "Bagru"
   ],
   "Himachal Pradesh": [
     "Shimla", "Kufri", "Fagu", "Narkanda", "Mashobra", "Naldehra", "Chail", 
@@ -52,7 +63,10 @@ const STATE_DESTINATIONS: Record<string, string[]> = {
     "Solang Valley", "Atal Tunnel", "Sissu", "Kullu", "Kasol", "Manikaran", 
     "Tosh", "Mandi", "Sundernagar", "Pandoh", "Bilaspur", "Dharamshala", 
     "McLeodGanj", "Bhagsu Nag", "Palampur", "Baijnath", "Bir Billing", 
-    "Dalhousie", "Khajjiar", "Chamba", "Kinnaur", "Kalpa", "Sangla"
+    "Dalhousie", "Khajjiar", "Chamba", "Kinnaur", "Kalpa", "Sangla",
+    "Theog", "Kotkhai", "Jubbal", "Rohru", "Chirgaon", "Dodra Kwar", "Chaupal", 
+    "Kupvi", "Nerwa", "Sunni", "Dhami", "Arki", "Kandaghat", "Nalagarh", 
+    "Baddi", "Ramshehar"
   ],
   "Haryana": [
     "Gurugram", "Faridabad", "Panipat", "Samalkha", "Sonipat", "Murthal", 
@@ -61,7 +75,11 @@ const STATE_DESTINATIONS: Record<string, string[]> = {
     "Pinjore", "Yamunanagar", "Jagadhri", "Rohtak", "Meham", "Bahadurgarh", 
     "Jhajjar", "Rewari", "Bawal", "Dharuhera", "Narnaul", "Bhiwani", 
     "Charkhi Dadri", "Hisar", "Hansi", "Barwala", "Fatehabad", "Tohana", 
-    "Sirsa", "Dabwali", "Jind", "Kaithal", "Palwal", "Hodal", "Nuh"
+    "Sirsa", "Dabwali", "Jind", "Kaithal", "Palwal", "Hodal", "Nuh",
+    "Manesar", "Sohna", "Tauru", "Pataudi", "Bilaspur (HR)", "Kosli", 
+    "Beri", "Badli", "Ellenabad", "Rania", "Mandi Dabwali", "Kalayat", 
+    "Pundri", "Assandh", "Indri", "Taraori", "Cheeka", "Ladwa", "Shahabad Markanda", 
+    "Radaur", "Chhachhrauli", "Sadhaura", "Naraingarh", "Barara", "Raipur Rani"
   ],
   "Punjab": [
     "Chandigarh", "Mohali", "Zirakpur", "Kharar", "Kurali", "Ropar",
@@ -72,7 +90,10 @@ const STATE_DESTINATIONS: Record<string, string[]> = {
     "Dasuya", "Mukerian", "Bathinda", "Mansa", "Barnala", "Sangrur",
     "Malerkotla", "Moga", "Firozpur", "Muktsar", "Faridkot", "Ferozepur Cantt",
     "Abohar", "Fazilka", "Sri Muktsar Sahib", "Rampura Phul", "Talwandi Sabo",
-    "Anandpur Sahib", "Ropar", "Morinda", "Fatehgarh Sahib", "Nangal"
+    "Anandpur Sahib", "Morinda", "Nangal", "Dera Bassi", "Lalru", "Banur", 
+    "Majri", "Chamkaur Sahib", "Khamanon", "Amloh", "Bassi Pathana", "Payal", 
+    "Raikot", "Jagraon", "Samrala", "Machhiwara", "Malaudh", "Sahnewal", 
+    "Dehlon", "Mullanpur Dakha"
   ],
   "Jammu & Kashmir": [
     "Jammu", "Katra (Vaishno Devi)", "Udhampur", "Patnitop", "Ramban",
@@ -81,7 +102,10 @@ const STATE_DESTINATIONS: Record<string, string[]> = {
     "Handwara", "Kulgam", "Shopian", "Pulwama", "Pampore", "Awantipora",
     "Bijbehara", "Kokernag", "Doda", "Kishtwar", "Bhaderwah", "Reasi",
     "Ramnagar (J&K)", "Akhnoor", "Rajouri", "Poonch", "Leh", "Kargil",
-    "Nubra Valley", "Pangong Lake", "Zanskar"
+    "Nubra Valley", "Pangong Lake", "Zanskar", "Samba", "Vijaypur", 
+    "Ghagwal", "Hiranagar", "Marheen", "Dinga Amb", "Billawar", "Basohli", 
+    "Mahanpur", "Bani", "Chenani", "Majalta", "Panchari", "Moungri", 
+    "Latti", "Dudu", "Basantgarh"
   ],
   "Madhya Pradesh": [
     "Bhopal", "Vidisha", "Raisen", "Sehore", "Indore", "Dewas", "Dhar",
@@ -91,7 +115,11 @@ const STATE_DESTINATIONS: Record<string, string[]> = {
     "Khajuraho", "Panna", "Chhatarpur", "Tikamgarh", "Orchha", "Satna",
     "Rewa", "Sidhi", "Singrauli", "Sagar", "Damoh", "Rahatgarh",
     "Pachmarhi", "Hoshangabad", "Harda", "Betul", "Chhindwara", "Seoni",
-    "Kanha", "Bandhavgarh", "Pench", "Omkareshwar", "Maheshwar", "Mandu"
+    "Kanha", "Bandhavgarh", "Pench", "Omkareshwar", "Maheshwar", "Mandu",
+    "Sanchi", "Mandideep", "Obaidullaganj", "Budhni", "Ashta", "Ichhawar", 
+    "Rehti", "Nasrullaganj", "Bareli", "Gairatganj", "Begumganj", "Silwani", 
+    "Udaipura", "Gyaraspur", "Kurwai", "Ganj Basoda", "Nateran", "Shamshabad", 
+    "Berasia"
   ],
   "Delhi NCR": [
     "Delhi Airport (IGI T3)", "Noida (All Sectors)", "Greater Noida (Pari Chowk)", 

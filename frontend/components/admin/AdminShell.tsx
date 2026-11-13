@@ -45,6 +45,7 @@ export default function AdminShell({ children, user }: AdminLayoutProps) {
       title: 'Pricing Engine',
       items: [
         { name: 'Pricing Console', href: '/admin/pricing' },
+        { name: 'Toll & State Tax Master', href: '/admin/tolls' },
         { name: 'Dynamic Surge Rules', href: '/admin/pricing/surge' },
         { name: 'Pricing Simulator', href: '/admin/pricing/simulator' },
         { name: 'Quotations & Snapshots', href: '#', comingSoon: true },

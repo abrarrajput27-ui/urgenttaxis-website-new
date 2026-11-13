@@ -200,6 +200,12 @@ export function generateWhatsAppLink(
     lines.push(`• 💳 *Estimated Total Fare:* *₹${effectiveTotal.toLocaleString('en-IN')}*`);
     lines.push(`• 🟢 *30% Advance Token:* *₹${token.toLocaleString('en-IN')}* (To Confirm)`);
     lines.push(`• ⚪ *70% Driver Balance:* *₹${balance.toLocaleString('en-IN')}* (At Pickup)`);
+    if (params.estimatedToll && params.estimatedToll > 0) {
+      lines.push(`• 🛣️ *Estimated Highway Tolls:* ~₹${params.estimatedToll.toLocaleString('en-IN')} (At Actuals)`);
+    }
+    if (params.estimatedStateTax && params.estimatedStateTax > 0) {
+      lines.push(`• 🏛️ *Estimated State Border Tax:* ~₹${params.estimatedStateTax.toLocaleString('en-IN')} (At Actuals)`);
+    }
   } else if (!hasTripDetails) {
     lines.push('💰 *FARE & PAYMENT BREAKDOWN*');
     lines.push('• 🏷️ Guaranteed Lowest Direct-Operator Rates');

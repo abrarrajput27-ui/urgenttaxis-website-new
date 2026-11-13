@@ -12,6 +12,7 @@ import RouteHighlights from '@/components/public/RouteHighlights';
 import MmtBookingWidget from '@/components/public/MmtBookingWidget';
 import RoutePlacesSection from '@/components/public/RoutePlacesSection';
 import RouteMilestonesWeatherTips from '@/components/public/RouteMilestonesWeatherTips';
+import RouteTollBreakdownCard from '@/components/public/RouteTollBreakdownCard';
 import RouteGallerySection from '@/components/public/RouteGallerySection';
 import RouteSimilarRoutes, { SimilarRouteItem } from '@/components/public/RouteSimilarRoutes';
 import DestinationConnectingRoutes, { ConnectingRouteItem } from '@/components/public/DestinationConnectingRoutes';
@@ -641,6 +642,16 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
             originName={originName}
             destName={destName}
             places={corridor.places}
+          />
+        </section>
+
+        {/* 4B. SMART ROUTE-BASED TOLL & STATE BORDER ENTRY TAX BREAKDOWN */}
+        <section>
+          <RouteTollBreakdownCard
+            origin={originName}
+            destination={destName}
+            initialVehicle="sedan"
+            distanceKm={distance}
           />
         </section>
 
