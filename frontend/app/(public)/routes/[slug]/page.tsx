@@ -254,7 +254,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
         { slug: 'delhi-to-jim-corbett-taxi', originName: 'Delhi', destName: 'Jim Corbett', distanceKm: 260, startingFare: 3699, image: '/destinations/jim-corbett.webp' },
       ];
 
-  // 2. Curate connecting routes originating from destName (User's explicit requirement)
+  // 2. Curate smart local and regional interconnected routes originating from destName
   const directConnectingFromDest = masterRoutesData
     .filter((mr) => mr.originName.toLowerCase() === destName.toLowerCase())
     .map((mr) => ({
@@ -287,30 +287,42 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
     });
   }
 
-  // Ensure 5 solid connecting options departing from destName
-  if (connectingRoutesList.length < 5) {
-    const hubFallbacks = [
-      { name: 'Delhi Airport (IGI T3)', dist: Math.round(distance + 20), fare: sedanFareTotal + 400, img: getDestinationImage('delhi-airport') },
-      { name: 'Noida International Airport', dist: Math.round(distance + 15), fare: sedanFareTotal + 300, img: getDestinationImage('noida-international-airport') },
-      { name: 'Gurugram Cyber City', dist: Math.round(distance + 35), fare: sedanFareTotal + 500, img: getDestinationImage('gurugram') },
-      { name: 'Ghaziabad Junction', dist: Math.round(distance - 10), fare: Math.max(2500, sedanFareTotal - 200), img: getDestinationImage('ghaziabad') },
-    ];
+  // Interconnect with nearby regional cities and major transport hubs
+  const regionalHubsByState: Record<string, string[]> = {
+    'Uttarakhand': ['Dehradun', 'Haridwar', 'Rishikesh', 'Nainital', 'Haldwani', 'Mussoorie', 'Delhi Airport (IGI T3)'],
+    'Uttar Pradesh': ['Agra', 'Mathura', 'Lucknow', 'Meerut', 'Ayodhya', 'Prayagraj', 'Varanasi', 'Delhi Airport (IGI T3)'],
+    'Himachal Pradesh': ['Shimla', 'Manali', 'Dharamshala', 'Kullu', 'Kasauli', 'Chandigarh', 'Delhi Airport (IGI T3)'],
+    'Rajasthan': ['Jaipur', 'Udaipur', 'Jodhpur', 'Ajmer', 'Pushkar', 'Bikaner', 'Delhi Airport (IGI T3)'],
+    'Punjab': ['Amritsar', 'Chandigarh', 'Ludhiana', 'Jalandhar', 'Patiala', 'Delhi Airport (IGI T3)'],
+    'Haryana': ['Gurugram', 'Faridabad', 'Panipat', 'Karnal', 'Ambala', 'Rohtak', 'Delhi Airport (IGI T3)'],
+    'Madhya Pradesh': ['Bhopal', 'Indore', 'Gwalior', 'Ujjain', 'Jabalpur', 'Delhi Airport (IGI T3)'],
+    'Jammu & Kashmir': ['Srinagar', 'Jammu', 'Katra', 'Gulmarg', 'Pahalgam', 'Delhi Airport (IGI T3)'],
+    'Delhi NCR': ['Ghaziabad', 'Noida', 'Gurugram', 'Faridabad', 'Delhi Airport (IGI T3)', 'Greater Noida'],
+  };
 
-    for (const hub of hubFallbacks) {
-      if (connectingRoutesList.length >= 5) break;
-      if (!connectingRoutesList.some((r) => r.toCity.toLowerCase().includes(hub.name.toLowerCase()))) {
-        connectingRoutesList.push({
-          title: `${destName} to ${hub.name} Cab`,
-          fromCity: destName,
-          toCity: hub.name,
-          distanceKm: hub.dist,
-          durationText: `${Math.round(hub.dist / 50)} - ${Math.round(hub.dist / 45)} Hours`,
-          startingFare: hub.fare,
-          image: hub.img,
-          href: `/routes/${generateSlug(destName, hub.name)}`,
-          isDirectRoutePage: true,
-        });
-      }
+  const detectedState = getLocationState(destName);
+  const targetHubs = regionalHubsByState[detectedState] || ['Delhi Airport (IGI T3)', 'Noida International Airport', 'Gurugram', 'Ghaziabad', 'Delhi'];
+
+  for (const hub of targetHubs) {
+    if (connectingRoutesList.length >= 8) break;
+    if (hub.toLowerCase() === destName.toLowerCase()) continue;
+    if (!connectingRoutesList.some((r) => r.toCity.toLowerCase() === hub.toLowerCase())) {
+      const accurate = resolveAccurateRoute(destName, hub);
+      const hubDist = accurate.distanceKm;
+      const hubDuration = accurate.durationText || `${Math.round(hubDist / 50)} Hours`;
+      const hubFare = Math.max(1800, Math.round(hubDist * 12));
+
+      connectingRoutesList.push({
+        title: `${destName} to ${hub} Cab`,
+        fromCity: destName,
+        toCity: hub,
+        distanceKm: hubDist,
+        durationText: hubDuration,
+        startingFare: hubFare,
+        image: getDestinationImage(hub),
+        href: `/routes/${generateSlug(destName, hub)}`,
+        isDirectRoutePage: true,
+      });
     }
   }
 

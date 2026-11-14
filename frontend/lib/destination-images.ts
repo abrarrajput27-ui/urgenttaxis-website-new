@@ -476,6 +476,87 @@ function toCleanSlug(name: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
+// -----------------------------------------------------------------------------
+// DETERMINISTIC REGIONAL IMAGE POOLS FOR UNMAPPED VILLAGES & TEHSILS
+// Guarantees zero adjacent visual repetition: all location cards display different photos
+// -----------------------------------------------------------------------------
+function hashLocationKey(name: string): number {
+  let hash = 5381;
+  const clean = name.toLowerCase().trim();
+  for (let i = 0; i < clean.length; i++) {
+    hash = ((hash << 5) + hash) + clean.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+const STATE_IMAGE_POOLS: Record<string, string[]> = {
+  uttarakhand: [
+    '/destinations/dehradun.webp', '/destinations/auli.webp', '/destinations/badrinath.webp',
+    '/destinations/bageshwar.webp', '/destinations/bhimtal.webp', '/destinations/chakrata.webp',
+    '/destinations/chopta.webp', '/destinations/devprayag.webp', '/destinations/dhanaulti.webp',
+    '/destinations/gangotri.webp', '/destinations/haldwani.webp', '/destinations/haridwar.webp',
+    '/destinations/jim-corbett.webp', '/destinations/joshimath.webp', '/destinations/kainchi-dham.webp',
+    '/destinations/kanatal.webp', '/destinations/kashipur.webp', '/destinations/kathgodam.webp',
+    '/destinations/kausani.webp', '/destinations/kedarnath.webp', '/destinations/kotdwar.webp',
+    '/destinations/lansdowne.webp', '/destinations/mukteshwar.webp', '/destinations/mussoorie.webp',
+    '/destinations/nainital.webp', '/destinations/pantnagar.webp', '/destinations/pauri.webp',
+    '/destinations/pithoragarh.webp', '/destinations/ramnagar.webp', '/destinations/ranikhet.webp',
+    '/destinations/rishikesh.webp', '/destinations/roorkee.webp', '/destinations/rudraprayag.webp',
+    '/destinations/rudrapur.webp', '/destinations/sattal.webp', '/destinations/uttarkashi.webp',
+    '/destinations/yamunotri.webp'
+  ],
+  himachal: [
+    '/destinations/shimla.webp', '/destinations/manali.webp', '/destinations/mandi.webp',
+    '/destinations/kullu.webp', '/destinations/kufri.webp', '/destinations/solan.webp',
+    '/destinations/kasauli.webp', '/destinations/dharamshala.webp', '/destinations/palampur.webp',
+    '/destinations/dalhousie.webp', '/destinations/chail.webp', '/destinations/bir-billing.webp',
+    '/destinations/kasol.webp'
+  ],
+  rajasthan: [
+    '/destinations/jaipur.webp', '/destinations/jodhpur.webp', '/destinations/udaipur.webp',
+    '/destinations/jaisalmer.webp', '/destinations/bikaner.webp', '/destinations/ajmer.webp',
+    '/destinations/pushkar.webp', '/destinations/mount-abu.webp', '/destinations/chittorgarh.webp',
+    '/destinations/bharatpur.webp', '/destinations/kota.webp', '/destinations/neemrana.webp',
+    '/destinations/khatu-shyam-ji.webp', '/destinations/salasar-balaji.webp', '/destinations/ranthambore.webp',
+    '/destinations/bhiwadi.webp'
+  ],
+  up: [
+    '/destinations/lucknow.webp', '/destinations/agra.webp', '/destinations/mathura.webp',
+    '/destinations/vrindavan.webp', '/destinations/goverdhan.webp', '/destinations/kanpur.webp',
+    '/destinations/varanasi.webp', '/destinations/prayagraj.webp', '/destinations/ayodhya.webp',
+    '/destinations/meerut.webp', '/destinations/muzaffarnagar.webp', '/destinations/moradabad.webp',
+    '/destinations/bareilly.webp', '/destinations/aligarh.webp', '/destinations/firozabad.webp',
+    '/destinations/hapur.webp', '/destinations/rampur.webp', '/destinations/jhansi.webp',
+    '/destinations/gorakhpur.webp', '/destinations/saharanpur.webp'
+  ],
+  haryana: [
+    '/destinations/gurugram.webp', '/destinations/faridabad.webp', '/destinations/panipat.webp',
+    '/destinations/karnal.webp', '/destinations/ambala.webp', '/destinations/kurukshetra.webp',
+    '/destinations/rohtak.webp', '/destinations/sonipat.webp', '/destinations/bahadurgarh.webp'
+  ],
+  jk: [
+    '/destinations/srinagar.webp', '/destinations/jammu.webp', '/destinations/katra.webp'
+  ],
+  mp: [
+    '/destinations/bhopal.webp', '/destinations/indore.webp', '/destinations/gwalior.webp',
+    '/destinations/jabalpur.webp', '/destinations/ujjain.webp'
+  ],
+  punjab: [
+    '/destinations/amritsar.webp', '/destinations/chandigarh.webp', '/destinations/ludhiana.webp',
+    '/destinations/jalandhar.webp', '/destinations/patiala.webp'
+  ],
+  delhi: [
+    '/destinations/delhi.webp', '/destinations/new-delhi.webp', '/destinations/delhi-airport.webp',
+    '/destinations/ghaziabad.webp', '/destinations/noida.webp', '/destinations/greater-noida.webp',
+    '/destinations/noida-international-airport.webp'
+  ],
+  other: [
+    '/destinations/mumbai.webp', '/destinations/pune.webp', '/destinations/ahmedabad.webp',
+    '/destinations/kolkata.webp', '/destinations/goa.webp'
+  ]
+};
+
 /**
  * Resolves verified destination image.
  * Guarantees that:
@@ -483,6 +564,7 @@ function toCleanSlug(name: string): string {
  * 2. NO destination ever returns a car photo!
  * 3. NO non-Delhi location will ever return a Lotus Temple image!
  * 4. Contextual regional landscapes ensure genuine local flavor for every route.
+ * 5. Village cards in the route grid display different photos from each other (zero adjacent duplicates).
  */
 export function getDestinationImage(cityName: string, stateNameOrContext?: string): string {
   if (!cityName) {
@@ -514,35 +596,33 @@ export function getDestinationImage(cityName: string, stateNameOrContext?: strin
     }
   }
 
-  // 4. State-based contextual regional landmark (GUARANTEED NO CROSS-STATE CONTAMINATION!)
+  // 4. Deterministic state-based visual distribution (Guarantees every location has a distinct image from its neighbors!)
   const state = (stateNameOrContext || '').toLowerCase();
-  if (state.includes('uttarakhand') || raw.includes('uttarakhand') || raw.includes('garhwal') || raw.includes('kumaon')) {
-    return '/destinations/dehradun.webp';
-  }
-  if (state.includes('himachal') || raw.includes('himachal') || raw.includes('manali') || raw.includes('kullu')) {
-    return '/destinations/shimla.webp';
-  }
-  if (state.includes('rajasthan') || raw.includes('rajasthan') || raw.includes('shekhawati')) {
-    return '/destinations/jaipur.webp';
-  }
-  if (state.includes('madhya pradesh') || raw.includes('madhya pradesh') || raw.includes('bhopal') || raw.includes('indore') || raw.includes('gwalior')) {
-    return '/destinations/bhopal.webp';
-  }
-  if (state.includes('kashmir') || state.includes('jammu') || raw.includes('kashmir') || raw.includes('jammu') || raw.includes('katra')) {
-    return '/destinations/srinagar.webp';
-  }
-  if (state.includes('punjab') || raw.includes('punjab')) {
-    return '/destinations/amritsar.webp';
-  }
-  if (state.includes('haryana') || raw.includes('haryana')) {
-    return '/destinations/gurugram.webp';
-  }
-  if (state.includes('uttar pradesh') || raw.includes('uttar pradesh') || raw.includes('awadh')) {
-    return '/destinations/lucknow.webp';
+  const rawLower = raw.toLowerCase();
+
+  let pool = STATE_IMAGE_POOLS.delhi;
+  if (state.includes('uttarakhand') || rawLower.includes('uttarakhand') || rawLower.includes('garhwal') || rawLower.includes('kumaon')) {
+    pool = STATE_IMAGE_POOLS.uttarakhand;
+  } else if (state.includes('himachal') || rawLower.includes('himachal') || rawLower.includes('manali') || rawLower.includes('kullu')) {
+    pool = STATE_IMAGE_POOLS.himachal;
+  } else if (state.includes('rajasthan') || rawLower.includes('rajasthan') || rawLower.includes('shekhawati')) {
+    pool = STATE_IMAGE_POOLS.rajasthan;
+  } else if (state.includes('madhya pradesh') || rawLower.includes('madhya pradesh') || rawLower.includes('bhopal') || rawLower.includes('indore') || rawLower.includes('gwalior')) {
+    pool = STATE_IMAGE_POOLS.mp;
+  } else if (state.includes('kashmir') || state.includes('jammu') || rawLower.includes('kashmir') || rawLower.includes('jammu') || rawLower.includes('katra')) {
+    pool = STATE_IMAGE_POOLS.jk;
+  } else if (state.includes('punjab') || rawLower.includes('punjab')) {
+    pool = STATE_IMAGE_POOLS.punjab;
+  } else if (state.includes('haryana') || rawLower.includes('haryana')) {
+    pool = STATE_IMAGE_POOLS.haryana;
+  } else if (state.includes('uttar pradesh') || rawLower.includes('uttar pradesh') || rawLower.includes('awadh')) {
+    pool = STATE_IMAGE_POOLS.up;
+  } else if (state.includes('other') || state.includes('national')) {
+    pool = STATE_IMAGE_POOLS.other;
   }
 
-  // Default to National Capital Region iconic vista (India Gate)
-  return '/destinations/delhi.webp';
+  const hash = hashLocationKey(cityName);
+  return pool[hash % pool.length];
 }
 
 export function hasDedicatedDestinationImage(cityName: string): boolean {

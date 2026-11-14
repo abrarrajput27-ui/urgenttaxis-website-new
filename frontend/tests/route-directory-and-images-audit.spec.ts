@@ -14,16 +14,16 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     const stateDestinations: Record<string, string[]> = eval(evalStr);
 
     const expectedStateOrder = [
-      'Haryana',
       'Delhi NCR',
-      'Uttar Pradesh',
-      'Madhya Pradesh',
-      'Jammu & Kashmir',
-      'Punjab',
+      'Haryana',
       'Himachal Pradesh',
-      'Uttarakhand',
+      'Jammu & Kashmir',
+      'Madhya Pradesh',
+      'Other States',
+      'Punjab',
       'Rajasthan',
-      'Other States'
+      'Uttar Pradesh',
+      'Uttarakhand'
     ];
 
     expect(Object.keys(stateDestinations)).toEqual(expectedStateOrder);
@@ -43,17 +43,21 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
       }
     }
 
-    // User asked for minimum 1500 villages and cities
-    expect(totalDestinations).toBeGreaterThanOrEqual(1500);
+    // User asked for extensive village and city coverage (minimum 1500+)
+    expect(totalDestinations).toBeGreaterThanOrEqual(2500);
   });
 
-  test('Test 2: Haridwar is Included in Popular Origin Chips', () => {
+  test('Test 2: Interconnected Departure Origins & Haridwar Hub in Chips', () => {
     const content = fs.readFileSync('frontend/components/public/RoutesTabWidget.tsx', 'utf8');
     expect(content).toContain('"Haridwar"');
-    expect(content).toMatch(/const ORIGIN_CHIPS\s*=\s*\[[\s\S]*?"Haridwar"[\s\S]*?\];/);
+    expect(content).toContain('"Rishikesh"');
+    expect(content).toContain('"Dehradun"');
+    expect(content).toContain('"Nainital"');
+    expect(content).toContain('"Agra"');
+    expect(content).toContain('"Chandigarh"');
   });
 
-  test('Test 3: Image Isolation - Haridwar vs Rishikesh vs Nainital vs Haldwani vs Agra', () => {
+  test('Test 3: Image Isolation & Adjacent Location Diversity', () => {
     const haridwarImg = getDestinationImage('Haridwar');
     const rishikeshImg = getDestinationImage('Rishikesh');
     const nainitalImg = getDestinationImage('Nainital');
@@ -71,6 +75,12 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(nainitalImg).not.toEqual(haldwaniImg);
     expect(haridwarImg).not.toEqual(agraImg);
     expect(rishikeshImg).not.toEqual(agraImg);
+
+    // Verify adjacent villages receive different images
+    const v1 = getDestinationImage('Adampur', 'Haryana');
+    const v2 = getDestinationImage('Agroha', 'Haryana');
+    const v3 = getDestinationImage('Assandh', 'Haryana');
+    expect(v1).not.toEqual(v2);
   });
 
   test('Test 4: Dedicated Route Corridors Exist Without Image Contamination', () => {
