@@ -117,7 +117,8 @@ export default function InterconnectedRouteNetwork({
         {/* Return Trip Quick Link */}
         <Link
           href={`/routes/${toSlug(destName)}-to-${toSlug(originName)}-taxi`}
-          className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-green hover:bg-brand-green-hover text-white font-black text-xs transition-all shadow-xs"
+          prefetch={true}
+          className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-green hover:bg-brand-green-hover text-white font-black text-xs transition-all shadow-xs cursor-pointer active:scale-95"
         >
           <span>{destName} to {originName} Return Cab</span>
           <FaArrowRight className="w-3 h-3" />
@@ -133,7 +134,7 @@ export default function InterconnectedRouteNetwork({
               <button
                 key={state}
                 onClick={() => setActiveTab(state)}
-                className={`shrink-0 px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+                className={`shrink-0 px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
                   isActive
                     ? 'bg-brand-blue text-white shadow-xs font-black'
                     : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80 font-bold'
@@ -156,7 +157,8 @@ export default function InterconnectedRouteNetwork({
             <Link
               key={idx}
               href={`/routes/${routeSlug}`}
-              className="group p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-brand-blue/50 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3"
+              prefetch={false}
+              className="group p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-brand-blue/50 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3 cursor-pointer active:scale-[0.98]"
             >
               <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-slate-100 border border-slate-200">

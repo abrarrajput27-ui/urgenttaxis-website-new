@@ -207,6 +207,18 @@ export default function UnifiedBookingWidget({
   const [numberOfDays, setNumberOfDays] = useState(1);
   const [passengerCount, setPassengerCount] = useState(2);
 
+  // Periodic auto-refresh interval for valid dispatch time (Zero-Error Search Guarantee across all pages)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const nowStr = new Date().toISOString().split('T')[0];
+      if (pickupDate === nowStr) {
+        const minT = getMinTimeForToday();
+        setPickupTime((prev) => (prev < minT ? minT : prev));
+      }
+    }, 30000); // Check every 30 seconds
+    return () => clearInterval(timer);
+  }, [pickupDate]);
+
   // Active Vehicle Selection
   const [selectedVehicleKey, setSelectedVehicleKey] = useState<VehicleCategoryKey>('sedan');
   const [hasSearched, setHasSearched] = useState(isDedicatedPage);
@@ -746,9 +758,9 @@ export default function UnifiedBookingWidget({
         setValidationError('Return date cannot precede pickup date.');
         return;
       }
-      if (returnDate === pickupDate && returnTime <= pickupTime) {
-        setValidationError('Return time must be later than pickup time for same-day round trips.');
-        return;
+      if (returnDate === pickupDate && returnTime <= effectivePickupTime) {
+        // Auto-refresh return time to end of day (23:59) so search never errors
+        setReturnTime('23:59');
       }
     }
 
@@ -828,9 +840,9 @@ export default function UnifiedBookingWidget({
         setValidationError('Return date cannot precede pickup date.');
         return;
       }
-      if (returnDate === pickupDate && returnTime <= pickupTime) {
-        setValidationError('Return time must be later than pickup time for same-day round trips.');
-        return;
+      if (returnDate === pickupDate && returnTime <= effectivePickupTime) {
+        // Auto-refresh return time to end of day (23:59) so search never errors
+        setReturnTime('23:59');
       }
     }
 

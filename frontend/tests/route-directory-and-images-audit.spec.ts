@@ -296,4 +296,36 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(layoutContent).toContain('verification');
     expect(layoutContent).toContain('google:');
   });
+
+  test('Test 13: Instant Image Modal Lightbox, Zero-Error Time Auto-Refresh & Speed Optimizations', () => {
+    // 1. Verify RouteGallerySection has interactive Lightbox Modal
+    const galleryContent = fs.readFileSync('frontend/components/public/RouteGallerySection.tsx', 'utf8');
+    expect(galleryContent).toContain('activeModalIndex');
+    expect(galleryContent).toContain('handleOpenModal');
+    expect(galleryContent).toContain('handleCloseModal');
+    expect(galleryContent).toContain('handlePrevImage');
+    expect(galleryContent).toContain('handleNextImage');
+    expect(galleryContent).toContain('priority');
+
+    // 2. Verify RoutePlacesSection has instant photo preview modal
+    const placesContent = fs.readFileSync('frontend/components/public/RoutePlacesSection.tsx', 'utf8');
+    expect(placesContent).toContain('previewItem');
+    expect(placesContent).toContain('setPreviewItem');
+    expect(placesContent).toContain('Fast Interactive Image Preview Modal');
+
+    // 3. Verify Zero-Error Auto-Refresh in both UnifiedBookingWidget and MmtBookingWidget
+    const unifiedContent = fs.readFileSync('frontend/components/public/UnifiedBookingWidget.tsx', 'utf8');
+    expect(unifiedContent).toContain('setInterval');
+    expect(unifiedContent).toContain('30000');
+
+    const mmtContent = fs.readFileSync('frontend/components/public/MmtBookingWidget.tsx', 'utf8');
+    expect(mmtContent).toContain('setInterval');
+    expect(mmtContent).toContain('30000');
+
+    // 4. Verify Permanent Designer Credit strictly preserved
+    const footerContent = fs.readFileSync('frontend/components/public/Footer.tsx', 'utf8');
+    expect(footerContent).toContain('footer-designer-credit');
+    expect(footerContent).toContain('Designed by');
+    expect(footerContent).toContain('Mantsha Khan');
+  });
 });

@@ -1175,7 +1175,7 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                   className="group bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col h-full"
                 >
                   {/* Destination WebP Image */}
-                  <Link href={`/routes/${route.slug}`} className="h-40 relative overflow-hidden bg-slate-100 block group/cardimg">
+                  <Link href={`/routes/${route.slug}`} prefetch={false} className="h-40 relative overflow-hidden bg-slate-100 block group/cardimg">
                     <Image
                       src={route.image}
                       alt={`${route.origin} to ${route.destination} cab`}
@@ -1236,7 +1236,8 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                       <div className="grid grid-cols-2 gap-2 pt-1">
                         <Link
                           href={`/cabs?pickup=${encodeURIComponent(route.origin)}&drop=${encodeURIComponent(route.destination)}&serviceType=one_way`}
-                          className="bg-[#1e1b4b] hover:bg-slate-800 text-white text-xs text-center font-bold px-3 py-2 rounded-xl shadow-xs transition-all flex items-center justify-center cursor-pointer"
+                          prefetch={false}
+                          className="bg-[#1e1b4b] hover:bg-slate-800 text-white text-xs text-center font-bold px-3 py-2 rounded-xl shadow-xs transition-all flex items-center justify-center cursor-pointer active:scale-95"
                         >
                           Select Cab
                         </Link>
@@ -1244,7 +1245,7 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                           href={whatsappUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="bg-[#059669] hover:bg-[#047857] text-white text-xs text-center font-bold px-3 py-2 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer"
+                          className="bg-[#059669] hover:bg-[#047857] text-white text-xs text-center font-bold px-3 py-2 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer active:scale-95"
                         >
                           <span>💬</span> WhatsApp
                         </a>
@@ -1252,7 +1253,8 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                       <div className="text-center pt-1">
                         <Link
                           href={`/routes/${route.slug}`}
-                          className="text-[11px] font-bold text-brand-blue hover:text-brand-green transition-colors inline-flex items-center gap-1"
+                          prefetch={false}
+                          className="text-[11px] font-bold text-brand-blue hover:text-brand-green transition-colors inline-flex items-center gap-1 active:scale-95"
                         >
                           <span>Explore Route, Hotels &amp; Stops</span>
                           <span>→</span>

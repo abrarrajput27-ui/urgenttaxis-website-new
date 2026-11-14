@@ -22,6 +22,10 @@ import {
   FaBed,
   FaGem,
   FaStar,
+  FaTimes,
+  FaSearchPlus,
+  FaExpand,
+  FaTaxi,
 } from 'react-icons/fa';
 
 interface RoutePlacesSectionProps {
@@ -62,6 +66,12 @@ export default function RoutePlacesSection({
   });
 
   const [activeHotelTab, setActiveHotelTab] = useState<'budget' | 'medium' | 'luxury'>('medium');
+  const [previewItem, setPreviewItem] = useState<{
+    src: string;
+    title: string;
+    subtitle?: string;
+    badge?: string;
+  } | null>(null);
 
   const toggleCol = (col: 'restaurants' | 'petrol' | 'cng' | 'attractions') => {
     setExpandedCols((prev) => ({
@@ -468,14 +478,41 @@ export default function RoutePlacesSection({
                 key={idx}
                 className="bg-slate-50 rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:shadow-md transition-all group"
               >
-                <div className="relative h-44 w-full bg-slate-200">
+                <div
+                  className="relative h-44 w-full bg-slate-200 cursor-pointer group/img overflow-hidden"
+                  onClick={() => setPreviewItem({
+                    src: hotel.image || '/destinations/hotel-resort.webp',
+                    title: hotel.name,
+                    subtitle: `${hotel.location} • Safe Family Stay`,
+                    badge: hotel.priceRange,
+                  })}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View photo of ${hotel.name}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      setPreviewItem({
+                        src: hotel.image || '/destinations/hotel-resort.webp',
+                        title: hotel.name,
+                        subtitle: `${hotel.location} • Safe Family Stay`,
+                        badge: hotel.priceRange,
+                      });
+                    }
+                  }}
+                >
                   <Image
                     src={hotel.image || '/destinations/hotel-resort.webp'}
                     alt={hotel.name}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="object-cover group-hover/img:scale-105 transition-transform duration-300"
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="text-white text-xs font-bold bg-black/60 px-3 py-1 rounded-full flex items-center gap-1.5 backdrop-blur-xs">
+                      <FaSearchPlus className="w-3 h-3" />
+                      <span>Click to view</span>
+                    </span>
+                  </div>
                   {hotel.priceRange && (
                     <span className="absolute bottom-2.5 left-2.5 bg-slate-900/90 text-white font-black text-[11px] px-2.5 py-1 rounded-lg backdrop-blur-xs border border-white/20">
                       {hotel.priceRange}
@@ -619,6 +656,86 @@ export default function RoutePlacesSection({
         </div>
       )}
 
+      {/* Fast Interactive Image Preview Modal */}
+      {previewItem !== null && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-between p-4 sm:p-6 animate-in fade-in duration-150"
+          onClick={() => setPreviewItem(null)}
+        >
+          {/* Top Bar with Title & Close Button */}
+          <div
+            className="w-full max-w-4xl flex items-center justify-between text-white pb-3 border-b border-white/10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <h3 className="text-sm sm:text-base font-black text-white truncate">
+                {previewItem.title}
+              </h3>
+              {previewItem.badge && (
+                <span className="text-[11px] font-black bg-emerald-500/30 text-emerald-300 border border-emerald-400/30 px-2.5 py-0.5 rounded-full shrink-0">
+                  {previewItem.badge}
+                </span>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setPreviewItem(null)}
+              aria-label="Close photo preview"
+              className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer active:scale-90 shrink-0"
+            >
+              <FaTimes className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Center Image Container */}
+          <div
+            className="relative w-full max-w-4xl flex-1 flex items-center justify-center my-3"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative w-full h-[60vh] sm:h-[70vh] rounded-2xl overflow-hidden shadow-2xl bg-black/40">
+              <Image
+                src={previewItem.src}
+                alt={previewItem.title}
+                fill
+                priority
+                className="object-contain"
+                sizes="(max-width: 1024px) 95vw, 900px"
+              />
+            </div>
+          </div>
+
+          {/* Bottom Bar: Location & Action */}
+          <div
+            className="w-full max-w-4xl bg-white/10 backdrop-blur-md rounded-2xl p-3 sm:p-4 text-white flex flex-col sm:flex-row items-center justify-between gap-3 border border-white/10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-center sm:text-left">
+              <p className="text-xs text-slate-300">
+                {previewItem.subtitle || `Verified destination in ${destName}`}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setPreviewItem(null)}
+                className="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-bold transition-all cursor-pointer active:scale-95"
+              >
+                Close
+              </button>
+              <a
+                href="#booking-widget"
+                onClick={() => setPreviewItem(null)}
+                className="px-4 py-2 rounded-xl bg-brand-green hover:bg-brand-green-hover text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+              >
+                <FaTaxi className="w-3.5 h-3.5" />
+                <span>Book Cab Drop</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

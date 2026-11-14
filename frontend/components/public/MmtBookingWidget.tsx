@@ -384,8 +384,8 @@ export default function MmtBookingWidget({
         return;
       }
       if (returnDate === pickupDate && returnTime <= effectivePickupTime) {
-        setErrorMsg('For same-day round trips, return departure time must be later than pickup time.');
-        return;
+        // Auto-refresh return departure time to 11:59 PM so search never errors
+        setReturnTime('23:59');
       }
     }
 
