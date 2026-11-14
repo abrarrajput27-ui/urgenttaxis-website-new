@@ -328,4 +328,50 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(footerContent).toContain('Designed by');
     expect(footerContent).toContain('Mantsha Khan');
   });
+
+  test('Test 14: Accurate Route Toll Plazas, Vehicle Rates, State Tax Engine & Designer Credit', () => {
+    const { calculateRouteTolls } = require('../lib/tolls');
+
+    // 1. Delhi to Haridwar Corridor Tolls
+    const dliHwr = calculateRouteTolls('Delhi', 'Haridwar', 'sedan', false, 215);
+    expect(dliHwr.totalToll).toBe(285);
+    expect(dliHwr.tollPlazas.length).toBe(3);
+    expect(dliHwr.tollPlazas[0].name).toContain('Bhojpur');
+    expect(dliHwr.tollPlazas[1].name).toContain('Siwaya');
+    expect(dliHwr.tollPlazas[2].name).toContain('Rohana');
+    expect(dliHwr.stateTaxes.some(st => st.state === 'Uttarakhand' && st.rate === 150)).toBe(true);
+
+    // SUV Rate check on Delhi to Haridwar (Bhojpur 170 + Siwaya 170 + Rohana 120 = 460)
+    const dliHwrSuv = calculateRouteTolls('Delhi', 'Haridwar', 'suv', false, 215);
+    expect(dliHwrSuv.totalToll).toBe(460);
+
+    // 2. Delhi to Amritsar Corridor Tolls (NH-44 5 Plazas: Murthal 75 + Bastara 175 + Shambhu 110 + Ladowal 165 + Dhilwan 85 = 610)
+    const dliAsr = calculateRouteTolls('Delhi', 'Amritsar', 'sedan', false, 450);
+    expect(dliAsr.totalToll).toBe(610);
+    expect(dliAsr.tollPlazas.length).toBe(5);
+    expect(dliAsr.tollPlazas.map(p => p.id)).toEqual([
+      'murthal-nh44', 'bastara-nh44', 'shambhu-nh44', 'ladowal-nh44', 'dhilwan-nh44'
+    ]);
+    expect(dliAsr.stateTaxes.some(st => st.state === 'Punjab' && st.rate === 150)).toBe(true);
+
+    // 3. Mumbai to Pune Expressway Tolls (Intra-state Maharashtra)
+    const mumPune = calculateRouteTolls('Mumbai', 'Pune', 'sedan', false, 150);
+    expect(mumPune.totalToll).toBe(440);
+    expect(mumPune.tollPlazas[0].id).toBe('khalapur-mpe');
+    expect(mumPune.tollPlazas[1].id).toBe('talegaon-mpe');
+    expect(mumPune.totalStateTax).toBe(0); // Same state -> ZERO border entry tax
+
+    // 4. Verify RouteTollBreakdownCard has interactive vehicle category selection
+    const cardContent = fs.readFileSync('frontend/components/public/RouteTollBreakdownCard.tsx', 'utf8');
+    expect(cardContent).toContain('selectedVehicle');
+    expect(cardContent).toContain('VEHICLE_OPTIONS');
+    expect(cardContent).toContain('Sedan (Dzire/Etios)');
+    expect(cardContent).toContain('SUV (Ertiga/Carens)');
+
+    // 5. Verify Permanent Protected Designer Credit
+    const footerContent = fs.readFileSync('frontend/components/public/Footer.tsx', 'utf8');
+    expect(footerContent).toContain('footer-designer-credit');
+    expect(footerContent).toContain('Designed by');
+    expect(footerContent).toContain('Mantsha Khan');
+  });
 });

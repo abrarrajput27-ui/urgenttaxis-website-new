@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { calculateRouteTolls } from '@/lib/tolls';
-import { ShieldCheck, Info, MapPin } from 'lucide-react';
+import { ShieldCheck, Info, MapPin, Car } from 'lucide-react';
 
 interface RouteTollBreakdownCardProps {
   origin: string;
@@ -11,16 +11,25 @@ interface RouteTollBreakdownCardProps {
   distanceKm?: number;
 }
 
+const VEHICLE_OPTIONS = [
+  { id: 'sedan', label: 'Sedan (Dzire/Etios)', rateText: '₹12/km' },
+  { id: 'suv', label: 'SUV (Ertiga/Carens)', rateText: '₹15/km' },
+  { id: 'crysta', label: 'Innova Crysta', rateText: '₹22/km' },
+  { id: 'traveller', label: 'Tempo Traveller', rateText: '₹26/km' },
+];
+
 export default function RouteTollBreakdownCard({
   origin,
   destination,
   initialVehicle = 'sedan',
   distanceKm = 250,
 }: RouteTollBreakdownCardProps) {
+  const [selectedVehicle, setSelectedVehicle] = useState(initialVehicle);
+
   const tollData = useMemo(() => {
-    // Show verified one-way toll for standard commercial taxi directly
-    return calculateRouteTolls(origin, destination, 'sedan', false, distanceKm);
-  }, [origin, destination, distanceKm]);
+    // Show verified one-way toll for selected commercial taxi category
+    return calculateRouteTolls(origin, destination, selectedVehicle, false, distanceKm);
+  }, [origin, destination, selectedVehicle, distanceKm]);
 
   return (
     <section className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 my-8">
@@ -46,6 +55,36 @@ export default function RouteTollBreakdownCard({
         </div>
       </div>
 
+      {/* Vehicle Category Selector for Tolls */}
+      <div className="mt-5 pb-4 border-b border-slate-100">
+        <span className="text-xs font-bold text-slate-500 block mb-2 uppercase tracking-wider">
+          Select Cab Category for Verified Highway Toll:
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {VEHICLE_OPTIONS.map((v) => {
+            const isActive = selectedVehicle.toLowerCase().includes(v.id) || (v.id === 'sedan' && selectedVehicle.toLowerCase().includes('hatchback'));
+            return (
+              <button
+                key={v.id}
+                type="button"
+                onClick={() => setSelectedVehicle(v.id)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+                  isActive
+                    ? 'bg-brand-blue text-white shadow-xs font-black'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200/80 border border-slate-200'
+                }`}
+              >
+                <Car className="w-3 h-3" />
+                <span>{v.label}</span>
+                <span className={`text-[10px] ${isActive ? 'text-blue-100' : 'text-slate-500'}`}>
+                  ({v.rateText})
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Toll Plazas Table */}
       <div className="mt-5">
         <div className="flex items-center justify-between mb-3">
@@ -53,7 +92,7 @@ export default function RouteTollBreakdownCard({
             Highway Toll Plazas ({tollData.tollPlazas.length} on Corridor)
           </h4>
           <span className="text-[11px] font-semibold text-slate-400">
-            One-Way Standard Commercial Cab
+            One-Way Rate ({selectedVehicle.toUpperCase()})
           </span>
         </div>
 

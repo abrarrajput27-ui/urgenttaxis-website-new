@@ -103,18 +103,24 @@ function resolveCorridorKey(origin: string, destination: string): string | null 
 
   if (isDelhiNcr && isKumaon) return 'delhi-nainital';
 
+  // Haridwar corridor (NH-334 / Delhi-Meerut Expressway)
+  const isHaridwar = ['haridwar', 'bahadrabad', 'jwalapur', 'laksar', 'bhagwanpur'].some(
+    (h) => normO.includes(h) || normD.includes(h)
+  );
+  if (isDelhiNcr && isHaridwar) return 'delhi-haridwar';
+
+  // Dehradun / Mussoorie / Rishikesh / Garhwal corridor
+  const isGarhwal = [
+    'dehradun', 'mussoorie', 'rishikesh', 'tapovan', 'roorkee', 
+    'dhanaulti', 'kanatal', 'tehri', 'chamba'
+  ].some((g) => normO.includes(g) || normD.includes(g));
+  if (isDelhiNcr && isGarhwal) return 'delhi-dehradun';
+
   // Agra / Mathura corridor
   const isBraj = ['agra', 'mathura', 'vrindavan', 'goverdhan', 'barsana', 'firozabad', 'fatehabadsikri'].some(
     (b) => normO.includes(b) || normD.includes(b)
   );
   if (isDelhiNcr && isBraj) return 'delhi-agra';
-
-  // Dehradun / Haridwar / Garhwal corridor
-  const isGarhwal = [
-    'dehradun', 'mussoorie', 'haridwar', 'rishikesh', 'tapovan', 'roorkee', 
-    'dhanaulti', 'kanatal', 'tehri', 'chamba'
-  ].some((g) => normO.includes(g) || normD.includes(g));
-  if (isDelhiNcr && isGarhwal) return 'delhi-dehradun';
 
   // Jaipur / Rajasthan corridor
   const isRajasthan = ['jaipur', 'ajmer', 'pushkar', 'khatushyam', 'salasar', 'alwar', 'neemrana', 'bhiwadi'].some(
@@ -122,35 +128,85 @@ function resolveCorridorKey(origin: string, destination: string): string | null 
   );
   if (isDelhiNcr && isRajasthan) return 'delhi-jaipur';
 
-  // Chandigarh / Punjab / J&K corridor
+  // Amritsar corridor (5 NH-44 Plazas)
+  const isAmritsar = ['amritsar', 'beas', 'tarntaran'].some(
+    (a) => normO.includes(a) || normD.includes(a)
+  );
+  if (isDelhiNcr && isAmritsar) return 'delhi-amritsar';
+
+  // Ludhiana / Jalandhar
+  const isLudhianaJalandhar = ['ludhiana', 'jalandhar', 'phagwara', 'khanna'].some(
+    (l) => normO.includes(l) || normD.includes(l)
+  );
+  if (isDelhiNcr && isLudhianaJalandhar) return 'delhi-ludhiana';
+
+  // Chandigarh / Mohali / Panchkula
+  const isPunjab = ['chandigarh', 'mohali', 'panchkula', 'patiala', 'bathinda', 'hoshiarpur'].some(
+    (p) => normO.includes(p) || normD.includes(p)
+  );
+  if (isDelhiNcr && isPunjab) return 'delhi-chandigarh';
+
+  // Jammu / Katra / Srinagar
   const isJammuKashmir = ['jammu', 'katra', 'srinagar', 'gulmarg', 'pahalgam', 'patnitop'].some(
     (j) => normO.includes(j) || normD.includes(j)
   );
   if (isDelhiNcr && isJammuKashmir) return 'delhi-jammu';
 
-  const isPunjab = ['chandigarh', 'mohali', 'panchkula', 'ludhiana', 'jalandhar', 'amritsar', 'patiala'].some(
-    (p) => normO.includes(p) || normD.includes(p)
-  );
-  if (isDelhiNcr && isPunjab) return 'delhi-chandigarh';
-
   // Himachal corridor
-  const isHimachal = ['shimla', 'manali', 'kullu', 'dharamshala', 'dalhousie', 'solan', 'kasauli'].some(
+  const isHimachal = ['shimla', 'manali', 'kullu', 'dharamshala', 'dalhousie', 'solan', 'kasauli', 'chail'].some(
     (h) => normO.includes(h) || normD.includes(h)
   );
   if (isDelhiNcr && isHimachal) return 'delhi-shimla';
 
-  // Agra-Lucknow expressway
-  const isAvadh = ['lucknow', 'kanpur', 'ayodhya', 'varanasi', 'prayagraj', 'gorakhpur'].some(
+  // Ayodhya corridor
+  const isAyodhya = ['ayodhya', 'faizabad'].some(
+    (ay) => normO.includes(ay) || normD.includes(ay)
+  );
+  if (isDelhiNcr && isAyodhya) return 'delhi-ayodhya';
+
+  // Varanasi / Prayagraj corridor
+  const isVaranasi = ['varanasi', 'kashi', 'prayagraj', 'allahabad', 'mirzapur'].some(
+    (v) => normO.includes(v) || normD.includes(v)
+  );
+  if (isDelhiNcr && isVaranasi) return 'delhi-varanasi';
+
+  // Agra-Lucknow / Avadh expressway
+  const isAvadh = ['lucknow', 'kanpur', 'gorakhpur'].some(
     (a) => normO.includes(a) || normD.includes(a)
   );
   if (isBraj && isAvadh) return 'agra-lucknow';
-  if (isDelhiNcr && isAvadh) return 'agra-lucknow';
+  if (isDelhiNcr && isAvadh) return 'delhi-lucknow';
 
   // MP corridor
   const isMp = ['gwalior', 'bhopal', 'indore', 'ujjain', 'jhansi', 'orchha'].some(
     (m) => normO.includes(m) || normD.includes(m)
   );
   if (isDelhiNcr && isMp) return 'delhi-gwalior';
+
+  // Mumbai to Pune / Nashik
+  if ((normO.includes('mumbai') || normO.includes('thane') || normO.includes('navimumbai')) && normD.includes('pune')) return 'mumbai-pune';
+  if ((normD.includes('mumbai') || normD.includes('thane') || normD.includes('navimumbai')) && normO.includes('pune')) return 'mumbai-pune';
+  if ((normO.includes('mumbai') || normO.includes('thane')) && (normD.includes('nashik') || normD.includes('shirdi'))) return 'mumbai-nashik';
+  if ((normD.includes('mumbai') || normD.includes('thane')) && (normO.includes('nashik') || normO.includes('shirdi'))) return 'mumbai-nashik';
+
+  // Gujarat corridors
+  if (normO.includes('ahmedabad') && normD.includes('surat')) return 'ahmedabad-surat';
+  if (normD.includes('ahmedabad') && normO.includes('surat')) return 'ahmedabad-surat';
+  if (normO.includes('ahmedabad') && normD.includes('vadodara')) return 'ahmedabad-vadodara';
+  if (normD.includes('ahmedabad') && normO.includes('vadodara')) return 'ahmedabad-vadodara';
+
+  // Bihar corridors
+  if (normO.includes('patna') && (normD.includes('gaya') || normD.includes('bodhgaya'))) return 'patna-gaya';
+  if (normD.includes('patna') && (normO.includes('gaya') || normO.includes('bodhgaya'))) return 'patna-gaya';
+
+  // West Bengal corridors
+  if (normO.includes('kolkata') && (normD.includes('durgapur') || normD.includes('asansol'))) return 'kolkata-durgapur';
+  if (normD.includes('kolkata') && (normO.includes('durgapur') || normO.includes('asansol'))) return 'kolkata-durgapur';
+
+  // Haridwar departure corridors
+  if (normO.includes('haridwar') && (normD.includes('delhi') || normD.includes('ghaziabad') || normD.includes('noida'))) return 'haridwar-delhi';
+  if (normO.includes('haridwar') && (normD.includes('chandigarh') || normD.includes('mohali') || normD.includes('panchkula'))) return 'haridwar-chandigarh';
+  if (normO.includes('haridwar') && (normD.includes('dehradun') || normD.includes('mussoorie') || normD.includes('rishikesh'))) return 'haridwar-dehradun';
 
   return null;
 }
@@ -183,13 +239,33 @@ export function calculateRouteTolls(
     const originState = getLocationState(origin) || 'Delhi';
     const destState = getLocationState(destination) || 'Uttar Pradesh';
 
-    if (originState !== destState) {
+    if (originState.toLowerCase() !== destState.toLowerCase()) {
       crossingStates = [destState];
+    } else {
+      // Intra-state trip: ZERO interstate commercial border entry tax!
+      crossingStates = [];
     }
 
-    // Select representative NHAI plazas matching the estimated distance
-    const count = Math.max(1, Math.min(5, Math.round(dist / 80)));
-    selectedPlazas = TOLL_PLAZAS.slice(0, count);
+    // Smart Regional & Highway Toll Selection (Strictly matches destination & origin states)
+    const matchingPlazas = TOLL_PLAZAS.filter(
+      (p) => p.state.toLowerCase() === destState.toLowerCase() || p.state.toLowerCase() === originState.toLowerCase()
+    );
+
+    if (matchingPlazas.length > 0) {
+      const count = Math.max(1, Math.min(matchingPlazas.length, Math.round(dist / 85)));
+      selectedPlazas = matchingPlazas.slice(0, count);
+    } else {
+      // Select plazas matching distance
+      const count = Math.max(1, Math.min(3, Math.round(dist / 100)));
+      selectedPlazas = TOLL_PLAZAS.slice(0, count);
+    }
+  }
+
+  // Ensure intra-state routes never incur border entry taxes
+  const detectedOriginState = getLocationState(origin);
+  const detectedDestState = getLocationState(destination);
+  if (detectedOriginState && detectedDestState && detectedOriginState.toLowerCase() === detectedDestState.toLowerCase()) {
+    crossingStates = [];
   }
 
   // Calculate individual plaza rates
