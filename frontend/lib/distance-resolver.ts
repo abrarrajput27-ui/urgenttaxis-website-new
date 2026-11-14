@@ -54,6 +54,7 @@ const CITY_COORDINATES: Record<string, GeoPoint> = {
   saket: { lat: 28.5244, lng: 77.2066 },
   'hauz-khas': { lat: 28.5494, lng: 77.2001 },
   'vasant-kunj': { lat: 28.5284, lng: 77.1497 },
+  'vasant-vihar': { lat: 28.5600, lng: 77.1600 },
   aerocity: { lat: 28.5487, lng: 77.1205 },
   'karol-bagh': { lat: 28.6517, lng: 77.1906 },
   'lajpat-nagar': { lat: 28.5677, lng: 77.2433 },
@@ -61,6 +62,43 @@ const CITY_COORDINATES: Record<string, GeoPoint> = {
   'kashmere-gate': { lat: 28.6675, lng: 77.2285 },
   'sarai-kale-khan': { lat: 28.5912, lng: 77.2564 },
   'nizamuddin': { lat: 28.5880, lng: 77.2530 },
+
+  // South Delhi / Jamia / Okhla localities
+  'abul-fazal-enclave': { lat: 28.5606, lng: 77.2988 },
+  'abul-fazal': { lat: 28.5606, lng: 77.2988 },
+  'jamia-nagar': { lat: 28.5615, lng: 77.2885 },
+  'jamia': { lat: 28.5615, lng: 77.2885 },
+  'zakir-nagar': { lat: 28.5670, lng: 77.2850 },
+  'batla-house': { lat: 28.5630, lng: 77.2900 },
+  'okhla': { lat: 28.5350, lng: 77.2750 },
+  'jasola': { lat: 28.5420, lng: 77.2890 },
+  'sarita-vihar': { lat: 28.5290, lng: 77.2950 },
+  'kalindi-kunj': { lat: 28.5450, lng: 77.3100 },
+  'mayur-vihar': { lat: 28.6040, lng: 77.2980 },
+  'laxmi-nagar': { lat: 28.6310, lng: 77.2770 },
+  'akshardham': { lat: 28.6127, lng: 77.2773 },
+  'chhattarpur': { lat: 28.5020, lng: 77.1850 },
+  'mehrauli': { lat: 28.5180, lng: 77.1850 },
+  'malviya-nagar': { lat: 28.5350, lng: 77.2080 },
+  'cr-park': { lat: 28.5410, lng: 77.2470 },
+  'kalkaji': { lat: 28.5460, lng: 77.2560 },
+  'nehru-place': { lat: 28.5490, lng: 77.2520 },
+  'greater-kailash': { lat: 28.5450, lng: 77.2380 },
+  'defence-colony': { lat: 28.5720, lng: 77.2320 },
+  'south-extension': { lat: 28.5720, lng: 77.2200 },
+  'burari': { lat: 28.7550, lng: 77.1980 },
+  'alipur': { lat: 28.7980, lng: 77.1350 },
+  'narela': { lat: 28.8520, lng: 77.0920 },
+  'bawana': { lat: 28.7980, lng: 77.0350 },
+  'najafgarh': { lat: 28.6090, lng: 76.9850 },
+  'mundka': { lat: 28.6820, lng: 77.0280 },
+  'nangloi': { lat: 28.6820, lng: 77.0650 },
+  'paschim-vihar': { lat: 28.6700, lng: 77.1000 },
+  'punjabi-bagh': { lat: 28.6700, lng: 77.1300 },
+  'rajouri-garden': { lat: 28.6500, lng: 77.1200 },
+  'tilak-nagar': { lat: 28.6360, lng: 77.0980 },
+  'uttam-nagar': { lat: 28.6200, lng: 77.0600 },
+  'vikaspuri': { lat: 28.6350, lng: 77.0750 },
 
   // Ghaziabad & Surrounding Localities (Urgent Taxis HQ)
   ghaziabad: { lat: 28.6692, lng: 77.4538 },
@@ -451,6 +489,7 @@ function findCoordinatesForAddress(address: string): GeoPoint | null {
   }
 
   // 3. Check for Indian State hints
+  if (raw.includes('delhi')) return CITY_COORDINATES['delhi'];
   if (raw.includes('uttarakhand')) return { lat: 30.0668, lng: 79.0193, isHill: true };
   if (raw.includes('himachal')) return { lat: 31.7087, lng: 76.9320, isHill: true };
   if (raw.includes('rajasthan')) return { lat: 26.9124, lng: 75.7873 };

@@ -96,42 +96,49 @@ export default function RouteTollBreakdownCard({
           </span>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200/70">
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200/70 text-[11px] sm:text-xs uppercase tracking-wider">
-              <tr>
-                <th className="py-2.5 px-3 sm:px-4">Toll Plaza</th>
-                <th className="py-2.5 px-3 sm:px-4 hidden sm:table-cell">Highway / Expressway</th>
-                <th className="py-2.5 px-3 sm:px-4 text-right">Amount</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {tollData.tollPlazas.map((plaza) => (
-                <tr key={plaza.id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="py-3 px-3 sm:px-4">
-                    <div className="font-bold text-slate-900">{plaza.name}</div>
-                    <div className="text-[11px] text-slate-500 sm:hidden">{plaza.highway}</div>
+        {tollData.tollPlazas.length > 0 ? (
+          <div className="overflow-hidden rounded-2xl border border-slate-200/70">
+            <table className="w-full text-left text-xs sm:text-sm">
+              <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200/70 text-[11px] sm:text-xs uppercase tracking-wider">
+                <tr>
+                  <th className="py-2.5 px-3 sm:px-4">Toll Plaza</th>
+                  <th className="py-2.5 px-3 sm:px-4 hidden sm:table-cell">Highway / Expressway</th>
+                  <th className="py-2.5 px-3 sm:px-4 text-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {tollData.tollPlazas.map((plaza) => (
+                  <tr key={plaza.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="py-3 px-3 sm:px-4">
+                      <div className="font-bold text-slate-900">{plaza.name}</div>
+                      <div className="text-[11px] text-slate-500 sm:hidden">{plaza.highway}</div>
+                    </td>
+                    <td className="py-3 px-3 sm:px-4 text-slate-600 hidden sm:table-cell">
+                      {plaza.highway}
+                    </td>
+                    <td className="py-3 px-3 sm:px-4 text-right font-black text-slate-900 tabular-nums">
+                      ₹{plaza.appliedRate}
+                    </td>
+                  </tr>
+                ))}
+                {/* Toll Total Row */}
+                <tr className="bg-slate-50 font-bold border-t border-slate-200">
+                  <td className="py-3 px-3 sm:px-4 text-slate-800" colSpan={2}>
+                    Total Highway Toll ({tollData.tollPlazas.length} Plazas)
                   </td>
-                  <td className="py-3 px-3 sm:px-4 text-slate-600 hidden sm:table-cell">
-                    {plaza.highway}
-                  </td>
-                  <td className="py-3 px-3 sm:px-4 text-right font-black text-slate-900 tabular-nums">
-                    ₹{plaza.appliedRate}
+                  <td className="py-3 px-3 sm:px-4 text-right font-black text-[#1e1b4b] text-sm sm:text-base tabular-nums">
+                    ₹{tollData.totalToll}
                   </td>
                 </tr>
-              ))}
-              {/* Toll Total Row */}
-              <tr className="bg-slate-50 font-bold border-t border-slate-200">
-                <td className="py-3 px-3 sm:px-4 text-slate-800" colSpan={2}>
-                  Total Highway Toll ({tollData.tollPlazas.length} Plazas)
-                </td>
-                <td className="py-3 px-3 sm:px-4 text-right font-black text-[#1e1b4b] text-sm sm:text-base tabular-nums">
-                  ₹{tollData.totalToll}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm flex items-center justify-between">
+            <span className="font-medium">No NHAI highway toll plazas on this direct city/NCR route corridor.</span>
+            <span className="font-black text-emerald-700 text-sm">₹0 Toll</span>
+          </div>
+        )}
       </div>
 
       {/* State Commercial Border Taxes */}

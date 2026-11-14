@@ -37,6 +37,7 @@ import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { resolveAccurateRoute } from '@/lib/distance-resolver';
 import { formatTime12Hour, formatDateReadable, calculateRoundTripDays, calculateReturnTimeline } from '@/lib/date-utils';
 import { calculateRouteTolls } from '@/lib/tolls';
+import { formatLocationWithState } from '@/lib/location-authority';
 import {
   calculateAdvanceToken,
   calculateRoundTripFare,
@@ -267,6 +268,11 @@ export default function CabsClient() {
   const formattedReturnTime = useMemo(() => {
     return formatTime12Hour(returnTime);
   }, [returnTime]);
+
+  // Formatted display locations with verified Indian State
+  const displayPickup = useMemo(() => formatLocationWithState(pickup), [pickup]);
+  const displayDrop = useMemo(() => formatLocationWithState(drop), [drop]);
+  const displayFinalDrop = useMemo(() => formatLocationWithState(finalDrop || pickup), [finalDrop, pickup]);
 
   // Outbound distance (pickup -> drop)
   const outboundDistanceKm = useMemo(() => {
@@ -991,9 +997,9 @@ export default function CabsClient() {
               {/* Origin ➔ Destination */}
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight flex items-center gap-2 flex-wrap">
                 {serviceType === 'local_rental' ? (
-                  <span>{pickup} Hourly Cab Rentals</span>
+                  <span>{displayPickup} Hourly Cab Rentals</span>
                 ) : (
-                  <span>{pickup && drop ? `${pickup} to ${drop} Cabs` : 'Available Cabs'}</span>
+                  <span>{pickup && drop ? `${displayPickup} to ${displayDrop} Cabs` : 'Available Cabs'}</span>
                 )}
               </h1>
               {serviceType === 'local_rental' && (
@@ -1540,7 +1546,7 @@ export default function CabsClient() {
                     <div className="relative h-36 w-full rounded-2xl overflow-hidden my-2">
                       <Image
                         src={vehicle.image}
-                        alt={`${vehicle.name} cab for ${pickup} to ${drop}`}
+                        alt={`${vehicle.name} cab for ${displayPickup} to ${displayDrop}`}
                         fill
                         className="object-contain hover:scale-105 transition-transform duration-300"
                         sizes="(max-width: 640px) 320px, 300px"
@@ -1672,11 +1678,11 @@ export default function CabsClient() {
                               {serviceType === 'round_trip' ? (
                                 <>
                                   <div className="flex items-center justify-between text-slate-700">
-                                    <span>Outbound Leg ({pickup} ➔ {drop}):</span>
+                                    <span>Outbound Leg ({displayPickup} ➔ {displayDrop}):</span>
                                     <span className="font-bold text-slate-900">{vehicle.outboundKm || routeData.distanceKm} km</span>
                                   </div>
                                   <div className="flex items-center justify-between text-slate-700">
-                                    <span>Return Leg ({drop} ➔ {vehicle.finalDropLocation || pickup}):</span>
+                                    <span>Return Leg ({displayDrop} ➔ {vehicle.finalDropLocation || displayPickup}):</span>
                                     <span className="font-bold text-slate-900">{vehicle.returnKm || routeData.distanceKm} km</span>
                                   </div>
                                   <div className="flex items-center justify-between text-slate-700">
@@ -1746,26 +1752,58 @@ export default function CabsClient() {
                           {/* Highway Toll Plazas Sub-breakdown */}
                           <div className="space-y-1.5">
                             <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                              <span>Plazas along Corridor ({tollInfo.tollPlazas.length})</span>
+                              <span>Highway Toll Plazas ({tollInfo.tollPlazas.length})</span>
                               <span>{serviceType === 'round_trip' ? 'Round-Trip' : 'One-Way'}</span>
                             </div>
-                            <div className="space-y-1 max-h-28 overflow-y-auto pr-1">
-                              {tollInfo.tollPlazas.map((p) => (
-                                <div
-                                  key={p.id}
-                                  className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200/60"
-                                >
-                                  <div>
-                                    <div className="font-bold text-slate-800 text-[11px]">{p.name}</div>
-                                    <div className="text-[10px] text-slate-400">{p.highway}</div>
+                            {tollInfo.tollPlazas.length > 0 ? (
+                              <div className="space-y-1 max-h-28 overflow-y-auto pr-1">
+                                {tollInfo.tollPlazas.map((p) => (
+                                  <div
+                                    key={p.id}
+                                    className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200/60"
+                                  >
+                                    <div>
+                                      <div className="font-bold text-slate-800 text-[11px]">{p.name}</div>
+                                      <div className="text-[10px] text-slate-400">{p.highway}</div>
+                                    </div>
+                                    <span className="font-black text-slate-900 tabular-nums text-xs">
+                                      ₹{p.appliedRate}
+                                    </span>
                                   </div>
-                                  <span className="font-black text-slate-900 tabular-nums text-xs">
-                                    ₹{p.appliedRate}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/60 text-slate-600 text-[11px]">
+                                No NHAI highway toll plazas on this direct city/NCR route (₹0 Toll).
+                              </div>
+                            )}
                           </div>
+
+                          {/* State Commercial Border Taxes & Municipal Permits Breakdown */}
+                          {tollInfo.stateTaxes.length > 0 && (
+                            <div className="space-y-1.5 pt-1">
+                              <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                <span>State Border Taxes & Municipal Permits ({tollInfo.stateTaxes.length})</span>
+                                <span className="text-emerald-700 font-bold">Total: ₹{tollInfo.totalStateTax}</span>
+                              </div>
+                              <div className="space-y-1">
+                                {tollInfo.stateTaxes.map((st, sidx) => (
+                                  <div
+                                    key={sidx}
+                                    className="flex items-center justify-between p-2 rounded-lg bg-emerald-50/70 border border-emerald-200/70 text-xs"
+                                  >
+                                    <div>
+                                      <div className="font-bold text-emerald-950 text-[11px]">{st.name} ({st.state})</div>
+                                      <div className="text-[10px] text-slate-500">{st.description}</div>
+                                    </div>
+                                    <span className="font-black text-emerald-900 tabular-nums text-xs">
+                                      ₹{st.rate}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       );
                     })()}
@@ -1777,8 +1815,8 @@ export default function CabsClient() {
                       <FaRoad className="text-brand-green shrink-0" />
                       <span className="truncate">
                         {serviceType === 'local_rental'
-                          ? `Local Rental in ${pickup} (${routeData.distanceKm} KM / ${routeData.durationText})`
-                          : `Route: ${pickup} ➔ ${drop} (${routeData.distanceKm} km)`}
+                          ? `Local Rental in ${displayPickup} (${routeData.distanceKm} KM / ${routeData.durationText})`
+                          : `Route: ${displayPickup} ➔ ${displayDrop} (${routeData.distanceKm} km)`}
                       </span>
                     </div>
                     <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full shrink-0">

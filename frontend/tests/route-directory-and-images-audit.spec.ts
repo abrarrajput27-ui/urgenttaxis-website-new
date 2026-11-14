@@ -374,4 +374,43 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(footerContent).toContain('Designed by');
     expect(footerContent).toContain('Mantsha Khan');
   });
+
+  test('Test 15: Ghaziabad to Abul Fazal Enclave Delhi NCR Local Transit, Accurate KM, Zero Highway Tolls, MCD Toll & Chhajrasi Revised Rate', () => {
+    const { resolveAccurateRoute } = require('../lib/distance-resolver');
+    const { calculateRouteTolls } = require('../lib/tolls');
+    const { TOLL_PLAZAS } = require('../lib/data/tolls-data');
+    const { getLocationState, formatLocationWithState } = require('../lib/location-authority');
+
+    // 1. Location state identification & disambiguation
+    expect(getLocationState('Abul Fazal Enclave')).toBe('Delhi');
+    expect(formatLocationWithState('Abul Fazal Enclave')).toBe('Abul Fazal Enclave, Delhi');
+    expect(formatLocationWithState('Ghaziabad')).toBe('Ghaziabad, Uttar Pradesh');
+
+    // 2. Realistic road distance between Ghaziabad and Abul Fazal Enclave (South Delhi)
+    const route = resolveAccurateRoute('Ghaziabad', 'Abul Fazal Enclave');
+    expect(route.distanceKm).toBeGreaterThanOrEqual(20);
+    expect(route.distanceKm).toBeLessThanOrEqual(35);
+    expect(route.durationMinutes).toBeGreaterThanOrEqual(25);
+    expect(route.durationMinutes).toBeLessThanOrEqual(60);
+
+    // 3. Toll Calculation for Ghaziabad to Abul Fazal Enclave (ZERO Highway Toll, Only MCD Toll ₹100)
+    const tollInfo = calculateRouteTolls('Ghaziabad', 'Abul Fazal Enclave', 'sedan', false, route.distanceKm);
+    expect(tollInfo.totalToll).toBe(0);
+    expect(tollInfo.tollPlazas.length).toBe(0);
+    expect(tollInfo.stateTaxes.some(st => st.state === 'Delhi' && st.rate === 100)).toBe(true);
+    expect(tollInfo.totalStateTax).toBe(100);
+
+    // 4. Chhajrasi Toll Plaza NH-9 verified revised rate (₹175 Sedan, ₹285 SUV)
+    const chhajrasi = TOLL_PLAZAS.find((p: any) => p.id === 'chhajrasi-nh9');
+    expect(chhajrasi).toBeDefined();
+    expect(chhajrasi.sedanRate).toBe(175);
+    expect(chhajrasi.sedanReturn).toBe(265);
+    expect(chhajrasi.suvRate).toBe(285);
+
+    // 5. Permanent protected footer designer credit
+    const footerContent = fs.readFileSync('frontend/components/public/Footer.tsx', 'utf8');
+    expect(footerContent).toContain('footer-designer-credit');
+    expect(footerContent).toContain('Designed by');
+    expect(footerContent).toContain('Mantsha Khan');
+  });
 });

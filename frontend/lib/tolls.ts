@@ -212,6 +212,29 @@ function resolveCorridorKey(origin: string, destination: string): string | null 
 }
 
 /**
+ * Detects whether a route is an intra-NCR local transit (e.g., Ghaziabad <-> Delhi, Noida <-> Delhi, Gurugram <-> Delhi)
+ * where NO NHAI highway toll plazas exist (only municipal MCD / state border tax applies).
+ */
+export function isDelhiNcrTransit(origin: string, destination: string): boolean {
+  const normO = origin.toLowerCase();
+  const normD = destination.toLowerCase();
+
+  const ncrTokens = [
+    'delhi', 'new delhi', 'ghaziabad', 'noida', 'greater noida', 'gurugram', 'gurgaon',
+    'faridabad', 'sahibabad', 'indirapuram', 'vaishali', 'vasundhara', 'abul fazal',
+    'jamia', 'okhla', 'jasola', 'saket', 'dwarka', 'rohini', 'lajpat nagar', 'crossings republik',
+    'raj nagar', 'dasna', 'masuri', 'modinagar', 'muradnagar', 'loni', 'manesar', 'kundli',
+    'anand vihar', 'sarita vihar', 'kalindi kunj', 'mayur vihar', 'laxmi nagar', 'akshardham',
+    'connaught place', 'karol bagh', 'chhattarpur', 'mehrauli', 'hauz khas', 'cr park', 'kalkaji'
+  ];
+
+  const originIsNcr = ncrTokens.some((t) => normO.includes(t));
+  const destIsNcr = ncrTokens.some((t) => normD.includes(t));
+
+  return originIsNcr && destIsNcr;
+}
+
+/**
  * Calculates Route Tolls & State Taxes
  */
 export function calculateRouteTolls(
@@ -227,17 +250,40 @@ export function calculateRouteTolls(
   let selectedPlazas: TollPlazaItem[] = [];
   let crossingStates: string[] = [];
 
+  const originState = getLocationState(origin) || 'Delhi';
+  const destState = getLocationState(destination) || 'Uttar Pradesh';
+  const isNcr = isDelhiNcrTransit(origin, destination);
+
   if (corridorKey && CORRIDOR_TOLL_MAPPINGS[corridorKey]) {
     const mapping = CORRIDOR_TOLL_MAPPINGS[corridorKey];
     selectedPlazas = mapping.tollIds
       .map((id) => TOLL_PLAZAS.find((p) => p.id === id))
       .filter((p): p is TollPlazaItem => Boolean(p));
     crossingStates = [...mapping.crossingStates];
+  } else if (isNcr) {
+    // Delhi NCR local cross-border or intra-city trip:
+    // (e.g. Ghaziabad <-> Delhi / Abul Fazal Enclave, Noida <-> Delhi, Gurugram <-> Delhi)
+    // There are NO NHAI highway toll plazas on direct city/NCR routes!
+    selectedPlazas = [];
+
+    // Check if commercial border entry / MCD toll applies
+    const isDestDelhi = destState.toLowerCase().includes('delhi');
+    const isOriginDelhi = originState.toLowerCase().includes('delhi');
+
+    if (isDestDelhi && !isOriginDelhi) {
+      // Commercial taxi entering Delhi from UP or Haryana pays Delhi MCD toll
+      crossingStates = ['Delhi'];
+    } else if (!isDestDelhi && isOriginDelhi) {
+      // Commercial taxi leaving Delhi entering UP or Haryana
+      crossingStates = [destState];
+    } else if (originState.toLowerCase() !== destState.toLowerCase()) {
+      crossingStates = [destState];
+    } else {
+      crossingStates = [];
+    }
   } else {
     // Dynamic fallback for any other town or corridor based on distance & state crossing
     const dist = approxDistanceKm || 200;
-    const originState = getLocationState(origin) || 'Delhi';
-    const destState = getLocationState(destination) || 'Uttar Pradesh';
 
     if (originState.toLowerCase() !== destState.toLowerCase()) {
       crossingStates = [destState];
@@ -246,18 +292,23 @@ export function calculateRouteTolls(
       crossingStates = [];
     }
 
-    // Smart Regional & Highway Toll Selection (Strictly matches destination & origin states)
-    const matchingPlazas = TOLL_PLAZAS.filter(
-      (p) => p.state.toLowerCase() === destState.toLowerCase() || p.state.toLowerCase() === originState.toLowerCase()
-    );
-
-    if (matchingPlazas.length > 0) {
-      const count = Math.max(1, Math.min(matchingPlazas.length, Math.round(dist / 85)));
-      selectedPlazas = matchingPlazas.slice(0, count);
+    // Short-distance rule: trips under 45 km without an explicit expressway mapping have NO highway tolls!
+    if (dist < 45) {
+      selectedPlazas = [];
     } else {
-      // Select plazas matching distance
-      const count = Math.max(1, Math.min(3, Math.round(dist / 100)));
-      selectedPlazas = TOLL_PLAZAS.slice(0, count);
+      // Smart Regional & Highway Toll Selection (Strictly matches destination & origin states)
+      const matchingPlazas = TOLL_PLAZAS.filter(
+        (p) => p.state.toLowerCase() === destState.toLowerCase() || p.state.toLowerCase() === originState.toLowerCase()
+      );
+
+      if (matchingPlazas.length > 0) {
+        const count = Math.max(0, Math.min(matchingPlazas.length, Math.round(dist / 85)));
+        selectedPlazas = matchingPlazas.slice(0, count);
+      } else {
+        // Select plazas matching distance
+        const count = Math.max(0, Math.min(3, Math.round(dist / 100)));
+        selectedPlazas = TOLL_PLAZAS.slice(0, count);
+      }
     }
   }
 

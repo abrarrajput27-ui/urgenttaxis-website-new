@@ -143,16 +143,61 @@ export const LOCATION_STATE_MAP: Record<string, string> = {
   jewar: 'Uttar Pradesh',
 
   // ─── Delhi NCR ─────────────────────────────────────────────────────────────
-  delhi: 'Delhi NCR',
-  'new-delhi': 'Delhi NCR',
-  'delhi-airport': 'Delhi NCR',
-  'igi-airport': 'Delhi NCR',
-  'delhi-igi': 'Delhi NCR',
-  'connaught-place': 'Delhi NCR',
-  saket: 'Delhi NCR',
-  rohini: 'Delhi NCR',
-  dwarka: 'Delhi NCR',
-  'anand-vihar': 'Delhi NCR',
+  delhi: 'Delhi',
+  'new-delhi': 'Delhi',
+  'delhi-airport': 'Delhi',
+  'igi-airport': 'Delhi',
+  'delhi-igi': 'Delhi',
+  'connaught-place': 'Delhi',
+  saket: 'Delhi',
+  rohini: 'Delhi',
+  dwarka: 'Delhi',
+  'anand-vihar': 'Delhi',
+  'abul-fazal-enclave': 'Delhi',
+  'abul-fazal': 'Delhi',
+  'jamia-nagar': 'Delhi',
+  'jamia': 'Delhi',
+  'zakir-nagar': 'Delhi',
+  'batla-house': 'Delhi',
+  'okhla': 'Delhi',
+  'jasola': 'Delhi',
+  'sarita-vihar': 'Delhi',
+  'kalindi-kunj': 'Delhi',
+  'mayur-vihar': 'Delhi',
+  'laxmi-nagar': 'Delhi',
+  'akshardham': 'Delhi',
+  'chhattarpur': 'Delhi',
+  'mehrauli': 'Delhi',
+  'malviya-nagar': 'Delhi',
+  'cr-park': 'Delhi',
+  'kalkaji': 'Delhi',
+  'nehru-place': 'Delhi',
+  'greater-kailash': 'Delhi',
+  'defence-colony': 'Delhi',
+  'south-extension': 'Delhi',
+  'burari': 'Delhi',
+  'alipur': 'Delhi',
+  'narela': 'Delhi',
+  'bawana': 'Delhi',
+  'najafgarh': 'Delhi',
+  'mundka': 'Delhi',
+  'nangloi': 'Delhi',
+  'paschim-vihar': 'Delhi',
+  'punjabi-bagh': 'Delhi',
+  'rajouri-garden': 'Delhi',
+  'tilak-nagar': 'Delhi',
+  'uttam-nagar': 'Delhi',
+  'vikaspuri': 'Delhi',
+  'pitampura': 'Delhi',
+  'janakpuri': 'Delhi',
+  'karol-bagh': 'Delhi',
+  'lajpat-nagar': 'Delhi',
+  'kashmere-gate': 'Delhi',
+  'sarai-kale-khan': 'Delhi',
+  'nizamuddin': 'Delhi',
+  'vasant-kunj': 'Delhi',
+  'vasant-vihar': 'Delhi',
+  'hauz-khas': 'Delhi',
 
   // ─── Haryana ───────────────────────────────────────────────────────────────
   gurugram: 'Haryana',
@@ -526,6 +571,20 @@ export function getLocationState(cityName: string): string {
 
   // Fallback state detection via raw string
   const raw = cityName.toLowerCase();
+  const isDelhi = [
+    'delhi', 'abul fazal', 'jamia', 'zakir nagar', 'batla house', 'okhla', 'jasola',
+    'sarita vihar', 'kalindi kunj', 'mayur vihar', 'laxmi nagar', 'akshardham',
+    'saket', 'hauz khas', 'malviya nagar', 'vasant kunj', 'vasant vihar',
+    'dwarka', 'rohini', 'pitampura', 'janakpuri', 'paschim vihar', 'punjabi bagh',
+    'rajouri garden', 'karol bagh', 'paharganj', 'chandni chowk', 'daryaganj',
+    'connaught place', 'lajpat nagar', 'defence colony', 'south extension',
+    'kalkaji', 'cr park', 'nehru place', 'chhattarpur', 'mehrauli', 'anand vihar',
+    'shahdara', 'seelampur', 'dilshad garden', 'burari', 'alipur', 'narela',
+    'bawana', 'najafgarh', 'mundka', 'nangloi', 'tilak nagar', 'uttam nagar',
+    'vikaspuri', 'safdarjung', 'lodhi', 'ina'
+  ].some((d) => raw.includes(d) || slug.includes(d.replace(/\s+/g, '-')));
+  if (isDelhi) return 'Delhi';
+
   if (raw.includes('uttarakhand') || raw.includes('uk')) return 'Uttarakhand';
   if (raw.includes('uttar pradesh') || raw.includes('up')) return 'Uttar Pradesh';
   if (raw.includes('rajasthan') || raw.includes('rj')) return 'Rajasthan';
@@ -533,7 +592,6 @@ export function getLocationState(cityName: string): string {
   if (raw.includes('haryana') || raw.includes('hr')) return 'Haryana';
   if (raw.includes('punjab') || raw.includes('pb')) return 'Punjab';
   if (raw.includes('kashmir') || raw.includes('jammu') || raw.includes('j&k')) return 'Jammu & Kashmir';
-  if (raw.includes('delhi')) return 'Delhi NCR';
   if (raw.includes('bihar') || raw.includes('br')) return 'Bihar';
   if (raw.includes('goa') || raw.includes('ga')) return 'Goa';
   if (raw.includes('gujarat') || raw.includes('gj')) return 'Gujarat';
@@ -555,6 +613,7 @@ export function formatLocationWithState(cityName: string): string {
   if (!cityName) return '';
   const trimmed = cityName.trim();
   const state = getLocationState(trimmed);
+  if (state === 'India') return trimmed;
   if (trimmed.toLowerCase().includes(state.toLowerCase())) {
     return trimmed;
   }
@@ -566,9 +625,14 @@ export function formatLocationWithState(cityName: string): string {
  */
 export const POPULAR_AUTOCOMPLETE_CITIES = [
   // Delhi NCR
-  { name: 'Delhi', state: 'Delhi NCR' },
-  { name: 'New Delhi', state: 'Delhi NCR' },
-  { name: 'Delhi Airport (IGI T3)', state: 'Delhi NCR' },
+  { name: 'Delhi', state: 'Delhi' },
+  { name: 'New Delhi', state: 'Delhi' },
+  { name: 'Delhi Airport (IGI T3)', state: 'Delhi' },
+  { name: 'Abul Fazal Enclave', state: 'Delhi' },
+  { name: 'Jamia Nagar', state: 'Delhi' },
+  { name: 'Okhla', state: 'Delhi' },
+  { name: 'Saket', state: 'Delhi' },
+  { name: 'Dwarka', state: 'Delhi' },
   { name: 'Ghaziabad', state: 'Uttar Pradesh' },
   { name: 'Noida', state: 'Uttar Pradesh' },
   { name: 'Greater Noida', state: 'Uttar Pradesh' },
