@@ -166,9 +166,9 @@ export default function UnifiedBookingWidget({
   const [validationError, setValidationError] = useState('');
 
   // Autocomplete UI state
-  const [originSuggestions, setOriginSuggestions] = useState<string[]>([]);
-  const [destSuggestions, setDestSuggestions] = useState<string[]>([]);
-  const [stopSuggestions, setStopSuggestions] = useState<string[]>([]);
+  const [originSuggestions, setOriginSuggestions] = useState<{ name: string; state: string }[]>([]);
+  const [destSuggestions, setDestSuggestions] = useState<{ name: string; state: string }[]>([]);
+  const [stopSuggestions, setStopSuggestions] = useState<{ name: string; state: string }[]>([]);
   const [showOriginDropdown, setShowOriginDropdown] = useState(false);
   const [showDestDropdown, setShowDestDropdown] = useState(false);
 
@@ -293,7 +293,8 @@ export default function UnifiedBookingWidget({
     setOrigin(val);
     setValidationError('');
     if (val.trim().length > 0) {
-      const filtered = TOP_CITIES.filter((c) => c.toLowerCase().includes(val.toLowerCase()) || getLocationState(c).toLowerCase().includes(val.toLowerCase()));
+      const q = val.toLowerCase().trim();
+      const filtered = POPULAR_AUTOCOMPLETE_CITIES.filter((c) => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
       setOriginSuggestions(filtered);
       setShowOriginDropdown(filtered.length > 0);
     } else {
@@ -306,7 +307,8 @@ export default function UnifiedBookingWidget({
     setDestination(val);
     setValidationError('');
     if (val.trim().length > 0) {
-      const filtered = TOP_CITIES.filter((c) => c.toLowerCase().includes(val.toLowerCase()));
+      const q = val.toLowerCase().trim();
+      const filtered = POPULAR_AUTOCOMPLETE_CITIES.filter((c) => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
       setDestSuggestions(filtered);
       setShowDestDropdown(filtered.length > 0);
     } else {
@@ -344,7 +346,8 @@ export default function UnifiedBookingWidget({
     setStops(updated);
     setValidationError('');
     if (val.trim().length > 0) {
-      const filtered = TOP_CITIES.filter((c) => c.toLowerCase().includes(val.toLowerCase()));
+      const q = val.toLowerCase().trim();
+      const filtered = POPULAR_AUTOCOMPLETE_CITIES.filter((c) => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
       setStopSuggestions(filtered);
       setActiveStopDropdownIndex(index);
     } else {
@@ -1054,15 +1057,18 @@ export default function UnifiedBookingWidget({
                   <div className="absolute top-full left-0 right-0 z-30 mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl max-h-48 overflow-y-auto">
                     {originSuggestions.map((city) => (
                       <div
-                        key={city}
+                        key={`${city.name}-${city.state}`}
                         onClick={() => {
-                          setOrigin(city);
+                          setOrigin(city.name);
                           setShowOriginDropdown(false);
-                          matchKnownRoute(city, destination, stops);
+                          matchKnownRoute(city.name, destination, stops);
                         }}
-                        className="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-blue-50/70 hover:text-[#1e1b4b] cursor-pointer transition-colors"
+                        className="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-blue-50/70 hover:text-[#1e1b4b] cursor-pointer transition-colors flex items-center justify-between"
                       >
-                        {city}
+                        <span className="font-bold text-slate-900">{city.name}</span>
+                        <span className="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-bold">
+                          {city.state}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -1126,15 +1132,18 @@ export default function UnifiedBookingWidget({
                   <div className="absolute top-full left-0 right-0 z-30 mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl max-h-48 overflow-y-auto">
                     {destSuggestions.map((city) => (
                       <div
-                        key={city}
+                        key={`${city.name}-${city.state}`}
                         onClick={() => {
-                          setDestination(city);
+                          setDestination(city.name);
                           setShowDestDropdown(false);
-                          matchKnownRoute(origin, city, stops);
+                          matchKnownRoute(origin, city.name, stops);
                         }}
-                        className="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-blue-50/70 hover:text-[#1e1b4b] cursor-pointer transition-colors"
+                        className="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-blue-50/70 hover:text-[#1e1b4b] cursor-pointer transition-colors flex items-center justify-between"
                       >
-                        {city}
+                        <span className="font-bold text-slate-900">{city.name}</span>
+                        <span className="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-bold">
+                          {city.state}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -1166,14 +1175,17 @@ export default function UnifiedBookingWidget({
                       <div className="absolute top-full left-0 right-0 z-30 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-40 overflow-y-auto">
                         {stopSuggestions.map((city) => (
                           <div
-                            key={city}
+                            key={`${city.name}-${city.state}`}
                             onClick={() => {
-                              handleStopChange(idx, city);
+                              handleStopChange(idx, city.name);
                               setActiveStopDropdownIndex(null);
                             }}
-                            className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 cursor-pointer"
+                            className="px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 cursor-pointer flex items-center justify-between"
                           >
-                            {city}
+                            <span className="font-bold text-slate-900">{city.name}</span>
+                            <span className="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-bold">
+                              {city.state}
+                            </span>
                           </div>
                         ))}
                       </div>

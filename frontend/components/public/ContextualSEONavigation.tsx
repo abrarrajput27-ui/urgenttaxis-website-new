@@ -79,7 +79,30 @@ export default function ContextualSEONavigation() {
     { label: 'Amritsar Airport Taxi', href: '/airport-transfers/delhi-to-amritsar-airport' },
   ];
 
-  // STRICT USER RULE: Exactly these 3 sections, 100% identical on every page
+  // 4. ALL-INDIA STATE & REGIONAL COVERAGE
+  const stateCoverageRoutes: NavLinkItem[] = [
+    { label: 'Bihar Taxi Services', href: '/routes' },
+    { label: 'Delhi NCR Taxi Service', href: '/taxi-service/delhi' },
+    { label: 'Goa Outstation Cabs', href: '/routes' },
+    { label: 'Gujarat Taxi Services', href: '/routes' },
+    { label: 'Haryana Cabs & Taxi', href: '/taxi-service/gurugram' },
+    { label: 'Himachal Pradesh Cabs', href: '/routes' },
+    { label: 'Jammu & Kashmir Cabs', href: '/routes' },
+    { label: 'Madhya Pradesh Taxi', href: '/routes' },
+    { label: 'Maharashtra Cabs', href: '/routes' },
+    { label: 'Punjab Outstation Cabs', href: '/routes' },
+    { label: 'Rajasthan Taxi Service', href: '/routes/delhi-to-jaipur-taxi' },
+    { label: 'Uttar Pradesh Cabs', href: '/taxi-service/ghaziabad' },
+    { label: 'Uttarakhand Taxi Services', href: '/routes/delhi-to-dehradun-taxi' },
+    { label: 'West Bengal Cabs', href: '/routes' },
+    { label: 'Delhi to Patna Taxi', href: '/routes/delhi-to-patna-taxi' },
+    { label: 'Delhi to Bodh Gaya Taxi', href: '/routes/delhi-to-bodh-gaya-taxi' },
+    { label: 'Delhi to Haridwar Taxi', href: '/routes/delhi-to-haridwar-taxi' },
+    { label: 'Delhi to Rishikesh Taxi', href: '/routes/delhi-to-rishikesh-taxi' },
+    { label: 'Delhi to Nainital Taxi', href: '/routes/delhi-to-nainital-taxi' },
+    { label: 'Delhi to Agra Taxi', href: '/routes/delhi-to-agra-taxi' },
+  ];
+
   const sections: NavSection[] = [
     {
       title: 'Popular City Taxi Services',
@@ -93,11 +116,15 @@ export default function ContextualSEONavigation() {
       title: 'Airport Cab Routes',
       links: airportCabRoutes,
     },
+    {
+      title: 'Service Coverage Across States',
+      links: stateCoverageRoutes,
+    },
   ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-b border-white/10">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-xs text-slate-400">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-xs text-slate-400">
         {sections.map((sec, idx) => (
           <div key={idx} className="space-y-3">
             <h4 className="text-white font-bold text-[14px] tracking-wide uppercase pb-2 border-b border-white/10">

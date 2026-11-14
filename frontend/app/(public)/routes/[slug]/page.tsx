@@ -289,15 +289,20 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
 
   // Interconnect with nearby regional cities and major transport hubs
   const regionalHubsByState: Record<string, string[]> = {
-    'Uttarakhand': ['Dehradun', 'Haridwar', 'Rishikesh', 'Nainital', 'Haldwani', 'Mussoorie', 'Delhi Airport (IGI T3)'],
-    'Uttar Pradesh': ['Agra', 'Mathura', 'Lucknow', 'Meerut', 'Ayodhya', 'Prayagraj', 'Varanasi', 'Delhi Airport (IGI T3)'],
-    'Himachal Pradesh': ['Shimla', 'Manali', 'Dharamshala', 'Kullu', 'Kasauli', 'Chandigarh', 'Delhi Airport (IGI T3)'],
-    'Rajasthan': ['Jaipur', 'Udaipur', 'Jodhpur', 'Ajmer', 'Pushkar', 'Bikaner', 'Delhi Airport (IGI T3)'],
-    'Punjab': ['Amritsar', 'Chandigarh', 'Ludhiana', 'Jalandhar', 'Patiala', 'Delhi Airport (IGI T3)'],
-    'Haryana': ['Gurugram', 'Faridabad', 'Panipat', 'Karnal', 'Ambala', 'Rohtak', 'Delhi Airport (IGI T3)'],
-    'Madhya Pradesh': ['Bhopal', 'Indore', 'Gwalior', 'Ujjain', 'Jabalpur', 'Delhi Airport (IGI T3)'],
-    'Jammu & Kashmir': ['Srinagar', 'Jammu', 'Katra', 'Gulmarg', 'Pahalgam', 'Delhi Airport (IGI T3)'],
+    'Bihar': ['Patna', 'Gaya', 'Bodh Gaya', 'Muzaffarpur', 'Bhagalpur', 'Darbhanga', 'Delhi Airport (IGI T3)'],
     'Delhi NCR': ['Ghaziabad', 'Noida', 'Gurugram', 'Faridabad', 'Delhi Airport (IGI T3)', 'Greater Noida'],
+    'Goa': ['Panaji', 'Madgaon (Margao)', 'Vasco da Gama', 'Mapusa', 'Calangute', 'Goa Airport (Mopa)'],
+    'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Gandhinagar', 'Delhi Airport (IGI T3)'],
+    'Haryana': ['Gurugram', 'Faridabad', 'Panipat', 'Karnal', 'Ambala', 'Rohtak', 'Delhi Airport (IGI T3)'],
+    'Himachal Pradesh': ['Shimla', 'Manali', 'Dharamshala', 'Kullu', 'Kasauli', 'Chandigarh', 'Delhi Airport (IGI T3)'],
+    'Jammu & Kashmir': ['Srinagar', 'Jammu', 'Katra', 'Gulmarg', 'Pahalgam', 'Delhi Airport (IGI T3)'],
+    'Madhya Pradesh': ['Bhopal', 'Indore', 'Gwalior', 'Ujjain', 'Jabalpur', 'Delhi Airport (IGI T3)'],
+    'Maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Nashik', 'Thane', 'Navi Mumbai', 'Mumbai Airport (BOM)'],
+    'Punjab': ['Amritsar', 'Chandigarh', 'Ludhiana', 'Jalandhar', 'Patiala', 'Delhi Airport (IGI T3)'],
+    'Rajasthan': ['Jaipur', 'Udaipur', 'Jodhpur', 'Ajmer', 'Pushkar', 'Bikaner', 'Delhi Airport (IGI T3)'],
+    'Uttar Pradesh': ['Agra', 'Mathura', 'Lucknow', 'Meerut', 'Ayodhya', 'Prayagraj', 'Varanasi', 'Delhi Airport (IGI T3)'],
+    'Uttarakhand': ['Dehradun', 'Haridwar', 'Rishikesh', 'Nainital', 'Haldwani', 'Mussoorie', 'Delhi Airport (IGI T3)'],
+    'West Bengal': ['Kolkata', 'Howrah', 'Siliguri', 'Durgapur', 'Asansol', 'Kolkata Airport (CCU)'],
   };
 
   const detectedState = getLocationState(destName);

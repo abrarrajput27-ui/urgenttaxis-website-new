@@ -373,6 +373,33 @@ export const DESTINATION_IMAGE_MAP: Record<string, string> = {
   maheshwar: '/destinations/indore.webp',
   mandu: '/destinations/indore.webp',
 
+  // ── BIHAR (Dedicated Landmark Visuals) ──
+  patna: '/destinations/patna.webp',
+  'patna-airport': '/destinations/patna.webp',
+  gaya: '/destinations/gaya.webp',
+  'gaya-airport': '/destinations/gaya.webp',
+  'bodh-gaya': '/destinations/bodh-gaya.webp',
+  'mahabodhi-temple': '/destinations/bodh-gaya.webp',
+  muzaffarpur: '/destinations/muzaffarpur.webp',
+  bhagalpur: '/destinations/bhagalpur.webp',
+  darbhanga: '/destinations/darbhanga.webp',
+  'darbhanga-airport': '/destinations/darbhanga.webp',
+  rajgir: '/destinations/rajgir.webp',
+  nalanda: '/destinations/nalanda.webp',
+  vaishali: '/destinations/rajgir.webp',
+  purnia: '/destinations/patna.webp',
+  begusarai: '/destinations/patna.webp',
+  chhapra: '/destinations/patna.webp',
+  arrah: '/destinations/patna.webp',
+  sasaram: '/destinations/gaya.webp',
+  motihari: '/destinations/muzaffarpur.webp',
+  bettiah: '/destinations/muzaffarpur.webp',
+  samastipur: '/destinations/darbhanga.webp',
+  madhubani: '/destinations/darbhanga.webp',
+  munger: '/destinations/bhagalpur.webp',
+  katihar: '/destinations/bhagalpur.webp',
+  saharsa: '/destinations/patna.webp',
+
   // ── OTHER STATES & NATIONAL HUBS ──
   mumbai: '/destinations/mumbai.webp',
   'mumbai-bandra': '/destinations/mumbai.webp',
@@ -414,9 +441,6 @@ export const DESTINATION_IMAGE_MAP: Record<string, string> = {
   durgapur: '/destinations/kolkata.webp',
   siliguri: '/destinations/dehradun.webp',
   darjeeling: '/destinations/shimla.webp',
-  patna: '/destinations/varanasi.webp',
-  gaya: '/destinations/varanasi.webp',
-  'bodh-gaya': '/destinations/varanasi.webp',
   deoghar: '/destinations/varanasi.webp',
   ranchi: '/destinations/varanasi.webp',
   jamshedpur: '/destinations/kolkata.webp',
@@ -551,9 +575,26 @@ const STATE_IMAGE_POOLS: Record<string, string[]> = {
     '/destinations/ghaziabad.webp', '/destinations/noida.webp', '/destinations/greater-noida.webp',
     '/destinations/noida-international-airport.webp'
   ],
+  bihar: [
+    '/destinations/patna.webp', '/destinations/bodh-gaya.webp', '/destinations/gaya.webp',
+    '/destinations/rajgir.webp', '/destinations/nalanda.webp', '/destinations/muzaffarpur.webp',
+    '/destinations/bhagalpur.webp', '/destinations/darbhanga.webp'
+  ],
+  goa: [
+    '/destinations/goa.webp'
+  ],
+  gujarat: [
+    '/destinations/ahmedabad.webp'
+  ],
+  maharashtra: [
+    '/destinations/mumbai.webp', '/destinations/pune.webp'
+  ],
+  west_bengal: [
+    '/destinations/kolkata.webp'
+  ],
   other: [
     '/destinations/mumbai.webp', '/destinations/pune.webp', '/destinations/ahmedabad.webp',
-    '/destinations/kolkata.webp', '/destinations/goa.webp'
+    '/destinations/kolkata.webp', '/destinations/goa.webp', '/destinations/patna.webp'
   ]
 };
 
@@ -601,7 +642,17 @@ export function getDestinationImage(cityName: string, stateNameOrContext?: strin
   const rawLower = raw.toLowerCase();
 
   let pool = STATE_IMAGE_POOLS.delhi;
-  if (state.includes('uttarakhand') || rawLower.includes('uttarakhand') || rawLower.includes('garhwal') || rawLower.includes('kumaon')) {
+  if (state.includes('bihar') || rawLower.includes('bihar')) {
+    pool = STATE_IMAGE_POOLS.bihar;
+  } else if (state.includes('goa') || rawLower.includes('goa')) {
+    pool = STATE_IMAGE_POOLS.goa;
+  } else if (state.includes('gujarat') || rawLower.includes('gujarat')) {
+    pool = STATE_IMAGE_POOLS.gujarat;
+  } else if (state.includes('maharashtra') || rawLower.includes('maharashtra') || rawLower.includes('mumbai') || rawLower.includes('pune')) {
+    pool = STATE_IMAGE_POOLS.maharashtra;
+  } else if (state.includes('west bengal') || rawLower.includes('west bengal') || rawLower.includes('bengal') || rawLower.includes('kolkata')) {
+    pool = STATE_IMAGE_POOLS.west_bengal;
+  } else if (state.includes('uttarakhand') || rawLower.includes('uttarakhand') || rawLower.includes('garhwal') || rawLower.includes('kumaon')) {
     pool = STATE_IMAGE_POOLS.uttarakhand;
   } else if (state.includes('himachal') || rawLower.includes('himachal') || rawLower.includes('manali') || rawLower.includes('kullu')) {
     pool = STATE_IMAGE_POOLS.himachal;

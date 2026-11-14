@@ -659,7 +659,7 @@ export default function MmtBookingWidget({
                       <div className="max-h-56 overflow-y-auto divide-y divide-slate-100">
                         {filteredOriginCities.map((city) => (
                           <button
-                            key={city.name}
+                            key={`${city.name}-${city.state}`}
                             type="button"
                             onClick={() => {
                               setOrigin(city.name);
@@ -765,7 +765,7 @@ export default function MmtBookingWidget({
                       <div className="max-h-56 overflow-y-auto divide-y divide-slate-100">
                         {filteredDestCities.map((city) => (
                           <button
-                            key={city.name}
+                            key={`${city.name}-${city.state}`}
                             type="button"
                             onClick={() => {
                               setDestination(city.name);

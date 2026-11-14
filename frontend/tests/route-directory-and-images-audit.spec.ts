@@ -14,16 +14,20 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     const stateDestinations: Record<string, string[]> = eval(evalStr);
 
     const expectedStateOrder = [
+      'Bihar',
       'Delhi NCR',
+      'Goa',
+      'Gujarat',
       'Haryana',
       'Himachal Pradesh',
       'Jammu & Kashmir',
       'Madhya Pradesh',
-      'Other States',
+      'Maharashtra',
       'Punjab',
       'Rajasthan',
       'Uttar Pradesh',
-      'Uttarakhand'
+      'Uttarakhand',
+      'West Bengal'
     ];
 
     expect(Object.keys(stateDestinations)).toEqual(expectedStateOrder);
@@ -118,5 +122,33 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
 
     // Verify Petrol pumps on route
     expect(haridwarToDelhi.places.petrolPumps.length).toBeGreaterThanOrEqual(3);
+  });
+
+  test('Test 6: Bihar Coverage & Dedicated Landmark Images', () => {
+    const patnaImg = getDestinationImage('Patna');
+    const bodhGayaImg = getDestinationImage('Bodh Gaya');
+    const gayaImg = getDestinationImage('Gaya');
+    const muzaffarpurImg = getDestinationImage('Muzaffarpur');
+    const bhagalpurImg = getDestinationImage('Bhagalpur');
+    const darbhangaImg = getDestinationImage('Darbhanga');
+
+    expect(patnaImg).toBe('/destinations/patna.webp');
+    expect(bodhGayaImg).toBe('/destinations/bodh-gaya.webp');
+    expect(gayaImg).toBe('/destinations/gaya.webp');
+    expect(muzaffarpurImg).toBe('/destinations/muzaffarpur.webp');
+    expect(bhagalpurImg).toBe('/destinations/bhagalpur.webp');
+    expect(darbhangaImg).toBe('/destinations/darbhanga.webp');
+
+    // Strict inequality
+    expect(patnaImg).not.toEqual(bodhGayaImg);
+    expect(gayaImg).not.toEqual(darbhangaImg);
+  });
+
+  test('Test 7: Autocomplete State Disambiguation', () => {
+    const content = fs.readFileSync('frontend/lib/location-authority.ts', 'utf8');
+    expect(content).toContain("name: 'Rampur', state: 'Uttar Pradesh'");
+    expect(content).toContain("name: 'Rampur', state: 'Bihar'");
+    expect(content).toContain("name: 'Bilaspur', state: 'Haryana'");
+    expect(content).toContain("name: 'Bilaspur', state: 'Himachal Pradesh'");
   });
 });

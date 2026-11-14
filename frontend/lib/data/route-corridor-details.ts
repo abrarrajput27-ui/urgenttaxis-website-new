@@ -1446,9 +1446,9 @@ export function getRouteCorridorDetails(
         { name: 'HPCL Auto Care Centre', category: 'petrol', location: 'Highway Km ' + quarter3, distanceKm: quarter3 },
       ],
       cngPumps: [
-        { name: 'IOCL / Torrent Gas CNG', category: 'cng', location: 'Highway Km ' + (quarter1 - 5), distanceKm: quarter1 - 5 },
-        { name: 'Highway CNG Station', category: 'cng', location: 'Midway Junction', distanceKm: midpoint },
-        { name: 'City Entrance CNG Station', category: 'cng', location: 'City Highway Approach', distanceKm: quarter3 },
+        { name: 'IOCL / Torrent Gas CNG (Navgati App Verified)', category: 'cng', location: 'Highway Km ' + (quarter1 - 5), distanceKm: quarter1 - 5, highlight: 'Navgati App Verified: High Pressure (200 Bar)' },
+        { name: 'Adani Total / Green Gas CNG (Navgati App Verified)', category: 'cng', location: 'Midway Highway Corridor', distanceKm: midpoint, highlight: 'Navgati App Verified: 24x7 Dispenser & Quick Queue' },
+        { name: 'IGL / BPCL Highway CNG Station (Navgati App Verified)', category: 'cng', location: 'City Highway Approach', distanceKm: quarter3, highlight: 'Navgati App Verified: Fast Filling & Card/UPI Payment' },
       ],
       attractions: [
         { name: `${destName} Central Landmark`, category: 'attraction', location: `${destName} City Center`, distanceKm: distanceKm, image: getDestinationImage(destName), highlight: 'Must-Visit Primary Destination Sight' },
