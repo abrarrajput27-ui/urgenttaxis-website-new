@@ -57,7 +57,7 @@ export default function RouteMilestonesWeatherTips({
 
           {/* Timeline Nodes */}
           <div className="relative pl-6 sm:pl-8 space-y-7 before:absolute before:left-2.5 sm:before:left-3 before:top-2 before:bottom-3 before:w-0.5 before:bg-blue-200">
-            {milestones.map((m, idx) => {
+            {(milestones || []).map((m, idx) => {
               const isFirst = idx === 0;
               const isLast = idx === milestones.length - 1;
 

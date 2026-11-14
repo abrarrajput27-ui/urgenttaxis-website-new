@@ -332,11 +332,10 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       ],
     },
     gallery: [
-      { src: '/destinations/haridwar.webp', caption: 'Har Ki Pauri Evening Aarti', alt: 'Illuminated Ganga Aarti ceremony at Har Ki Pauri' },
-      { src: '/destinations/rishikesh.webp', caption: 'Ganges River Valley', alt: 'Holy river Ganges flowing down from Shivalik hills' },
-      { src: '/destinations/dehradun.webp', caption: 'Shivalik Mountain Foothills', alt: 'Shivalik hill ranges surrounding Haridwar' },
+      { src: '/destinations/haridwar.webp', caption: 'Har Ki Pauri Evening Aarti', alt: 'Illuminated Ganga Aarti ceremony at Har Ki Pauri Haridwar' },
+      { src: '/destinations/heritage-stop.webp', caption: 'Mansa Devi & Chandi Devi Shrines', alt: 'Historic hilltop temple shrines overlooking Haridwar' },
       { src: '/destinations/food-plaza.webp', caption: 'Cheetal Grand Food Hub', alt: 'Highway restaurant and family food plaza' },
-      { src: '/destinations/hotel-resort.webp', caption: 'Haridwar Riverside Heritage Stays', alt: 'Riverside hotels and resorts in Haridwar' },
+      { src: '/destinations/hotel-resort.webp', caption: 'Haridwar Riverside Heritage Stays', alt: 'Riverside hotels and ashram retreats in Haridwar' },
     ],
   },
 
@@ -628,11 +627,11 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       ],
     },
     gallery: [
-      { src: '/destinations/dehradun.webp', caption: 'Dehradun Valley Scenery', alt: 'Scenic valley of Dehradun' },
-      { src: '/destinations/mussoorie.webp', caption: 'Mussoorie Queen of Hills', alt: 'Mussoorie mountain skyline' },
-      { src: '/destinations/rishikesh.webp', caption: 'Rishikesh Ganga Ghat', alt: 'Rishikesh Holy River Ganga' },
-      { src: '/destinations/haridwar.webp', caption: 'Har Ki Pauri Haridwar', alt: 'Haridwar sacred Ganga Aarti' },
-      { src: '/destinations/dhanaulti.webp', caption: 'Dhanaulti Pine Forests', alt: 'Dhanaulti Himalayan forest view' },
+      { src: '/destinations/dehradun.webp', caption: 'Dehradun Valley & FRI Campus', alt: 'Scenic valley and heritage architecture in Dehradun' },
+      { src: '/destinations/mussoorie.webp', caption: 'Mussoorie Queen of Hills', alt: 'Mussoorie mountain skyline and Mall Road' },
+      { src: '/destinations/dhanaulti.webp', caption: 'Dhanaulti Pine Forests', alt: 'Dhanaulti Himalayan pine forest vista' },
+      { src: '/destinations/food-plaza.webp', caption: 'Midway Highway Food Stop', alt: 'Highway restaurant and family food plaza' },
+      { src: '/destinations/hotel-resort.webp', caption: 'Dehradun Foothill Resorts', alt: 'Boutique hill view resorts in Dehradun valley' },
     ],
   },
 
@@ -878,6 +877,296 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
       { src: '/destinations/pushkar.webp', caption: 'Holy Lake Pushkar', alt: 'Pushkar holy lake and desert landscape' },
     ],
   },
+
+  // ---------------------------------------------------------------------------
+  // 6. DELHI / NCR TO RISHIKESH & YOGA CAPITAL (Dedicated Master Corridor)
+  // ---------------------------------------------------------------------------
+  'delhi-rishikesh': {
+    highway: 'via Delhi-Meerut Expressway (NE3) & NH334 Fast Corridor',
+    routeChain: 'Delhi / NCR → Meerut Expressway → Khatauli Bypass → Muzaffarnagar → Roorkee → Haridwar Bypass → Raiwala → Rishikesh (Tapovan / Ram Jhula)',
+    roadType: 'High-Speed Access Expressway (NE3), 4-Lane NH334 & Foothill Highway',
+    weather: {
+      temp: '22°C',
+      condition: 'Refreshing Himalayan Foothill Breeze & Clean Air',
+      feelsLike: '21°C',
+    },
+    travelTips: [
+      'Delhi-Meerut Expressway connects directly to NH334 bypassing all city bottlenecks.',
+      'Cheetal Grand (Km 99, Khatauli) is the premier midway stop for breakfast, filter coffee and clean washrooms.',
+      'Bypass Haridwar congestion via the Raiwala highway flyover for direct access into Tapovan & Lakshman Jhula.',
+      'Popular drop destinations include Tapovan, Ram Jhula, Swarg Ashram, and Shivpuri river rafting camps.',
+      'All Urgent Taxis yellow-plate commercial cabs are pre-verified for seamless Uttarakhand entry.',
+    ],
+    milestones: [
+      { town: 'Delhi / NCR Departure', km: 0, timeText: '00:00 Hrs', description: 'Doorstep pickup from anywhere in Delhi, Noida, Gurgaon or Ghaziabad.' },
+      { town: 'Meerut Expressway Exit', km: 52, timeText: '00:45 Hrs', description: 'Smooth transition to 4-lane NH334 access highway.' },
+      { town: 'Khatauli (Cheetal Grand)', km: 99, timeText: '01:35 Hrs', description: 'Iconic family breakfast stop with lush lawns & pristine washrooms.' },
+      { town: 'Roorkee Highway Bypass', km: 172, timeText: '02:45 Hrs', description: 'Fast bypass past IIT Roorkee and Solani aqueduct.' },
+      { town: 'Raiwala (Haridwar Bypass)', km: 218, timeText: '03:30 Hrs', description: 'Direct corridor skirting Rajaji National Park foothills.' },
+      { town: 'Rishikesh (Tapovan Hub)', km: 238, timeText: '04:00 Hrs', description: 'Arrival at Yoga Capital of the World, Ram Jhula & Tapovan hotels.' },
+    ],
+    alternativeRoutes: [
+      {
+        id: 'expressway-nh334',
+        name: 'Fastest Delhi-Meerut Expressway & NH334',
+        highway: 'via DME, Khatauli, Roorkee Bypass & Raiwala Flyover',
+        distanceKm: 238,
+        durationText: '4 Hours',
+        tollPlazasCount: 3,
+        tollAmount: 380,
+        description: 'Primary high-speed corridor with verified FASTag lanes, wide multilane roads, and world-class midway plazas.',
+      },
+      {
+        id: 'upper-ganga-canal',
+        name: 'Scenic Upper Ganga Canal Scenic Expressway',
+        highway: 'via Muradnagar, Niwari, Purkaji & Roorkee Canal Road',
+        distanceKm: 228,
+        durationText: '4.5 Hours',
+        tollPlazasCount: 1,
+        tollAmount: 110,
+        description: 'Green scenic canal route offering serene waterside countryside driving.',
+      },
+    ],
+    famousFoods: [
+      {
+        name: 'Chotiwala Restaurant',
+        location: 'Swarg Ashram, Rishikesh',
+        dish: 'Traditional Garhwali Thali & Pure Ghee Halwa',
+        description: 'Iconic 1958 heritage vegetarian dining landmark overlooking the Ganges.',
+        image: '/destinations/rishikesh.webp',
+      },
+      {
+        name: 'The Sitting Elephant (EllBee)',
+        location: 'Haridwar Road, Rishikesh',
+        dish: 'Rooftop River-View Dining & Continental Platters',
+        description: 'Panoramic views of the Holy Ganges and Shivalik hills with gourmet multi-cuisine dining.',
+        image: '/destinations/rishikesh.webp',
+      },
+      {
+        name: 'German Bakery & Cafe Nirvana',
+        location: 'Tapovan / Lakshman Jhula',
+        dish: 'Fresh Herbal Teas, Wood-Fired Pizza & Croissants',
+        description: 'Relaxed yogic atmosphere popular with international travelers and backpackers.',
+        image: '/destinations/rishikesh.webp',
+      },
+    ],
+    hiddenGems: [
+      {
+        name: 'Beatles Ashram (Chaurasi Kutia)',
+        location: 'Swarg Ashram / Rajaji Reserve',
+        distanceKm: 242,
+        highlight: 'Historic Maharishi Mahesh Yogi Transcendental Meditation Ashram',
+        description: 'Forest retreat where The Beatles stayed and composed the White Album in 1968, featuring graffiti stone igloos.',
+        image: '/destinations/rishikesh.webp',
+      },
+      {
+        name: 'Neer Garh Waterfall Trek',
+        location: 'Neer Guddu (5 km past Tapovan)',
+        distanceKm: 245,
+        highlight: 'Two-Tiered Natural Turquoise Waterfall & Mountain Pools',
+        description: 'Short forest hike through limestone gorges leading to pristine natural bathing pools.',
+        image: '/destinations/rishikesh.webp',
+      },
+      {
+        name: 'Vashistha Cave (Gufa)',
+        location: 'Badrinath Road (21 km past Rishikesh)',
+        distanceKm: 259,
+        highlight: 'Ancient Riverbank Cave where Sage Vashistha Meditated',
+        description: 'Tranquil white-sand river beach and sacred subterranean meditation cavern right on the Ganges.',
+        image: '/destinations/rishikesh.webp',
+      },
+    ],
+    hotelGroups: {
+      luxury: [
+        { name: 'Aloha on the Ganges', category: 'hotel', location: 'Tapovan, Rishikesh', distanceKm: 240, image: '/destinations/hotel-resort.webp', highlight: 'Infinity Pool Overlooking Ganges Valley', priceRange: '₹10,500/night' },
+        { name: 'Taj Rishikesh Resort & Spa', category: 'hotel', location: 'Singthali / Byasi, Rishikesh', distanceKm: 265, image: '/destinations/hotel-resort.webp', highlight: 'Ultra-Luxury Himalayan Riverside Haven', priceRange: '₹22,000/night' },
+        { name: 'The Roseate Ganges', category: 'hotel', location: 'Shivpuri, Rishikesh', distanceKm: 255, image: '/destinations/hotel-resort.webp', highlight: 'Boutique Forest Villas & Wellness Retreat', priceRange: '₹18,000/night' },
+      ],
+      medium: [
+        { name: 'Ganga Kinare Heritage Hotel', category: 'hotel', location: 'Virbhadra Road, Rishikesh', distanceKm: 236, image: '/destinations/hotel-resort.webp', highlight: 'Private Riverside Ghat with Daily Evening Aarti', priceRange: '₹4,800/night' },
+        { name: 'Modi Yoga Retreat', category: 'hotel', location: 'Muni Ki Reti, Rishikesh', distanceKm: 237, image: '/destinations/hotel-resort.webp', highlight: 'Holistic Ayurvedic Wellness & River View', priceRange: '₹5,500/night' },
+        { name: 'Divine Resort & Spa', category: 'hotel', location: 'Tapovan, Rishikesh', distanceKm: 239, image: '/destinations/hotel-resort.webp', highlight: 'Direct View of Lakshman Jhula Suspension Bridge', priceRange: '₹4,200/night' },
+      ],
+      budget: [
+        { name: 'Zostel Tapovan Rishikesh', category: 'hotel', location: 'Badrinath Road, Tapovan', distanceKm: 240, image: '/destinations/hotel-resort.webp', highlight: 'Top-Rated Traveler Hostel & Private Rooms', priceRange: '₹1,200/night' },
+        { name: 'Hotel Tapovan Vatika', category: 'hotel', location: 'Tapovan Sarai, Rishikesh', distanceKm: 239, image: '/destinations/hotel-resort.webp', highlight: 'Clean AC Rooms near Ram Jhula & Ashrams', priceRange: '₹1,800/night' },
+        { name: 'Parmarth Niketan Ashram Guest House', category: 'hotel', location: 'Swarg Ashram, Rishikesh', distanceKm: 241, image: '/destinations/hotel-resort.webp', highlight: 'Spiritual Riverfront Ashram Living', priceRange: '₹1,000/night' },
+      ],
+    },
+    places: {
+      restaurants: [
+        { name: 'Cheetal Grand Food Hub', category: 'restaurant', location: 'Khatauli Bypass (NH334)', distanceKm: 99, image: '/destinations/food-plaza.webp', highlight: 'Legendary Paneer Pakoras, Cutlets & Filter Coffee' },
+        { name: 'Jain Shikanji & Highway Treat', category: 'restaurant', location: 'Modinagar / Meerut Bypass', distanceKm: 48, image: '/destinations/food-plaza.webp', highlight: 'Fresh Masala Shikanji & North Indian Snacks' },
+        { name: 'Chotiwala Restaurant', category: 'restaurant', location: 'Swarg Ashram, Rishikesh', distanceKm: 240, image: '/destinations/rishikesh.webp', highlight: 'Classic Vegetarian Dining Landmark' },
+        { name: 'The Sitting Elephant', category: 'restaurant', location: 'Haridwar Road, Rishikesh', distanceKm: 236, image: '/destinations/rishikesh.webp', highlight: 'Rooftop Ganges View Dining' },
+      ],
+      petrolPumps: [
+        { name: 'Indian Oil COCO Fuel Center', category: 'petrol', location: 'Khatauli Bypass (NH334)', distanceKm: 99 },
+        { name: 'Bharat Petroleum Highway Center', category: 'petrol', location: 'Muzaffarnagar Bypass, UP', distanceKm: 126 },
+        { name: 'HPCL Auto Care Centre', category: 'petrol', location: 'Roorkee Bypass, UK', distanceKm: 174 },
+        { name: 'Indian Oil Highway Service Hub', category: 'petrol', location: 'Raiwala (NH334), UK', distanceKm: 224 },
+      ],
+      cngPumps: [
+        { name: 'Indraprastha Gas (IGL) CNG Mega Hub', category: 'cng', location: 'Delhi-Meerut Expressway Exit', distanceKm: 52 },
+        { name: 'Torrent Gas Highway CNG (Navgati Verified)', category: 'cng', location: 'Khatauli Bypass, UP', distanceKm: 96 },
+        { name: 'Green Gas CNG Station (Navgati Verified)', category: 'cng', location: 'Roorkee Highway, UK', distanceKm: 170 },
+        { name: 'Haridwar-Rishikesh Highway CNG Center (Navgati Verified)', category: 'cng', location: 'Jwalapur-Raiwala Corridor', distanceKm: 218 },
+      ],
+      attractions: [
+        { name: 'Ram Jhula & Laxman Jhula', category: 'attraction', location: 'Muni Ki Reti / Swarg Ashram', distanceKm: 238, image: '/destinations/rishikesh.webp', highlight: 'Iconic Iron Suspension Bridges over the Sacred Ganges' },
+        { name: 'Triveni Ghat Evening Maha Aarti', category: 'attraction', location: 'Mayakund, Rishikesh', distanceKm: 236, image: '/destinations/rishikesh.webp', highlight: 'Sacred Confluence of Three Rivers & Grand Evening Aarti' },
+        { name: 'Parmarth Niketan Ganga Aarti', category: 'attraction', location: 'Swarg Ashram, Rishikesh', distanceKm: 241, image: '/destinations/rishikesh.webp', highlight: 'World-Renowned Sunset Aarti with Vedic Chants' },
+        { name: 'Beatles Ashram (Chaurasi Kutia)', category: 'attraction', location: 'Rajaji Tiger Reserve Edge', distanceKm: 242, image: '/destinations/rishikesh.webp', highlight: 'Historic Ashram & Meditation Caves in the Forest' },
+        { name: 'Shivpuri River Rafting Rapid Point', category: 'attraction', location: 'Shivpuri, Rishikesh', distanceKm: 254, image: '/destinations/rishikesh.webp', highlight: 'Grade III/IV Rapids & White Sand Beach Camps' },
+      ],
+    },
+    gallery: [
+      { src: '/destinations/rishikesh.webp', caption: 'Ram Jhula & Holy Ganges', alt: 'Panoramic view of Ram Jhula suspension bridge over the Ganges in Rishikesh' },
+      { src: '/destinations/hotel-resort.webp', caption: 'Riverside Yoga Resorts', alt: 'Tranquil riverside wellness resorts in Rishikesh' },
+      { src: '/destinations/food-plaza.webp', caption: 'Highway Dining at Cheetal Grand', alt: 'Popular highway rest stop on NH334' },
+      { src: '/destinations/heritage-stop.webp', caption: 'Triveni Ghat Evening Aarti', alt: 'Spiritual Ganga Aarti ceremony at Triveni Ghat Rishikesh' },
+    ],
+  },
+
+  // ---------------------------------------------------------------------------
+  // 7. DELHI / NCR TO HALDWANI & KUMAON GATEWAY (Dedicated Master Corridor)
+  // ---------------------------------------------------------------------------
+  'delhi-haldwani': {
+    highway: 'via Delhi-Meerut Expressway, NH9 & Rampur-Rudrapur Corridor',
+    routeChain: 'Delhi / NCR → Hapur Bypass → Gajraula → Moradabad Bypass → Rampur → Bilaspur → Rudrapur → Haldwani (Kathgodam Gateway)',
+    roadType: 'Access-Controlled Expressway, Multi-Lane NH9 & Smooth Terai Highway',
+    weather: {
+      temp: '23°C',
+      condition: 'Pleasant Sub-Himalayan Weather & Clean Air',
+      feelsLike: '22°C',
+    },
+    travelTips: [
+      'Delhi-Meerut Expressway up to Dasna and NH9 onwards provides a fast, 4-lane driving corridor.',
+      'Gajraula Midway (Km 105) is the most trusted food and washroom break point with Bikanervala and KFC.',
+      'Haldwani is the commercial gateway to Kumaon hills, Nainital, Almora, and Kainchi Dham.',
+      'Kathgodam Railway Station and transport hub is just 5 km past Haldwani city center.',
+      'Urgent Taxis yellow-plate commercial cabs are pre-cleared for Uttarakhand state border entry.',
+    ],
+    milestones: [
+      { town: 'Delhi / NCR Departure', km: 0, timeText: '00:00 Hrs', description: 'Doorstep pickup from any residential sector or airport terminal.' },
+      { town: 'Hapur Bypass (NH9)', km: 58, timeText: '00:55 Hrs', description: 'Crossing Eastern Peripheral Expressway intersection.' },
+      { town: 'Gajraula Highway Midway', km: 105, timeText: '01:45 Hrs', description: 'Premier family food hub featuring Bikanervala, Tadka Punjab Ka & clean restrooms.' },
+      { town: 'Moradabad Bypass', km: 165, timeText: '02:40 Hrs', description: 'Smooth elevated bypass avoiding Moradabad city congestion.' },
+      { town: 'Rudrapur Industrial Hub', km: 238, timeText: '04:00 Hrs', description: 'Major manufacturing district and commercial gateway to Uttarakhand.' },
+      { town: 'Haldwani City Center', km: 270, timeText: '04:45 Hrs', description: 'Arrival at Haldwani and Kathgodam base of Kumaon foothills.' },
+    ],
+    alternativeRoutes: [
+      {
+        id: 'fastest-nh9',
+        name: 'Fastest 4-Lane NH9 via Rampur & Rudrapur',
+        highway: 'via DME, Gajraula, Moradabad Bypass, Rampur & Rudrapur',
+        distanceKm: 270,
+        durationText: '4.5 - 5 Hours',
+        tollPlazasCount: 3,
+        tollAmount: 395,
+        description: 'Primary four-lane national highway with wide toll plazas and plentiful midway restaurants.',
+      },
+      {
+        id: 'via-bazpur-kaladhungi',
+        name: 'Scenic Corbett Foothills via Kashipur & Bazpur',
+        highway: 'via Moradabad, Kashipur, Bazpur & Kaladhungi',
+        distanceKm: 280,
+        durationText: '5.5 Hours',
+        tollPlazasCount: 2,
+        tollAmount: 220,
+        description: 'Picturesque rural highway driving past mango orchards and Jim Corbett gateway.',
+      },
+    ],
+    famousFoods: [
+      {
+        name: 'Standard Sweet & Restaurant',
+        location: 'Bareilly Road, Haldwani',
+        dish: 'Pure Khoya Bal Mithai & Kumaoni Singori',
+        description: 'Renowned sweet shop delivering authentic mountain delicacies made with pure hill milk.',
+        image: '/destinations/haldwani.webp',
+      },
+      {
+        name: 'The Kathgodam Food Plaza',
+        location: 'Kathgodam Station Road',
+        dish: 'Piping Hot Mountain Chai & Maggi with Garhwali Buns',
+        description: 'Beloved transit food point for tourists heading up towards Nainital and Bhimtal.',
+        image: '/destinations/haldwani.webp',
+      },
+    ],
+    hiddenGems: [
+      {
+        name: 'Gaula Barrage & River Vista',
+        location: 'Gaula River, Haldwani',
+        distanceKm: 273,
+        highlight: 'Scenic River Reservoir Overlooked by Himalayan Foothills',
+        description: 'Peaceful riverbank picnic attraction on the Gaula River, loved for sunsets and bird watching.',
+        image: '/destinations/haldwani.webp',
+      },
+      {
+        name: 'Hedakhan Ashram & Temple',
+        location: 'Chorgallia Road (5 km from Haldwani)',
+        distanceKm: 275,
+        highlight: 'Spiritual Riverfront Meditation Sanctuary',
+        description: 'Serene ashram nestled amidst tranquil mango groves and flowing stream waters.',
+        image: '/destinations/haldwani.webp',
+      },
+      {
+        name: 'Kathgodam Shivalik Lookout Point',
+        location: 'Kathgodam-Nainital Ascent (Km 2)',
+        distanceKm: 278,
+        highlight: 'First Glimpse of the Towering Kumaon Mountain Ranges',
+        description: 'Panoramic viewpoint overlooking the glowing nighttime lights of Haldwani plains.',
+        image: '/destinations/haldwani.webp',
+      },
+    ],
+    hotelGroups: {
+      luxury: [
+        { name: 'Fortune Walkway Hotel', category: 'hotel', location: 'Nainital Road, Haldwani', distanceKm: 271, image: '/destinations/hotel-resort.webp', highlight: 'Premium ITC Fortune Hotel with Fine Dining', priceRange: '₹6,500/night' },
+        { name: 'Rosewood Hotel Haldwani', category: 'hotel', location: 'Bareilly-Nainital Road', distanceKm: 269, image: '/destinations/hotel-resort.webp', highlight: 'Boutique Comfort with Mountain View Suites', priceRange: '₹4,500/night' },
+      ],
+      medium: [
+        { name: 'Hotel Relax Inn', category: 'hotel', location: 'Kaladhungi Road, Haldwani', distanceKm: 270, image: '/destinations/hotel-resort.webp', highlight: 'Central Location with Family Amenities', priceRange: '₹2,800/night' },
+        { name: 'Hotel Saurabh Candy by Peppermint', category: 'hotel', location: 'Civil Lines, Haldwani', distanceKm: 271, image: '/destinations/hotel-resort.webp', highlight: 'Modern Lifestyle Transit Stay', priceRange: '₹3,200/night' },
+      ],
+      budget: [
+        { name: 'Hotel Kathgodam Residency', category: 'hotel', location: 'Station Road, Kathgodam', distanceKm: 274, image: '/destinations/hotel-resort.webp', highlight: 'Directly Opposite Kathgodam Railway Station', priceRange: '₹1,500/night' },
+        { name: 'Hotel Milan & Restaurant', category: 'hotel', location: 'Bus Stand Road, Haldwani', distanceKm: 269, image: '/destinations/hotel-resort.webp', highlight: 'Affordable & Clean Outstation Transit Room', priceRange: '₹1,200/night' },
+      ],
+    },
+    places: {
+      restaurants: [
+        { name: 'Bikanervala Highway Food Court', category: 'restaurant', location: 'Gajraula, UP (NH9)', distanceKm: 105, image: '/destinations/food-plaza.webp', highlight: 'Pure Veg Meals, Chhole Bhature & Clean Restrooms' },
+        { name: 'Tadka Punjab Ka Family Dhaba', category: 'restaurant', location: 'Gajraula Midway, UP', distanceKm: 108, image: '/destinations/food-plaza.webp', highlight: 'Authentic Dal Makhani & Tandoori Parathas' },
+        { name: 'Standard Sweet & Restaurant', category: 'restaurant', location: 'Bareilly Road, Haldwani', distanceKm: 270, image: '/destinations/haldwani.webp', highlight: 'Famous Kumaoni Sweets & Vegetarian Thali' },
+        { name: 'The Chocolate Room & Cafe', category: 'restaurant', location: 'Nainital Road, Haldwani', distanceKm: 271, image: '/destinations/haldwani.webp', highlight: 'Artisan Coffee, Pastas & Shakes' },
+      ],
+      petrolPumps: [
+        { name: 'Indian Oil COCO Fuel Center', category: 'petrol', location: 'Gajraula Highway (NH9)', distanceKm: 104 },
+        { name: 'Bharat Petroleum Highway Hub', category: 'petrol', location: 'Moradabad Bypass, UP', distanceKm: 156 },
+        { name: 'HP Petrol Pump Swagat Point', category: 'petrol', location: 'Rudrapur Highway, UK', distanceKm: 222 },
+        { name: 'Indian Oil Auto Care', category: 'petrol', location: 'Rudrapur-Haldwani Road, UK', distanceKm: 258 },
+      ],
+      cngPumps: [
+        { name: 'Indraprastha Gas (IGL) CNG Hub', category: 'cng', location: 'Hapur Bypass (NH9)', distanceKm: 55 },
+        { name: 'Torrent Gas Highway CNG (Navgati Verified)', category: 'cng', location: 'Gajraula Bypass, UP', distanceKm: 102 },
+        { name: 'Green Gas CNG Station (Navgati Verified)', category: 'cng', location: 'Moradabad Bypass, UP', distanceKm: 154 },
+        { name: 'Adani Total Gas CNG (Navgati Verified)', category: 'cng', location: 'Rudrapur Industrial Area, UK', distanceKm: 224 },
+        { name: 'Haldwani Transport Nagar CNG Pump (Navgati Verified)', category: 'cng', location: 'Bareilly-Nainital Road, Haldwani', distanceKm: 268 },
+      ],
+      attractions: [
+        { name: 'Gaula Barrage', category: 'attraction', location: 'Gaula River, Haldwani', distanceKm: 273, image: '/destinations/haldwani.webp', highlight: 'Picturesque River Reservoir & Shivalik Mountain Backdrop' },
+        { name: 'Hedakhan Ashram', category: 'attraction', location: 'Chorgallia Road, Haldwani', distanceKm: 275, image: '/destinations/haldwani.webp', highlight: 'Spiritual Riverbank Temple & Mango Grove Retreat' },
+        { name: 'Kathgodam Shivalik Point', category: 'attraction', location: 'Kathgodam Foothills', distanceKm: 278, image: '/destinations/haldwani.webp', highlight: 'Historic Railhead & Gateway into Kumaon Hills' },
+        { name: 'Sheetla Devi Temple', category: 'attraction', location: 'Ranibagh, Haldwani', distanceKm: 276, image: '/destinations/haldwani.webp', highlight: 'Ancient Hilltop Devi Temple on River Confluence' },
+      ],
+    },
+    gallery: [
+      { src: '/destinations/haldwani.webp', caption: 'Gaula Barrage & Kathgodam Hills', alt: 'Haldwani gateway view of Kumaon mountain ranges' },
+      { src: '/destinations/food-plaza.webp', caption: 'Gajraula Midway Highway Stop', alt: 'Food plaza and restaurant stop on Delhi-Haldwani route' },
+      { src: '/destinations/hotel-resort.webp', caption: 'Haldwani Business & Transit Stays', alt: 'Hotels and accommodations in Haldwani' },
+      { src: '/destinations/heritage-stop.webp', caption: 'Sheetla Devi Ranibagh Shrine', alt: 'Historic temple shrine near Kathgodam Haldwani' },
+    ],
+  },
 };
 
 /**
@@ -896,14 +1185,20 @@ export function getRouteCorridorDetails(
     return KNOWN_CORRIDORS[key];
   }
 
-  // Check key matches by destination
+  // 1. Check exact destination corridors
   if (normDest.includes('haridwar')) {
     return KNOWN_CORRIDORS['delhi-haridwar'];
   }
-  if (normDest.includes('nainital') || normDest.includes('haldwani') || normDest.includes('bhimtal') || normDest.includes('kainchi') || normDest.includes('ramnagar') || normDest.includes('corbett') || normDest.includes('almora') || normDest.includes('ranikhet')) {
+  if (normDest.includes('rishikesh') || normDest.includes('tapovan') || normDest.includes('shivpuri')) {
+    return KNOWN_CORRIDORS['delhi-rishikesh'];
+  }
+  if (normDest.includes('haldwani') || normDest.includes('kathgodam')) {
+    return KNOWN_CORRIDORS['delhi-haldwani'];
+  }
+  if (normDest.includes('nainital') || normDest.includes('bhimtal') || normDest.includes('kainchi') || normDest.includes('ramnagar') || normDest.includes('corbett') || normDest.includes('almora') || normDest.includes('ranikhet')) {
     return KNOWN_CORRIDORS['delhi-nainital'];
   }
-  if (normDest.includes('dehradun') || normDest.includes('mussoorie') || normDest.includes('rishikesh') || normDest.includes('roorkee')) {
+  if (normDest.includes('dehradun') || normDest.includes('mussoorie') || normDest.includes('roorkee')) {
     return KNOWN_CORRIDORS['delhi-dehradun'];
   }
   if (normDest.includes('agra') || normDest.includes('mathura') || normDest.includes('vrindavan') || normDest.includes('firozabad')) {
@@ -911,6 +1206,131 @@ export function getRouteCorridorDetails(
   }
   if (normDest.includes('jaipur') || normDest.includes('ajmer') || normDest.includes('pushkar') || normDest.includes('khatu') || normDest.includes('salasar') || normDest.includes('alwar')) {
     return KNOWN_CORRIDORS['delhi-jaipur'];
+  }
+
+  // 2. Intelligent Haridwar-origin route generator
+  if (normOrigin.includes('haridwar')) {
+    const isHill = ['nainital', 'mussoorie', 'shimla', 'manali', 'dharamshala', 'kullu', 'ranikhet', 'almora', 'kausani', 'auli', 'badrinath', 'kedarnath', 'chopta', 'kasol', 'dalhousie'].some((h) => normDest.includes(h));
+    const midpoint = Math.max(25, Math.round(distanceKm / 2));
+
+    return {
+      highway: isHill ? 'via Shivalik Foothills & Hill Highway' : 'via NH334, Delhi-Meerut Expressway / NH9 Corridor',
+      routeChain: `Haridwar (Har Ki Pauri / Roorkee Road) → Roorkee Bypass → Fast Highway Corridor (${midpoint} km) → Regional Toll Bypass → ${destName}`,
+      roadType: isHill ? 'Scenic Mountain Ghats & Well-Maintained Hill Roads' : 'Fast Multi-Lane Highway with Dedicated FASTag Toll Plazas',
+      weather: {
+        temp: isHill ? '18°C' : '24°C',
+        condition: isHill ? 'Cool Mountain Breezes' : 'Pleasant Clear Skies',
+        feelsLike: isHill ? '17°C' : '23°C',
+      },
+      travelTips: [
+        `Start early from Haridwar to beat local pilgrim traffic around Har Ki Pauri and Bhupatwala.`,
+        `Commercial yellow-plate cabs with verified mountain chauffeurs ensure safe driving on both hills and plains.`,
+        `Pre-fitted FASTag guarantees swift transit through all state border and NHAI toll plazas.`,
+        `Complimentary mineral water and sanitized AC cabs on every booking.`,
+        `Doorstep pickup available across all Haridwar ashrams, hotels, and railway station.`,
+      ],
+      alternativeRoutes: [
+        {
+          id: 'primary-haridwar-corridor',
+          name: `Direct Fast Highway from Haridwar to ${destName}`,
+          highway: 'via NH334 / State Express Corridor',
+          distanceKm: distanceKm,
+          durationText: `${Math.round(distanceKm / 50)} - ${Math.round(distanceKm / 45)} Hours`,
+          tollPlazasCount: Math.max(1, Math.min(4, Math.round(distanceKm / 80))),
+          tollAmount: Math.round(distanceKm * 1.2),
+          description: `Fastest connected highway route departing from Haridwar with 24/7 commercial cab support.`,
+        },
+      ],
+      milestones: [
+        { town: 'Haridwar Departure', km: 0, timeText: '0 hr', description: 'Doorstep pickup across Haridwar ashrams, hotels, or railway station.' },
+        { town: 'Roorkee Highway Bypass', km: Math.max(15, Math.round(distanceKm * 0.15)), timeText: '30 - 45 min', description: 'Crossing historic Solani aqueduct and Roorkee corridor.' },
+        { town: 'Midway Fuel & Food Hub', km: midpoint, timeText: `${Math.round(midpoint / 50)} hr`, description: 'Verified family food plaza and clean restrooms.' },
+        { town: `Approach to ${destName}`, km: Math.max(30, Math.round(distanceKm * 0.8)), timeText: `${Math.round((distanceKm * 0.8) / 50)} hr`, description: `Entering ${destName} regional boundary.` },
+        { town: `${destName} Arrival`, km: distanceKm, timeText: `${Math.round(distanceKm / 50)} hr`, description: `Safe doorstep drop at your hotel or destination in ${destName}.` },
+      ],
+      famousFoods: [
+        {
+          name: 'Haridwar Pure Veg Delicacies',
+          location: 'Upper Road / Moti Bazar',
+          dish: 'Kachori with Aloo Sabzi & Hot Jalebi',
+          description: 'Famous Haridwar morning breakfast celebrated along the holy ghats.',
+          image: '/destinations/food-plaza.webp',
+        },
+      ],
+      hiddenGems: [
+        {
+          name: 'Chandi Devi Neel Parvat View',
+          location: 'Neel Parvat, Haridwar',
+          distanceKm: 4,
+          highlight: 'Scenic Ropeway & Panoramic Ganges Vista',
+          description: 'Ancient hill shrine offering expansive aerial views of the sacred Ganges winding through the plains.',
+          image: '/destinations/haridwar.webp',
+        },
+      ],
+      hotelGroups: {
+        budget: [
+          {
+            name: `${destName} Budget Stay`,
+            category: 'hotel',
+            location: `${destName} City Center`,
+            distanceKm: distanceKm,
+            image: '/destinations/hotel-resort.webp',
+            highlight: 'Clean AC rooms, 24x7 desk & safe parking',
+            priceRange: '₹1,200 - ₹2,000 / night',
+          },
+        ],
+        medium: [
+          {
+            name: `${destName} Comfort Inn`,
+            category: 'hotel',
+            location: `${destName} Main Road`,
+            distanceKm: distanceKm,
+            image: '/destinations/hotel-resort.webp',
+            highlight: 'Modern family rooms & restaurant',
+            priceRange: '₹2,500 - ₹4,500 / night',
+          },
+        ],
+        luxury: [
+          {
+            name: `${destName} Grand Heritage Resort`,
+            category: 'hotel',
+            location: `${destName} Prime Zone`,
+            distanceKm: distanceKm,
+            image: '/destinations/hotel-resort.webp',
+            highlight: 'Premium hospitality & fine dining',
+            priceRange: '₹5,500+ / night',
+          },
+        ],
+      },
+      places: {
+        restaurants: [
+          { name: 'Cheetal Grand Khatauli', category: 'restaurant', location: 'NH334 Highway Midway', distanceKm: 115, image: '/destinations/food-plaza.webp', highlight: 'Famous Highway Cutlets & Filter Coffee' },
+          { name: 'Jain Shikanji Highway Treat', category: 'restaurant', location: 'Modinagar / Meerut Corridor', distanceKm: 165, image: '/destinations/food-plaza.webp', highlight: 'Fresh Masala Shikanji & Snacks' },
+          { name: 'Hoshiyarpuri Pure Veg', category: 'restaurant', location: 'Upper Road, Haridwar', distanceKm: 2, image: '/destinations/food-plaza.webp', highlight: 'Authentic Pure Vegetarian North Indian Thali' },
+        ],
+        petrolPumps: [
+          { name: 'Indian Oil Highway Service Center', category: 'petrol', location: 'Haridwar-Roorkee Highway', distanceKm: 12 },
+          { name: 'Bharat Petroleum Highway Center', category: 'petrol', location: 'Roorkee Bypass, UK', distanceKm: 32 },
+          { name: 'HPCL Auto Care Centre', category: 'petrol', location: 'Muzaffarnagar Bypass, UP', distanceKm: 85 },
+        ],
+        cngPumps: [
+          { name: 'Haridwar City CNG Station (Navgati Verified)', category: 'cng', location: 'Jwalapur Bypass, Haridwar', distanceKm: 6 },
+          { name: 'Green Gas CNG Station (Navgati Verified)', category: 'cng', location: 'Roorkee Highway, UK', distanceKm: 35 },
+          { name: 'Torrent Gas Highway CNG (Navgati Verified)', category: 'cng', location: 'Khatauli Bypass, UP', distanceKm: 112 },
+          { name: 'Indraprastha Gas (IGL) Mega Station', category: 'cng', location: 'Meerut Expressway Exit', distanceKm: 160 },
+        ],
+        attractions: [
+          { name: 'Har Ki Pauri Ghat', category: 'attraction', location: 'Haridwar Center', distanceKm: 1, image: '/destinations/haridwar.webp', highlight: 'Sacred Ganga Aarti & Pilgrimage Landmark' },
+          { name: 'Mansa Devi Temple', category: 'attraction', location: 'Bilwa Parvat, Haridwar', distanceKm: 3, image: '/destinations/haridwar.webp', highlight: 'Historic Hilltop Shrine with Cable Car' },
+        ],
+      },
+      gallery: [
+        { src: '/destinations/haridwar.webp', caption: 'Har Ki Pauri Haridwar', alt: 'Sacred Har Ki Pauri Ganga Ghat in Haridwar' },
+        { src: getDestinationImage(destName), caption: `${destName} Landmark`, alt: `${destName} landmark destination vista` },
+        { src: '/destinations/food-plaza.webp', caption: 'Midway Highway Stop', alt: 'Midway food plaza and restaurant stop' },
+        { src: '/destinations/hotel-resort.webp', caption: 'Premium Cab Comfort', alt: 'Urgent Taxis verified outstation travel' },
+      ],
+    };
   }
 
   // Dynamic corridor generator for any city in India
