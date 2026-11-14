@@ -658,8 +658,9 @@ export function calculateRoundTripFare(
   const configuredRate = ROUND_TRIP_PER_KM_RATES[normCategory] || 12;
   const vehicleRate = input.vehicleRate && input.vehicleRate > 0 ? input.vehicleRate : configuredRate;
 
-  // Distance Fare calculation
+  // Distance Fare calculation (Base Fare)
   const distanceFare = billableKm * vehicleRate;
+  const baseFare = distanceFare;
 
   // Driver Allowance (Standard commercial daily allowance for outstation round-trip)
   const driverAllowancePerDay = DRIVER_ALLOWANCE_PER_DAY[normCategory] || 400;
@@ -668,13 +669,14 @@ export function calculateRoundTripFare(
   // Night Pickup / Travel Allowance (10:00 PM to 06:00 AM)
   let isNightPickup = false;
   let nightCharges = 0;
-  const pTime = timeline.pickupTime;
-  const rTime = timeline.returnTime;
-  if (pTime || rTime) {
+  // Only evaluate night charges if explicit pickupTime or returnTime was provided
+  const explicitPickupTime = input.pickupTime;
+  const explicitReturnTime = input.returnTime;
+  if (explicitPickupTime || explicitReturnTime) {
     try {
-      const [pH] = (pTime || '09:00').split(':').map(Number);
-      const [rH] = (rTime || '23:59').split(':').map(Number);
-      if (pH >= 22 || pH < 6 || rH >= 22 || rH < 6) {
+      const [pH] = (explicitPickupTime || '09:00').split(':').map(Number);
+      const [rH] = (explicitReturnTime || '12:00').split(':').map(Number);
+      if ((explicitPickupTime && (pH >= 22 || pH < 6)) || (explicitReturnTime && (rH >= 22 || rH < 6))) {
         isNightPickup = true;
         const nightRate = normCategory.includes('tempo') || normCategory.includes('urbania') || normCategory.includes('bus')
           ? 400
@@ -688,11 +690,10 @@ export function calculateRoundTripFare(
     }
   }
 
-  // Subtotal base fare
-  const baseFare = distanceFare + totalDriverAllowance;
-  // Statutory 5% GST
-  const estimatedGst = Math.round((baseFare + nightCharges) * 0.05);
-  const totalFare = baseFare + nightCharges + estimatedGst;
+  // Confirmed total round-trip fare
+  const totalFare = distanceFare + totalDriverAllowance + nightCharges;
+  // Statutory 5% GST itemization
+  const estimatedGst = Math.round(totalFare * 0.05);
 
   // 30% Advance Token & 70% Driver Balance
   const tokenAmount = calculateAdvanceToken(totalFare, ADVANCE_PERCENT);

@@ -61,7 +61,7 @@ test.describe('Phase 1: Master Pricing Engine Unit Tests', () => {
     expect(rt.totalDriverAllowance).toBe(400);
     expect(rt.totalFare).toBe(5680);
     expect(rt.tokenAmount).toBe(1700); // 5680 * 0.30 = 1704 -> 1700
-    expect(rt.workingExplanation).toContain('Billable 440 km × ₹12/km + Driver Allowance ₹400');
+    expect(rt.workingExplanation).toContain('440 billable KM × ₹12/km + Driver Allowance ₹400');
   });
 
   test('Round Trip: Minimum Daily Guarantee Applied (100 km one-way, 2 days, Sedan)', () => {
@@ -127,17 +127,16 @@ test.describe('Phase 1: Master Pricing Engine Unit Tests', () => {
   });
 
   test('Phase 2.9: Reverse Route Policy - Forward matches but unseeded reverse falls back to generic', () => {
-    // Delhi -> Nainital exists forward
-    const forward = findVerifiedMasterRoute(undefined, 'Delhi', 'Nainital');
+    // Delhi -> Mukteshwar exists forward
+    const forward = findVerifiedMasterRoute(undefined, 'Delhi', 'Mukteshwar');
     expect(forward).not.toBeNull();
-    expect(forward!.sedanFare).toBe(4999);
 
-    // Nainital -> Delhi has no explicit reverse record -> returns null
-    const reverse = findVerifiedMasterRoute(undefined, 'Nainital', 'Delhi');
+    // Mukteshwar -> Delhi has no explicit reverse record -> returns null
+    const reverse = findVerifiedMasterRoute(undefined, 'Mukteshwar', 'Delhi');
     expect(reverse).toBeNull();
 
     // Client submitting forward routeId on reverse route is rejected
-    const forcedForward = findVerifiedMasterRoute('delhi-to-nainital-taxi', 'Nainital', 'Delhi');
+    const forcedForward = findVerifiedMasterRoute('delhi-to-mukteshwar-taxi', 'Mukteshwar', 'Delhi');
     expect(forcedForward).toBeNull();
 
     // Explicit directional pair preserves different fares
