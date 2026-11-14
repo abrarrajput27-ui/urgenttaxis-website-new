@@ -276,4 +276,24 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(footerContent).toContain('Designed by');
     expect(footerContent).toContain('Mantsha Khan');
   });
+
+  test('Test 12: Complete Sitemap Coverage (1,000+ URLs) & Google Search Console Verification', () => {
+    // 1. Verify sitemap.ts includes all master routes without restrictive filtering
+    const sitemapContent = fs.readFileSync('frontend/app/sitemap.ts', 'utf8');
+    expect(sitemapContent).not.toContain('verifiedSet.has');
+    expect(sitemapContent).toContain('masterRoutesData.map');
+
+    // 2. Verify robots.ts specifies sitemap.xml
+    const robotsContent = fs.readFileSync('frontend/app/robots.ts', 'utf8');
+    expect(robotsContent).toContain('sitemap.xml');
+    expect(robotsContent).toContain("allow: '/'");
+
+    // 3. Verify Google Search Console verification files
+    const htmlVerification = fs.readFileSync('frontend/public/googled9fc2f68a802d19f.html', 'utf8');
+    expect(htmlVerification).toContain('googled9fc2f68a802d19f.html');
+
+    const layoutContent = fs.readFileSync('frontend/app/layout.tsx', 'utf8');
+    expect(layoutContent).toContain('verification');
+    expect(layoutContent).toContain('google:');
+  });
 });
