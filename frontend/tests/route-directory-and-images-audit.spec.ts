@@ -47,8 +47,8 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
       }
     }
 
-    // User asked for extensive village and city coverage (minimum 1500+ per state, 4000+ total)
-    expect(totalDestinations).toBeGreaterThanOrEqual(4000);
+    // User asked for extensive village and city coverage (minimum 1500+ per state, 5000+ total)
+    expect(totalDestinations).toBeGreaterThanOrEqual(5000);
   });
 
   test('Test 2: Interconnected Departure Origins & Haridwar Hub in Chips', () => {
@@ -158,6 +158,17 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(chdCorridor.highway).toContain('NH-44');
     expect(chdCorridor.places.cngPumps.some(p => p.highlight?.includes('Navgati App Verified'))).toBe(true);
 
+    // Delhi to Amritsar master corridor
+    const asrCorridor = getRouteCorridorDetails('Delhi', 'Amritsar', 450);
+    expect(asrCorridor.highway).toContain('NH-44');
+    expect(asrCorridor.places.attractions.some(a => a.name.includes('Golden Temple'))).toBe(true);
+    expect(asrCorridor.places.cngPumps.some(p => p.highlight?.includes('Navgati App Verified'))).toBe(true);
+
+    // Delhi to Shimla master corridor
+    const shmCorridor = getRouteCorridorDetails('Delhi', 'Shimla', 345);
+    expect(shmCorridor.highway).toContain('Himalayan Expressway');
+    expect(shmCorridor.famousFoods?.some(f => f.dish.includes('Siddu'))).toBe(true);
+
     // Delhi to Lucknow master corridor
     const lkoCorridor = getRouteCorridorDetails('Delhi', 'Lucknow', 555);
     expect(lkoCorridor.highway).toContain('Agra-Lucknow Expressway');
@@ -191,5 +202,31 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     const bknCorridor = getRouteCorridorDetails('Delhi', 'Bikaner', 460);
     expect(bknCorridor.highway).toContain('NE4');
     expect(bknCorridor.famousFoods?.[0].dish).toContain('Dal Baati');
+  });
+
+  test('Test 10: Distinct Landmark WebP Images for Major Regional Hubs', () => {
+    const suratImg = getDestinationImage('Surat');
+    const vadodaraImg = getDestinationImage('Vadodara');
+    const shirdiImg = getDestinationImage('Shirdi');
+    const nashikImg = getDestinationImage('Nashik');
+    const darjeelingImg = getDestinationImage('Darjeeling');
+    const siliguriImg = getDestinationImage('Siliguri');
+    const durgapurImg = getDestinationImage('Durgapur');
+    const asansolImg = getDestinationImage('Asansol');
+
+    expect(suratImg).toBe('/destinations/surat.webp');
+    expect(vadodaraImg).toBe('/destinations/vadodara.webp');
+    expect(shirdiImg).toBe('/destinations/shirdi.webp');
+    expect(nashikImg).toBe('/destinations/nashik.webp');
+    expect(darjeelingImg).toBe('/destinations/darjeeling.webp');
+    expect(siliguriImg).toBe('/destinations/siliguri.webp');
+    expect(durgapurImg).toBe('/destinations/durgapur.webp');
+    expect(asansolImg).toBe('/destinations/asansol.webp');
+
+    // Verify strict isolation across neighboring cities
+    expect(suratImg).not.toEqual(vadodaraImg);
+    expect(shirdiImg).not.toEqual(nashikImg);
+    expect(darjeelingImg).not.toEqual(siliguriImg);
+    expect(durgapurImg).not.toEqual(asansolImg);
   });
 });

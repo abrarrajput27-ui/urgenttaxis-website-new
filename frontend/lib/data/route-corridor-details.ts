@@ -1474,6 +1474,194 @@ export const KNOWN_CORRIDORS: Record<string, CorridorDetail> = {
     ],
   },
 
+
+  // ---------------------------------------------------------------------------
+  // 11. DELHI / NCR TO AMRITSAR (Master Corridor)
+  // ---------------------------------------------------------------------------
+  'delhi-amritsar': {
+    highway: 'via NH-44 Grand Trunk Road (GT Road 6-Lane Expressway)',
+    routeChain: 'Delhi / NCR → Murthal (Km 48) → Panipat (Km 92) → Karnal (Km 130) → Ambala Cantt (Km 200) → Ludhiana Flyover (Km 310) → Phagwara → Jalandhar Bypass (Km 370) → Beas Dera → Amritsar Golden Temple (Km 450)',
+    roadType: 'High-Speed 6-Lane Access-Controlled NH-44 GT Highway with Flyovers & Grade Separators',
+    weather: {
+      temp: '21°C',
+      condition: 'Clear Highway Skies & Fresh North Plains Air',
+      feelsLike: '20°C',
+    },
+    travelTips: [
+      'Direct 6-lane Grand Trunk Road corridor connecting Delhi with the spiritual capital of Punjab.',
+      'Iconic midway food stops: Amrik Sukhdev Murthal (Km 48), Haveli Karnal (Km 130), and Lucky Dhaba Jalandhar (Km 370).',
+      'Equipped with verified FASTag for electronic toll plaza passage at Panipat, Gharaunda, Sambhu, and Ladhowal.',
+      'Doorstep drop across Golden Temple area, Ranjit Avenue, Mall Road, and Sri Guru Ram Dass Jee Airport.',
+    ],
+    alternativeRoutes: [
+      {
+        id: 'nh44-amritsar-direct',
+        name: 'Primary NH-44 Grand Trunk Highway',
+        highway: 'via NH-44 GT Road',
+        distanceKm: 450,
+        durationText: '7 - 7.5 Hours',
+        tollPlazasCount: 5,
+        tollAmount: 620,
+        description: 'Fastest 6-lane national highway passing through Panipat, Ambala, Ludhiana and Jalandhar.',
+      },
+    ],
+    milestones: [
+      { town: 'Delhi / NCR Departure', km: 0, timeText: '0 hr', description: 'Doorstep pickup across Delhi NCR.' },
+      { town: 'Murthal Paratha Hub', km: 48, timeText: '45 mins', description: 'Famous 24x7 dhabas with white butter parathas.' },
+      { town: 'Karnal Haveli Midway', km: 130, timeText: '2.2 hr', description: 'Premier midway refreshment stop with modern restrooms.' },
+      { town: 'Ambala Cantt Flyover', km: 200, timeText: '3.2 hr', description: 'Major twin-city junction connecting Haryana & Punjab.' },
+      { town: 'Ludhiana Elevated Highway', km: 310, timeText: '5 hr', description: 'Industrial hub with seamless elevated bypass.' },
+      { town: 'Jalandhar Bypass', km: 370, timeText: '6 hr', description: 'Sports capital bypass onto Beas corridor.' },
+      { town: 'Amritsar Golden Temple', km: 450, timeText: '7.5 hr', description: 'Arrival at the sacred holy city.' },
+    ],
+    hotelGroups: {
+      budget: [
+        { name: 'Hotel City Park Amritsar', category: 'hotel', location: 'Near Town Hall, Amritsar', distanceKm: 450, image: '/destinations/hotel-resort.webp', highlight: 'Walking distance to Golden Temple, clean AC rooms', priceRange: '₹1,500 - ₹2,400 / night' },
+      ],
+      medium: [
+        { name: 'Fairfield by Marriott Amritsar', category: 'hotel', location: 'Albert Road, Amritsar', distanceKm: 452, image: '/destinations/hotel-resort.webp', highlight: 'Modern international business hotel with outdoor pool', priceRange: '₹3,800 - ₹6,000 / night' },
+        { name: 'Hyatt Regency Amritsar', category: 'hotel', location: 'MBM Farms, GT Road', distanceKm: 448, image: '/destinations/hotel-resort.webp', highlight: 'Premium luxury, spa & multi-cuisine restaurant', priceRange: '₹5,500 - ₹8,500 / night' },
+      ],
+      luxury: [
+        { name: 'Taj Swarna Amritsar', category: 'hotel', location: 'Majitha Verka Bypass, Amritsar', distanceKm: 453, image: '/destinations/hotel-resort.webp', highlight: '5-star palatial luxury by IHCL with signature fine dining', priceRange: '₹8,500 - ₹20,000 / night' },
+      ],
+    },
+    famousFoods: [
+      { name: 'Authentic Amritsari Kulcha with Chole', location: 'Maqbool Road / Hall Bazar', dish: 'Crispy Tandoori Stuffed Kulcha with Fresh Desi Makhan', description: 'Multi-layered crispy tandoori bread filled with spiced potato and paneer, served with spicy chole and tamarind chutney.', image: '/destinations/food-plaza.webp' },
+      { name: 'Kesar Da Dhaba Heritage Dal Makhani', location: 'Chowk Passian, Old Amritsar', dish: 'Mah Ki Dal slow-cooked for 12 hours with Desi Ghee', description: 'Century-old historic recipe founded in 1916, renowned across the subcontinent.', image: '/destinations/food-plaza.webp' },
+      { name: 'Gian Chand Lassi & Phirni', location: 'Opposite Regent Cinema, Amritsar', dish: 'Thick Creamy Malai Lassi & Kesar Phirni', description: 'Frothy churned yogurt served in clay kulhads with a thick layer of clotted cream.', image: '/destinations/food-plaza.webp' },
+    ],
+    hiddenGems: [
+      { name: 'Attari-Wagah Border Beating Retreat', location: 'Attari Border Highway (NH-3)', distanceKm: 478, highlight: 'Electrifying Daily Flag Lowering Ceremony with Patriotic Fervor', description: 'World-famous ceremonial military drill conducted by BSF and Pakistan Rangers at sunset.', image: '/destinations/amritsar.webp' },
+      { name: 'Gobindgarh Fort Heritage Complex', location: 'Old Cantt Road, Amritsar', distanceKm: 451, highlight: 'Historic 18th Century Fortress of Maharaja Ranjit Singh', description: 'Magnificent restored military fort featuring 7D Toshakhana coin museum and light-and-sound shows.', image: '/destinations/amritsar.webp' },
+    ],
+    places: {
+      restaurants: [
+        { name: 'Amrik Sukhdev Dhaba', category: 'restaurant', location: 'Murthal NH-44 (Km 48)', distanceKm: 48, image: '/destinations/food-plaza.webp', highlight: 'World-Famous 24x7 Highway Dhaba & Bakery' },
+        { name: 'Haveli Heritage Complex', category: 'restaurant', location: 'Karnal NH-44 (Km 130)', distanceKm: 130, image: '/destinations/food-plaza.webp', highlight: 'Iconic Punjabi Village Dhaba & Clean Restrooms' },
+        { name: 'Lucky Dhaba', category: 'restaurant', location: 'Jalandhar Bypass NH-44', distanceKm: 370, image: '/destinations/food-plaza.webp', highlight: 'Famous Traditional Dal Makhani & Fresh Naan' },
+        { name: 'Kesar Da Dhaba', category: 'restaurant', location: 'Chowk Passian, Amritsar', distanceKm: 450, image: '/destinations/food-plaza.webp', highlight: 'Legendary Century-Old Heritage Vegetarian Dining' },
+      ],
+      petrolPumps: [
+        { name: 'Indian Oil COCO Mega Center', category: 'petrol', location: 'Murthal NH-44', distanceKm: 52 },
+        { name: 'Bharat Petroleum Highway Center', category: 'petrol', location: 'Karnal Midway', distanceKm: 132 },
+        { name: 'HPCL Auto Care Centre', category: 'petrol', location: 'Ludhiana Bypass', distanceKm: 312 },
+        { name: 'Indian Oil Highway Service Hub', category: 'petrol', location: 'Jalandhar-Amritsar Highway', distanceKm: 395 },
+      ],
+      cngPumps: [
+        { name: 'Indraprastha Gas (IGL) Sonipat Hub (Navgati Verified)', category: 'cng', location: 'Murthal Bypass (NH-44)', distanceKm: 49, highlight: 'Navgati App Verified: High Pressure (205 Bar)' },
+        { name: 'Gujarat Gas Mega CNG Station (Navgati Verified)', category: 'cng', location: 'Karnal Midway (NH-44)', distanceKm: 129, highlight: 'Navgati App Verified: High Pressure (210 Bar) & Fast Queue' },
+        { name: 'Torrent Gas Highway CNG (Navgati Verified)', category: 'cng', location: 'Ambala Cantt Bypass', distanceKm: 199, highlight: 'Navgati App Verified: Quick Fill & Zero Queue' },
+        { name: 'IOCL Highway CNG Center (Navgati Verified)', category: 'cng', location: 'Ludhiana GT Road (Km 310)', distanceKm: 311, highlight: 'Navgati App Verified: 24x7 Dispenser & Fast Flow' },
+        { name: 'GAIL Gas / BPCL Auto CNG (Navgati Verified)', category: 'cng', location: 'Amritsar Bypass (NH-44)', distanceKm: 442, highlight: 'Navgati App Verified: 210 Bar Quick Fill & Digital Payment' },
+      ],
+      attractions: [
+        { name: 'Sri Harmandir Sahib (Golden Temple)', category: 'attraction', location: 'Heritage Street, Amritsar', distanceKm: 450, image: '/destinations/amritsar.webp', highlight: 'Most Sacred Sikh Gurudwara & Spiritual Wonder of the World' },
+        { name: 'Jallianwala Bagh National Memorial', category: 'attraction', location: 'Near Golden Temple, Amritsar', distanceKm: 450, image: '/destinations/amritsar.webp', highlight: 'Historic Freedom Struggle Memorial & Eternal Flame' },
+        { name: 'Attari-Wagah Border', category: 'attraction', location: 'Wagah Border Highway', distanceKm: 478, image: '/destinations/amritsar.webp', highlight: 'World-Renowned International Border Retreat Ceremony' },
+      ],
+    },
+    gallery: [
+      { src: '/destinations/amritsar.webp', caption: 'Golden Temple Harmandir Sahib', alt: 'Sacred golden dome of Harmandir Sahib Amritsar' },
+      { src: '/destinations/food-plaza.webp', caption: 'Karnal Haveli Midway Stop', alt: 'Punjabi dhaba midway stop on NH-44' },
+      { src: '/destinations/hotel-resort.webp', caption: 'Premium Cab Fleet Comfort', alt: 'Urgent Taxis verified outstation travel' },
+      { src: '/destinations/delhi.webp', caption: 'Delhi Departure onto GT Road', alt: 'Highway departure from Delhi onto NH-44' },
+    ],
+  },
+
+  // ---------------------------------------------------------------------------
+  // 12. DELHI / NCR TO SHIMLA (Master Mountain Corridor)
+  // ---------------------------------------------------------------------------
+  'delhi-shimla': {
+    highway: 'via NH-44 & Himalayan Expressway (NH-5 Mountain Highway)',
+    routeChain: 'Delhi / NCR → Murthal → Panipat → Karnal → Ambala → Zirakpur Flyover → Himalayan Expressway Toll (Km 260) → Parwanoo Timber Trail → Dharampur → Solan Bypass → Kandaghat → Shoghi → Shimla Mall Road (Km 345)',
+    roadType: '6-Lane GT Road (Plains) & 4-Lane Engineered Mountain Expressway (Himalayan Expressway NH-5)',
+    weather: {
+      temp: '16°C',
+      condition: 'Crisp Alpine Himalayan Air & Cool Pine Mist',
+      feelsLike: '15°C',
+    },
+    travelTips: [
+      'Engineered 4-lane mountain expressway drastically reduces travel time and eliminates sharp hairpin bends.',
+      'Experienced mountain-certified commercial chauffeurs with extensive driving experience in fog and hill terrain.',
+      'Last major plains CNG fueling point available at Parwanoo / Kalka foothills before starting hill climb.',
+      'Doorstep drop across Shimla Mall Road lift, Victory Tunnel, Lakkar Bazar, Sanjauli, and Chhota Shimla.',
+    ],
+    alternativeRoutes: [
+      {
+        id: 'himalayan-exp-nh5',
+        name: 'Himalayan Expressway via Solan Bypass',
+        highway: 'via NH-44 & NH-5 (Himalayan Expressway)',
+        distanceKm: 345,
+        durationText: '6.5 - 7 Hours',
+        tollPlazasCount: 4,
+        tollAmount: 480,
+        description: 'Modern 4-lane mountain highway with flyovers and bypass tunnels avoiding Solan city traffic.',
+      },
+    ],
+    milestones: [
+      { town: 'Delhi / NCR Departure', km: 0, timeText: '0 hr', description: 'Doorstep pickup across Delhi NCR.' },
+      { town: 'Murthal Paratha Hub', km: 48, timeText: '45 mins', description: 'Breakfast stop with piping hot stuffed parathas.' },
+      { town: 'Karnal Midway', km: 130, timeText: '2.2 hr', description: 'Clean restrooms and family food plaza.' },
+      { town: 'Himalayan Expressway Toll (Parwanoo)', km: 260, timeText: '4.5 hr', description: 'Entering Himachal foothills with Timber Trail cable car.' },
+      { town: 'Dharampur / Solan Bypass', km: 295, timeText: '5.5 hr', description: 'Scenic pine valleys and Giani Da Dhaba.' },
+      { town: 'Shoghi Pine Ridge', km: 330, timeText: '6.2 hr', description: 'Refreshing mountain vistas approaching Shimla.' },
+      { town: 'Shimla Mall Road / Lift', km: 345, timeText: '7 hr', description: 'Safe arrival at Queen of the Hills.' },
+    ],
+    hotelGroups: {
+      budget: [
+        { name: 'Hotel Pineview Shimla', category: 'hotel', location: 'Circular Road, Shimla', distanceKm: 345, image: '/destinations/hotel-resort.webp', highlight: 'Valley view rooms, 24x7 hot water & room service', priceRange: '₹1,800 - ₹2,800 / night' },
+      ],
+      medium: [
+        { name: 'Clarkes Hotel Heritage', category: 'hotel', location: 'Mall Road, Shimla', distanceKm: 346, image: '/destinations/hotel-resort.webp', highlight: 'Grand colonial heritage hotel since 1898 with fine dining', priceRange: '₹5,500 - ₹8,500 / night' },
+        { name: 'Hotel Combermere', category: 'hotel', location: 'Opposite Tourism Lift, The Mall', distanceKm: 346, image: '/destinations/hotel-resort.webp', highlight: 'Direct elevator access to Mall Road with gymnasium and spa', priceRange: '₹4,500 - ₹7,500 / night' },
+      ],
+      luxury: [
+        { name: 'The Oberoi Cecil Shimla', category: 'hotel', location: 'Chaura Maidan, Shimla', distanceKm: 347, image: '/destinations/hotel-resort.webp', highlight: 'Iconic 5-star colonial heritage luxury by Oberoi with indoor heated pool', priceRange: '₹14,000 - ₹32,000 / night' },
+        { name: 'Wildflower Hall Mashobra', category: 'hotel', location: 'Charabra, Mashobra Shimla', distanceKm: 358, image: '/destinations/hotel-resort.webp', highlight: 'Exquisite mountain resort at 8,250 ft with outdoor heated jacuzzi overlooking Himalayas', priceRange: '₹22,000 - ₹45,000 / night' },
+      ],
+    },
+    famousFoods: [
+      { name: 'Traditional Himachali Siddu', location: 'The Ridge / Lower Bazar, Shimla', dish: 'Steamed Wheat Siddu with Walnut & Desi Ghee dip', description: 'Nutritious traditional steamed bread stuffed with spiced poppy seeds and dry fruits, served with generous pure ghee.', image: '/destinations/food-plaza.webp' },
+      { name: 'Himachali Dham Thali', location: 'Himachali Rasoi, Mall Road', dish: 'Chana Madra, Sepu Vadi, Khatta & Meetha Bhaat', description: 'Authentic festive feast prepared by traditional Botis without onion and garlic.', image: '/destinations/food-plaza.webp' },
+      { name: 'Tibetan Steamed Momos & Thukpa', location: 'Tibetan Market, The Ridge', dish: 'Juicy Vegetable & Chicken Momos with Spicy Dip', description: 'Hot comforting Tibetan broth soup and handmade dumplings in chilly mountain air.', image: '/destinations/food-plaza.webp' },
+    ],
+    hiddenGems: [
+      { name: 'Jakhoo Hill & Ropeway', location: 'Jakhoo Peak (Highest Point 8,050 ft)', distanceKm: 348, highlight: 'Aerial Cable Car & 108-Foot Colossal Hanuman Statue', description: 'Highest mountain peak in Shimla offering breathtaking panoramic views of snow-capped Shivalik ranges.', image: '/destinations/shimla.webp' },
+      { name: 'Annandale & Army Heritage Museum', location: 'Annandale Valley, Shimla', distanceKm: 349, highlight: 'Lush Green Glade, Helipad & Historic Military Museum', description: 'Historic playground surrounded by tall deodar trees housing rare military trophies and historical artifacts.', image: '/destinations/shimla.webp' },
+    ],
+    places: {
+      restaurants: [
+        { name: 'Amrik Sukhdev Dhaba', category: 'restaurant', location: 'Murthal NH-44', distanceKm: 48, image: '/destinations/food-plaza.webp', highlight: 'Iconic 24x7 Breakfast Stop' },
+        { name: 'Giani Da Dhaba', category: 'restaurant', location: 'Dharampur Solan (NH-5)', distanceKm: 285, image: '/destinations/food-plaza.webp', highlight: 'Legendary Highway Dhaba on Mountain Highway' },
+        { name: 'Timber Trail Heights Restaurant', category: 'restaurant', location: 'Parwanoo Foothills', distanceKm: 265, image: '/destinations/food-plaza.webp', highlight: 'Scenic Valley Views & Multi-Cuisine Buffet' },
+        { name: 'Himachali Rasoi', category: 'restaurant', location: 'Middle Bazar, Shimla', distanceKm: 346, image: '/destinations/food-plaza.webp', highlight: 'Authentic Traditional Pahadi Dining Experience' },
+      ],
+      petrolPumps: [
+        { name: 'Indian Oil COCO Fuel Center', category: 'petrol', location: 'Karnal Midway', distanceKm: 132 },
+        { name: 'Bharat Petroleum Highway Center', category: 'petrol', location: 'Zirakpur Flyover', distanceKm: 242 },
+        { name: 'HPCL Auto Care Parwanoo', category: 'petrol', location: 'Himalayan Expressway Toll', distanceKm: 262 },
+        { name: 'Indian Oil High Altitude Pump', category: 'petrol', location: 'Solan Bypass (NH-5)', distanceKm: 305 },
+      ],
+      cngPumps: [
+        { name: 'Indraprastha Gas (IGL) Sonipat Hub (Navgati Verified)', category: 'cng', location: 'Murthal Bypass (NH-44)', distanceKm: 49, highlight: 'Navgati App Verified: High Pressure (205 Bar)' },
+        { name: 'Gujarat Gas Mega CNG (Navgati Verified)', category: 'cng', location: 'Karnal Midway (NH-44)', distanceKm: 129, highlight: 'Navgati App Verified: High Pressure (210 Bar)' },
+        { name: 'Torrent Gas Highway Station (Navgati Verified)', category: 'cng', location: 'Ambala Cantt Bypass', distanceKm: 199, highlight: 'Navgati App Verified: 24x7 Dispenser' },
+        { name: 'Torrent Gas Parwanoo Foothill CNG (Navgati Verified)', category: 'cng', location: 'Parwanoo Kalka Foothills', distanceKm: 264, highlight: 'Navgati App Verified: 200 Bar pressure (Last Plains CNG Point)' },
+      ],
+      attractions: [
+        { name: 'The Ridge & Christ Church', category: 'attraction', location: 'The Ridge, Shimla', distanceKm: 346, image: '/destinations/shimla.webp', highlight: 'Iconic Neo-Gothic 1857 Church & Snow Mountain Vistas' },
+        { name: 'Mall Road & Lakkar Bazar', category: 'attraction', location: 'Mall Road, Shimla', distanceKm: 346, image: '/destinations/shimla.webp', highlight: 'Pedestrian Boulevard with Wooden Handicrafts' },
+        { name: 'Viceregal Lodge (IIAS)', category: 'attraction', location: 'Observatory Hill, Shimla', distanceKm: 348, image: '/destinations/shimla.webp', highlight: 'Historic British Viceregal Residence & Botanical Gardens' },
+      ],
+    },
+    gallery: [
+      { src: '/destinations/shimla.webp', caption: 'Christ Church & The Ridge Shimla', alt: 'Historic Christ Church on The Ridge Shimla' },
+      { src: '/destinations/food-plaza.webp', caption: 'Mountain Highway Food Stop', alt: 'Wayside restaurant with valley views on NH-5' },
+      { src: '/destinations/hotel-resort.webp', caption: 'Luxury Alpine Resort Hospitality', alt: 'Comfortable mountain resort in Shimla' },
+      { src: '/destinations/chandigarh.webp', caption: 'Shivalik Foothills Transit', alt: 'Scenic foothills connecting Chandigarh and Shimla' },
+    ],
+  },
 };
 
 /**
@@ -1513,6 +1701,12 @@ export function getRouteCorridorDetails(
   }
   if (normDest.includes('jaipur') || normDest.includes('ajmer') || normDest.includes('pushkar') || normDest.includes('khatu') || normDest.includes('salasar') || normDest.includes('alwar')) {
     return KNOWN_CORRIDORS['delhi-jaipur'];
+  }
+  if (normDest.includes('amritsar') || normDest.includes('wagah')) {
+    return KNOWN_CORRIDORS['delhi-amritsar'];
+  }
+  if (normDest.includes('shimla') || normDest.includes('kufri') || normDest.includes('chail')) {
+    return KNOWN_CORRIDORS['delhi-shimla'];
   }
   if (normDest.includes('chandigarh') || normDest.includes('mohali') || normDest.includes('panchkula')) {
     return KNOWN_CORRIDORS['delhi-chandigarh'];
