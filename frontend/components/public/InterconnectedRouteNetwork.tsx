@@ -186,7 +186,7 @@ export default function InterconnectedRouteNetwork({
                 <div>
                   <span className="text-[10px] text-slate-600 block uppercase font-bold leading-none">Starting Rate</span>
                   <span className="font-black text-brand-green text-sm leading-tight inline-block mt-0.5">
-                    From ₹11/km
+                    From ₹12/km
                   </span>
                 </div>
                 <span className="inline-flex items-center gap-1 font-bold text-brand-blue text-xs group-hover:translate-x-0.5 transition-transform">
@@ -206,7 +206,7 @@ export default function InterconnectedRouteNetwork({
           <span>Why Book Outstation Cabs from {destName} with Urgent Taxis?</span>
         </h3>
         <p className="leading-relaxed">
-          Urgent Taxis delivers reliable, 24/7 doorstep outstation taxi service from <strong>{destName}</strong> to all cities, tehsils, and airports in <strong>{destState}</strong> and neighboring states. All rides feature verified commercial yellow-plate chauffeurs, transparent per-km billing (Hatchback ₹11/km, Sedan ₹12/km, SUV ₹15/km, Innova Crysta ₹22/km), FASTag electronic toll clearance, and zero cancellation charges on advance bookings.
+          Urgent Taxis delivers reliable, 24/7 doorstep outstation taxi service from <strong>{destName}</strong> to all cities, tehsils, and airports in <strong>{destState}</strong> and neighboring states. All rides feature verified commercial yellow-plate chauffeurs, transparent per-km billing (Hatchback ₹12/km, Sedan ₹14/km, Ertiga ₹16/km, Innova ₹20/km, Innova Crysta/Hycross ₹24/km), FASTag electronic toll clearance, and zero cancellation charges on advance bookings.
         </p>
       </div>
     </div>

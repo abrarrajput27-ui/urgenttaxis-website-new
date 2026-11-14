@@ -12,9 +12,11 @@ interface RouteTollBreakdownCardProps {
 }
 
 const VEHICLE_OPTIONS = [
-  { id: 'sedan', label: 'Sedan (Dzire/Etios)', rateText: '₹12/km' },
-  { id: 'suv', label: 'SUV (Ertiga/Carens)', rateText: '₹15/km' },
-  { id: 'crysta', label: 'Innova Crysta', rateText: '₹22/km' },
+  { id: 'hatchback', label: 'Hatchback (WagonR/Swift)', rateText: '₹12/km' },
+  { id: 'sedan', label: 'Sedan (Dzire/Etios)', rateText: '₹14/km' },
+  { id: 'suv', label: 'SUV (Ertiga/Carens)', rateText: '₹16/km' },
+  { id: 'innova', label: 'Toyota Innova', rateText: '₹20/km' },
+  { id: 'crysta', label: 'Innova Crysta / Hycross', rateText: '₹24/km' },
   { id: 'traveller', label: 'Tempo Traveller', rateText: '₹26/km' },
 ];
 

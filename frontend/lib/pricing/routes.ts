@@ -59,39 +59,40 @@ export const SUPPORTED_VEHICLE_CATEGORIES: Record<
   string,
   { normalized: SupportedVehicleCategory; perKmRate: number; displayName: string }
 > = {
-  // Hatchback (₹11/km)
-  'hatchback': { normalized: 'hatchback', perKmRate: 11, displayName: 'Hatchback (WagonR / Swift)' },
-  'cat-hatchback': { normalized: 'hatchback', perKmRate: 11, displayName: 'Hatchback (WagonR / Swift)' },
-  'wagonr': { normalized: 'hatchback', perKmRate: 11, displayName: 'Hatchback (WagonR / Swift)' },
-  'swift': { normalized: 'hatchback', perKmRate: 11, displayName: 'Hatchback (WagonR / Swift)' },
+  // Hatchback (₹12/km)
+  'hatchback': { normalized: 'hatchback', perKmRate: 12, displayName: 'Hatchback (WagonR / Swift)' },
+  'cat-hatchback': { normalized: 'hatchback', perKmRate: 12, displayName: 'Hatchback (WagonR / Swift)' },
+  'wagonr': { normalized: 'hatchback', perKmRate: 12, displayName: 'Hatchback (WagonR / Swift)' },
+  'swift': { normalized: 'hatchback', perKmRate: 12, displayName: 'Hatchback (WagonR / Swift)' },
 
-  // Sedan (₹12/km)
-  'sedan': { normalized: 'sedan', perKmRate: 12, displayName: 'Sedan (Dzire / Etios)' },
-  'cat-sedan': { normalized: 'sedan', perKmRate: 12, displayName: 'Sedan (Dzire / Etios)' },
-  'dzire': { normalized: 'sedan', perKmRate: 12, displayName: 'Sedan (Dzire / Etios)' },
-  'etios': { normalized: 'sedan', perKmRate: 12, displayName: 'Sedan (Dzire / Etios)' },
+  // Sedan (₹14/km)
+  'sedan': { normalized: 'sedan', perKmRate: 14, displayName: 'Sedan (Dzire / Etios)' },
+  'cat-sedan': { normalized: 'sedan', perKmRate: 14, displayName: 'Sedan (Dzire / Etios)' },
+  'dzire': { normalized: 'sedan', perKmRate: 14, displayName: 'Sedan (Dzire / Etios)' },
+  'etios': { normalized: 'sedan', perKmRate: 14, displayName: 'Sedan (Dzire / Etios)' },
 
-  // SUV / MUV / Ertiga (₹15/km)
-  'suv-muv': { normalized: 'suv-muv', perKmRate: 15, displayName: 'SUV / MUV (Ertiga / Carens)' },
-  'cat-suv': { normalized: 'suv-muv', perKmRate: 15, displayName: 'SUV / MUV (Ertiga / Carens)' },
-  'suv_mpv': { normalized: 'suv-muv', perKmRate: 15, displayName: 'SUV / MUV (Ertiga / Carens)' },
-  'suv': { normalized: 'suv-muv', perKmRate: 15, displayName: 'SUV / MUV (Ertiga / Carens)' },
-  'muv': { normalized: 'suv-muv', perKmRate: 15, displayName: 'SUV / MUV (Ertiga / Carens)' },
-  'mpv': { normalized: 'suv-muv', perKmRate: 15, displayName: 'SUV / MUV (Ertiga / Carens)' },
-  'ertiga': { normalized: 'suv-muv', perKmRate: 15, displayName: 'SUV / MUV (Ertiga / Carens)' },
-  'carens': { normalized: 'suv-muv', perKmRate: 15, displayName: 'SUV / MUV (Ertiga / Carens)' },
+  // SUV / MUV / Ertiga (₹16/km)
+  'suv-muv': { normalized: 'suv-muv', perKmRate: 16, displayName: 'SUV / MUV (Ertiga / Carens)' },
+  'cat-suv': { normalized: 'suv-muv', perKmRate: 16, displayName: 'SUV / MUV (Ertiga / Carens)' },
+  'suv_mpv': { normalized: 'suv-muv', perKmRate: 16, displayName: 'SUV / MUV (Ertiga / Carens)' },
+  'suv': { normalized: 'suv-muv', perKmRate: 16, displayName: 'SUV / MUV (Ertiga / Carens)' },
+  'muv': { normalized: 'suv-muv', perKmRate: 16, displayName: 'SUV / MUV (Ertiga / Carens)' },
+  'mpv': { normalized: 'suv-muv', perKmRate: 16, displayName: 'SUV / MUV (Ertiga / Carens)' },
+  'ertiga': { normalized: 'suv-muv', perKmRate: 16, displayName: 'SUV / MUV (Ertiga / Carens)' },
+  'carens': { normalized: 'suv-muv', perKmRate: 16, displayName: 'SUV / MUV (Ertiga / Carens)' },
 
-  // Standard Toyota Innova Classic (₹19/km)
-  'innova': { normalized: 'innova', perKmRate: 19, displayName: 'Toyota Innova (Classic 7-Seater)' },
-  'cat-innova': { normalized: 'innova', perKmRate: 19, displayName: 'Toyota Innova (Classic 7-Seater)' },
-  'toyota-innova': { normalized: 'innova', perKmRate: 19, displayName: 'Toyota Innova (Classic 7-Seater)' },
+  // Standard Toyota Innova Classic (₹20/km)
+  'innova': { normalized: 'innova', perKmRate: 20, displayName: 'Toyota Innova (Classic 7-Seater)' },
+  'cat-innova': { normalized: 'innova', perKmRate: 20, displayName: 'Toyota Innova (Classic 7-Seater)' },
+  'toyota-innova': { normalized: 'innova', perKmRate: 20, displayName: 'Toyota Innova (Classic 7-Seater)' },
 
-  // Innova Crysta / Executive SUV (₹22/km)
-  'executive-suv': { normalized: 'executive-suv', perKmRate: 22, displayName: 'Executive SUV (Innova Crysta)' },
-  'cat-exec-suv': { normalized: 'executive-suv', perKmRate: 22, displayName: 'Executive SUV (Innova Crysta)' },
-  'crysta': { normalized: 'executive-suv', perKmRate: 22, displayName: 'Executive SUV (Innova Crysta)' },
-  'innova-crysta': { normalized: 'executive-suv', perKmRate: 22, displayName: 'Executive SUV (Innova Crysta)' },
-  'innova_crysta': { normalized: 'executive-suv', perKmRate: 22, displayName: 'Executive SUV (Innova Crysta)' },
+  // Innova Crysta / Executive SUV / Hycross (₹24/km)
+  'executive-suv': { normalized: 'executive-suv', perKmRate: 24, displayName: 'Executive SUV (Innova Crysta / Hycross)' },
+  'cat-exec-suv': { normalized: 'executive-suv', perKmRate: 24, displayName: 'Executive SUV (Innova Crysta / Hycross)' },
+  'crysta': { normalized: 'executive-suv', perKmRate: 24, displayName: 'Executive SUV (Innova Crysta / Hycross)' },
+  'innova-crysta': { normalized: 'executive-suv', perKmRate: 24, displayName: 'Executive SUV (Innova Crysta / Hycross)' },
+  'innova_crysta': { normalized: 'executive-suv', perKmRate: 24, displayName: 'Executive SUV (Innova Crysta / Hycross)' },
+  'hycross': { normalized: 'executive-suv', perKmRate: 24, displayName: 'Executive SUV (Innova Crysta / Hycross)' },
 
   // Tempo Traveller (₹26/km)
   'tempo': { normalized: 'tempo', perKmRate: 26, displayName: 'Tempo Traveller' },

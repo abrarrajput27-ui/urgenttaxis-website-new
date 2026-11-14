@@ -28,14 +28,17 @@ export const ROUND_TRIP_MIN_KM_PER_DAY = 250;
 
 /** Extra KM Rate per vehicle class */
 export const EXTRA_KM_RATES: Record<string, number> = {
-  hatchback: 11,
-  sedan: 12,
-  'suv-muv': 15,
-  suv_mpv: 15,
-  suv: 15,
-  'executive-suv': 22,
-  innova: 19,
-  innova_crysta: 22,
+  hatchback: 12,
+  sedan: 14,
+  'suv-muv': 16,
+  suv_mpv: 16,
+  suv: 16,
+  ertiga: 16,
+  innova: 20,
+  'executive-suv': 24,
+  innova_crysta: 24,
+  crysta: 24,
+  hycross: 24,
   tempo12: 24,
   tempo16: 26,
   tempo20: 28,
@@ -283,9 +286,9 @@ export function resolveOneWayFare(
   // 2. Universal Dynamic Calculation for all addresses, cities & unmapped locations
   const accurate = resolveAccurateRoute(origin, destination, knownDistanceKm || 0);
   const distanceKm = accurate.distanceKm;
-  const sedanFare = accurate.sedanFare || Math.max(1600, Math.round(distanceKm * 12));
-  const ertigaFare = accurate.ertigaFare || Math.max(2200, Math.round(distanceKm * 15));
-  const crystaFare = accurate.crystaFare || Math.max(3400, Math.round(distanceKm * 22));
+  const sedanFare = accurate.sedanFare || Math.max(1800, Math.round(distanceKm * 14));
+  const ertigaFare = accurate.ertigaFare || Math.max(2400, Math.round(distanceKm * 16));
+  const crystaFare = accurate.crystaFare || Math.max(3600, Math.round(distanceKm * 24));
   const startsAt = Math.min(sedanFare, ertigaFare, crystaFare);
   const estimatedToll = Math.round(distanceKm * 1.6);
 

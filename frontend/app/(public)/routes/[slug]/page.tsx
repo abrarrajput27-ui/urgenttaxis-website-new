@@ -94,9 +94,9 @@ async function resolveRouteBySlug(slug: string) {
     const accurate = resolveAccurateRoute(originName, destName);
     const distance = accurate.distanceKm;
     const durationText = accurate.durationText || `${Math.round(distance / 50)} - ${Math.round(distance / 45)} Hours`;
-    const sedanFare = Math.max(1500, Math.round(distance * 12));
-    const ertigaFare = Math.max(2200, Math.round(distance * 15));
-    const crystaFare = Math.max(3000, Math.round(distance * 22));
+    const sedanFare = Math.max(1800, Math.round(distance * 14));
+    const ertigaFare = Math.max(2400, Math.round(distance * 16));
+    const crystaFare = Math.max(3600, Math.round(distance * 24));
 
     return {
       id: `dynamic-${slug}`,
@@ -237,10 +237,10 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
     return Math.round(distance * fallbackRate);
   };
 
-  const hatchbackFareTotal = Math.max(1200, Math.round(distance * 11));
-  const sedanFareTotal = parseFare(route.sedanFare, 12);
-  const ertigaFareTotal = parseFare(route.ertigaFare, 15);
-  const crystaFareTotal = parseFare(route.crystaFare, 22);
+  const hatchbackFareTotal = Math.max(1500, Math.round(distance * 12));
+  const sedanFareTotal = parseFare(route.sedanFare, 14);
+  const ertigaFareTotal = parseFare(route.ertigaFare, 16);
+  const crystaFareTotal = parseFare(route.crystaFare, 24);
   const tempoFareTotal = Math.max(3500, Math.round(distance * 26));
 
   const breadcrumbItems = [
@@ -775,7 +775,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
                 <span>Transparent Cab Categories &amp; Fares</span>
               </h3>
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Choose from compact Hatchbacks (₹11/km), comfortable Sedans like Dzire/Etios (₹12/km), family SUVs like Ertiga (₹15/km), luxury Innova Crysta (₹22/km), and 12–16 seater Tempo Travellers (₹26/km). Guaranteed sanitized cabs with verified commercial yellow-plate chauffeurs.
+                Choose from compact Hatchbacks (₹12/km), comfortable Sedans like Dzire/Etios (₹14/km), family SUVs like Ertiga (₹16/km), Toyota Innova (₹20/km), luxury Innova Crysta / Hycross (₹24/km), and 12–16 seater Tempo Travellers (₹26/km). Guaranteed sanitized cabs with verified commercial yellow-plate chauffeurs.
               </p>
             </div>
 

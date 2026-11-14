@@ -54,23 +54,23 @@ test.describe('Phase 1: Master Pricing Engine Unit Tests', () => {
 
   test('Round Trip: Delhi to Agra (220 km one-way, 1 day, Sedan)', () => {
     // 220 km * 2 = 440 km round trip. Guaranteed min km = 250 km. Billable = 440 km.
-    // Base = 440 * 12 = 5280. Driver allowance = 400. Total = 5680.
+    // Base = 440 * 14 = 6160. Driver allowance = 400. Total = 6560.
     const rt = calculateRoundTripFare(220, 1, 'sedan');
     expect(rt.billableKm).toBe(440);
-    expect(rt.baseFare).toBe(5280);
+    expect(rt.baseFare).toBe(6160);
     expect(rt.totalDriverAllowance).toBe(400);
-    expect(rt.totalFare).toBe(5680);
-    expect(rt.tokenAmount).toBe(1700); // 5680 * 0.30 = 1704 -> 1700
-    expect(rt.workingExplanation).toContain('440 billable KM × ₹12/km + Driver Allowance ₹400');
+    expect(rt.totalFare).toBe(6560);
+    expect(rt.tokenAmount).toBe(1970); // 6560 * 0.30 = 1968 -> 1970
+    expect(rt.workingExplanation).toContain('440 billable KM × ₹14/km + Driver Allowance ₹400');
   });
 
   test('Round Trip: Minimum Daily Guarantee Applied (100 km one-way, 2 days, Sedan)', () => {
     // Total km = 200. Guaranteed = 250 * 2 = 500 km. Billable = 500 km.
-    // Base = 500 * 12 = 6000. Driver allowance = 800. Total = 6800.
+    // Base = 500 * 14 = 7000. Driver allowance = 800. Total = 7800.
     const rt = calculateRoundTripFare(100, 2, 'sedan');
     expect(rt.billableKm).toBe(500);
-    expect(rt.totalFare).toBe(6800);
-    expect(rt.tokenAmount).toBe(2040); // 6800 * 0.30 = 2040
+    expect(rt.totalFare).toBe(7800);
+    expect(rt.tokenAmount).toBe(2340); // 7800 * 0.30 = 2340
   });
 
   test('Master Route Resolution: Ghaziabad to Haridwar', () => {
@@ -175,11 +175,11 @@ test.describe('Phase 1: Master Pricing Engine Unit Tests', () => {
     expect(validateAndNormalizeVehicleCategory('rocket').isValid).toBe(false);
 
     // Approved rates
-    expect(validateAndNormalizeVehicleCategory('hatchback').perKmRate).toBe(11);
-    expect(validateAndNormalizeVehicleCategory('sedan').perKmRate).toBe(12);
-    expect(validateAndNormalizeVehicleCategory('suv-muv').perKmRate).toBe(15);
-    expect(validateAndNormalizeVehicleCategory('innova').perKmRate).toBe(19);
-    expect(validateAndNormalizeVehicleCategory('executive-suv').perKmRate).toBe(22);
+    expect(validateAndNormalizeVehicleCategory('hatchback').perKmRate).toBe(12);
+    expect(validateAndNormalizeVehicleCategory('sedan').perKmRate).toBe(14);
+    expect(validateAndNormalizeVehicleCategory('suv-muv').perKmRate).toBe(16);
+    expect(validateAndNormalizeVehicleCategory('innova').perKmRate).toBe(20);
+    expect(validateAndNormalizeVehicleCategory('executive-suv').perKmRate).toBe(24);
     expect(validateAndNormalizeVehicleCategory('tempo').perKmRate).toBe(26);
     expect(validateAndNormalizeVehicleCategory('urbania').perKmRate).toBe(32);
     expect(validateAndNormalizeVehicleCategory('bus').perKmRate).toBe(48);

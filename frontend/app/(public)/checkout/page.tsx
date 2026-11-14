@@ -43,12 +43,12 @@ import { formatTime12Hour, formatDateReadable, calculateRoundTripDays, calculate
 
 // Vehicle Display Profiles
 const VEHICLE_INFO: Record<string, { name: string; models: string; seats: string; bags: string; image: string; perKm: string; baseRate: number }> = {
-  hatchback: { name: 'Hatchback', models: 'Maruti WagonR, Swift, Celerio', seats: '4 Seats', bags: '2 Bags', image: '/fleet-brand/Hatchback.webp', perKm: '₹11/km', baseRate: 11 },
-  sedan: { name: 'Sedan', models: 'Maruti Dzire, Toyota Etios, Honda Amaze', seats: '4 Seats', bags: '3 Bags', image: '/fleet-brand/dzire.webp', perKm: '₹12/km', baseRate: 12 },
-  ertiga: { name: 'Maruti Ertiga', models: 'Maruti Ertiga 6-Seater AC', seats: '6 Seats', bags: '4 Bags', image: '/fleet-brand/Ertiga.webp', perKm: '₹15/km', baseRate: 15 },
-  'suv-muv': { name: 'SUV / MUV', models: 'Renault Triber, Kia Carens, Bolero (SUV / MPV)', seats: '6/7 Seats', bags: '4 Bags', image: '/fleet-brand/Ertiga.webp', perKm: '₹15/km', baseRate: 15 },
-  innova: { name: 'Toyota Innova', models: 'Toyota Innova 7-Seater Classic', seats: '7 Seats', bags: '5 Bags', image: '/fleet-brand/Innova Crysta.webp', perKm: '₹19/km', baseRate: 19 },
-  'executive-suv': { name: 'Innova Crysta', models: 'Toyota Innova Crysta, Hycross', seats: '7 Seats', bags: '5 Bags', image: '/fleet-brand/Innova Crysta.webp', perKm: '₹22/km', baseRate: 22 },
+  hatchback: { name: 'Hatchback', models: 'Maruti WagonR, Swift, Celerio', seats: '4 Seats', bags: '2 Bags', image: '/fleet-brand/Hatchback.webp', perKm: '₹12/km', baseRate: 12 },
+  sedan: { name: 'Sedan', models: 'Maruti Dzire, Toyota Etios, Honda Amaze', seats: '4 Seats', bags: '3 Bags', image: '/fleet-brand/dzire.webp', perKm: '₹14/km', baseRate: 14 },
+  ertiga: { name: 'Maruti Ertiga', models: 'Maruti Ertiga 6-Seater AC', seats: '6 Seats', bags: '4 Bags', image: '/fleet-brand/Ertiga.webp', perKm: '₹16/km', baseRate: 16 },
+  'suv-muv': { name: 'SUV / MUV', models: 'Renault Triber, Kia Carens, Bolero (SUV / MPV)', seats: '6/7 Seats', bags: '4 Bags', image: '/fleet-brand/Ertiga.webp', perKm: '₹16/km', baseRate: 16 },
+  innova: { name: 'Toyota Innova', models: 'Toyota Innova 7-Seater Classic', seats: '7 Seats', bags: '5 Bags', image: '/fleet-brand/Innova Crysta.webp', perKm: '₹20/km', baseRate: 20 },
+  'executive-suv': { name: 'Innova Crysta', models: 'Toyota Innova Crysta, Hycross', seats: '7 Seats', bags: '5 Bags', image: '/fleet-brand/Innova Crysta.webp', perKm: '₹24/km', baseRate: 24 },
   tempo: { name: 'Tempo Traveller', models: 'Force Traveller 12-26 Seater', seats: '12-26 Seats', bags: '15 Bags', image: '/fleet-brand/Tempo Traveller.webp', perKm: '₹26/km', baseRate: 26 },
   urbania: { name: 'Force Urbania', models: 'Force Urbania Luxury (12 / 16 Seater)', seats: '12-16 Seats', bags: '14 Bags', image: '/fleet-brand/Urbania.webp', perKm: '₹32/km', baseRate: 32 },
   bus: { name: 'Luxury Bus / Coach', models: '27 Seater Minibus / 45 Seater Volvo', seats: '27-45 Seats', bags: '45 Bags', image: '/fleet-brand/volvo bus.webp', perKm: '₹48/km', baseRate: 48 },

@@ -39,10 +39,10 @@ test.describe('Phase 13: Complete Round-Trip Booking, Duration & Fare Test Suite
     expect(quote.totalMinimumKm).toBe(250);
     expect(quote.actualTotalDistanceKm).toBe(160);
     expect(quote.billableKm).toBe(250); // MAX(160, 250) = 250
-    expect(quote.distanceFare).toBe(250 * 12); // 3000
-    expect(quote.baseFare).toBe(3000);
+    expect(quote.distanceFare).toBe(250 * 14); // 3500
+    expect(quote.baseFare).toBe(3500);
     expect(quote.totalDriverAllowance).toBe(400); // 1 day
-    expect(quote.totalFare).toBe(3400); // 3000 + 400
+    expect(quote.totalFare).toBe(3900); // 3500 + 400
   });
 
   // ---------------------------------------------------------------------------
@@ -115,9 +115,9 @@ test.describe('Phase 13: Complete Round-Trip Booking, Duration & Fare Test Suite
     expect(quote.tripDays).toBe(4);
     expect(quote.totalMinimumKm).toBe(1000); // 4 * 250
     expect(quote.billableKm).toBe(1000); // MAX(600, 1000) = 1000
-    expect(quote.distanceFare).toBe(1000 * 12); // 12,000
+    expect(quote.distanceFare).toBe(1000 * 14); // 14,000
     expect(quote.totalDriverAllowance).toBe(400 * 4); // 1,600
-    expect(quote.totalFare).toBe(12000 + 1600); // 13,600
+    expect(quote.totalFare).toBe(14000 + 1600); // 15,600
   });
 
   // ---------------------------------------------------------------------------
@@ -142,9 +142,9 @@ test.describe('Phase 13: Complete Round-Trip Booking, Duration & Fare Test Suite
     expect(quote.actualTotalDistanceKm).toBe(900);
     expect(quote.totalMinimumKm).toBe(750);
     expect(quote.billableKm).toBe(900); // MAX(900, 750) = 900 (actual KM wins)
-    expect(quote.distanceFare).toBe(900 * 12); // 10,800
+    expect(quote.distanceFare).toBe(900 * 14); // 12,600
     expect(quote.totalDriverAllowance).toBe(1200);
-    expect(quote.totalFare).toBe(10800 + 1200); // 12,000
+    expect(quote.totalFare).toBe(12600 + 1200); // 13,800
   });
 
   // ---------------------------------------------------------------------------
@@ -177,7 +177,7 @@ test.describe('Phase 13: Complete Round-Trip Booking, Duration & Fare Test Suite
     expect(quote.actualTotalDistanceKm).toBe(600);
     expect(quote.totalMinimumKm).toBe(750); // 3 * 250
     expect(quote.billableKm).toBe(750);
-    expect(quote.distanceFare).toBe(750 * 12);
+    expect(quote.distanceFare).toBe(750 * 14);
   });
 
   // ---------------------------------------------------------------------------

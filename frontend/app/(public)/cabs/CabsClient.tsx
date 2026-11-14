@@ -407,14 +407,14 @@ export default function CabsClient() {
         busFare = Math.round(sedanFare * 4.8);
       } else {
         // Unmapped outstation corridor fallback calibrated to commercial market standards
-        sedanFare = Math.max(1800, Math.round(dist * 14.5));
-        hatchbackFare = Math.max(1500, Math.round(dist * 12.5));
-        ertigaFare = Math.max(2600, Math.round(dist * 18.5));
-        innovaFare = Math.max(3400, Math.round(dist * 21.0));
-        crystaFare = Math.max(4200, Math.round(dist * 25.0));
-        tempoFare = Math.max(5800, Math.round(dist * 29.0));
-        urbaniaFare = Math.max(7800, Math.round(dist * 36.0));
-        busFare = Math.max(11500, Math.round(dist * 52.0));
+        sedanFare = Math.max(1800, Math.round(dist * 14));
+        hatchbackFare = Math.max(1500, Math.round(dist * 12));
+        ertigaFare = Math.max(2400, Math.round(dist * 16));
+        innovaFare = Math.max(3000, Math.round(dist * 20));
+        crystaFare = Math.max(3600, Math.round(dist * 24));
+        tempoFare = Math.max(5000, Math.round(dist * 26));
+        urbaniaFare = Math.max(7000, Math.round(dist * 32));
+        busFare = Math.max(11000, Math.round(dist * 48));
       }
       suvMuvFare = ertigaFare;
     } else if (serviceType === 'round_trip') {
@@ -707,7 +707,7 @@ export default function CabsClient() {
         'BUDGET VALUE',
         'bg-amber-600',
         hatchbackFare,
-        '₹11/km'
+        '₹12/km'
       ),
       buildCard(
         'sedan',
@@ -720,7 +720,7 @@ export default function CabsClient() {
         'MOST POPULAR',
         'bg-emerald-600',
         sedanFare,
-        '₹12/km'
+        '₹14/km'
       ),
       buildCard(
         'ertiga',
@@ -733,7 +733,7 @@ export default function CabsClient() {
         'FAMILY CHOICE',
         'bg-blue-600',
         ertigaFare,
-        '₹15/km'
+        '₹16/km'
       ),
       buildCard(
         'suv-muv',
@@ -746,7 +746,7 @@ export default function CabsClient() {
         'EXTRA SPACE',
         'bg-teal-700',
         suvMuvFare,
-        '₹15/km'
+        '₹16/km'
       ),
       buildCard(
         'innova',
@@ -759,7 +759,7 @@ export default function CabsClient() {
         'COMFORT RIDE',
         'bg-indigo-700',
         innovaFare,
-        '₹19/km'
+        '₹20/km'
       ),
       buildCard(
         'executive-suv',
@@ -772,7 +772,7 @@ export default function CabsClient() {
         'PREMIUM LUXURY',
         'bg-slate-900',
         crystaFare,
-        '₹22/km'
+        '₹24/km'
       ),
       buildCard(
         'tempo16',

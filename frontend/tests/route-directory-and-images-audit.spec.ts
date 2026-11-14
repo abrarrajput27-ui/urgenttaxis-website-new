@@ -413,4 +413,50 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(footerContent).toContain('Designed by');
     expect(footerContent).toContain('Mantsha Khan');
   });
+
+  test('Test 16: Master Fare Rate Updates (Hatchback 12, Sedan 14, Ertiga 16, Innova 20, Crysta 24) & Corridor Toll Plaza Accuracy', () => {
+    const { validateAndNormalizeVehicleCategory, EXTRA_KM_RATES, ROUND_TRIP_PER_KM_RATES } = require('../lib/pricing');
+    const { SUPPORTED_VEHICLE_CATEGORIES } = require('../lib/pricing/routes');
+    const { getRouteCorridorDetails } = require('../lib/data/route-corridor-details');
+
+    // 1. Per Km Rates in pricing.ts
+    expect(EXTRA_KM_RATES.hatchback).toBe(12);
+    expect(EXTRA_KM_RATES.sedan).toBe(14);
+    expect(EXTRA_KM_RATES['suv-muv']).toBe(16);
+    expect(EXTRA_KM_RATES.ertiga).toBe(16);
+    expect(EXTRA_KM_RATES.innova).toBe(20);
+    expect(EXTRA_KM_RATES['executive-suv']).toBe(24);
+    expect(EXTRA_KM_RATES.crysta).toBe(24);
+    expect(EXTRA_KM_RATES.hycross).toBe(24);
+
+    expect(ROUND_TRIP_PER_KM_RATES.hatchback).toBe(12);
+    expect(ROUND_TRIP_PER_KM_RATES.sedan).toBe(14);
+    expect(ROUND_TRIP_PER_KM_RATES['suv-muv']).toBe(16);
+    expect(ROUND_TRIP_PER_KM_RATES.ertiga).toBe(16);
+    expect(ROUND_TRIP_PER_KM_RATES.innova).toBe(20);
+    expect(ROUND_TRIP_PER_KM_RATES['executive-suv']).toBe(24);
+
+    // 2. Per Km Rates in pricing/routes.ts
+    expect(SUPPORTED_VEHICLE_CATEGORIES.hatchback.perKmRate).toBe(12);
+    expect(SUPPORTED_VEHICLE_CATEGORIES.sedan.perKmRate).toBe(14);
+    expect(SUPPORTED_VEHICLE_CATEGORIES['suv-muv'].perKmRate).toBe(16);
+    expect(SUPPORTED_VEHICLE_CATEGORIES.innova.perKmRate).toBe(20);
+    expect(SUPPORTED_VEHICLE_CATEGORIES['executive-suv'].perKmRate).toBe(24);
+
+    // 3. Corridor details & Route Toll Calculation with genuine plaza count
+    const { calculateRouteTolls } = require('../lib/tolls');
+    const tollResult = calculateRouteTolls('Delhi', 'Dehradun', 'sedan', false, 245);
+    expect(tollResult.tollPlazas.length).toBeGreaterThan(0);
+    expect(tollResult.tollPlazas.every((tp: any) => tp.name && tp.appliedRate > 0)).toBe(true);
+    expect(tollResult.totalToll).toBeGreaterThan(0);
+
+    const corridor = getRouteCorridorDetails('Delhi', 'Dehradun', 245);
+    expect(corridor).toBeDefined();
+
+    // Alternative routes dynamically use calculateRouteTolls
+    expect(corridor.alternativeRoutes).toBeDefined();
+    expect(corridor.alternativeRoutes!.length).toBeGreaterThan(0);
+    expect(corridor.alternativeRoutes![0].tollPlazasCount).toBeGreaterThan(0);
+    expect(corridor.alternativeRoutes![0].tollAmount).toBeGreaterThan(0);
+  });
 });

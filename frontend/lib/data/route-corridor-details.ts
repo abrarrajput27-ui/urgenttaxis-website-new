@@ -1,5 +1,6 @@
 import { getDestinationImage } from '../destination-images';
 import { getLocationState } from '../location-authority';
+import { calculateRouteTolls } from '../tolls';
 
 export interface RouteMilestone {
   town: string;
@@ -1740,16 +1741,19 @@ export function getRouteCorridorDetails(
         `Doorstep pickup available across all Haridwar ashrams, hotels, and railway station.`,
       ],
       alternativeRoutes: [
-        {
-          id: 'primary-haridwar-corridor',
-          name: `Direct Fast Highway from Haridwar to ${destName}`,
-          highway: 'via NH334 / State Express Corridor',
-          distanceKm: distanceKm,
-          durationText: `${Math.round(distanceKm / 50)} - ${Math.round(distanceKm / 45)} Hours`,
-          tollPlazasCount: Math.max(1, Math.min(4, Math.round(distanceKm / 80))),
-          tollAmount: Math.round(distanceKm * 1.2),
-          description: `Fastest connected highway route departing from Haridwar with 24/7 commercial cab support.`,
-        },
+        (() => {
+          const tollInfo = calculateRouteTolls('Haridwar', destName, 'sedan', false, distanceKm);
+          return {
+            id: 'primary-haridwar-corridor',
+            name: `Direct Fast Highway from Haridwar to ${destName}`,
+            highway: 'via NH334 / State Express Corridor',
+            distanceKm: distanceKm,
+            durationText: `${Math.round(distanceKm / 50)} - ${Math.round(distanceKm / 45)} Hours`,
+            tollPlazasCount: tollInfo.tollPlazas.length,
+            tollAmount: tollInfo.totalToll,
+            description: `Fastest connected highway route departing from Haridwar with 24/7 commercial cab support.`,
+          };
+        })(),
       ],
       milestones: [
         { town: 'Haridwar Departure', km: 0, timeText: '0 hr', description: 'Doorstep pickup across Haridwar ashrams, hotels, or railway station.' },
@@ -1984,16 +1988,19 @@ export function getRouteCorridorDetails(
       `Transparent per-KM rates guarantee no hidden surcharges at the end of your trip.`,
     ],
     alternativeRoutes: [
-      {
-        id: 'primary-highway',
-        name: `Primary Highway Corridor to ${destName}`,
-        highway: highwayName,
-        distanceKm: distanceKm,
-        durationText: `${Math.round(distanceKm / 50)} - ${Math.round(distanceKm / 45)} Hours`,
-        tollPlazasCount: Math.max(1, Math.min(4, Math.round(distanceKm / 80))),
-        tollAmount: Math.round(distanceKm * 1.2),
-        description: `Direct access-controlled highway corridor connecting ${originName} and ${destName} with verified FASTag plazas.`,
-      },
+      (() => {
+        const tollInfo = calculateRouteTolls(originName, destName, 'sedan', false, distanceKm);
+        return {
+          id: 'primary-highway',
+          name: `Primary Highway Corridor to ${destName}`,
+          highway: highwayName,
+          distanceKm: distanceKm,
+          durationText: `${Math.round(distanceKm / 50)} - ${Math.round(distanceKm / 45)} Hours`,
+          tollPlazasCount: tollInfo.tollPlazas.length,
+          tollAmount: tollInfo.totalToll,
+          description: `Direct access-controlled highway corridor connecting ${originName} and ${destName} with verified FASTag plazas.`,
+        };
+      })(),
     ],
     hotelGroups: {
       budget: [

@@ -147,7 +147,7 @@ export default function FleetPage() {
               bags="2 Bags"
               ac={true}
               music={true}
-              outstationPrice="₹11/km"
+              outstationPrice="₹12/km"
               localPrice="₹1200"
             />
             <VehicleCard
@@ -158,7 +158,7 @@ export default function FleetPage() {
               bags="2 Bags"
               ac={true}
               music={true}
-              outstationPrice="₹12/km"
+              outstationPrice="₹14/km"
               localPrice="₹1500"
             />
             <VehicleCard
@@ -169,7 +169,7 @@ export default function FleetPage() {
               bags="4 Bags"
               ac={true}
               music={true}
-              outstationPrice="₹15/km"
+              outstationPrice="₹16/km"
               localPrice="₹2000"
             />
             <VehicleCard
@@ -180,7 +180,7 @@ export default function FleetPage() {
                 bags="4 Bags"
                 ac={true}
                 music={true}
-                outstationPrice="₹22/km"
+                outstationPrice="₹24/km"
                 localPrice="₹2500"
                 />
           </div>
