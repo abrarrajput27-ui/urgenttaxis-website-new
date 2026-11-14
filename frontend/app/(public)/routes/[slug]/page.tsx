@@ -16,6 +16,7 @@ import RouteTollBreakdownCard from '@/components/public/RouteTollBreakdownCard';
 import RouteGallerySection from '@/components/public/RouteGallerySection';
 import RouteSimilarRoutes, { SimilarRouteItem } from '@/components/public/RouteSimilarRoutes';
 import DestinationConnectingRoutes, { ConnectingRouteItem } from '@/components/public/DestinationConnectingRoutes';
+import InterconnectedRouteNetwork from '@/components/public/InterconnectedRouteNetwork';
 import PageFAQSection from '@/components/public/PageFAQSection';
 import { getRouteSpecificFAQs, getCommonBookingFAQs } from '@/lib/faqs/faq-generator';
 import { getDestinationImage } from '@/lib/destination-images';
@@ -147,11 +148,28 @@ export async function generateMetadata({ params }: DynamicRoutePageProps) {
   const dist = route.estimated_distance_km || 250;
   const sedanStart = route.sedanFare || Math.round(dist * 12);
 
+  const keywords = [
+    `${originName} to ${destName} taxi service`,
+    `${originName} to ${destName} cab fare`,
+    `${originName} to ${destName} cab booking`,
+    `one way cab ${originName} to ${destName}`,
+    `round trip taxi ${originName} to ${destName}`,
+    `outstation taxi service ${destName}`,
+    `cheapest taxi ${originName} to ${destName}`,
+    `${originName} to ${destName} car rental with driver`,
+    `urgent taxi ${destName}`,
+    `${destName} taxi booking ${destState}`,
+    `FASTag toll charges ${originName} to ${destName}`,
+    `navgati cng gas station on ${originName} to ${destName} highway`,
+    `${originState} to ${destState} taxi route`,
+  ];
+
   return constructMetadata({
-    title: `${originName} to ${destName} Taxi Service (${destState}) | Verified AC Cabs`,
-    description: `Book reliable AC Cabs from ${originName} (${originState}) to ${destName} (${destState}). Distance ${dist} km, starting from ₹${sedanStart.toLocaleString('en-IN')}. Clean cars, verified highway chauffeurs & 24/7 support.`,
+    title: `${originName} to ${destName} Taxi Service | Cab Fare ₹${sedanStart.toLocaleString('en-IN')} | Urgent Taxis`,
+    description: `Book verified doorstep AC taxi from ${originName} (${originState}) to ${destName} (${destState}). Distance ${dist} km, starting ₹${sedanStart.toLocaleString('en-IN')}. One-way & round trip cabs with transparent tolls, verified dhabas & 24/7 dispatch.`,
     canonicalPath: `/routes/${resolvedParams.slug}`,
     image: getDestinationImage(destName),
+    keywords,
     noIndex: false,
   });
 }
@@ -705,6 +723,17 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
           />
         </section>
 
+        {/* 7B. ALL-INDIA INTERCONNECTED ROUTE NETWORK (14 States, Cities, Villages & Hubs) */}
+        <section>
+          <InterconnectedRouteNetwork
+            originName={originName}
+            originState={originState}
+            destName={destName}
+            destState={destState}
+            distanceKm={distance}
+          />
+        </section>
+
         {/* 8. FREQUENTLY ASKED QUESTIONS (2-Column Layout matching concept) */}
         <section>
           <PageFAQSection
@@ -722,6 +751,69 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
             originName={originName}
             similarRoutes={similarRoutesList}
           />
+        </section>
+
+        {/* 9B. LOCATION SEO AUTHORITY & CORRIDOR TRAVEL GUIDE */}
+        <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-xs space-y-6">
+          <div className="border-b border-slate-100 pb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-brand-green text-xs font-bold mb-2">
+              <span>🌟</span>
+              <span>Official Outstation Highway Travel Guide</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+              {originName} to {destName} Outstation Taxi Service Guide
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">
+              Complete guide for booking doorstep outstation cabs from {originName} ({originState}) to {destName} ({destState}) with live pricing, FASTag toll information, Navgati CNG stops &amp; 24/7 support.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="space-y-2 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+              <h3 className="font-black text-slate-900 text-sm flex items-center gap-2">
+                <span>🚕</span>
+                <span>Transparent Cab Categories &amp; Fares</span>
+              </h3>
+              <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                Choose from compact Hatchbacks (₹11/km), comfortable Sedans like Dzire/Etios (₹12/km), family SUVs like Ertiga (₹15/km), luxury Innova Crysta (₹22/km), and 12–16 seater Tempo Travellers (₹26/km). Guaranteed sanitized cabs with verified commercial yellow-plate chauffeurs.
+              </p>
+            </div>
+
+            <div className="space-y-2 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+              <h3 className="font-black text-slate-900 text-sm flex items-center gap-2">
+                <span>🛣️</span>
+                <span>Tolls &amp; State Passenger Taxes</span>
+              </h3>
+              <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                For one-way and airport transfers, highway toll plazas and commercial state border taxes are calculated with itemized transparency. Round-trip and hourly rentals exclude tolls/parking, payable at actuals. Night driving allowance applies from 10:00 PM to 06:00 AM.
+              </p>
+            </div>
+
+            <div className="space-y-2 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+              <h3 className="font-black text-slate-900 text-sm flex items-center gap-2">
+                <span>⛽</span>
+                <span>Navgati App Calibrated Fuel Stops</span>
+              </h3>
+              <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                Travel with confidence with verified CNG stations operating at high pressure (200–210 Bar), 24x7 dispensers, clean family dhabas, and modern wayside amenities along {corridor.highway}.
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4 text-xs font-bold text-slate-600">
+            <div className="flex items-center gap-2">
+              <span className="text-brand-green">✓</span>
+              <span>Doorstep Pickup across all {originName} sectors, hotels &amp; railway stations</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-brand-green">✓</span>
+              <span>Direct drop to any village, tehsil or hotel in {destName}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-brand-green">✓</span>
+              <span>Commercial Yellow-Plate Verified Chauffeurs</span>
+            </div>
+          </div>
         </section>
 
         {/* 10. BOTTOM CALL-TO-ACTION BANNER */}
@@ -799,6 +891,41 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
                   ratingValue: '4.9',
                   reviewCount: '1485',
                 },
+              },
+              {
+                '@type': 'BreadcrumbList',
+                itemListElement: breadcrumbItems.map((item, idx) => ({
+                  '@type': 'ListItem',
+                  position: idx + 1,
+                  name: item.label,
+                  item: item.href ? `https://www.urgenttaxis.in${item.href}` : undefined,
+                })),
+              },
+              {
+                '@type': 'FAQPage',
+                mainEntity: allRouteFaqs.map((faq) => ({
+                  '@type': 'Question',
+                  name: faq.question,
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: faq.answer,
+                  },
+                })),
+              },
+              {
+                '@type': 'TaxiService',
+                name: `Urgent Taxis - ${originName} to ${destName} Cab Service`,
+                provider: {
+                  '@type': 'LocalBusiness',
+                  name: 'Urgent Taxis',
+                  telephone: '+917310651940',
+                  url: 'https://www.urgenttaxis.in',
+                  priceRange: '₹₹',
+                },
+                areaServed: [
+                  { '@type': 'City', name: `${originName}, ${originState}` },
+                  { '@type': 'City', name: `${destName}, ${destState}` },
+                ],
               },
               {
                 '@type': 'TouristTrip',

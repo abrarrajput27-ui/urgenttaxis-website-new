@@ -229,4 +229,51 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(darjeelingImg).not.toEqual(siliguriImg);
     expect(durgapurImg).not.toEqual(asansolImg);
   });
+
+  test('Test 11: Interconnected Route Network, High-Rank SEO Keywords, Schemas & Designer Credit', () => {
+    // 1. Verify InterconnectedRouteNetwork component
+    const interconnectContent = fs.readFileSync('frontend/components/public/InterconnectedRouteNetwork.tsx', 'utf8');
+    expect(interconnectContent).toContain('All-India Interconnected Route Network');
+    expect(interconnectContent).toContain('STATE_INTERCONNECT_HUBS');
+
+    const expectedStateOrder = [
+      'Bihar',
+      'Delhi NCR',
+      'Goa',
+      'Gujarat',
+      'Haryana',
+      'Himachal Pradesh',
+      'Jammu & Kashmir',
+      'Madhya Pradesh',
+      'Maharashtra',
+      'Punjab',
+      'Rajasthan',
+      'Uttar Pradesh',
+      'Uttarakhand',
+      'West Bengal'
+    ];
+
+    for (const state of expectedStateOrder) {
+      expect(interconnectContent).toContain(`'${state}'`);
+    }
+
+    // 2. Verify Dynamic Route Page SEO keywords and Schema.org
+    const routePageContent = fs.readFileSync('frontend/app/(public)/routes/[slug]/page.tsx', 'utf8');
+    expect(routePageContent).toContain('InterconnectedRouteNetwork');
+    expect(routePageContent).toContain('keywords');
+    expect(routePageContent).toContain('taxi service');
+    expect(routePageContent).toContain('cab fare');
+    expect(routePageContent).toContain('FASTag toll charges');
+    expect(routePageContent).toContain('navgati cng gas station');
+    expect(routePageContent).toContain('Official Outstation Highway Travel Guide');
+    expect(routePageContent).toContain("'@type': 'BreadcrumbList'");
+    expect(routePageContent).toContain("'@type': 'FAQPage'");
+    expect(routePageContent).toContain("'@type': 'TaxiService'");
+
+    // 3. Verify Permanent Designer Credit
+    const footerContent = fs.readFileSync('frontend/components/public/Footer.tsx', 'utf8');
+    expect(footerContent).toContain('footer-designer-credit');
+    expect(footerContent).toContain('Designed by');
+    expect(footerContent).toContain('Mantsha Khan');
+  });
 });

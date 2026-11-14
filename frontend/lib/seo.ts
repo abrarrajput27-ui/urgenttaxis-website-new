@@ -24,6 +24,7 @@ interface ConstructMetadataProps {
   canonicalPath?: string;
   noIndex?: boolean;
   ogImage?: string;
+  keywords?: string[] | string;
 }
 
 /**
@@ -36,6 +37,7 @@ export function constructMetadata({
   canonicalPath = '',
   noIndex = false,
   ogImage = '/logo.jpg',
+  keywords,
 }: ConstructMetadataProps = {}): Metadata {
   // Enforce title: if title is provided, do NOT append brand here because Next.js template (%s | Urgent Taxis) handles it.
   // If title is not provided, use default brand title.
@@ -50,6 +52,7 @@ export function constructMetadata({
   return {
     title: pageTitle,
     description: trimmedDescription,
+    keywords: keywords,
     metadataBase: new URL(SITE_CONFIG.domain),
     alternates: {
       canonical: canonicalUrl,
