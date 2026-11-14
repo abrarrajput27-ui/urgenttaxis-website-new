@@ -47,8 +47,8 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
       }
     }
 
-    // User asked for extensive village and city coverage (minimum 1500+)
-    expect(totalDestinations).toBeGreaterThanOrEqual(2500);
+    // User asked for extensive village and city coverage (minimum 1500+ per state, 4000+ total)
+    expect(totalDestinations).toBeGreaterThanOrEqual(4000);
   });
 
   test('Test 2: Interconnected Departure Origins & Haridwar Hub in Chips', () => {
@@ -150,5 +150,46 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(content).toContain("name: 'Rampur', state: 'Bihar'");
     expect(content).toContain("name: 'Bilaspur', state: 'Haryana'");
     expect(content).toContain("name: 'Bilaspur', state: 'Himachal Pradesh'");
+  });
+
+  test('Test 8: Master Expressways & Navgati CNG Verification across States', () => {
+    // Delhi to Chandigarh master corridor
+    const chdCorridor = getRouteCorridorDetails('Delhi', 'Chandigarh', 245);
+    expect(chdCorridor.highway).toContain('NH-44');
+    expect(chdCorridor.places.cngPumps.some(p => p.highlight?.includes('Navgati App Verified'))).toBe(true);
+
+    // Delhi to Lucknow master corridor
+    const lkoCorridor = getRouteCorridorDetails('Delhi', 'Lucknow', 555);
+    expect(lkoCorridor.highway).toContain('Agra-Lucknow Expressway');
+    expect(lkoCorridor.places.cngPumps.some(p => p.name.includes('Green Gas'))).toBe(true);
+
+    // Delhi to Patna master corridor
+    const patnaCorridor = getRouteCorridorDetails('Delhi', 'Patna', 995);
+    expect(patnaCorridor.highway).toContain('Purvanchal Exp');
+    expect(patnaCorridor.famousFoods?.some(f => f.dish.includes('Litti Chokha'))).toBe(true);
+  });
+
+  test('Test 9: State-Calibrated Dynamic Corridors with Navgati CNG for Bihar, Punjab, HP, Rajasthan', () => {
+    // Dynamic Bihar corridor (e.g. Gaya)
+    const gayaCorridor = getRouteCorridorDetails('Delhi', 'Gaya', 1050);
+    expect(gayaCorridor.highway).toContain('NH-19');
+    expect(gayaCorridor.famousFoods?.[0].dish).toContain('Litti Chokha');
+    expect(gayaCorridor.places.cngPumps.some(p => p.name.includes('GAIL Gas'))).toBe(true);
+
+    // Dynamic Punjab corridor (e.g. Ludhiana)
+    const ldhCorridor = getRouteCorridorDetails('Delhi', 'Ludhiana', 315);
+    expect(ldhCorridor.highway).toContain('NH-44');
+    expect(ldhCorridor.famousFoods?.[0].dish).toContain('Amritsari Kulcha');
+    expect(ldhCorridor.places.cngPumps.some(p => p.name.includes('Gujarat Gas'))).toBe(true);
+
+    // Dynamic Himachal corridor (e.g. Dharamshala)
+    const dhmCorridor = getRouteCorridorDetails('Delhi', 'Dharamshala', 485);
+    expect(dhmCorridor.highway).toContain('Mountain Highway');
+    expect(dhmCorridor.famousFoods?.[0].dish).toContain('Siddu');
+
+    // Dynamic Rajasthan corridor (e.g. Bikaner)
+    const bknCorridor = getRouteCorridorDetails('Delhi', 'Bikaner', 460);
+    expect(bknCorridor.highway).toContain('NE4');
+    expect(bknCorridor.famousFoods?.[0].dish).toContain('Dal Baati');
   });
 });
