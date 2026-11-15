@@ -522,4 +522,50 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(footerContent).toContain('Designed by');
     expect(footerContent).toContain('Mantsha Khan');
   });
+
+  test('Test 18: Eliminate Phantom Tolls, Calibrate Goa Corridor (Anjuna-Palolem) & Geometric Corridor Matching', () => {
+    const { resolveAccurateRoute } = require('../lib/distance-resolver');
+    const { calculateRouteTolls } = require('../lib/tolls');
+    const { getLocationState, formatLocationWithState } = require('../lib/location-authority');
+    const fs = require('fs');
+
+    // 1. Goa Corridor: Anjuna to Palolem calibration
+    expect(getLocationState('Anjuna')).toBe('Goa');
+    expect(getLocationState('Palolem')).toBe('Goa');
+    expect(formatLocationWithState('Anjuna')).toBe('Anjuna, Goa');
+    expect(formatLocationWithState('Palolem')).toBe('Palolem, Goa');
+
+    const anjunaPalolem = resolveAccurateRoute('Anjuna', 'Palolem');
+    expect(anjunaPalolem.distanceKm).toBeGreaterThanOrEqual(75);
+    expect(anjunaPalolem.distanceKm).toBeLessThanOrEqual(95);
+    expect(anjunaPalolem.durationMinutes).toBeGreaterThanOrEqual(90);
+    expect(anjunaPalolem.durationMinutes).toBeLessThanOrEqual(135);
+
+    // 2. Anjuna to Palolem Tolls: ZERO Highway Tolls, ZERO State Taxes (Intra-Goa)
+    const goaTollInfo = calculateRouteTolls('Anjuna', 'Palolem', 'sedan', false, anjunaPalolem.distanceKm);
+    expect(goaTollInfo.totalToll).toBe(0);
+    expect(goaTollInfo.tollPlazas.length).toBe(0);
+    expect(goaTollInfo.totalStateTax).toBe(0);
+    expect(goaTollInfo.stateTaxes.length).toBe(0);
+    expect(goaTollInfo.grandTotal).toBe(0);
+
+    // 3. ZERO Chhajrasi Contamination on Unrelated Corridors
+    // Lucknow to Varanasi: Must NEVER include Chhajrasi (NH-9)
+    const lkoVnsToll = calculateRouteTolls('Lucknow', 'Varanasi', 'sedan', false, 310);
+    expect(lkoVnsToll.tollPlazas.some(p => p.id === 'chhajrasi-nh9')).toBe(false);
+    expect(lkoVnsToll.totalStateTax).toBe(0); // Intra-state UP
+
+    // 4. Legitimate NH-9 Corridors DO contain Chhajrasi Toll Plaza
+    const gzbMbdToll = calculateRouteTolls('Ghaziabad', 'Moradabad', 'sedan', false, 140);
+    expect(gzbMbdToll.tollPlazas.some(p => p.id === 'chhajrasi-nh9')).toBe(true);
+    expect(gzbMbdToll.tollPlazas.some(p => p.id === 'brijghat-nh9')).toBe(true);
+    expect(gzbMbdToll.tollPlazas.some(p => p.id === 'joya-nh9')).toBe(true);
+    expect(gzbMbdToll.totalStateTax).toBe(0); // Intra-state UP
+
+    // 5. Permanent protected footer designer credit
+    const footerContent = fs.readFileSync('frontend/components/public/Footer.tsx', 'utf8');
+    expect(footerContent).toContain('footer-designer-credit');
+    expect(footerContent).toContain('Designed by');
+    expect(footerContent).toContain('Mantsha Khan');
+  });
 });

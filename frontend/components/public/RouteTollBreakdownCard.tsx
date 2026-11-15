@@ -137,7 +137,7 @@ export default function RouteTollBreakdownCard({
           </div>
         ) : (
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm flex items-center justify-between">
-            <span className="font-medium">No NHAI highway toll plazas on this direct city/NCR route corridor.</span>
+            <span className="font-medium">No NHAI highway toll plazas on this direct route corridor.</span>
             <span className="font-black text-emerald-700 text-sm">₹0 Toll</span>
           </div>
         )}

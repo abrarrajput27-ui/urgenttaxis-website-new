@@ -15,6 +15,7 @@ import {
   StateTaxRate,
 } from './data/tolls-data';
 import { getLocationState } from './location-authority';
+import { findCoordinatesForAddress } from './distance-resolver';
 
 export interface CalculatedTollPlaza {
   id: string;
@@ -90,6 +91,17 @@ function resolveCorridorKey(origin: string, destination: string): string | null 
   const normO = normalizePlace(origin);
   const normD = normalizePlace(destination);
 
+  // Goa Intra-state Corridors (Pure coastal/tourist transits with ₹0 highway toll & ₹0 state border tax)
+  const goaTokens = [
+    'goa', 'anjuna', 'palolem', 'calangute', 'baga', 'candolim', 'panaji', 
+    'margao', 'madgaon', 'vasco', 'mapusa', 'ponda', 'colva', 'benaulim', 
+    'arambol', 'morjim', 'vagator', 'canacona', 'porvorim', 'dabolim', 'mopa',
+    'agonda', 'cavelossim', 'siolim', 'assagao', 'bambolim', 'dona-paula', 'old-goa'
+  ];
+  const isOriginGoa = goaTokens.some((g) => normO.includes(g)) || getLocationState(origin) === 'Goa';
+  const isDestGoa = goaTokens.some((g) => normD.includes(g)) || getLocationState(destination) === 'Goa';
+  if (isOriginGoa && isDestGoa) return 'goa-intra';
+
   // Kumaon & Nainital corridor
   const isKumaon = [
     'nainital', 'haldwani', 'kathgodam', 'bhimtal', 'almora', 'ranikhet', 
@@ -127,6 +139,24 @@ function resolveCorridorKey(origin: string, destination: string): string | null 
     (r) => normO.includes(r) || normD.includes(r)
   );
   if (isDelhiNcr && isRajasthan) return 'delhi-jaipur';
+
+  // Moradabad / Rampur / Sambhal / Amroha (NH-9 Chhajrasi, Brijghat, Joya)
+  const isMoradabad = ['moradabad', 'rampur', 'sambhal', 'amroha', 'gajraula'].some(
+    (m) => normO.includes(m) || normD.includes(m)
+  );
+  if (isDelhiNcr && isMoradabad) return 'delhi-moradabad';
+
+  // Bareilly / Shahjahanpur / Pilibhit (NH-9 / NH-30)
+  const isBareilly = ['bareilly', 'shahjahanpur', 'pilibhit'].some(
+    (b) => normO.includes(b) || normD.includes(b)
+  );
+  if (isDelhiNcr && isBareilly) return 'delhi-bareilly';
+
+  // Hapur / Pilkhuwa (NH-9 Chhajrasi Only)
+  const isHapur = ['hapur', 'pilkhuwa', 'babugarh'].some(
+    (h) => normO.includes(h) || normD.includes(h)
+  );
+  if (isDelhiNcr && isHapur) return 'delhi-hapur';
 
   // Amritsar corridor (5 NH-44 Plazas)
   const isAmritsar = ['amritsar', 'beas', 'tarntaran'].some(
@@ -170,6 +200,22 @@ function resolveCorridorKey(origin: string, destination: string): string | null 
   );
   if (isDelhiNcr && isVaranasi) return 'delhi-varanasi';
 
+  // Lucknow to Varanasi (Intra-state UP via NH-731 / Purvanchal)
+  if (normO.includes('lucknow') && (normD.includes('varanasi') || normD.includes('kashi'))) return 'lucknow-varanasi';
+  if (normD.includes('lucknow') && (normO.includes('varanasi') || normO.includes('kashi'))) return 'lucknow-varanasi';
+
+  // Lucknow to Ayodhya (NH-27)
+  if (normO.includes('lucknow') && (normD.includes('ayodhya') || normD.includes('faizabad'))) return 'lucknow-ayodhya';
+  if (normD.includes('lucknow') && (normO.includes('ayodhya') || normO.includes('faizabad'))) return 'lucknow-ayodhya';
+
+  // Kanpur to Prayagraj (NH-19)
+  if (normO.includes('kanpur') && (normD.includes('prayagraj') || normD.includes('allahabad'))) return 'kanpur-prayagraj';
+  if (normD.includes('kanpur') && (normO.includes('prayagraj') || normO.includes('allahabad'))) return 'kanpur-prayagraj';
+
+  // Prayagraj to Varanasi (NH-19)
+  if ((normO.includes('prayagraj') || normO.includes('allahabad')) && (normD.includes('varanasi') || normD.includes('kashi'))) return 'prayagraj-varanasi';
+  if ((normD.includes('prayagraj') || normD.includes('allahabad')) && (normO.includes('varanasi') || normO.includes('kashi'))) return 'prayagraj-varanasi';
+
   // Agra-Lucknow / Avadh expressway
   const isAvadh = ['lucknow', 'kanpur', 'gorakhpur'].some(
     (a) => normO.includes(a) || normD.includes(a)
@@ -209,6 +255,62 @@ function resolveCorridorKey(origin: string, destination: string): string | null 
   if (normO.includes('haridwar') && (normD.includes('dehradun') || normD.includes('mussoorie') || normD.includes('rishikesh'))) return 'haridwar-dehradun';
 
   return null;
+}
+
+/**
+ * Geometric Corridor Detection Engine.
+ * Verifies whether a toll plaza physically lies along the highway route corridor between origin and destination.
+ * Computes bounding-box containment, projection progress scalar t, and cross-track perpendicular distance.
+ */
+export function isPointAlongRouteCorridor(
+  plazaLat: number,
+  plazaLng: number,
+  origLat: number,
+  origLng: number,
+  destLat: number,
+  destLng: number,
+  maxCorridorKm: number = 30
+): { isAlong: boolean; progress: number; distanceKm: number } {
+  // Bounding box pre-check with dynamic safety margin
+  const padLat = Math.max(0.35, Math.abs(destLat - origLat) * 0.20);
+  const padLng = Math.max(0.35, Math.abs(destLng - origLng) * 0.20);
+
+  const minLat = Math.min(origLat, destLat) - padLat;
+  const maxLat = Math.max(origLat, destLat) + padLat;
+  const minLng = Math.min(origLng, destLng) - padLng;
+  const maxLng = Math.max(origLng, destLng) + padLng;
+
+  if (plazaLat < minLat || plazaLat > maxLat || plazaLng < minLng || plazaLng > maxLng) {
+    return { isAlong: false, progress: 0, distanceKm: 999 };
+  }
+
+  const dLat = destLat - origLat;
+  const dLng = destLng - origLng;
+  const lenSq = dLat * dLat + dLng * dLng;
+
+  if (lenSq < 0.0001) {
+    return { isAlong: false, progress: 0, distanceKm: 999 };
+  }
+
+  // Projection scalar t onto the line segment (0 = origin, 1 = destination)
+  const t = ((plazaLat - origLat) * dLat + (plazaLng - origLng) * dLng) / lenSq;
+
+  // Toll plaza must lie within the travel segment (between 3% and 97% of the journey)
+  if (t < 0.03 || t > 0.97) {
+    return { isAlong: false, progress: t, distanceKm: 999 };
+  }
+
+  // Calculate perpendicular distance to the projected point on the segment
+  const projLat = origLat + t * dLat;
+  const projLng = origLng + t * dLng;
+
+  const latDiffKm = (plazaLat - projLat) * 111.0;
+  const avgLatRad = ((plazaLat + projLat) / 2) * (Math.PI / 180);
+  const lngDiffKm = (plazaLng - projLng) * (111.0 * Math.cos(avgLatRad));
+  const perpDistKm = Math.sqrt(latDiffKm * latDiffKm + lngDiffKm * lngDiffKm);
+
+  const isAlong = perpDistKm <= maxCorridorKm;
+  return { isAlong, progress: t, distanceKm: perpDistKm };
 }
 
 /**
@@ -286,7 +388,7 @@ export function calculateRouteTolls(
       crossingStates = [];
     }
   } else {
-    // Dynamic fallback for any other town or corridor based on distance & state crossing
+    // Dynamic corridor matching for any other route
     const dist = approxDistanceKm || 200;
 
     if (originState.toLowerCase() !== destState.toLowerCase()) {
@@ -300,18 +402,62 @@ export function calculateRouteTolls(
     if (dist < 45) {
       selectedPlazas = [];
     } else {
-      // Smart Regional & Highway Toll Selection (Strictly matches destination & origin states)
-      const matchingPlazas = TOLL_PLAZAS.filter(
-        (p) => p.state.toLowerCase() === destState.toLowerCase() || p.state.toLowerCase() === originState.toLowerCase()
-      );
+      // Geometrically match toll plazas strictly along the physical route corridor
+      const coordO = findCoordinatesForAddress(origin);
+      const coordD = findCoordinatesForAddress(destination);
 
-      if (matchingPlazas.length > 0) {
-        const count = Math.max(0, Math.min(matchingPlazas.length, Math.round(dist / 85)));
-        selectedPlazas = matchingPlazas.slice(0, count);
+      if (coordO && coordD) {
+        const allowedStates = new Set<string>([
+          originState.toLowerCase(),
+          destState.toLowerCase(),
+        ]);
+        // Allow intermediate transit states if cross-country
+        if (
+          (originState === 'Delhi' && destState === 'Punjab') ||
+          (originState === 'Punjab' && destState === 'Delhi') ||
+          (originState === 'Delhi' && destState === 'Himachal Pradesh') ||
+          (originState === 'Delhi' && destState === 'Jammu & Kashmir')
+        ) {
+          allowedStates.add('haryana');
+          allowedStates.add('punjab');
+        }
+        if (
+          (originState === 'Delhi' && destState === 'Uttarakhand') ||
+          (originState === 'Uttarakhand' && destState === 'Delhi')
+        ) {
+          allowedStates.add('uttar pradesh');
+        }
+
+        const candidatePlazas: { plaza: TollPlazaItem; progress: number }[] = [];
+
+        for (const plaza of TOLL_PLAZAS) {
+          if (!allowedStates.has(plaza.state.toLowerCase())) continue;
+
+          const check = isPointAlongRouteCorridor(
+            plaza.lat,
+            plaza.lng,
+            coordO.lat,
+            coordO.lng,
+            coordD.lat,
+            coordD.lng,
+            30 // 30 km max deviation from straight corridor
+          );
+
+          if (check.isAlong) {
+            candidatePlazas.push({ plaza, progress: check.progress });
+          }
+        }
+
+        // Sort candidate plazas in order of direction of travel (origin to destination)
+        candidatePlazas.sort((a, b) => a.progress - b.progress);
+
+        // Cap to realistic density (max 1 plaza per 65 km of route)
+        const maxPlazasAllowed = Math.max(1, Math.round(dist / 65));
+        selectedPlazas = candidatePlazas.slice(0, maxPlazasAllowed).map((c) => c.plaza);
       } else {
-        // Select plazas matching distance
-        const count = Math.max(0, Math.min(3, Math.round(dist / 100)));
-        selectedPlazas = TOLL_PLAZAS.slice(0, count);
+        // ZERO fake toll plazas when coordinates are not available!
+        // Never fall back to dummy TOLL_PLAZAS.slice()
+        selectedPlazas = [];
       }
     }
   }

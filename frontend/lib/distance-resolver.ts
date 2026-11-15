@@ -31,7 +31,7 @@ export interface AccurateRouteResult {
   isFromMasterData: boolean;
 }
 
-interface GeoPoint {
+export interface GeoPoint {
   lat: number;
   lng: number;
   isHill?: boolean;
@@ -457,11 +457,32 @@ const CITY_COORDINATES: Record<string, GeoPoint> = {
   margao: { lat: 15.2832, lng: 73.9862 },
   madgaon: { lat: 15.2832, lng: 73.9862 },
   'vasco-da-gama': { lat: 15.3959, lng: 73.8157 },
+  vasco: { lat: 15.3959, lng: 73.8157 },
   mapusa: { lat: 15.5937, lng: 73.8142 },
   calangute: { lat: 15.5439, lng: 73.7553 },
   candolim: { lat: 15.5178, lng: 73.7667 },
   baga: { lat: 15.5553, lng: 73.7517 },
   anjuna: { lat: 15.5733, lng: 73.7410 },
+  palolem: { lat: 15.0100, lng: 74.0232 },
+  agonda: { lat: 15.0440, lng: 73.9870 },
+  colva: { lat: 15.2780, lng: 73.9140 },
+  benaulim: { lat: 15.2570, lng: 73.9210 },
+  cavelossim: { lat: 15.1760, lng: 73.9450 },
+  arambol: { lat: 15.6860, lng: 73.7050 },
+  morjim: { lat: 15.6170, lng: 73.7380 },
+  vagator: { lat: 15.6020, lng: 73.7340 },
+  siolim: { lat: 15.6260, lng: 73.7680 },
+  assagao: { lat: 15.5900, lng: 73.7780 },
+  porvorim: { lat: 15.5340, lng: 73.8290 },
+  ponda: { lat: 15.4020, lng: 74.0150 },
+  canacona: { lat: 15.0040, lng: 74.0480 },
+  mopa: { lat: 15.7580, lng: 73.8650 },
+  'mopa-airport': { lat: 15.7580, lng: 73.8650 },
+  dabolim: { lat: 15.3800, lng: 73.8310 },
+  'dabolim-airport': { lat: 15.3800, lng: 73.8310 },
+  bambolim: { lat: 15.4520, lng: 73.8580 },
+  'dona-paula': { lat: 15.4540, lng: 73.8050 },
+  'old-goa': { lat: 15.5030, lng: 73.9120 },
 
   // Maharashtra Hubs
   nashik: { lat: 19.9975, lng: 73.7898 },
@@ -502,7 +523,7 @@ export function normalizeKey(str: string): string {
 /**
  * Searches our vast coordinates matrix for any locality, street, or city mentioned in the input address.
  */
-function findCoordinatesForAddress(address: string): GeoPoint | null {
+export function findCoordinatesForAddress(address: string): GeoPoint | null {
   if (!address || typeof address !== 'string') return null;
 
   const raw = address.toLowerCase();

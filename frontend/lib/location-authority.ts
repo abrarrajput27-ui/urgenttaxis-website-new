@@ -499,7 +499,16 @@ export const LOCATION_STATE_MAP: Record<string, string> = {
   canacona: 'Goa',
   porvorim: 'Goa',
   dabolim: 'Goa',
+  'dabolim-airport': 'Goa',
   mopa: 'Goa',
+  'mopa-airport': 'Goa',
+  agonda: 'Goa',
+  cavelossim: 'Goa',
+  siolim: 'Goa',
+  assagao: 'Goa',
+  bambolim: 'Goa',
+  'dona-paula': 'Goa',
+  'old-goa': 'Goa',
 
   // ─── Gujarat ───────────────────────────────────────────────────────────────
   ahmedabad: 'Gujarat',
@@ -814,8 +823,14 @@ export const POPULAR_AUTOCOMPLETE_CITIES = [
   { name: 'Candolim', state: 'Goa' },
   { name: 'Baga', state: 'Goa' },
   { name: 'Anjuna', state: 'Goa' },
+  { name: 'Palolem', state: 'Goa' },
+  { name: 'Colva', state: 'Goa' },
+  { name: 'Agonda', state: 'Goa' },
+  { name: 'Arambol', state: 'Goa' },
   { name: 'Vasco da Gama', state: 'Goa' },
   { name: 'Mapusa', state: 'Goa' },
+  { name: 'Mopa Airport (GOX)', state: 'Goa' },
+  { name: 'Dabolim Airport (GOI)', state: 'Goa' },
 
   // Gujarat Hubs
   { name: 'Ahmedabad', state: 'Gujarat' },

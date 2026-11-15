@@ -1076,4 +1076,44 @@ export const CORRIDOR_TOLL_MAPPINGS: Record<string, {
     tollIds: ['lachhiwala-nh72'],
     crossingStates: [],
   },
+  // Delhi NCR to Moradabad / Rampur / Sambhal / Amroha (NH-9 Corridor)
+  'delhi-moradabad': {
+    tollIds: ['chhajrasi-nh9', 'brijghat-nh9', 'joya-nh9'],
+    crossingStates: ['Uttar Pradesh'],
+  },
+  // Delhi NCR to Bareilly / Shahjahanpur / Pilibhit (NH-9 / NH-30 Corridor)
+  'delhi-bareilly': {
+    tollIds: ['chhajrasi-nh9', 'brijghat-nh9', 'joya-nh9'],
+    crossingStates: ['Uttar Pradesh'],
+  },
+  // Delhi NCR to Hapur / Pilkhuwa (NH-9 Chhajrasi Only)
+  'delhi-hapur': {
+    tollIds: ['chhajrasi-nh9'],
+    crossingStates: ['Uttar Pradesh'],
+  },
+  // Lucknow to Varanasi / Kashi (Intra-state UP via NH-731 / Purvanchal)
+  'lucknow-varanasi': {
+    tollIds: [],
+    crossingStates: [],
+  },
+  // Lucknow to Ayodhya (NH-27 Ahmadpur Toll - Intra-state UP)
+  'lucknow-ayodhya': {
+    tollIds: ['ahmadpur-nh27'],
+    crossingStates: [],
+  },
+  // Kanpur to Prayagraj (NH-19 Barhad Toll - Intra-state UP)
+  'kanpur-prayagraj': {
+    tollIds: ['barhad-nh19'],
+    crossingStates: [],
+  },
+  // Prayagraj to Varanasi (NH-19 Lalanagar Toll - Intra-state UP)
+  'prayagraj-varanasi': {
+    tollIds: ['lalanagar-nh19'],
+    crossingStates: [],
+  },
+  // Intra-Goa Coastal & City Corridors (Zero Highway Toll Plazas, Zero Border Taxes)
+  'goa-intra': {
+    tollIds: [],
+    crossingStates: [],
+  },
 };

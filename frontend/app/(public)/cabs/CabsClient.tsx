@@ -1774,7 +1774,7 @@ export default function CabsClient() {
                               </div>
                             ) : (
                               <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/60 text-slate-600 text-[11px]">
-                                No NHAI highway toll plazas on this direct city/NCR route (₹0 Toll).
+                                No NHAI highway toll plazas on this direct route corridor (₹0 Toll).
                               </div>
                             )}
                           </div>
