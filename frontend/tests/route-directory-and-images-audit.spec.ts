@@ -6,35 +6,21 @@ import fs from 'fs';
 test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwar Origin Audit', () => {
 
   test('Test 1: RoutesTabWidget State Order & Strict A-to-Z Alphabetical Sorting', () => {
-    const content = fs.readFileSync('frontend/components/public/RoutesTabWidget.tsx', 'utf8');
-    const match = content.match(/const STATE_DESTINATIONS: Record<string, string\[\]> = \{([\s\S]*?)\n\};/);
-    expect(match).toBeTruthy();
+    const allStatesData = require('../lib/data/all-states-destinations.json');
+    const stateDestinations: Record<string, string[]> = allStatesData;
 
-    const evalStr = '({' + match![1] + '})';
-    const stateDestinations: Record<string, string[]> = eval(evalStr);
-
-    const expectedStateOrder = [
-      'Bihar',
-      'Delhi NCR',
-      'Goa',
-      'Gujarat',
-      'Haryana',
-      'Himachal Pradesh',
-      'Jammu & Kashmir',
-      'Madhya Pradesh',
-      'Maharashtra',
-      'Punjab',
-      'Rajasthan',
-      'Uttar Pradesh',
-      'Uttarakhand',
-      'West Bengal'
-    ];
-
-    expect(Object.keys(stateDestinations)).toEqual(expectedStateOrder);
+    expect(Object.keys(stateDestinations).length).toBe(35);
+    expect(stateDestinations['Bihar']).toBeDefined();
+    expect(stateDestinations['Delhi NCR']).toBeDefined();
+    expect(stateDestinations['Goa']).toBeDefined();
+    expect(stateDestinations['Karnataka']).toBeDefined();
+    expect(stateDestinations['Tamil Nadu']).toBeDefined();
+    expect(stateDestinations['Uttar Pradesh']).toBeDefined();
+    expect(stateDestinations['Uttarakhand']).toBeDefined();
 
     let totalDestinations = 0;
     for (const [state, list] of Object.entries(stateDestinations)) {
-      expect(list.length).toBeGreaterThan(50);
+      expect(list.length).toBeGreaterThanOrEqual(30);
       totalDestinations += list.length;
 
       // Verify strict A-to-Z alphabetical sorting
@@ -47,8 +33,8 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
       }
     }
 
-    // User asked for extensive village and city coverage (minimum 1500+ per state, 5000+ total)
-    expect(totalDestinations).toBeGreaterThanOrEqual(5000);
+    // User asked for extensive village and city coverage (minimum 15,000+ total)
+    expect(totalDestinations).toBeGreaterThanOrEqual(15000);
   });
 
   test('Test 2: Interconnected Departure Origins & Haridwar Hub in Chips', () => {
@@ -563,6 +549,82 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(gzbMbdToll.totalStateTax).toBe(0); // Intra-state UP
 
     // 5. Permanent protected footer designer credit
+    const footerContent = fs.readFileSync('frontend/components/public/Footer.tsx', 'utf8');
+    expect(footerContent).toContain('footer-designer-credit');
+    expect(footerContent).toContain('Designed by');
+    expect(footerContent).toContain('Mantsha Khan');
+  });
+
+  test('Test 19: All 35 Indian States & UTs Integration, Scrollable State Navigation, 20,000+ LGD Verified Locations & Tax Coverage', () => {
+    const allStatesData = require('../lib/data/all-states-destinations.json');
+    const { STATE_TAX_RATES } = require('../lib/data/tolls-data');
+    const { getLocationState, formatLocationWithState } = require('../lib/location-authority');
+    const fs = require('fs');
+
+    // 1. All 35 States and UTs imported
+    const states = Object.keys(allStatesData);
+    expect(states.length).toBe(35);
+
+    // 2. Total verified locations > 20,000 from Government Panchayati Raj LGD database
+    let totalCount = 0;
+    for (const [st, locs] of Object.entries(allStatesData as Record<string, string[]>)) {
+      expect(locs.length).toBeGreaterThanOrEqual(30);
+      totalCount += locs.length;
+    }
+    expect(totalCount).toBeGreaterThanOrEqual(20000);
+
+    // 3. Location State Resolution across diverse Indian States & UTs
+    expect(getLocationState('Visakhapatnam')).toBe('Andhra Pradesh');
+    expect(formatLocationWithState('Visakhapatnam')).toBe('Visakhapatnam, Andhra Pradesh');
+
+    expect(getLocationState('Guwahati')).toBe('Assam');
+    expect(formatLocationWithState('Guwahati')).toBe('Guwahati, Assam');
+
+    expect(getLocationState('Ranchi')).toBe('Jharkhand');
+    expect(formatLocationWithState('Ranchi')).toBe('Ranchi, Jharkhand');
+
+    expect(getLocationState('Bengaluru')).toBe('Karnataka');
+    expect(formatLocationWithState('Bengaluru')).toBe('Bengaluru, Karnataka');
+
+    expect(getLocationState('Kochi')).toBe('Kerala');
+    expect(formatLocationWithState('Kochi')).toBe('Kochi, Kerala');
+
+    expect(getLocationState('Bhubaneswar')).toBe('Odisha');
+    expect(formatLocationWithState('Bhubaneswar')).toBe('Bhubaneswar, Odisha');
+
+    expect(getLocationState('Chennai')).toBe('Tamil Nadu');
+    expect(formatLocationWithState('Chennai')).toBe('Chennai, Tamil Nadu');
+
+    expect(getLocationState('Hyderabad')).toBe('Telangana');
+    expect(formatLocationWithState('Hyderabad')).toBe('Hyderabad, Telangana');
+
+    expect(getLocationState('Leh')).toBe('Ladakh');
+    expect(formatLocationWithState('Leh')).toBe('Leh, Ladakh');
+
+    expect(getLocationState('Gangtok')).toBe('Sikkim');
+    expect(formatLocationWithState('Gangtok')).toBe('Gangtok, Sikkim');
+
+    expect(getLocationState('Raipur')).toBe('Chhattisgarh');
+    expect(formatLocationWithState('Raipur')).toBe('Raipur, Chhattisgarh');
+
+    expect(getLocationState('Palolem')).toBe('Goa');
+    expect(formatLocationWithState('Palolem')).toBe('Palolem, Goa');
+
+    // 4. Commercial State Tax defined across all 35 States & UTs
+    for (const st of states) {
+      expect(STATE_TAX_RATES[st], `State tax rate missing for ${st}`).toBeDefined();
+      expect(STATE_TAX_RATES[st].sedanRate).toBeGreaterThan(0);
+      expect(STATE_TAX_RATES[st].suvRate).toBeGreaterThan(0);
+    }
+
+    // 5. Scrollable State Tabs with Left and Right Controls in RoutesTabWidget
+    const widgetContent = fs.readFileSync('frontend/components/public/RoutesTabWidget.tsx', 'utf8');
+    expect(widgetContent).toContain('scrollStateTabs');
+    expect(widgetContent).toContain('Scroll States Left');
+    expect(widgetContent).toContain('Scroll States Right');
+    expect(widgetContent).toContain('tabsContainerRef');
+
+    // 6. Permanent protected footer designer credit
     const footerContent = fs.readFileSync('frontend/components/public/Footer.tsx', 'utf8');
     expect(footerContent).toContain('footer-designer-credit');
     expect(footerContent).toContain('Designed by');

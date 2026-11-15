@@ -81,26 +81,31 @@ export default function ContextualSEONavigation() {
 
   // 4. ALL-INDIA STATE & REGIONAL COVERAGE
   const stateCoverageRoutes: NavLinkItem[] = [
+    { label: 'Andhra Pradesh Cabs', href: '/routes?state=Andhra%20Pradesh' },
+    { label: 'Assam Outstation Taxi', href: '/routes?state=Assam' },
     { label: 'Bihar Taxi Services', href: '/routes?state=Bihar' },
+    { label: 'Chhattisgarh Cabs', href: '/routes?state=Chhattisgarh' },
     { label: 'Delhi NCR Taxi Service', href: '/taxi-service/delhi' },
     { label: 'Goa Outstation Cabs', href: '/routes?state=Goa' },
     { label: 'Gujarat Taxi Services', href: '/routes?state=Gujarat' },
     { label: 'Haryana Cabs & Taxi', href: '/taxi-service/gurugram' },
     { label: 'Himachal Pradesh Cabs', href: '/routes?state=Himachal%20Pradesh' },
     { label: 'Jammu & Kashmir Cabs', href: '/routes?state=Jammu%20%26%20Kashmir' },
+    { label: 'Jharkhand Outstation Taxi', href: '/routes?state=Jharkhand' },
+    { label: 'Karnataka Cabs', href: '/routes?state=Karnataka' },
+    { label: 'Kerala Outstation Taxi', href: '/routes?state=Kerala' },
+    { label: 'Ladakh Taxi Services', href: '/routes?state=Ladakh' },
     { label: 'Madhya Pradesh Taxi', href: '/routes?state=Madhya%20Pradesh' },
     { label: 'Maharashtra Cabs', href: '/routes?state=Maharashtra' },
+    { label: 'Odisha Outstation Cabs', href: '/routes?state=Odisha' },
     { label: 'Punjab Outstation Cabs', href: '/routes?state=Punjab' },
     { label: 'Rajasthan Taxi Service', href: '/routes?state=Rajasthan' },
+    { label: 'Sikkim Tourist Cabs', href: '/routes?state=Sikkim' },
+    { label: 'Tamil Nadu Cabs', href: '/routes?state=Tamil%20Nadu' },
+    { label: 'Telangana Taxi Services', href: '/routes?state=Telangana' },
     { label: 'Uttar Pradesh Cabs', href: '/routes?state=Uttar%20Pradesh' },
     { label: 'Uttarakhand Taxi Services', href: '/routes?state=Uttarakhand' },
     { label: 'West Bengal Cabs', href: '/routes?state=West%20Bengal' },
-    { label: 'Delhi to Patna Taxi', href: '/routes/delhi-to-patna-taxi' },
-    { label: 'Delhi to Bodh Gaya Taxi', href: '/routes/delhi-to-bodh-gaya-taxi' },
-    { label: 'Delhi to Haridwar Taxi', href: '/routes/delhi-to-haridwar-taxi' },
-    { label: 'Delhi to Rishikesh Taxi', href: '/routes/delhi-to-rishikesh-taxi' },
-    { label: 'Delhi to Nainital Taxi', href: '/routes/delhi-to-nainital-taxi' },
-    { label: 'Delhi to Agra Taxi', href: '/routes/delhi-to-agra-taxi' },
   ];
 
   const sections: NavSection[] = [

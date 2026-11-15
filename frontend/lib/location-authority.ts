@@ -355,6 +355,98 @@ export const LOCATION_STATE_MAP: Record<string, string> = {
   pahalgam: 'Jammu & Kashmir',
   sonamarg: 'Jammu & Kashmir',
 
+  // ─── Ladakh ────────────────────────────────────────────────────────────────
+  leh: 'Ladakh',
+  kargil: 'Ladakh',
+  diskit: 'Ladakh',
+  hunder: 'Ladakh',
+  zanskar: 'Ladakh',
+  drass: 'Ladakh',
+  dras: 'Ladakh',
+  turtuk: 'Ladakh',
+  pangong: 'Ladakh',
+  'pangong-tso': 'Ladakh',
+
+  // ─── Major State Capitals & Key National Hubs ──────────────────────────────
+  raipur: 'Chhattisgarh',
+  bilaspur: 'Chhattisgarh',
+  durg: 'Chhattisgarh',
+  bhilai: 'Chhattisgarh',
+  ranchi: 'Jharkhand',
+  jamshedpur: 'Jharkhand',
+  dhanbad: 'Jharkhand',
+  bokaro: 'Jharkhand',
+  deoghar: 'Jharkhand',
+  bhubaneswar: 'Odisha',
+  puri: 'Odisha',
+  visakhapatnam: 'Andhra Pradesh',
+  vizag: 'Andhra Pradesh',
+  vijayawada: 'Andhra Pradesh',
+  tirupati: 'Andhra Pradesh',
+  amaravati: 'Andhra Pradesh',
+  kurnool: 'Andhra Pradesh',
+  guwahati: 'Assam',
+  dispur: 'Assam',
+  silchar: 'Assam',
+  dibrugarh: 'Assam',
+  jorhat: 'Assam',
+  tezpur: 'Assam',
+  bengaluru: 'Karnataka',
+  bangalore: 'Karnataka',
+  mysuru: 'Karnataka',
+  mysore: 'Karnataka',
+  mangalore: 'Karnataka',
+  mangaluru: 'Karnataka',
+  hubballi: 'Karnataka',
+  belagavi: 'Karnataka',
+  hampi: 'Karnataka',
+  coorg: 'Karnataka',
+  madikeri: 'Karnataka',
+  kochi: 'Kerala',
+  cochin: 'Kerala',
+  thiruvananthapuram: 'Kerala',
+  trivandrum: 'Kerala',
+  kozhikode: 'Kerala',
+  calicut: 'Kerala',
+  munnar: 'Kerala',
+  alleppey: 'Kerala',
+  alappuzha: 'Kerala',
+  wayanad: 'Kerala',
+  varkala: 'Kerala',
+  chennai: 'Tamil Nadu',
+  madurai: 'Tamil Nadu',
+  coimbatore: 'Tamil Nadu',
+  tiruchirappalli: 'Tamil Nadu',
+  salem: 'Tamil Nadu',
+  ooty: 'Tamil Nadu',
+  kodaikanal: 'Tamil Nadu',
+  rameswaram: 'Tamil Nadu',
+  kanyakumari: 'Tamil Nadu',
+  hyderabad: 'Telangana',
+  secunderabad: 'Telangana',
+  warangal: 'Telangana',
+  nizamabad: 'Telangana',
+  karimnagar: 'Telangana',
+  gangtok: 'Sikkim',
+  pelling: 'Sikkim',
+  namchi: 'Sikkim',
+  shillong: 'Meghalaya',
+  cherrapunji: 'Meghalaya',
+  agartala: 'Tripura',
+  imphal: 'Manipur',
+  aizawl: 'Mizoram',
+  kohima: 'Nagaland',
+  dimapur: 'Nagaland',
+  itanagar: 'Arunachal Pradesh',
+  tawang: 'Arunachal Pradesh',
+  'port-blair': 'Andaman & Nicobar Islands',
+  puducherry: 'Puducherry',
+  pondicherry: 'Puducherry',
+  daman: 'Dadra & Nagar Haveli and Daman & Diu',
+  diu: 'Dadra & Nagar Haveli and Daman & Diu',
+  silvassa: 'Dadra & Nagar Haveli and Daman & Diu',
+  kavaratti: 'Lakshadweep',
+
   // ─── National Metros & Hubs ────────────────────────────────────────────────
   mumbai: 'Maharashtra',
   pune: 'Maharashtra',
@@ -592,6 +684,19 @@ function toSlug(name: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
+import allStatesDestinations from './data/all-states-destinations.json';
+
+// Pre-indexed map of all 20,455 verified locations across India to their exact State
+const ALL_STATES_INDEX: Record<string, string> = {};
+for (const [stateName, locs] of Object.entries(allStatesDestinations)) {
+  for (const loc of locs as string[]) {
+    const s = toSlug(loc);
+    if (s && !ALL_STATES_INDEX[s]) {
+      ALL_STATES_INDEX[s] = stateName;
+    }
+  }
+}
+
 /**
  * Resolves verified State name for any city, town, village or locality.
  */
@@ -601,6 +706,10 @@ export function getLocationState(cityName: string): string {
 
   if (LOCATION_STATE_MAP[slug]) {
     return LOCATION_STATE_MAP[slug];
+  }
+
+  if (ALL_STATES_INDEX[slug]) {
+    return ALL_STATES_INDEX[slug];
   }
 
   // Substring match
@@ -643,6 +752,23 @@ export function getLocationState(cityName: string): string {
   if (raw.includes('karnataka') || raw.includes('bangalore') || raw.includes('bengaluru')) return 'Karnataka';
   if (raw.includes('telangana') || raw.includes('hyderabad')) return 'Telangana';
   if (raw.includes('tamil nadu') || raw.includes('chennai')) return 'Tamil Nadu';
+  if (raw.includes('andhra pradesh') || raw.includes('tirupati') || raw.includes('vizag')) return 'Andhra Pradesh';
+  if (raw.includes('assam') || raw.includes('guwahati')) return 'Assam';
+  if (raw.includes('odisha') || raw.includes('bhubaneswar') || raw.includes('puri')) return 'Odisha';
+  if (raw.includes('kerala') || raw.includes('kochi') || raw.includes('munnar')) return 'Kerala';
+  if (raw.includes('ladakh') || raw.includes('leh')) return 'Ladakh';
+  if (raw.includes('chhattisgarh') || raw.includes('raipur')) return 'Chhattisgarh';
+  if (raw.includes('sikkim') || raw.includes('gangtok')) return 'Sikkim';
+  if (raw.includes('meghalaya') || raw.includes('shillong')) return 'Meghalaya';
+  if (raw.includes('tripura') || raw.includes('agartala')) return 'Tripura';
+  if (raw.includes('manipur') || raw.includes('imphal')) return 'Manipur';
+  if (raw.includes('mizoram') || raw.includes('aizawl')) return 'Mizoram';
+  if (raw.includes('nagaland') || raw.includes('kohima')) return 'Nagaland';
+  if (raw.includes('arunachal pradesh') || raw.includes('itanagar')) return 'Arunachal Pradesh';
+  if (raw.includes('andaman') || raw.includes('nicobar')) return 'Andaman & Nicobar Islands';
+  if (raw.includes('puducherry') || raw.includes('pondicherry')) return 'Puducherry';
+  if (raw.includes('daman') || raw.includes('diu') || raw.includes('dadra')) return 'Dadra & Nagar Haveli and Daman & Diu';
+  if (raw.includes('lakshadweep')) return 'Lakshadweep';
 
   return 'India';
 }
