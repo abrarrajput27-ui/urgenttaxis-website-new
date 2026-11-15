@@ -229,8 +229,10 @@ export interface RouteFareQuote {
   destName: string;
   distanceKm: number;
   durationText: string;
+  hatchbackFare?: number;
   sedanFare: number;
   ertigaFare: number;
+  innovaFare?: number;
   crystaFare: number;
   startsAt: number;
   estimatedToll: number;
@@ -264,7 +266,9 @@ export function resolveOneWayFare(
   if (match) {
     const distanceKm = match.estimated_distance_km || knownDistanceKm || 200;
     const sedanFare = match.sedanFare || 3499;
+    const hatchbackFare = match.hatchbackFare || Math.max(1500, Math.round(distanceKm * 12));
     const ertigaFare = match.ertigaFare || Math.round(sedanFare * 1.35);
+    const innovaFare = match.innovaFare || Math.max(2800, Math.round(distanceKm * 20));
     const crystaFare = match.crystaFare || Math.round(sedanFare * 2.2);
     const startsAt = Math.min(sedanFare, ertigaFare, crystaFare);
     const estimatedToll = Math.round(distanceKm * 1.6);
@@ -274,9 +278,11 @@ export function resolveOneWayFare(
       originName: match.originName,
       destName: match.destName,
       distanceKm,
-      durationText: match.durationText || `${Math.round(distanceKm / 50)} hours`,
+      durationText: match.durationText || `${Math.round(distanceKm / 55)} hours`,
+      hatchbackFare,
       sedanFare,
       ertigaFare,
+      innovaFare,
       crystaFare,
       startsAt,
       estimatedToll,
@@ -289,14 +295,18 @@ export function resolveOneWayFare(
   const distanceKm = accurate.distanceKm;
   const isNcrTransit = isDelhiNcrTransit(origin, destination);
 
-  // For intra-NCR local drops, apply point-to-point city fare (min ₹699 Sedan, ₹999 Ertiga, ₹1699 Crysta)
-  // For long-distance intercity outstation routes, maintain the standard outstation booking floor (min ₹1800 Sedan, ₹2400 Ertiga, ₹3600 Crysta)
+  // For intra-NCR local drops, apply point-to-point city fare (min ₹599 Hatchback, ₹699 Sedan, ₹999 Ertiga, ₹1499 Innova, ₹1699 Crysta)
+  // For long-distance intercity outstation routes, maintain the standard outstation booking floor (min ₹1500 Hatchback, ₹1800 Sedan, ₹2400 Ertiga, ₹2800 Innova, ₹3600 Crysta)
+  const minHatchFare = isNcrTransit ? 599 : 1500;
   const minSedanFare = isNcrTransit ? 699 : 1800;
   const minErtigaFare = isNcrTransit ? 999 : 2400;
+  const minInnovaFare = isNcrTransit ? 1499 : 2800;
   const minCrystaFare = isNcrTransit ? 1699 : 3600;
 
+  const hatchbackFare = Math.max(minHatchFare, Math.round(distanceKm * 12));
   const sedanFare = accurate.sedanFare || Math.max(minSedanFare, Math.round(distanceKm * 14));
   const ertigaFare = accurate.ertigaFare || Math.max(minErtigaFare, Math.round(distanceKm * 16));
+  const innovaFare = Math.max(minInnovaFare, Math.round(distanceKm * 20));
   const crystaFare = accurate.crystaFare || Math.max(minCrystaFare, Math.round(distanceKm * 24));
   const startsAt = Math.min(sedanFare, ertigaFare, crystaFare);
   const estimatedToll = isNcrTransit ? 0 : Math.round(distanceKm * 1.6);
@@ -307,8 +317,10 @@ export function resolveOneWayFare(
     destName: destination,
     distanceKm,
     durationText: accurate.durationText,
+    hatchbackFare,
     sedanFare,
     ertigaFare,
+    innovaFare,
     crystaFare,
     startsAt,
     estimatedToll,

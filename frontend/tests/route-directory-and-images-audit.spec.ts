@@ -630,4 +630,121 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(footerContent).toContain('Designed by');
     expect(footerContent).toContain('Mantsha Khan');
   });
+
+  test('Test 20: Nationwide Highway Distances, Duration, Master Fare Rates & Expressway Toll Calibration', () => {
+    const { resolveOneWayFare } = require('../lib/pricing');
+    const { calculateRouteTolls } = require('../lib/tolls');
+    const { resolveAccurateRoute } = require('../lib/distance-resolver');
+    const { STATE_DEFAULT_ORIGINS } = require('../components/public/RoutesTabWidget');
+    const masterRoutes = require('../lib/data/processed-master-routes.json');
+    const fs = require('fs');
+
+    // 1. All 35 States have primary departure hubs in STATE_DEFAULT_ORIGINS
+    expect(Object.keys(STATE_DEFAULT_ORIGINS).length).toBe(35);
+    expect(STATE_DEFAULT_ORIGINS['Karnataka']).toBe('Bengaluru');
+    expect(STATE_DEFAULT_ORIGINS['Maharashtra']).toBe('Mumbai');
+    expect(STATE_DEFAULT_ORIGINS['Goa']).toBe('Panaji');
+    expect(STATE_DEFAULT_ORIGINS['Tamil Nadu']).toBe('Chennai');
+    expect(STATE_DEFAULT_ORIGINS['Telangana']).toBe('Hyderabad');
+    expect(STATE_DEFAULT_ORIGINS['West Bengal']).toBe('Kolkata');
+    expect(STATE_DEFAULT_ORIGINS['Assam']).toBe('Guwahati');
+    expect(STATE_DEFAULT_ORIGINS['Bihar']).toBe('Patna');
+    expect(STATE_DEFAULT_ORIGINS['Gujarat']).toBe('Ahmedabad');
+    expect(STATE_DEFAULT_ORIGINS['Rajasthan']).toBe('Jaipur');
+
+    // 2. Accurate real-world highway distances & driving durations across India
+    const blrMys = resolveAccurateRoute('Bengaluru', 'Mysuru');
+    expect(blrMys.distanceKm).toBeGreaterThanOrEqual(140);
+    expect(blrMys.distanceKm).toBeLessThanOrEqual(155);
+    expect(blrMys.durationText).toContain('2 hrs');
+
+    const chnCbe = resolveAccurateRoute('Chennai', 'Coimbatore');
+    expect(chnCbe.distanceKm).toBeGreaterThanOrEqual(500);
+    expect(chnCbe.distanceKm).toBeLessThanOrEqual(530);
+
+    const hydWgl = resolveAccurateRoute('Hyderabad', 'Warangal');
+    expect(hydWgl.distanceKm).toBeGreaterThanOrEqual(140);
+    expect(hydWgl.distanceKm).toBeLessThanOrEqual(160);
+
+    const ghySil = resolveAccurateRoute('Guwahati', 'Silchar');
+    expect(ghySil.distanceKm).toBeGreaterThanOrEqual(295);
+    expect(ghySil.distanceKm).toBeLessThanOrEqual(325);
+
+    const delPat = resolveAccurateRoute('Delhi', 'Patna');
+    expect(delPat.distanceKm).toBeGreaterThanOrEqual(1020);
+    expect(delPat.distanceKm).toBeLessThanOrEqual(1120);
+
+    const mumPun = resolveAccurateRoute('Mumbai', 'Pune');
+    expect(mumPun.distanceKm).toBeGreaterThanOrEqual(145);
+    expect(mumPun.distanceKm).toBeLessThanOrEqual(160);
+
+    const panPal = resolveAccurateRoute('Panaji', 'Palolem');
+    expect(panPal.distanceKm).toBeGreaterThanOrEqual(65);
+    expect(panPal.distanceKm).toBeLessThanOrEqual(80);
+
+    // 3. Toll Plazas & State Tax Accuracy
+    // Bengaluru-Mysuru Expressway Tolls
+    const bmeTolls = calculateRouteTolls('Bengaluru', 'Mysuru', 'sedan', false, blrMys.distanceKm);
+    expect(bmeTolls.tollPlazas.length).toBe(2);
+    expect(bmeTolls.tollPlazas.some((p: any) => p.name.includes('Sheshagirihalli'))).toBe(true);
+    expect(bmeTolls.tollPlazas.some((p: any) => p.name.includes('Gananguru'))).toBe(true);
+    expect(bmeTolls.totalToll).toBe(325);
+    expect(bmeTolls.totalStateTax).toBe(0); // Intra-state Karnataka
+
+    // Delhi to Patna Expressway & Highway Plazas
+    const delPatTolls = calculateRouteTolls('Delhi', 'Patna', 'sedan', false, delPat.distanceKm);
+    expect(delPatTolls.tollPlazas.length).toBeGreaterThanOrEqual(5);
+    expect(delPatTolls.totalToll).toBeGreaterThanOrEqual(1000);
+    expect(delPatTolls.stateTaxes.length).toBeGreaterThanOrEqual(1);
+
+    // Chennai to Coimbatore Tolls
+    const cbeTolls = calculateRouteTolls('Chennai', 'Coimbatore', 'sedan', false, chnCbe.distanceKm);
+    expect(cbeTolls.tollPlazas.length).toBeGreaterThanOrEqual(3);
+    expect(cbeTolls.totalToll).toBeGreaterThanOrEqual(280);
+
+    // Hyderabad to Warangal Toll
+    const hydTolls = calculateRouteTolls('Hyderabad', 'Warangal', 'sedan', false, hydWgl.distanceKm);
+    expect(hydTolls.tollPlazas.length).toBe(1);
+    expect(hydTolls.totalToll).toBe(85);
+
+    // Goa Intra-state Zero Toll & Zero Tax Guarantee
+    const goaTolls = calculateRouteTolls('Panaji', 'Palolem', 'sedan', false, panPal.distanceKm);
+    expect(goaTolls.tollPlazas.length).toBe(0);
+    expect(goaTolls.totalToll).toBe(0);
+    expect(goaTolls.totalStateTax).toBe(0);
+
+    // 4. Route Detail Page Cab Options (Exact Master Rates)
+    const routePageContent = fs.readFileSync('frontend/app/(public)/routes/[slug]/page.tsx', 'utf8');
+    expect(routePageContent).toContain("ratePerKm: 12"); // Hatchback
+    expect(routePageContent).toContain("ratePerKm: 14"); // Sedan
+    expect(routePageContent).toContain("ratePerKm: 16"); // SUV / Ertiga
+    expect(routePageContent).toContain("ratePerKm: 20"); // Toyota Innova
+    expect(routePageContent).toContain("ratePerKm: 24"); // Innova Crysta / Hycross
+    expect(routePageContent).toContain("ratePerKm: 26"); // Tempo Traveller
+
+    // 5. Zero Flat-3499 Outliers in Master Routes
+    const flat3499Outliers = masterRoutes.filter(
+      (r: any) => r.sedanFare === 3499 && (r.estimated_distance_km > 300 || r.estimated_distance_km < 120)
+    );
+    expect(flat3499Outliers.length).toBe(0);
+
+    // Verified Specific Speed/Duration Calibrations
+    const manaliRoute = masterRoutes.find((r: any) => r.slug === 'delhi-to-manali-taxi');
+    expect(manaliRoute.durationText).toBe('12 hours');
+    expect(manaliRoute.estimated_distance_km).toBe(530);
+
+    const ayodhyaRoute = masterRoutes.find((r: any) => r.slug === 'delhi-to-ayodhya-taxi');
+    expect(ayodhyaRoute.durationText).toBe('10 hours');
+    expect(ayodhyaRoute.estimated_distance_km).toBe(680);
+
+    const varanasiRoute = masterRoutes.find((r: any) => r.slug === 'delhi-to-varanasi-taxi');
+    expect(varanasiRoute.durationText).toBe('13 hours');
+    expect(varanasiRoute.estimated_distance_km).toBe(820);
+
+    // 6. Permanent protected footer designer credit
+    const footerContent = fs.readFileSync('frontend/components/public/Footer.tsx', 'utf8');
+    expect(footerContent).toContain('footer-designer-credit');
+    expect(footerContent).toContain('Designed by');
+    expect(footerContent).toContain('Mantsha Khan');
+  });
 });

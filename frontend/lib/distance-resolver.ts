@@ -17,6 +17,8 @@
  */
 
 import masterRoutesData from './data/processed-master-routes.json';
+import { getLocationState } from './location-authority';
+
 
 export interface AccurateRouteResult {
   origin: string;
@@ -38,7 +40,7 @@ export interface GeoPoint {
 }
 
 // -----------------------------------------------------------------------------
-// 1. MASTER GEOGRAPHIC COORDINATES MATRIX (250+ LOCATIONS)
+// 1. MASTER GEOGRAPHIC COORDINATES MATRIX (550+ LOCATIONS ACROSS ALL INDIA)
 // -----------------------------------------------------------------------------
 const CITY_COORDINATES: Record<string, GeoPoint> = {
   // Delhi NCR & Capital Region
@@ -505,7 +507,363 @@ const CITY_COORDINATES: Record<string, GeoPoint> = {
   puri: { lat: 19.8135, lng: 85.8312 },
   guwahati: { lat: 26.1445, lng: 91.7362 },
   goa: { lat: 15.2993, lng: 74.1240 },
+
+  // Nationwide State Hubs, Capitals & Districts Matrix (South, West, East, Central & Northeast)
+  'bengaluru': { lat: 12.9716, lng: 77.5946 },
+  'bangalore': { lat: 12.9716, lng: 77.5946 },
+  'bengaluru-airport': { lat: 13.1986, lng: 77.7066 },
+  'kia-airport': { lat: 13.1986, lng: 77.7066 },
+  'mysuru': { lat: 12.2958, lng: 76.6394 },
+  'mysore': { lat: 12.2958, lng: 76.6394 },
+  'hubballi': { lat: 15.3647, lng: 75.124 },
+  'hubli': { lat: 15.3647, lng: 75.124 },
+  'dharwad': { lat: 15.4589, lng: 75.0078 },
+  'mangaluru': { lat: 12.9141, lng: 74.856 },
+  'mangalore': { lat: 12.9141, lng: 74.856 },
+  'belagavi': { lat: 15.8497, lng: 74.4977 },
+  'belgaum': { lat: 15.8497, lng: 74.4977 },
+  'davanagere': { lat: 14.4644, lng: 75.9218 },
+  'ballari': { lat: 15.1394, lng: 76.9214 },
+  'bellary': { lat: 15.1394, lng: 76.9214 },
+  'kalaburagi': { lat: 17.3297, lng: 76.8343 },
+  'gulbarga': { lat: 17.3297, lng: 76.8343 },
+  'vijayapura': { lat: 16.8302, lng: 75.71 },
+  'bijapur': { lat: 16.8302, lng: 75.71 },
+  'shivamogga': { lat: 13.9299, lng: 75.5681 },
+  'shimoga': { lat: 13.9299, lng: 75.5681 },
+  'tumakuru': { lat: 13.3392, lng: 77.1017 },
+  'tumkur': { lat: 13.3392, lng: 77.1017 },
+  'udupi': { lat: 13.3409, lng: 74.7421 },
+  'manipal': { lat: 13.3525, lng: 74.7865 },
+  'hassan': { lat: 13.0033, lng: 76.1004 },
+  'bidar': { lat: 17.9104, lng: 77.5199 },
+  'raichur': { lat: 16.212, lng: 77.3439 },
+  'bagalkot': { lat: 16.18, lng: 75.69 },
+  'gadag': { lat: 15.4319, lng: 75.6355 },
+  'haveri': { lat: 14.7954, lng: 75.3991 },
+  'yadgir': { lat: 16.7628, lng: 77.1378 },
+  'koppal': { lat: 15.3444, lng: 76.1548 },
+  'karwar': { lat: 14.8185, lng: 74.1337 },
+  'chikkamagaluru': { lat: 13.3161, lng: 75.772, isHill: true },
+  'chikmagalur': { lat: 13.3161, lng: 75.772, isHill: true },
+  'madikeri': { lat: 12.4244, lng: 75.7382, isHill: true },
+  'coorg': { lat: 12.4244, lng: 75.7382, isHill: true },
+  'gokarna': { lat: 14.5479, lng: 74.3188 },
+  'hampi': { lat: 15.335, lng: 76.46 },
+  'murudeshwar': { lat: 14.094, lng: 74.4849 },
+  'dandeli': { lat: 15.2361, lng: 74.6173, isHill: true },
+  'kolar': { lat: 13.1367, lng: 78.1292 },
+  'mandya': { lat: 12.5234, lng: 76.8966 },
+  'chamarajanagar': { lat: 11.9261, lng: 76.9437 },
+  'ramanagara': { lat: 12.7209, lng: 77.2799 },
+  'chitradurga': { lat: 14.2251, lng: 76.398 },
+  'chennai': { lat: 13.0827, lng: 80.2707 },
+  'chennai-airport': { lat: 12.9941, lng: 80.1709 },
+  'coimbatore': { lat: 11.0168, lng: 76.9558 },
+  'madurai': { lat: 9.9252, lng: 78.1198 },
+  'tiruchirappalli': { lat: 10.7905, lng: 78.7047 },
+  'trichy': { lat: 10.7905, lng: 78.7047 },
+  'salem': { lat: 11.6643, lng: 78.146 },
+  'tirunelveli': { lat: 8.7139, lng: 77.7567 },
+  'tiruppur': { lat: 11.1085, lng: 77.3411 },
+  'vellore': { lat: 12.9165, lng: 79.1325 },
+  'erode': { lat: 11.341, lng: 77.7172 },
+  'thoothukudi': { lat: 8.7642, lng: 78.1348 },
+  'tuticorin': { lat: 8.7642, lng: 78.1348 },
+  'dindigul': { lat: 10.3673, lng: 77.9803 },
+  'thanjavur': { lat: 10.787, lng: 79.1378 },
+  'kanchipuram': { lat: 12.8342, lng: 79.7036 },
+  'karur': { lat: 10.9601, lng: 78.0766 },
+  'ooty': { lat: 11.4102, lng: 76.695, isHill: true },
+  'udhagamandalam': { lat: 11.4102, lng: 76.695, isHill: true },
+  'kodaikanal': { lat: 10.2381, lng: 77.4892, isHill: true },
+  'kanyakumari': { lat: 8.0883, lng: 77.5385 },
+  'rameswaram': { lat: 9.2876, lng: 79.3129 },
+  'mahabalipuram': { lat: 12.6269, lng: 80.1927 },
+  'hosur': { lat: 12.7409, lng: 77.8253 },
+  'nagapattinam': { lat: 10.7656, lng: 79.8424 },
+  'cuddalore': { lat: 11.748, lng: 79.7714 },
+  'tiruvannamalai': { lat: 12.2253, lng: 79.0747 },
+  'thiruvananthapuram': { lat: 8.5241, lng: 76.9366 },
+  'trivandrum': { lat: 8.5241, lng: 76.9366 },
+  'kochi': { lat: 9.9312, lng: 76.2673 },
+  'cochin': { lat: 9.9312, lng: 76.2673 },
+  'ernakulam': { lat: 9.9816, lng: 76.2999 },
+  'kochi-airport': { lat: 10.1518, lng: 76.393 },
+  'kozhikode': { lat: 11.2588, lng: 75.7804 },
+  'calicut': { lat: 11.2588, lng: 75.7804 },
+  'thrissur': { lat: 10.5276, lng: 76.2144 },
+  'kollam': { lat: 8.8932, lng: 76.6141 },
+  'alappuzha': { lat: 9.4981, lng: 76.3388 },
+  'alleppey': { lat: 9.4981, lng: 76.3388 },
+  'palakkad': { lat: 10.7867, lng: 76.6548 },
+  'kannur': { lat: 11.8745, lng: 75.3704 },
+  'kottayam': { lat: 9.5916, lng: 76.5222 },
+  'malappuram': { lat: 11.051, lng: 76.0711 },
+  'wayanad': { lat: 11.605, lng: 76.0828, isHill: true },
+  'kalpetta': { lat: 11.605, lng: 76.0828, isHill: true },
+  'kasaragod': { lat: 12.4996, lng: 74.9869 },
+  'munnar': { lat: 10.0889, lng: 77.0595, isHill: true },
+  'pathanamthitta': { lat: 9.2648, lng: 76.787 },
+  'varkala': { lat: 8.7379, lng: 76.7163 },
+  'kovalam': { lat: 8.4004, lng: 76.9787 },
+  'thekkady': { lat: 9.6031, lng: 77.1615, isHill: true },
+  'guruvayur': { lat: 10.5946, lng: 76.0416 },
+  'hyderabad': { lat: 17.385, lng: 78.4867 },
+  'secunderabad': { lat: 17.4399, lng: 78.4983 },
+  'hyderabad-airport': { lat: 17.2403, lng: 78.4294 },
+  'rgia': { lat: 17.2403, lng: 78.4294 },
+  'warangal': { lat: 17.9689, lng: 79.5941 },
+  'nizamabad': { lat: 18.6725, lng: 78.0941 },
+  'karimnagar': { lat: 18.4386, lng: 79.1288 },
+  'khammam': { lat: 17.2473, lng: 80.1514 },
+  'ramagundam': { lat: 18.7557, lng: 79.513 },
+  'mahbubnagar': { lat: 16.7488, lng: 77.9856 },
+  'nalgonda': { lat: 17.0577, lng: 79.2684 },
+  'adilabad': { lat: 19.6641, lng: 78.532 },
+  'suryapet': { lat: 17.1439, lng: 79.6239 },
+  'siddipet': { lat: 18.1018, lng: 78.852 },
+  'mancherial': { lat: 18.8679, lng: 79.4639 },
+  'visakhapatnam': { lat: 17.6868, lng: 83.2185 },
+  'vizag': { lat: 17.6868, lng: 83.2185 },
+  'vijayawada': { lat: 16.5062, lng: 80.648 },
+  'guntur': { lat: 16.3067, lng: 80.4365 },
+  'nellore': { lat: 14.4426, lng: 79.9865 },
+  'kurnool': { lat: 15.8281, lng: 78.0373 },
+  'rajahmundry': { lat: 17.0005, lng: 81.804 },
+  'tirupati': { lat: 13.6288, lng: 79.4192 },
+  'kakinada': { lat: 16.9891, lng: 82.2475 },
+  'kadapa': { lat: 14.4673, lng: 78.8242 },
+  'anantapur': { lat: 14.6819, lng: 77.6006 },
+  'vizianagaram': { lat: 18.1067, lng: 83.3956 },
+  'eluru': { lat: 16.7107, lng: 81.0952 },
+  'ongole': { lat: 15.5057, lng: 80.0499 },
+  'nandyal': { lat: 15.4786, lng: 78.4836 },
+  'machilipatnam': { lat: 16.1875, lng: 81.1389 },
+  'srikakulam': { lat: 18.2949, lng: 83.8938 },
+  'chittoor': { lat: 13.2172, lng: 79.1003 },
+  'amaravati': { lat: 16.5131, lng: 80.5165 },
+  'araku': { lat: 18.3273, lng: 82.8775, isHill: true },
+  'kolkata': { lat: 22.5726, lng: 88.3639 },
+  'calcutta': { lat: 22.5726, lng: 88.3639 },
+  'kolkata-airport': { lat: 22.6547, lng: 88.4467 },
+  'howrah': { lat: 22.5958, lng: 88.2636 },
+  'durgapur': { lat: 23.5204, lng: 87.3119 },
+  'asansol': { lat: 23.6889, lng: 86.9661 },
+  'siliguri': { lat: 26.7271, lng: 88.3953 },
+  'darjeeling': { lat: 27.041, lng: 88.2663, isHill: true },
+  'kalimpong': { lat: 27.0594, lng: 88.4695, isHill: true },
+  'malda': { lat: 25.0, lng: 88.1333 },
+  'kharagpur': { lat: 22.3398, lng: 87.3255 },
+  'haldia': { lat: 22.062, lng: 88.082 },
+  'bardhaman': { lat: 23.2324, lng: 87.8615 },
+  'burdwan': { lat: 23.2324, lng: 87.8615 },
+  'jalpaiguri': { lat: 26.54, lng: 88.72 },
+  'cooch-behar': { lat: 26.3452, lng: 89.4482 },
+  'purulia': { lat: 23.3321, lng: 86.3652 },
+  'midnapore': { lat: 22.4257, lng: 87.3199 },
+  'digha': { lat: 21.6266, lng: 87.5074 },
+  'shantiniketan': { lat: 23.6774, lng: 87.6837 },
+  'bolpur': { lat: 23.6774, lng: 87.6837 },
+  'bhubaneswar': { lat: 20.2961, lng: 85.8245 },
+  'cuttack': { lat: 20.4625, lng: 85.8828 },
+  'rourkela': { lat: 22.2604, lng: 84.8536 },
+  'berhampur': { lat: 19.315, lng: 84.7941 },
+  'sambalpur': { lat: 21.4669, lng: 83.9812 },
+  'puri': { lat: 19.8135, lng: 85.8312 },
+  'balasore': { lat: 21.4934, lng: 86.9135 },
+  'bhadrak': { lat: 21.0544, lng: 86.496 },
+  'baripada': { lat: 21.9322, lng: 86.7258 },
+  'jharsuguda': { lat: 21.8554, lng: 84.0062 },
+  'jeypore': { lat: 18.8561, lng: 82.5683 },
+  'angul': { lat: 20.84, lng: 85.1 },
+  'konark': { lat: 19.8876, lng: 86.0945 },
+  'guwahati': { lat: 26.1445, lng: 91.7362 },
+  'guwahati-airport': { lat: 26.1061, lng: 91.5859 },
+  'silchar': { lat: 24.8333, lng: 92.7789 },
+  'dibrugarh': { lat: 27.4728, lng: 94.912 },
+  'jorhat': { lat: 26.7509, lng: 94.2037 },
+  'nagaon': { lat: 26.3464, lng: 92.684 },
+  'tinsukia': { lat: 27.4922, lng: 95.3468 },
+  'tezpur': { lat: 26.6528, lng: 92.7926 },
+  'bongaigaon': { lat: 26.5024, lng: 90.5432 },
+  'sivasagar': { lat: 26.9826, lng: 94.6425 },
+  'kaziranga': { lat: 26.5775, lng: 93.1711 },
+  'shillong': { lat: 25.5788, lng: 91.8933, isHill: true },
+  'cherrapunji': { lat: 25.2702, lng: 91.7323, isHill: true },
+  'agartala': { lat: 23.8315, lng: 91.2868 },
+  'aizawl': { lat: 23.7271, lng: 92.7176, isHill: true },
+  'imphal': { lat: 24.817, lng: 93.9368 },
+  'kohima': { lat: 25.6751, lng: 94.1086, isHill: true },
+  'dimapur': { lat: 25.9092, lng: 93.7266 },
+  'itanagar': { lat: 27.0844, lng: 93.6053 },
+  'gangtok': { lat: 27.3389, lng: 88.6065, isHill: true },
+  'ahmedabad': { lat: 23.0225, lng: 72.5714 },
+  'ahmedabad-airport': { lat: 23.0772, lng: 72.6347 },
+  'surat': { lat: 21.1702, lng: 72.8311 },
+  'vadodara': { lat: 22.3072, lng: 73.1812 },
+  'baroda': { lat: 22.3072, lng: 73.1812 },
+  'rajkot': { lat: 22.3039, lng: 70.8022 },
+  'bhavnagar': { lat: 21.7645, lng: 72.1519 },
+  'jamnagar': { lat: 22.4707, lng: 70.0577 },
+  'junagadh': { lat: 21.5222, lng: 70.4579 },
+  'gandhinagar': { lat: 23.2156, lng: 72.6369 },
+  'anand': { lat: 22.5645, lng: 72.9289 },
+  'navsari': { lat: 20.95, lng: 72.93 },
+  'morbi': { lat: 22.812, lng: 70.8378 },
+  'nadiad': { lat: 22.6916, lng: 72.8634 },
+  'surendranagar': { lat: 22.7278, lng: 71.6378 },
+  'bharuch': { lat: 21.7051, lng: 72.9959 },
+  'mehsana': { lat: 23.588, lng: 72.3693 },
+  'bhuj': { lat: 23.242, lng: 69.6669 },
+  'porbandar': { lat: 21.6417, lng: 69.6293 },
+  'vapi': { lat: 20.3893, lng: 72.9106 },
+  'valsad': { lat: 20.5992, lng: 72.9342 },
+  'palanpur': { lat: 24.1724, lng: 72.4346 },
+  'somnath': { lat: 20.888, lng: 70.401 },
+  'dwarka-gujarat': { lat: 22.2442, lng: 68.9685 },
+  'statue-of-unity': { lat: 21.838, lng: 73.7191 },
+  'kevadia': { lat: 21.838, lng: 73.7191 },
+  'patna': { lat: 25.5941, lng: 85.1376 },
+  'patna-airport': { lat: 25.5913, lng: 85.088 },
+  'gaya': { lat: 24.7955, lng: 85.0002 },
+  'bodh-gaya': { lat: 24.6961, lng: 84.9869 },
+  'bhagalpur': { lat: 25.2425, lng: 86.9842 },
+  'muzaffarpur': { lat: 26.1209, lng: 85.3647 },
+  'purnia': { lat: 25.7771, lng: 87.4753 },
+  'darbhanga': { lat: 26.1542, lng: 85.8918 },
+  'bihar-sharif': { lat: 25.1969, lng: 85.5194 },
+  'arrah': { lat: 25.5541, lng: 84.6644 },
+  'begusarai': { lat: 25.4182, lng: 86.1272 },
+  'katihar': { lat: 25.5394, lng: 87.5732 },
+  'munger': { lat: 25.3757, lng: 86.4744 },
+  'chhapra': { lat: 25.7796, lng: 84.7499 },
+  'sasaram': { lat: 24.9528, lng: 84.0315 },
+  'hajipur': { lat: 25.6858, lng: 85.2096 },
+  'motihari': { lat: 26.647, lng: 84.9089 },
+  'buxar': { lat: 25.5647, lng: 83.9777 },
+  'rajgir': { lat: 25.03, lng: 85.42 },
+  'nalanda': { lat: 25.1357, lng: 85.4436 },
+  'ranchi': { lat: 23.3441, lng: 85.3096 },
+  'jamshedpur': { lat: 22.8046, lng: 86.2029 },
+  'dhanbad': { lat: 23.7957, lng: 86.4304 },
+  'bokaro': { lat: 23.6693, lng: 86.1511 },
+  'deoghar': { lat: 24.4826, lng: 86.7 },
+  'hazaribagh': { lat: 23.9934, lng: 85.3637 },
+  'giridih': { lat: 24.1856, lng: 86.3072 },
+  'ramgarh': { lat: 23.63, lng: 85.51 },
+  'bhopal': { lat: 23.2599, lng: 77.4126 },
+  'indore': { lat: 22.7196, lng: 75.8577 },
+  'jabalpur': { lat: 23.1815, lng: 79.9864 },
+  'gwalior': { lat: 26.2183, lng: 78.1828 },
+  'ujjain': { lat: 23.1765, lng: 75.7885 },
+  'sagar': { lat: 23.8388, lng: 78.7378 },
+  'dewas': { lat: 22.9676, lng: 76.0534 },
+  'satna': { lat: 24.6005, lng: 80.8322 },
+  'ratlam': { lat: 23.3315, lng: 75.0367 },
+  'rewa': { lat: 24.5362, lng: 81.3037 },
+  'katni': { lat: 23.8343, lng: 80.3957 },
+  'singrauli': { lat: 24.1997, lng: 82.6645 },
+  'khandwa': { lat: 21.8314, lng: 76.3498 },
+  'khajuraho': { lat: 24.8318, lng: 79.9199 },
+  'pachmarhi': { lat: 22.4674, lng: 78.4346, isHill: true },
+  'omkareshwar': { lat: 22.245, lng: 76.1517 },
+  'raipur': { lat: 21.2514, lng: 81.6296 },
+  'bhilai': { lat: 21.2167, lng: 81.4333 },
+  'bilaspur': { lat: 22.0797, lng: 82.1409 },
+  'korba': { lat: 22.3595, lng: 82.7501 },
+  'jagdalpur': { lat: 19.074, lng: 82.008 },
+  'raigarh': { lat: 21.8974, lng: 83.395 },
+  'amritsar': { lat: 31.634, lng: 74.8723 },
+  'ludhiana': { lat: 30.901, lng: 75.8573 },
+  'jalandhar': { lat: 31.326, lng: 75.5762 },
+  'patiala': { lat: 30.3398, lng: 76.3869 },
+  'bathinda': { lat: 30.211, lng: 74.9455 },
+  'pathankot': { lat: 32.2689, lng: 75.6499 },
+  'mohali': { lat: 30.7046, lng: 76.7179 },
+  'chandigarh': { lat: 30.7333, lng: 76.7794 },
+  'panipat': { lat: 29.3909, lng: 76.9635 },
+  'karnal': { lat: 29.6857, lng: 76.9905 },
+  'ambala': { lat: 30.3782, lng: 76.7767 },
+  'rohtak': { lat: 28.8955, lng: 76.6066 },
+  'hisar': { lat: 29.1492, lng: 75.7217 },
+  'sonipat': { lat: 28.9931, lng: 77.0151 },
+  'srinagar': { lat: 34.0837, lng: 74.7973, isHill: true },
+  'jammu': { lat: 32.7266, lng: 74.857 },
+  'katra': { lat: 32.9918, lng: 74.9317, isHill: true },
+  'vaishno-devi': { lat: 33.0308, lng: 74.949, isHill: true },
+  'gulmarg': { lat: 34.0484, lng: 74.3805, isHill: true },
+  'pahalgam': { lat: 34.0163, lng: 75.315, isHill: true },
+  'leh': { lat: 34.1526, lng: 77.5771, isHill: true },
+  'kargil': { lat: 34.5539, lng: 76.1349, isHill: true },
+  'nubra': { lat: 34.6863, lng: 77.5673, isHill: true },
+  'diskit': { lat: 34.5428, lng: 77.5583, isHill: true },
+  'pangong': { lat: 33.7595, lng: 78.6674, isHill: true },
+  'shimla': { lat: 31.1048, lng: 77.1734, isHill: true },
+  'manali': { lat: 32.2432, lng: 77.1892, isHill: true },
+  'dharamshala': { lat: 32.219, lng: 76.3234, isHill: true },
+  'mcleodganj': { lat: 32.2426, lng: 76.3213, isHill: true },
+  'dalhousie': { lat: 32.5387, lng: 75.971, isHill: true },
+  'kasauli': { lat: 30.9013, lng: 76.9649, isHill: true },
+  'solan': { lat: 30.9045, lng: 77.0967, isHill: true },
+  'kullu': { lat: 31.9579, lng: 77.1095, isHill: true },
+  'kasol': { lat: 32.01, lng: 77.315, isHill: true },
+  'spiti': { lat: 32.2461, lng: 78.0349, isHill: true },
+  'kaza': { lat: 32.2276, lng: 78.071, isHill: true },
+  'port-blair': { lat: 11.6234, lng: 92.7265 },
+  'havelock': { lat: 11.9761, lng: 92.9876 },
+  'daman': { lat: 20.4283, lng: 72.8397 },
+  'diu': { lat: 20.7144, lng: 70.9874 },
+  'silvassa': { lat: 20.2763, lng: 73.0083 },
+  'puducherry': { lat: 11.9416, lng: 79.8083 },
+  'pondicherry': { lat: 11.9416, lng: 79.8083 },
+  'kavaratti': { lat: 10.5667, lng: 72.6417 },
+  goa: { lat: 15.2993, lng: 74.1240 },
 };
+
+// -----------------------------------------------------------------------------
+// 1.1 ALL 35 INDIAN STATES & UNION TERRITORIES GEOGRAPHIC CENTROIDS
+// -----------------------------------------------------------------------------
+export const STATE_CENTROIDS: Record<string, GeoPoint> = {
+  'Andaman & Nicobar Islands': { lat: 11.6234, lng: 92.7265 },
+  'Andhra Pradesh': { lat: 15.9129, lng: 79.7400 },
+  'Arunachal Pradesh': { lat: 28.2180, lng: 94.7278, isHill: true },
+  'Assam': { lat: 26.2006, lng: 92.9376 },
+  'Bihar': { lat: 25.0961, lng: 85.3131 },
+  'Chandigarh': { lat: 30.7333, lng: 76.7794 },
+  'Chhattisgarh': { lat: 21.2787, lng: 81.8661 },
+  'Dadra & Nagar Haveli and Daman & Diu': { lat: 20.4283, lng: 72.8397 },
+  'Delhi': { lat: 28.6139, lng: 77.2090 },
+  'Delhi NCR': { lat: 28.6139, lng: 77.2090 },
+  'Goa': { lat: 15.2993, lng: 74.1240 },
+  'Gujarat': { lat: 22.2587, lng: 71.1924 },
+  'Haryana': { lat: 29.0588, lng: 76.0856 },
+  'Himachal Pradesh': { lat: 31.1048, lng: 77.1734, isHill: true },
+  'Jammu & Kashmir': { lat: 33.7782, lng: 76.5762, isHill: true },
+  'Jharkhand': { lat: 23.6102, lng: 85.2799 },
+  'Karnataka': { lat: 15.3173, lng: 75.7139 },
+  'Kerala': { lat: 10.8505, lng: 76.2711 },
+  'Ladakh': { lat: 34.1526, lng: 77.5771, isHill: true },
+  'Lakshadweep': { lat: 10.5667, lng: 72.6417 },
+  'Madhya Pradesh': { lat: 22.9734, lng: 78.6569 },
+  'Maharashtra': { lat: 19.7515, lng: 75.7139 },
+  'Manipur': { lat: 24.6637, lng: 93.9063, isHill: true },
+  'Meghalaya': { lat: 25.4670, lng: 91.3662, isHill: true },
+  'Mizoram': { lat: 23.1645, lng: 92.9376, isHill: true },
+  'Nagaland': { lat: 26.1584, lng: 94.5624, isHill: true },
+  'Odisha': { lat: 20.9517, lng: 85.0985 },
+  'Puducherry': { lat: 11.9416, lng: 79.8083 },
+  'Punjab': { lat: 31.1471, lng: 75.3412 },
+  'Rajasthan': { lat: 27.0238, lng: 74.2179 },
+  'Sikkim': { lat: 27.5330, lng: 88.5122, isHill: true },
+  'Tamil Nadu': { lat: 11.1271, lng: 78.6569 },
+  'Telangana': { lat: 18.1124, lng: 79.0193 },
+  'Tripura': { lat: 23.9408, lng: 91.9882 },
+  'Uttar Pradesh': { lat: 26.8467, lng: 80.9462 },
+  'Uttarakhand': { lat: 30.0668, lng: 79.0193, isHill: true },
+  'West Bengal': { lat: 22.9868, lng: 87.8550 },
+};
+
 
 // -----------------------------------------------------------------------------
 // 2. SMART ADDRESS & LOCALITY PARSER
@@ -529,7 +887,7 @@ export function findCoordinatesForAddress(address: string): GeoPoint | null {
   const raw = address.toLowerCase();
   const slug = normalizeKey(address);
 
-  // 1. Direct match
+  // 1. Direct match in CITY_COORDINATES
   if (CITY_COORDINATES[slug]) {
     return CITY_COORDINATES[slug];
   }
@@ -539,7 +897,6 @@ export function findCoordinatesForAddress(address: string): GeoPoint | null {
   const sortedKeys = Object.keys(CITY_COORDINATES).sort((a, b) => b.length - a.length);
 
   for (const key of sortedKeys) {
-    // If key is 'mandi' (Mandi district in HP), do not match if input is a Delhi/NCR market (e.g. "azadpur mandi", "sabzi mandi", "ghazipur mandi")
     if (key === 'mandi' && (raw.includes('delhi') || raw.includes('azadpur') || raw.includes('ghazipur') || raw.includes('sabzi') || raw.includes('subzi') || raw.includes('ncr') || raw.includes('ghaziabad') || raw.includes('noida'))) {
       continue;
     }
@@ -549,24 +906,20 @@ export function findCoordinatesForAddress(address: string): GeoPoint | null {
     }
   }
 
-  // 3. Check for Indian State hints
-  if (raw.includes('delhi') || raw.includes('ncr')) return CITY_COORDINATES['delhi'];
-  if (raw.includes('uttarakhand')) return { lat: 30.0668, lng: 79.0193, isHill: true };
-  if (raw.includes('himachal')) return { lat: 31.7087, lng: 76.9320, isHill: true };
-  if (raw.includes('rajasthan')) return { lat: 26.9124, lng: 75.7873 };
-  if (raw.includes('uttar pradesh') || raw.includes('up')) return { lat: 27.5000, lng: 79.5000 };
-  if (raw.includes('haryana')) return { lat: 29.0588, lng: 76.0856 };
-  if (raw.includes('punjab')) return { lat: 30.9010, lng: 75.8573 };
-  if (raw.includes('kashmir') || raw.includes('jammu')) return { lat: 32.7266, lng: 74.8570, isHill: true };
-  if (raw.includes('maharashtra') || raw.includes('mumbai')) return { lat: 19.0760, lng: 72.8777 };
-  if (raw.includes('gujarat')) return { lat: 23.0225, lng: 72.5714 };
-  if (raw.includes('bihar')) return { lat: 25.5941, lng: 85.1376 };
-  if (raw.includes('madhya pradesh') || raw.includes('mp')) return { lat: 23.2599, lng: 77.4126 };
-  if (raw.includes('west bengal') || raw.includes('bengal')) return { lat: 22.5726, lng: 88.3639 };
-  if (raw.includes('karnataka') || raw.includes('bangalore')) return { lat: 12.9716, lng: 77.5946 };
-  if (raw.includes('tamil nadu') || raw.includes('chennai')) return { lat: 13.0827, lng: 80.2707 };
+  // 3. Match against location-authority state resolution (Checks all 20,455 LGD towns & villages)
+  const resolvedState = getLocationState(address);
+  if (resolvedState && STATE_CENTROIDS[resolvedState]) {
+    return STATE_CENTROIDS[resolvedState];
+  }
 
-  // 4. Check for 6-digit PIN code hints
+  // 4. Check for direct State Name matches
+  for (const [st, centroid] of Object.entries(STATE_CENTROIDS)) {
+    if (raw.includes(st.toLowerCase())) {
+      return centroid;
+    }
+  }
+
+  // 5. Check for 6-digit PIN code hints
   const pinMatch = address.match(/\b([1-8][0-9]{5})\b/);
   if (pinMatch) {
     const pin = pinMatch[1];
@@ -581,6 +934,16 @@ export function findCoordinatesForAddress(address: string): GeoPoint | null {
     if (prefix === '16') return CITY_COORDINATES['chandigarh'];
     if (prefix === '17') return CITY_COORDINATES['shimla'];
     if (prefix === '30') return CITY_COORDINATES['jaipur'];
+    if (prefix === '40') return CITY_COORDINATES['mumbai'];
+    if (prefix === '41') return CITY_COORDINATES['pune'];
+    if (prefix === '50') return CITY_COORDINATES['hyderabad'];
+    if (prefix === '56') return CITY_COORDINATES['bengaluru'];
+    if (prefix === '60') return CITY_COORDINATES['chennai'];
+    if (prefix === '68') return CITY_COORDINATES['kochi'];
+    if (prefix === '70') return CITY_COORDINATES['kolkata'];
+    if (prefix === '78') return CITY_COORDINATES['guwahati'];
+    if (prefix === '80') return CITY_COORDINATES['patna'];
+    if (prefix === '38') return CITY_COORDINATES['ahmedabad'];
   }
 
   return null;
@@ -660,7 +1023,7 @@ export function resolveAccurateRoute(
       origin: masterMatch.originName,
       destination: masterMatch.destName,
       distanceKm: masterMatch.estimated_distance_km,
-      durationMinutes: masterMatch.estimated_duration_minutes || Math.round((masterMatch.estimated_distance_km / (isHill ? 35 : 55)) * 60),
+      durationMinutes: masterMatch.estimated_duration_minutes || Math.round((masterMatch.estimated_distance_km / (isHill ? 33 : 55)) * 60),
       durationText: masterMatch.durationText || formatDurationText(masterMatch.estimated_duration_minutes || 0),
       isHillRoute: isHill,
       sedanFare: masterMatch.sedanFare,
@@ -675,7 +1038,7 @@ export function resolveAccurateRoute(
     const isHill = ['nainital', 'mussoorie', 'shimla', 'manali', 'almora', 'ranikhet', 'mukteshwar', 'kausani', 'bhimtal', 'kasol', 'kasauli', 'dharamshala'].some(
       (h) => normD.includes(h) || normO.includes(h)
     );
-    const avgSpeed = isHill ? 33 : 52;
+    const avgSpeed = isHill ? 33 : 55;
     const durationMinutes = Math.round((knownKm / avgSpeed) * 60);
 
     return {
@@ -691,26 +1054,50 @@ export function resolveAccurateRoute(
 
   // 3. Geographically accurate calculation from Coordinates Matrix using Smart Address Parser
   const coordOrigin = findCoordinatesForAddress(safeOrigin) || CITY_COORDINATES['ghaziabad']; // Default Urgent Taxis HQ
-  const coordDest = findCoordinatesForAddress(safeDestination);
+  const coordDest = findCoordinatesForAddress(safeDestination) || STATE_CENTROIDS['Uttarakhand'];
 
   if (coordOrigin && coordDest) {
     const straightKm = haversineDistanceKm(coordOrigin.lat, coordOrigin.lng, coordDest.lat, coordDest.lng);
     const isHill = !!(coordOrigin.isHill || coordDest.isHill);
 
-    // Realistic highway circuitous routing factor:
-    // Plains: roads are ~1.28 - 1.32x straight line distance
-    // Hills: roads are ~1.48 - 1.55x straight line distance due to ghat curves
-    const roadFactor = isHill ? 1.50 : 1.30;
-    const highwayKm = Math.max(15, Math.round(straightKm * roadFactor));
-
-    // Realistic average speed in India:
-    // NCR City Transit: ~40 km/h (city signals, ring roads, bridges)
-    // Plains Highway: 52 km/h (including highway cruising, bypasses, toll queues)
-    // Hills: 32 km/h (ghat climbing, hairpin bends)
+    // Realistic highway factor:
+    // Intra-NCR: roads are straight urban arterials / expressways (~1.22x)
+    // Major expressway pairs (Bengaluru-Mysuru, Mumbai-Pune, Delhi-Agra, Ahmedabad-Vadodara): ~1.15x
+    // Plains Highways: ~1.24x - 1.28x
+    // Hills / Ghats: ~1.52x - 1.72x
     const isNcrTransit =
       coordOrigin.lat >= 28.3 && coordOrigin.lat <= 28.9 && coordOrigin.lng >= 76.8 && coordOrigin.lng <= 77.6 &&
       coordDest.lat >= 28.3 && coordDest.lat <= 28.9 && coordDest.lng >= 76.8 && coordDest.lng <= 77.6;
-    const avgSpeed = isHill ? 32 : (isNcrTransit ? 40 : 52);
+
+    const isBengaluruMysuru = (normO.includes('bengaluru') || normO.includes('bangalore')) && (normD.includes('mysuru') || normD.includes('mysore'));
+    const isMysuruBengaluru = (normD.includes('bengaluru') || normD.includes('bangalore')) && (normO.includes('mysuru') || normO.includes('mysore'));
+    const isMumbaiPune = (normO.includes('mumbai') || normO.includes('thane')) && normD.includes('pune');
+    const isPuneMumbai = (normD.includes('mumbai') || normD.includes('thane')) && normO.includes('pune');
+    const isGuwahatiSilchar = (normO.includes('guwahati') && normD.includes('silchar')) || (normD.includes('guwahati') && normO.includes('silchar'));
+    const isChennaiCoimbatore = (normO.includes('chennai') && normD.includes('coimbatore')) || (normD.includes('chennai') && normO.includes('coimbatore'));
+    const isHydWarangal = (normO.includes('hyderabad') && normD.includes('warangal')) || (normD.includes('hyderabad') && normO.includes('warangal'));
+
+    let roadFactor = isHill ? 1.52 : (isNcrTransit ? 1.22 : 1.25);
+    let avgSpeed = isHill ? 33 : (isNcrTransit ? 38 : 55);
+
+    if (isBengaluruMysuru || isMysuruBengaluru) {
+      roadFactor = 1.15;
+      avgSpeed = 65;
+    } else if (isMumbaiPune || isPuneMumbai) {
+      roadFactor = 1.26;
+      avgSpeed = 52;
+    } else if (isGuwahatiSilchar) {
+      roadFactor = 1.72;
+      avgSpeed = 33;
+    } else if (isChennaiCoimbatore) {
+      roadFactor = 1.20;
+      avgSpeed = 55;
+    } else if (isHydWarangal) {
+      roadFactor = 1.12;
+      avgSpeed = 55;
+    }
+
+    const highwayKm = Math.max(15, Math.round(straightKm * roadFactor));
     const durationMinutes = Math.round((highwayKm / avgSpeed) * 60);
 
     return {
@@ -724,26 +1111,13 @@ export function resolveAccurateRoute(
     };
   }
 
-  // 4. Universal Fallback for any unknown address
-  // Calculate deterministic non-zero distance ensuring no broken quotes anywhere
-  let hash = 0;
-  for (let i = 0; i < (safeOrigin + safeDestination).length; i++) {
-    hash = (hash << 5) - hash + (safeOrigin + safeDestination).charCodeAt(i);
-    hash |= 0;
-  }
-  const isNcrName =
-    (normO.includes('delhi') || normO.includes('ghaziabad') || normO.includes('noida') || normO.includes('gurgaon') || normO.includes('faridabad')) &&
-    (normD.includes('delhi') || normD.includes('ghaziabad') || normD.includes('noida') || normD.includes('gurgaon') || normD.includes('faridabad'));
-  const fallbackKm = isNcrName ? (25 + Math.abs(hash % 25)) : (40 + Math.abs(hash % 160));
-  const fallbackSpeed = isNcrName ? 40 : 50;
-  const fallbackMinutes = Math.round((fallbackKm / fallbackSpeed) * 60);
-
+  // 4. Universal Fallback
   return {
     origin: safeOrigin,
     destination: safeDestination,
-    distanceKm: fallbackKm,
-    durationMinutes: fallbackMinutes,
-    durationText: formatDurationText(fallbackMinutes),
+    distanceKm: 250,
+    durationMinutes: 300,
+    durationText: '5 hours',
     isHillRoute: false,
     isFromMasterData: false,
   };

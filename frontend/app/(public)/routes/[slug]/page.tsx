@@ -222,7 +222,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
   const destState = getLocationState(destName);
   const distance = route.estimated_distance_km || 300;
   const hrs = Math.floor((route.estimated_duration_minutes || 360) / 60);
-  const durationText = `${hrs} - ${hrs + 1} Hours`;
+  const durationText = hrs === 0 ? `${route.estimated_duration_minutes || 45} Mins` : `${hrs} - ${hrs + 1} Hours`;
 
   // Corridor details (milestones, weather, tips, places, highway)
   const corridor = getRouteCorridorDetails(originName, destName, distance);
@@ -240,6 +240,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
   const hatchbackFareTotal = Math.max(1500, Math.round(distance * 12));
   const sedanFareTotal = parseFare(route.sedanFare, 14);
   const ertigaFareTotal = parseFare(route.ertigaFare, 16);
+  const innovaFareTotal = Math.max(2800, Math.round(distance * 20));
   const crystaFareTotal = parseFare(route.crystaFare, 24);
   const tempoFareTotal = Math.max(3500, Math.round(distance * 26));
 
@@ -366,7 +367,7 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       models: 'WagonR, Swift or similar',
       seats: 4,
       bags: 2,
-      ratePerKm: 11,
+      ratePerKm: 12,
       totalFare: hatchbackFareTotal,
       image: '/fleet-brand/Hatchback.webp',
       checkoutCat: 'hatchback',
@@ -376,27 +377,37 @@ export default async function DynamicRoutePage({ params }: DynamicRoutePageProps
       models: 'Dzire, Etios or similar',
       seats: 4,
       bags: 3,
-      ratePerKm: 12,
+      ratePerKm: 14,
       totalFare: sedanFareTotal,
       image: '/fleet-brand/dzire.webp',
       checkoutCat: 'sedan',
     },
     {
-      category: 'SUV',
+      category: 'SUV / Ertiga',
       models: 'Ertiga, Carens or similar',
       seats: 6,
       bags: 4,
-      ratePerKm: 15,
+      ratePerKm: 16,
       totalFare: ertigaFareTotal,
       image: '/fleet-brand/Ertiga.webp',
       checkoutCat: 'suv-muv',
     },
     {
-      category: 'Innova Crysta',
+      category: 'Toyota Innova',
+      models: 'Innova 2.5V, Marazzo or similar',
+      seats: 7,
+      bags: 4,
+      ratePerKm: 20,
+      totalFare: innovaFareTotal,
+      image: '/fleet-brand/Innova Crysta.webp',
+      checkoutCat: 'innova',
+    },
+    {
+      category: 'Innova Crysta / Hycross',
       models: 'Toyota Innova Crysta / Hycross',
       seats: 7,
       bags: 4,
-      ratePerKm: 22,
+      ratePerKm: 24,
       totalFare: crystaFareTotal,
       image: '/fleet-brand/Innova Crysta.webp',
       checkoutCat: 'executive-suv',

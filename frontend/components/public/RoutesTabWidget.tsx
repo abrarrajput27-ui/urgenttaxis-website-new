@@ -14,10 +14,49 @@ import allStatesData from '@/lib/data/all-states-destinations.json';
 // -----------------------------------------------------------------------------
 export const STATE_DESTINATIONS: Record<string, string[]> = allStatesData as Record<string, string[]>;
 
+// Primary departure hubs mapped per Indian State / UT for authentic intra-state & outstation route cards
+export const STATE_DEFAULT_ORIGINS: Record<string, string> = {
+  "Andaman & Nicobar Islands": "Port Blair",
+  "Andhra Pradesh": "Visakhapatnam",
+  "Arunachal Pradesh": "Itanagar",
+  "Assam": "Guwahati",
+  "Bihar": "Patna",
+  "Chhattisgarh": "Raipur",
+  "Dadra & Nagar Haveli and Daman & Diu": "Daman",
+  "Delhi NCR": "Ghaziabad",
+  "Goa": "Panaji",
+  "Gujarat": "Ahmedabad",
+  "Haryana": "Gurugram",
+  "Himachal Pradesh": "Shimla",
+  "Jammu & Kashmir": "Srinagar",
+  "Jharkhand": "Ranchi",
+  "Karnataka": "Bengaluru",
+  "Kerala": "Kochi",
+  "Ladakh": "Leh",
+  "Lakshadweep": "Kavaratti",
+  "Madhya Pradesh": "Bhopal",
+  "Maharashtra": "Mumbai",
+  "Manipur": "Imphal",
+  "Meghalaya": "Shillong",
+  "Mizoram": "Aizawl",
+  "Nagaland": "Kohima",
+  "Odisha": "Bhubaneswar",
+  "Puducherry": "Puducherry",
+  "Punjab": "Amritsar",
+  "Rajasthan": "Jaipur",
+  "Sikkim": "Gangtok",
+  "Tamil Nadu": "Chennai",
+  "Telangana": "Hyderabad",
+  "Tripura": "Agartala",
+  "Uttar Pradesh": "Lucknow",
+  "Uttarakhand": "Dehradun",
+  "West Bengal": "Kolkata",
+};
+
 // Popular departure origins for quick switching
 const ORIGIN_CHIPS = [
-  "Delhi",
   "Ghaziabad",
+  "Delhi",
   "Noida",
   "Greater Noida",
   "Gurugram",
@@ -60,7 +99,8 @@ interface RoutesTabWidgetProps {
 
 export default function RoutesTabWidget({ initialOrigin, initialActiveState }: RoutesTabWidgetProps = {}) {
   const [activeState, setActiveState] = useState<string>(initialActiveState || "Delhi NCR");
-  const [activeOrigin, setActiveOrigin] = useState<string>(initialOrigin || "Ghaziabad");
+  const [activeOrigin, setActiveOrigin] = useState<string>(initialOrigin || STATE_DEFAULT_ORIGINS[initialActiveState || "Delhi NCR"] || "Ghaziabad");
+  const [hasUserSelectedOrigin, setHasUserSelectedOrigin] = useState<boolean>(Boolean(initialOrigin));
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [visibleCount, setVisibleCount] = useState<number>(24);
   const tabsContainerRef = useRef<HTMLDivElement>(null);
@@ -79,17 +119,19 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
       const stateParam = params.get('state');
       if (stateParam && STATE_DESTINATIONS[stateParam]) {
         setActiveState(stateParam);
+        if (!hasUserSelectedOrigin && STATE_DEFAULT_ORIGINS[stateParam]) {
+          setActiveOrigin(STATE_DEFAULT_ORIGINS[stateParam]);
+        }
       }
     }
-  }, []);
+  }, [hasUserSelectedOrigin]);
 
-  // Dynamic origin chips ensuring initialOrigin is prominent
+  // Dynamic origin chips ensuring state-specific and selected origins are prominent
   const availableChips = useMemo(() => {
-    if (initialOrigin && !ORIGIN_CHIPS.some((chip) => chip.toLowerCase() === initialOrigin.toLowerCase())) {
-      return [initialOrigin, ...ORIGIN_CHIPS];
-    }
-    return ORIGIN_CHIPS;
-  }, [initialOrigin]);
+    const stateHub = STATE_DEFAULT_ORIGINS[activeState] || "Ghaziabad";
+    const prominent = [stateHub, activeOrigin, "Ghaziabad", "Delhi", "Haridwar", "Panaji", "Bengaluru", "Mumbai"];
+    return Array.from(new Set([...prominent, ...ORIGIN_CHIPS]));
+  }, [activeState, activeOrigin]);
 
   // Filter destination list strictly within the active state (Zero cross-state mixing!)
   const stateList = STATE_DESTINATIONS[activeState] || [];
@@ -115,8 +157,8 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
     return subset.map((dest, idx) => {
       const quote = resolveOneWayFare(activeOrigin, dest);
       const distance = quote?.distanceKm || 220;
-      const price = quote?.sedanFare || Math.round(distance * 11);
-      const duration = quote?.durationText || `${Math.round(distance / 50)} hrs`;
+      const price = quote?.sedanFare || Math.max(1800, Math.round(distance * 14));
+      const duration = quote?.durationText || `${Math.round(distance / 55)} hrs`;
       const slug = quote?.slug || `${activeOrigin.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-to-${dest.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-taxi`;
       const image = getDestinationImage(dest, activeState);
 
@@ -167,6 +209,9 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                   setActiveState(state);
                   setSearchQuery("");
                   setVisibleCount(24);
+                  if (!hasUserSelectedOrigin && STATE_DEFAULT_ORIGINS[state]) {
+                    setActiveOrigin(STATE_DEFAULT_ORIGINS[state]);
+                  }
                 }}
                 className={`whitespace-nowrap px-4 py-2.5 min-h-[44px] rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all duration-200 border-2 cursor-pointer snap-start shrink-0 ${
                   isActive
@@ -215,7 +260,10 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                 <button
                   key={chip}
                   type="button"
-                  onClick={() => setActiveOrigin(chip)}
+                  onClick={() => {
+                    setActiveOrigin(chip);
+                    setHasUserSelectedOrigin(true);
+                  }}
                   className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap shrink-0 border cursor-pointer ${
                     isSelected
                       ? 'bg-brand-green border-brand-green text-white shadow-xs'

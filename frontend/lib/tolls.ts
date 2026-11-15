@@ -254,6 +254,26 @@ function resolveCorridorKey(origin: string, destination: string): string | null 
   if (normO.includes('haridwar') && (normD.includes('chandigarh') || normD.includes('mohali') || normD.includes('panchkula'))) return 'haridwar-chandigarh';
   if (normO.includes('haridwar') && (normD.includes('dehradun') || normD.includes('mussoorie') || normD.includes('rishikesh'))) return 'haridwar-dehradun';
 
+  // Karnataka corridors (Bengaluru-Mysuru Expressway)
+  if ((normO.includes('bengaluru') || normO.includes('bangalore')) && (normD.includes('mysuru') || normD.includes('mysore'))) return 'bengaluru-mysuru';
+  if ((normD.includes('bengaluru') || normD.includes('bangalore')) && (normO.includes('mysuru') || normO.includes('mysore'))) return 'bengaluru-mysuru';
+
+  // Tamil Nadu corridors (Chennai-Coimbatore NH-48 / NH-544)
+  if (normO.includes('chennai') && normD.includes('coimbatore')) return 'chennai-coimbatore';
+  if (normD.includes('chennai') && normO.includes('coimbatore')) return 'chennai-coimbatore';
+
+  // Telangana corridors (Hyderabad-Warangal NH-163)
+  if (normO.includes('hyderabad') && normD.includes('warangal')) return 'hyderabad-warangal';
+  if (normD.includes('hyderabad') && normO.includes('warangal')) return 'hyderabad-warangal';
+
+  // Rajasthan corridors (Jaipur-Udaipur NH-48)
+  if (normO.includes('jaipur') && normD.includes('udaipur')) return 'jaipur-udaipur';
+  if (normD.includes('jaipur') && normO.includes('udaipur')) return 'jaipur-udaipur';
+
+  // Delhi NCR to Bihar / Patna
+  if (isDelhiNcr && (normD.includes('patna') || normD.includes('bihar') || normD.includes('gaya') || normD.includes('muzaffarpur'))) return 'delhi-patna';
+  if (isDelhiNcr && (normO.includes('patna') || normO.includes('bihar') || normO.includes('gaya') || normO.includes('muzaffarpur'))) return 'delhi-patna';
+
   return null;
 }
 
@@ -407,31 +427,13 @@ export function calculateRouteTolls(
       const coordD = findCoordinatesForAddress(destination);
 
       if (coordO && coordD) {
-        const allowedStates = new Set<string>([
-          originState.toLowerCase(),
-          destState.toLowerCase(),
-        ]);
-        // Allow intermediate transit states if cross-country
-        if (
-          (originState === 'Delhi' && destState === 'Punjab') ||
-          (originState === 'Punjab' && destState === 'Delhi') ||
-          (originState === 'Delhi' && destState === 'Himachal Pradesh') ||
-          (originState === 'Delhi' && destState === 'Jammu & Kashmir')
-        ) {
-          allowedStates.add('haryana');
-          allowedStates.add('punjab');
-        }
-        if (
-          (originState === 'Delhi' && destState === 'Uttarakhand') ||
-          (originState === 'Uttarakhand' && destState === 'Delhi')
-        ) {
-          allowedStates.add('uttar pradesh');
-        }
-
         const candidatePlazas: { plaza: TollPlazaItem; progress: number }[] = [];
 
         for (const plaza of TOLL_PLAZAS) {
-          if (!allowedStates.has(plaza.state.toLowerCase())) continue;
+          // Intra-state trip rule: only match plazas located within the trip's home state
+          if (originState.toLowerCase() === destState.toLowerCase()) {
+            if (plaza.state.toLowerCase() !== originState.toLowerCase()) continue;
+          }
 
           const check = isPointAlongRouteCorridor(
             plaza.lat,
