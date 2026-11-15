@@ -225,11 +225,15 @@ export function isDelhiNcrTransit(origin: string, destination: string): boolean 
     'jamia', 'okhla', 'jasola', 'saket', 'dwarka', 'rohini', 'lajpat nagar', 'crossings republik',
     'raj nagar', 'dasna', 'masuri', 'modinagar', 'muradnagar', 'loni', 'manesar', 'kundli',
     'anand vihar', 'sarita vihar', 'kalindi kunj', 'mayur vihar', 'laxmi nagar', 'akshardham',
-    'connaught place', 'karol bagh', 'chhattarpur', 'mehrauli', 'hauz khas', 'cr park', 'kalkaji'
+    'connaught place', 'karol bagh', 'chhattarpur', 'mehrauli', 'hauz khas', 'cr park', 'kalkaji',
+    'azadpur', 'ashram', 'ali village', 'arjan garh', 'asiad village', 'badli', 'badarpur',
+    'alipur', 'bawana', 'narela', 'najafgarh', 'mundka', 'nangloi', 'paschim vihar', 'punjabi bagh',
+    'rajouri garden', 'tilak nagar', 'uttam nagar', 'vikaspuri', 'pitampura', 'janakpuri',
+    'anand parbat', 'ashok vihar', 'ashok nagar', 'civil lines', 'chandni chowk', 'central secretariat'
   ];
 
-  const originIsNcr = ncrTokens.some((t) => normO.includes(t));
-  const destIsNcr = ncrTokens.some((t) => normD.includes(t));
+  const originIsNcr = ncrTokens.some((t) => normO.includes(t)) || getLocationState(origin) === 'Delhi';
+  const destIsNcr = ncrTokens.some((t) => normD.includes(t)) || getLocationState(destination) === 'Delhi';
 
   return originIsNcr && destIsNcr;
 }

@@ -77,6 +77,7 @@ const CITY_COORDINATES: Record<string, GeoPoint> = {
   'mayur-vihar': { lat: 28.6040, lng: 77.2980 },
   'laxmi-nagar': { lat: 28.6310, lng: 77.2770 },
   'akshardham': { lat: 28.6127, lng: 77.2773 },
+  'akshardham-mandir': { lat: 28.6127, lng: 77.2773 },
   'chhattarpur': { lat: 28.5020, lng: 77.1850 },
   'mehrauli': { lat: 28.5180, lng: 77.1850 },
   'malviya-nagar': { lat: 28.5350, lng: 77.2080 },
@@ -88,6 +89,7 @@ const CITY_COORDINATES: Record<string, GeoPoint> = {
   'south-extension': { lat: 28.5720, lng: 77.2200 },
   'burari': { lat: 28.7550, lng: 77.1980 },
   'alipur': { lat: 28.7980, lng: 77.1350 },
+  'alipur-garhi': { lat: 28.7990, lng: 77.1380 },
   'narela': { lat: 28.8520, lng: 77.0920 },
   'bawana': { lat: 28.7980, lng: 77.0350 },
   'najafgarh': { lat: 28.6090, lng: 76.9850 },
@@ -99,6 +101,40 @@ const CITY_COORDINATES: Record<string, GeoPoint> = {
   'tilak-nagar': { lat: 28.6360, lng: 77.0980 },
   'uttam-nagar': { lat: 28.6200, lng: 77.0600 },
   'vikaspuri': { lat: 28.6350, lng: 77.0750 },
+
+  // Delhi NCR Verified Localities (North, South, East, West Delhi)
+  'azadpur': { lat: 28.7070, lng: 77.1770 },
+  'azadpur-mandi': { lat: 28.7120, lng: 77.1810 },
+  'ashram': { lat: 28.5710, lng: 77.2580 },
+  'ashram-chowk': { lat: 28.5710, lng: 77.2580 },
+  'ali-village': { lat: 28.5130, lng: 77.3080 },
+  'arjan-garh': { lat: 28.4815, lng: 77.1350 },
+  'asiad-village': { lat: 28.5530, lng: 77.2170 },
+  'badli': { lat: 28.7350, lng: 77.1390 },
+  'badli-industrial-area': { lat: 28.7400, lng: 77.1420 },
+  'badli-village': { lat: 28.7350, lng: 77.1390 },
+  'aya-nagar': { lat: 28.4720, lng: 77.1340 },
+  'ashok-vihar': { lat: 28.6940, lng: 77.1750 },
+  'ashok-nagar': { lat: 28.6360, lng: 77.3080 },
+  'anand-parbat': { lat: 28.6650, lng: 77.1750 },
+  'apsara-border': { lat: 28.6790, lng: 77.3180 },
+  'badarpur': { lat: 28.5040, lng: 77.3050 },
+  'badarpur-border': { lat: 28.4980, lng: 77.3080 },
+  'bakhtawarpur': { lat: 28.8150, lng: 77.1450 },
+  'bakkarwala': { lat: 28.6650, lng: 77.0250 },
+  'barwala': { lat: 28.7450, lng: 77.0650 },
+  'begumpur': { lat: 28.7150, lng: 77.0650 },
+  'bhati-mines': { lat: 28.4750, lng: 77.2150 },
+  'bhikaji-cama-place': { lat: 28.5670, lng: 77.1870 },
+  'bijwasan': { lat: 28.5280, lng: 77.0580 },
+  'bindapur': { lat: 28.6150, lng: 77.0650 },
+  'chawla': { lat: 28.5650, lng: 76.9950 },
+  'chhawla': { lat: 28.5650, lng: 76.9950 },
+  'civil-lines': { lat: 28.6780, lng: 77.2250 },
+  'chirag-dilli': { lat: 28.5420, lng: 77.2250 },
+  'chanakyapuri': { lat: 28.5950, lng: 77.1950 },
+  'chandni-chowk': { lat: 28.6560, lng: 77.2300 },
+  'central-secretariat': { lat: 28.6180, lng: 77.2120 },
 
   // Ghaziabad & Surrounding Localities (Urgent Taxis HQ)
   ghaziabad: { lat: 28.6692, lng: 77.4538 },
@@ -457,7 +493,7 @@ export function normalizeKey(str: string): string {
   if (!str) return '';
   return str
     .toLowerCase()
-    .replace(/\b(airport|railway station|junction|cantt|city|ncr|t3|t1|t2|road|highway|expressway|terminal|temple|mandir|dham|baba|ashram|international)\b/gi, '')
+    .replace(/\b(airport|railway station|junction|cantt|city|ncr|t3|t1|t2|road|highway|expressway|terminal|temple|mandir|dham|baba|international)\b/gi, '')
     .trim()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
@@ -482,6 +518,10 @@ function findCoordinatesForAddress(address: string): GeoPoint | null {
   const sortedKeys = Object.keys(CITY_COORDINATES).sort((a, b) => b.length - a.length);
 
   for (const key of sortedKeys) {
+    // If key is 'mandi' (Mandi district in HP), do not match if input is a Delhi/NCR market (e.g. "azadpur mandi", "sabzi mandi", "ghazipur mandi")
+    if (key === 'mandi' && (raw.includes('delhi') || raw.includes('azadpur') || raw.includes('ghazipur') || raw.includes('sabzi') || raw.includes('subzi') || raw.includes('ncr') || raw.includes('ghaziabad') || raw.includes('noida'))) {
+      continue;
+    }
     const readable = key.replace(/-/g, ' ');
     if (raw.includes(readable) || slug.includes(key)) {
       return CITY_COORDINATES[key];
@@ -489,7 +529,7 @@ function findCoordinatesForAddress(address: string): GeoPoint | null {
   }
 
   // 3. Check for Indian State hints
-  if (raw.includes('delhi')) return CITY_COORDINATES['delhi'];
+  if (raw.includes('delhi') || raw.includes('ncr')) return CITY_COORDINATES['delhi'];
   if (raw.includes('uttarakhand')) return { lat: 30.0668, lng: 79.0193, isHill: true };
   if (raw.includes('himachal')) return { lat: 31.7087, lng: 76.9320, isHill: true };
   if (raw.includes('rajasthan')) return { lat: 26.9124, lng: 75.7873 };
@@ -643,9 +683,13 @@ export function resolveAccurateRoute(
     const highwayKm = Math.max(15, Math.round(straightKm * roadFactor));
 
     // Realistic average speed in India:
-    // Plains: 52 km/h (including highway cruising, bypasses, toll queues)
+    // NCR City Transit: ~40 km/h (city signals, ring roads, bridges)
+    // Plains Highway: 52 km/h (including highway cruising, bypasses, toll queues)
     // Hills: 32 km/h (ghat climbing, hairpin bends)
-    const avgSpeed = isHill ? 32 : 52;
+    const isNcrTransit =
+      coordOrigin.lat >= 28.3 && coordOrigin.lat <= 28.9 && coordOrigin.lng >= 76.8 && coordOrigin.lng <= 77.6 &&
+      coordDest.lat >= 28.3 && coordDest.lat <= 28.9 && coordDest.lng >= 76.8 && coordDest.lng <= 77.6;
+    const avgSpeed = isHill ? 32 : (isNcrTransit ? 40 : 52);
     const durationMinutes = Math.round((highwayKm / avgSpeed) * 60);
 
     return {
@@ -660,14 +704,18 @@ export function resolveAccurateRoute(
   }
 
   // 4. Universal Fallback for any unknown address
-  // Calculate deterministic non-zero highway distance ($d \ge 35$ km) ensuring no broken quotes anywhere
+  // Calculate deterministic non-zero distance ensuring no broken quotes anywhere
   let hash = 0;
   for (let i = 0; i < (safeOrigin + safeDestination).length; i++) {
     hash = (hash << 5) - hash + (safeOrigin + safeDestination).charCodeAt(i);
     hash |= 0;
   }
-  const fallbackKm = 40 + Math.abs(hash % 160); // 40km to 200km realistic intercity estimate
-  const fallbackMinutes = Math.round((fallbackKm / 50) * 60);
+  const isNcrName =
+    (normO.includes('delhi') || normO.includes('ghaziabad') || normO.includes('noida') || normO.includes('gurgaon') || normO.includes('faridabad')) &&
+    (normD.includes('delhi') || normD.includes('ghaziabad') || normD.includes('noida') || normD.includes('gurgaon') || normD.includes('faridabad'));
+  const fallbackKm = isNcrName ? (25 + Math.abs(hash % 25)) : (40 + Math.abs(hash % 160));
+  const fallbackSpeed = isNcrName ? 40 : 50;
+  const fallbackMinutes = Math.round((fallbackKm / fallbackSpeed) * 60);
 
   return {
     origin: safeOrigin,

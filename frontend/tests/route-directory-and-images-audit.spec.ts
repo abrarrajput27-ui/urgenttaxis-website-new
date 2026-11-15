@@ -459,4 +459,67 @@ test.describe('Route Directory, Strict A-to-Z Sorting, Image Isolation & Haridwa
     expect(corridor.alternativeRoutes![0].tollPlazasCount).toBeGreaterThan(0);
     expect(corridor.alternativeRoutes![0].tollAmount).toBeGreaterThan(0);
   });
+
+  test('Test 17: Delhi NCR Localities Distance, Point-to-Point Fare & SEO Optimization Audit', () => {
+    const { resolveAccurateRoute } = require('../lib/distance-resolver');
+    const { resolveOneWayFare } = require('../lib/pricing');
+    const { getLocationState } = require('../lib/location-authority');
+    const fs = require('fs');
+
+    // 1. Azadpur Mandi: Real Delhi distance (30-45 km, ~40-60 min), NOT Himachal 513 km!
+    const azadpurMandi = resolveAccurateRoute('Ghaziabad', 'Azadpur Mandi');
+    expect(azadpurMandi.distanceKm).toBeGreaterThanOrEqual(28);
+    expect(azadpurMandi.distanceKm).toBeLessThanOrEqual(45);
+    expect(azadpurMandi.durationMinutes).toBeLessThanOrEqual(75);
+
+    // 2. Ashram Chowk: Real South Delhi distance (20-35 km), NOT 193 km!
+    const ashramChowk = resolveAccurateRoute('Ghaziabad', 'Ashram Chowk');
+    expect(ashramChowk.distanceKm).toBeGreaterThanOrEqual(20);
+    expect(ashramChowk.distanceKm).toBeLessThanOrEqual(35);
+    expect(ashramChowk.durationMinutes).toBeLessThanOrEqual(60);
+
+    // 3. Ali Village, Azadpur, Arjan Garh, Asiad Village, Badli
+    const aliVillage = resolveAccurateRoute('Ghaziabad', 'Ali Village');
+    expect(aliVillage.distanceKm).toBeGreaterThanOrEqual(20);
+    expect(aliVillage.distanceKm).toBeLessThanOrEqual(38);
+
+    const azadpur = resolveAccurateRoute('Ghaziabad', 'Azadpur');
+    expect(azadpur.distanceKm).toBeGreaterThanOrEqual(28);
+    expect(azadpur.distanceKm).toBeLessThanOrEqual(45);
+
+    const arjanGarh = resolveAccurateRoute('Ghaziabad', 'Arjan Garh');
+    expect(arjanGarh.distanceKm).toBeGreaterThanOrEqual(35);
+    expect(arjanGarh.distanceKm).toBeLessThanOrEqual(55);
+
+    const asiadVillage = resolveAccurateRoute('Ghaziabad', 'Asiad Village');
+    expect(asiadVillage.distanceKm).toBeGreaterThanOrEqual(24);
+    expect(asiadVillage.distanceKm).toBeLessThanOrEqual(42);
+
+    const badli = resolveAccurateRoute('Ghaziabad', 'Badli');
+    expect(badli.distanceKm).toBeGreaterThanOrEqual(30);
+    expect(badli.distanceKm).toBeLessThanOrEqual(48);
+
+    // 4. Point-to-Point NCR Fare: No artificial ₹1800 outstation minimum for short city drops
+    const anandViharFare = resolveOneWayFare('Ghaziabad', 'Anand Vihar');
+    expect(anandViharFare).not.toBeNull();
+    expect(anandViharFare!.sedanFare).toBe(699); // Point to point local NCR drop, NOT ₹1800!
+
+    const akshardhamFare = resolveOneWayFare('Ghaziabad', 'Akshardham');
+    expect(akshardhamFare).not.toBeNull();
+    expect(akshardhamFare!.sedanFare).toBe(699); // Point to point local NCR drop, NOT ₹1800!
+
+    // Outstation retains standard floor
+    const haridwarFare = resolveOneWayFare('Ghaziabad', 'Haridwar');
+    expect(haridwarFare!.sedanFare).toBeGreaterThanOrEqual(1800);
+
+    // 5. Keyword stuffing removed in DirectBookingComparison
+    const comparisonContent = fs.readFileSync('frontend/components/public/DirectBookingComparison.tsx', 'utf8');
+    expect(comparisonContent).not.toContain('Delhi taxi, Noida taxi, Ghaziabad taxi');
+
+    // 6. Permanent protected designer credit
+    const footerContent = fs.readFileSync('frontend/components/public/Footer.tsx', 'utf8');
+    expect(footerContent).toContain('footer-designer-credit');
+    expect(footerContent).toContain('Designed by');
+    expect(footerContent).toContain('Mantsha Khan');
+  });
 });

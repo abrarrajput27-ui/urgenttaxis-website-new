@@ -108,9 +108,9 @@ export default function DirectBookingComparison() {
               </div>
             </div>
 
-            {/* SEO Overview Description matching screenshot */}
+            {/* Operator Trust & Coverage Overview */}
             <div className="p-4 sm:p-5 rounded-2xl bg-slate-50/70 border border-slate-200/60 text-[11px] sm:text-xs text-slate-500 font-normal leading-relaxed">
-              Urgent Taxis provides premier outstation taxi and airport taxi services across major cities. Whether you need a simple cab booking or an online cab booking platform, our taxi service offers reliable chauffeur driven car experiences. We specialize in one way taxi drops, round trip cab packages, and prompt airport transfer. For city tours, book a local cab or hire a spacious tempo traveller for group trips. We also cater to business professionals requiring a corporate cab. Explore popular corridors with our Delhi taxi, Noida taxi, Ghaziabad taxi, Aligarh taxi, Lucknow taxi, Haridwar taxi, Rishikesh taxi, Nainital taxi, Jim Corbett taxi, Dehradun taxi, Agra taxi, and Jaipur taxi routes.
+              Urgent Taxis delivers verified, dependable outstation cabs, airport transfers, and hourly city rentals from our central Masuri Ghaziabad dispatch office. Every booking connects you directly with clean commercial yellow-plate vehicles, background-verified highway chauffeurs, and transparent billing with zero surge pricing. We serve all major corridors including Haridwar, Dehradun, Rishikesh, Nainital, Agra, Jaipur, Lucknow, and regional NCR drop points 24 hours a day.
             </div>
           </div>
 

@@ -17,6 +17,7 @@ import masterRoutesData from './data/processed-master-routes.json';
 import { AIRPORT_ROUTES_DATA } from './data/airport-routes-data';
 import { SITE_CONFIG } from './seo';
 import { resolveAccurateRoute } from './distance-resolver';
+import { isDelhiNcrTransit } from './tolls';
 import { formatTime12Hour, formatDateReadable, calculateReturnTimeline, ReturnTimelineResult } from './date-utils';
 
 // -----------------------------------------------------------------------------
@@ -286,11 +287,19 @@ export function resolveOneWayFare(
   // 2. Universal Dynamic Calculation for all addresses, cities & unmapped locations
   const accurate = resolveAccurateRoute(origin, destination, knownDistanceKm || 0);
   const distanceKm = accurate.distanceKm;
-  const sedanFare = accurate.sedanFare || Math.max(1800, Math.round(distanceKm * 14));
-  const ertigaFare = accurate.ertigaFare || Math.max(2400, Math.round(distanceKm * 16));
-  const crystaFare = accurate.crystaFare || Math.max(3600, Math.round(distanceKm * 24));
+  const isNcrTransit = isDelhiNcrTransit(origin, destination);
+
+  // For intra-NCR local drops, apply point-to-point city fare (min ₹699 Sedan, ₹999 Ertiga, ₹1699 Crysta)
+  // For long-distance intercity outstation routes, maintain the standard outstation booking floor (min ₹1800 Sedan, ₹2400 Ertiga, ₹3600 Crysta)
+  const minSedanFare = isNcrTransit ? 699 : 1800;
+  const minErtigaFare = isNcrTransit ? 999 : 2400;
+  const minCrystaFare = isNcrTransit ? 1699 : 3600;
+
+  const sedanFare = accurate.sedanFare || Math.max(minSedanFare, Math.round(distanceKm * 14));
+  const ertigaFare = accurate.ertigaFare || Math.max(minErtigaFare, Math.round(distanceKm * 16));
+  const crystaFare = accurate.crystaFare || Math.max(minCrystaFare, Math.round(distanceKm * 24));
   const startsAt = Math.min(sedanFare, ertigaFare, crystaFare);
-  const estimatedToll = Math.round(distanceKm * 1.6);
+  const estimatedToll = isNcrTransit ? 0 : Math.round(distanceKm * 1.6);
 
   return {
     slug: generateRouteSlug(origin, destination),

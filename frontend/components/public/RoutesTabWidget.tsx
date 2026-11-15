@@ -986,6 +986,17 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [visibleCount, setVisibleCount] = useState<number>(24);
 
+  // Synchronize state tab if navigated with ?state= in URL
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const stateParam = params.get('state');
+      if (stateParam && STATE_DESTINATIONS[stateParam]) {
+        setActiveState(stateParam);
+      }
+    }
+  }, []);
+
   // Dynamic origin chips ensuring initialOrigin is prominent
   const availableChips = useMemo(() => {
     if (initialOrigin && !ORIGIN_CHIPS.some((chip) => chip.toLowerCase() === initialOrigin.toLowerCase())) {
@@ -1220,7 +1231,11 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                       </div>
                       <div className="flex items-center text-xs text-slate-600 font-semibold bg-slate-50 p-2 rounded-xl">
                         <Car className="w-3.5 h-3.5 mr-1.5 text-brand-blue shrink-0" />
-                        <span className="truncate">Hatchback, Sedan, Ertiga &amp; Innova</span>
+                        <span className="truncate">
+                          {route.distance < 60 || activeState === 'Delhi NCR'
+                            ? 'AC Hatchback & Sedan Available'
+                            : 'Hatchback, Sedan, Ertiga & Innova'}
+                        </span>
                       </div>
                     </div>
 
@@ -1256,7 +1271,11 @@ export default function RoutesTabWidget({ initialOrigin, initialActiveState }: R
                           prefetch={false}
                           className="text-[11px] font-bold text-brand-blue hover:text-brand-green transition-colors inline-flex items-center gap-1 active:scale-95"
                         >
-                          <span>Explore Route, Hotels &amp; Stops</span>
+                          <span>
+                            {route.distance < 60 || activeState === 'Delhi NCR'
+                              ? 'View Route & Toll Details'
+                              : 'Explore Route, Tolls & Stops'}
+                          </span>
                           <span>→</span>
                         </Link>
                       </div>

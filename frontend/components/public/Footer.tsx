@@ -150,7 +150,7 @@ export default function PublicFooter() {
               <div className="flex items-start gap-3">
                 <FaPhoneAlt className="text-emerald-500 mt-1 shrink-0" />
                 <div>
-                  <span className="text-[11px] text-slate-500 block uppercase font-medium">24/7 Helpline</span>
+                  <span className="text-[11px] text-slate-500 block uppercase font-medium">24/7 Calling Helpline</span>
                   <a href={`tel:${SITE_CONFIG.phoneRaw}`} className="hover:text-white font-semibold transition-colors block">
                     {SITE_CONFIG.phone}
                   </a>
@@ -159,7 +159,7 @@ export default function PublicFooter() {
               <div className="flex items-start gap-3">
                 <FaWhatsapp className="text-emerald-500 mt-1 shrink-0 text-base" />
                 <div>
-                  <span className="text-[11px] text-slate-500 block uppercase font-medium">WhatsApp Booking</span>
+                  <span className="text-[11px] text-slate-500 block uppercase font-medium">WhatsApp Booking Desk</span>
                   <a
                     href={generateWhatsAppLink(SITE_CONFIG.whatsapp, { customMessage: 'Hello Urgent Taxis! 👋\n\nI need to book a cab.' })}
                     target="_blank"
