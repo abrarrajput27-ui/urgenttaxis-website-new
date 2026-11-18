@@ -30,7 +30,7 @@ export const BUSINESS_CONFIG = {
   tagline: 'Fast To Your Destination — Your Quick Ride Solution!',
   taglineHindi: 'हमेशा आपके साथ!',
   canonicalDomain: 'https://www.urgenttaxis.com',
-  siteUrl: 'https://www.urgenttaxis.in',
+  siteUrl: 'https://www.urgenttaxis.com',
   logoUrl: '/logo.jpg',
   ogImageUrl: '/og-image.jpg',
 
@@ -41,7 +41,7 @@ export const BUSINESS_CONFIG = {
     display: '+91 73106 51940',
     whatsapp: '+91 8595066033',
     whatsappRaw: '918595066033',
-    email: 'info@urgenttaxis.in',
+    email: 'info@urgenttaxis.com',
   },
 
   // Physical Location & Service Areas
