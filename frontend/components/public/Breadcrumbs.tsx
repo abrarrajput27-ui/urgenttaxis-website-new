@@ -13,7 +13,7 @@ interface PublicBreadcrumbsProps {
  * from all public-facing pages, while preserving full SEO BreadcrumbList JSON-LD Schema.
  */
 export default function PublicBreadcrumbs({ items }: PublicBreadcrumbsProps) {
-  const domain = 'https://www.urgenttaxis.in';
+  const domain = 'https://urgenttaxis.com';
 
   const breadcrumbListSchema = {
     '@context': 'https://schema.org',
