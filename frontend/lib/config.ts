@@ -29,8 +29,8 @@ export const BUSINESS_CONFIG = {
   legalName: 'Urgent Taxis Transport Services',
   tagline: 'Fast To Your Destination — Your Quick Ride Solution!',
   taglineHindi: 'हमेशा आपके साथ!',
-  canonicalDomain: 'https://www.urgenttaxis.com',
-  siteUrl: 'https://www.urgenttaxis.com',
+  canonicalDomain: 'https://urgenttaxis.com',
+  siteUrl: 'https://urgenttaxis.com',
   logoUrl: '/logo.jpg',
   ogImageUrl: '/og-image.jpg',
 
