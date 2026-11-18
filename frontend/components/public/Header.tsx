@@ -67,9 +67,9 @@ export default function PublicHeader() {
 
           {/* Top Bar Right */}
           <div className="flex items-center gap-6 font-semibold">
-            <a href="mailto:info@urgenttaxis.in" className="flex items-center gap-2 text-slate-600 hover:text-brand-blue transition-colors">
+            <a href="mailto:info@urgenttaxis.com" className="flex items-center gap-2 text-slate-600 hover:text-brand-blue transition-colors">
               <FaEnvelope className="w-4 h-4" />
-              <span>info@urgenttaxis.in</span>
+              <span>info@urgenttaxis.com</span>
             </a>
             {(BUSINESS_CONFIG.socialProfiles.facebook || BUSINESS_CONFIG.socialProfiles.instagram || BUSINESS_CONFIG.socialProfiles.youtube) && (
               <div className="flex items-center gap-3">
@@ -239,8 +239,8 @@ export default function PublicHeader() {
             
           {/* Mobile Top Bar Info */}
           <div className="flex items-center justify-between pt-3 pb-1 border-t border-slate-100/50 text-[13px] text-slate-500 font-bold">
-            <a href="mailto:info@urgenttaxis.in" className="flex items-center gap-1.5 hover:text-brand-blue">
-              <FaEnvelope /> info@urgenttaxis.in
+            <a href="mailto:info@urgenttaxis.com" className="flex items-center gap-1.5 hover:text-brand-blue">
+              <FaEnvelope /> info@urgenttaxis.com
             </a>
             {(BUSINESS_CONFIG.socialProfiles.facebook || BUSINESS_CONFIG.socialProfiles.instagram || BUSINESS_CONFIG.socialProfiles.youtube) && (
               <div className="flex items-center gap-3 text-lg">
