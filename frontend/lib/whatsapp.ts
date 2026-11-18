@@ -73,7 +73,7 @@ export interface WhatsAppMessageParams {
  * • 💳 *Estimated Total Fare:* *₹3,499*
  * • 🟢 *30% Advance Token:* *₹1,050* (To Confirm)
  * • ⚪ *70% Driver Balance:* *₹2,449* (At Pickup)
- * 🌐 *Website:* https://www.urgenttaxis.in/...
+ * 🌐 *Website:* https://www.urgenttaxis.com/...
  * 📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad
  * 💬 *WhatsApp Desk:* +91 8595066033
  * Please confirm cab availability & driver assignment! ✨
@@ -258,11 +258,11 @@ export function generateWhatsAppLink(
     lines.push(params.invoiceUrl);
   } else if (params.bookingReference) {
     lines.push('🧾 *DIGITAL INVOICE & RECEIPT:*');
-    lines.push(`https://www.urgenttaxis.in/booking-confirmation/${params.bookingReference}/invoice`);
+    lines.push(`https://www.urgenttaxis.com/booking-confirmation/${params.bookingReference}/invoice`);
   }
 
   // Website, 24x7 Helpline & WhatsApp Desk
-  lines.push(`🌐 *Website:* ${params.pageUrl || 'https://www.urgenttaxis.in'}`);
+  lines.push(`🌐 *Website:* ${params.pageUrl || 'https://www.urgenttaxis.com'}`);
   lines.push('📞 *24x7 Helpline:* +91 7310651940 | Masuri, Ghaziabad');
   lines.push('💬 *WhatsApp Desk:* +91 8595066033');
   lines.push(
